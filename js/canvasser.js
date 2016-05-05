@@ -2,8 +2,6 @@ function canvasser(dataFile){
     requestJSON(dataFile, init);
     var act = new interaction();
 
-    dropPos = {x:10,y:100};
-
     function requestJSON(fileNamePath, returnFunction)
     {
         var xhr = new XMLHttpRequest();
@@ -46,25 +44,15 @@ function canvasser(dataFile){
         act.context.fillStyle    = "white";
         act.context.fillRect(0,0,act.canvas.width,act.canvas.height);
 
+        act.data.objects.forEach(function(obj){
+            var posCheck = drawShapes(act.context, obj.position, act.data.shapes[obj.shape], obj.color, obj.testp, act.position);
+            if (!obj.testp) return;
+            if (posCheck) obj.color = obj.selectcolor;
+                else obj.color = obj.defaultcolor;
+        });
 
-        drawShapes(act.context, act.position, act.data.shapes.drop);
-
-        //console.log(position);
-        dropPos.x = act.position.x;
-        dropPos.y = act.position.y;
-        act.context.beginPath();
-        act.context.moveTo(170, 80);
-        act.context.bezierCurveTo(130, 100, 130, 150, 230, 150);
-        act.context.bezierCurveTo(250, 180, 320, 180, 340, 150);
-        act.context.bezierCurveTo(420, 150, 420, 120, 390, 100);
-        act.context.bezierCurveTo(430, 40, 370, 30, 340, 50);
-        act.context.bezierCurveTo(320, 5, 250, 20, 250, 50);
-        act.context.bezierCurveTo(200, 5, 150, 20, 170, 80);
-        act.context.closePath(); // complete custom shape
-        if (act.context.isPointInPath(act.position.x, act.position.y)) act.context.strokeStyle = 'blue';
-        else act.context.strokeStyle = 'red';
-        act.context.lineWidth = 5;
-        act.context.stroke();
+        drawShapes(act.context, act.position, act.data.shapes.drop, null, false, null);
+        var xxx = drawShapes(act.context, {x:110,y:110}, act.data.shapes.cloud, "blue", true, act.position, act.color);
 
         act.context.beginPath();
         act.context.moveTo(act.position.x, act.position.y);
@@ -83,18 +71,32 @@ function canvasser(dataFile){
         window.requestAnimationFrame(loop);
     }
 
-    function drawShapes(ctx, origin, shapeData){
+    function drawShapes(ctx, origin, shapeData, color, doTest, testP){
+        var test = false;
         ctx.beginPath();
         shapeData.forEach(function(shape){
             if (shape.type === "move") ctx.moveTo(origin.x+shape.offsetx, origin.y+shape.offsety);
             if (shape.type === "arc") ctx.arc(origin.x+shape.offsetx, origin.y+shape.offsety, shape.radius, shape.startangle, shape.endangle, shape.counterclockwise);
+            if (shape.type === "bcurve") ctx.bezierCurveTo(origin.x+shape.offsetxa, origin.y+shape.offsetya, origin.x+shape.offsetxb, origin.y+shape.offsetyb,origin.x+shape.offsetxc, origin.y+shape.offsetyc);
             if (shape.type === "line") ctx.lineTo(origin.x+shape.offsetx, origin.y+shape.offsety);
             if (shape.type === "linewidth") ctx.lineWidth = shape.width;
-            if (shape.type === "fillStyle") ctx.fillStyle = shape.color;
+            if (shape.type === "fillStyle") {
+                if (color === null)
+                    ctx.fillStyle = shape.color;
+                else ctx.fillStyle = color;
+            }
             if (shape.type === "fill") ctx.fill();
+            if (shape.type === "strokestyle"){
+                if (color === null) ctx.strokeStyle = shape.color;
+                else ctx.strokeStyle = color;
+            }
             if (shape.type === "stroke") ctx.stroke();
+            if (shape.type === "ptest" && doTest){
+                if (ctx.isPointInPath(testP.x, testP.y)) test = true;
+            }
         });
         ctx.closePath();
+        return test;
    }
 
     function getMousePos(event) {
