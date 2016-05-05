@@ -140,6 +140,7 @@
 	}],
         "objects":[
             {"shape":"cloud", "position":{"x":100,"y":300}, "color":"rgba(255,165,0,1)","defaultcolor":"rgba(255,165,0,1)","selectcolor":"rgba(100,100,100,1)","testp":true},
+            {"shape":"cloud", "position":{"x":0,"y":0}, "color":"rgba(255,165,0,1)","defaultcolor":"rgba(255,165,0,1)","selectcolor":"rgba(100,100,100,1)","testp":true},
             {"shape":"drop", "position":{"x":100,"y":100}, "color":"rgba(155,165,0,1)","testp":false},
             {"shape":"drop", "position":{"x":100,"y":200}, "color":"rgba(125,165,0,1)","testp":false},
             {"shape":"drop", "position":{"x":100,"y":300}, "color":"rgba(25,165,0,1)","testp":false}

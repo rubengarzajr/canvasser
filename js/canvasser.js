@@ -52,7 +52,6 @@ function canvasser(dataFile){
         });
 
         drawShapes(act.context, act.position, act.data.shapes.drop, null, false, null);
-        var xxx = drawShapes(act.context, {x:110,y:110}, act.data.shapes.cloud, "blue", true, act.position, act.color);
 
         act.context.beginPath();
         act.context.moveTo(act.position.x, act.position.y);
