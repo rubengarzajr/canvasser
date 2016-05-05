@@ -1,10 +1,8 @@
-
-
 function canvasser(dataFile){
     requestJSON(dataFile, init);
     var act = new interaction();
 
-dropPos = {x:10,y:100};
+    dropPos = {x:10,y:100};
 
     function requestJSON(fileNamePath, returnFunction)
     {
@@ -25,7 +23,7 @@ dropPos = {x:10,y:100};
         act.context = act.canvas.getContext('2d');
         act.canvas.width  = data.settings.canvaswidth;
         act.canvas.height = data.settings.canvasheight;
-        console.log(data.shapes.drop);
+        act.data = data;
         document.getElementById(data.settings.canvasparent).appendChild(act.canvas);
         act.canvas.addEventListener('mousemove', getMousePos, false);
 
@@ -37,6 +35,7 @@ dropPos = {x:10,y:100};
         this.canvas       = null;
         this.context      = null;
         this.currentTime  = null;
+        this.data         = null;
         this.previousTime = null;
         this.canvasSize   = {x:0, y:0};
         this.curveList    = [];
@@ -46,6 +45,9 @@ dropPos = {x:10,y:100};
         act.context.clearRect(0,0,act.canvas.width,act.canvas.height);
         act.context.fillStyle    = "white";
         act.context.fillRect(0,0,act.canvas.width,act.canvas.height);
+
+
+        drawShapes(act.context, act.position, act.data.shapes.drop);
 
         //console.log(position);
         dropPos.x = act.position.x;
@@ -73,24 +75,6 @@ dropPos = {x:10,y:100};
         act.context.stroke();
 
         act.context.beginPath();
-        var radius           = 20;
-        var startAngle       = .9 * Math.PI;
-        var endAngle         = 2.1 * Math.PI;
-        var counterClockwise = false;
-
-        act.context.lineWidth    = 10;
-        act.context.strokeStyle  = 'black';
-
-        act.context.lineTo(dropPos.x, dropPos.y);
-        act.context.arc(dropPos.x, dropPos.y-50, radius, startAngle, endAngle, counterClockwise);
-        act.context.lineTo(dropPos.x, dropPos.y);
-
-        act.context.lineWidth = 1;
-        act.context.fillStyle = 'red';
-        act.context.fill();
-        act.context.closePath(); // complete custom shape
-
-        act.context.beginPath();
         act.context.arc(50, 50, 50, 0, 2 * Math.PI, false);
         act.context.fillStyle = 'green';
         act.context.fill();
@@ -98,6 +82,20 @@ dropPos = {x:10,y:100};
 
         window.requestAnimationFrame(loop);
     }
+
+    function drawShapes(ctx, origin, shapeData){
+        ctx.beginPath();
+        shapeData.forEach(function(shape){
+            if (shape.type === "move") ctx.moveTo(origin.x+shape.offsetx, origin.y+shape.offsety);
+            if (shape.type === "arc") ctx.arc(origin.x+shape.offsetx, origin.y+shape.offsety, shape.radius, shape.startangle, shape.endangle, shape.counterclockwise);
+            if (shape.type === "line") ctx.lineTo(origin.x+shape.offsetx, origin.y+shape.offsety);
+            if (shape.type === "linewidth") ctx.lineWidth = shape.width;
+            if (shape.type === "fillStyle") ctx.fillStyle = shape.color;
+            if (shape.type === "fill") ctx.fill();
+            if (shape.type === "stroke") ctx.stroke();
+        });
+        ctx.closePath();
+   }
 
     function getMousePos(event) {
         var rect = act.canvas.getBoundingClientRect();

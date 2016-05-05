@@ -141,8 +141,11 @@
 	"shapes": {
             "drop":[
                 {"type":"line","offsetx":0,"offsety": 0},
-                {"type":"arc","offsetx":0,"offsety": -50, "radius": 20, "startangle":2.826, "endangle":6.594, "counterClockwise":false },
-                {"type":"line","offsetx":0,"offsety": 0}
+                {"type":"arc","offsetx":0,"offsety": -50, "radius": 20, "startangle":2.826, "endangle":6.594, "counterclockwise":false },
+                {"type":"line","offsetx":0,"offsety": 0},
+                {"type":"linewidth", "width":1},
+                {"type":"fillStyle", "color":"purple"},
+                {"type":"fill"}
             ]
 
 	},
