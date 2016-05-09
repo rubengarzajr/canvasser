@@ -9,6 +9,7 @@
         <link href="css/canvasser.css" rel="stylesheet" type="text/css"/>
     </head>
     <body onload='canvasser("data\\data.json");'>
-        <div id='canvasholder'></div>
+        <div id='canvasholder' style="float:left"></div>
+        <div id='details' style="float:left"></div>
     </body>
 </html>
