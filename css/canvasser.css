@@ -8,3 +8,31 @@ and open the template in the editor.
     Author     : user
 */
 
+.title{
+    text-align: center;
+    font-size: 2.25em;
+    margin-bottom: 10px;
+}
+
+.subtitle{
+    text-align: center;
+    font-size: 1.25em;
+}
+
+.divspace{
+    padding-bottom: 25px;
+}
+
+td{
+
+}
+
+.contentspace{
+    margin: 5px 20px;
+}
+
+a{
+    font-size: 1.1em;
+    color: black;
+    font-weight: bold;
+}
