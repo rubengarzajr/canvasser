@@ -1,0 +1,47 @@
+{
+    "createtypes":["object","image","shape","settings"],
+    "settings":[
+        {"type":"canvaswidth",  "widgets":{"size":"int"}},
+	{"type":"canvasheight", "widgets":{"size":"int"}},
+        {"type":"canvasparent", "widgets":{"parent":"text"}}
+    ],
+    "object":[
+        {"type":"image", "widgets":{"name":"text", "group":"text", "show":"bool", "image":"imagedata",  "position":"xy" }},
+        {"type":"shape", "widgets":{"name":"text", "group":"text", "show":"bool", "shape":"shapedata", "position":"xy" },"widgetbank":["actions"] }
+    ],
+    "image":[
+        {"type":"imagedata", "widgets":{"id":"text", "url":"filename"}}
+    ],
+    "shape":[
+        {"type":"shapedata", "widgets":{"id":"text", "color":"color", "defaultcolor":"color", "selectcolor":"color"},"widgetbank":["drawcode"]}
+    ],
+    "drawcode":[
+        {"type":"line",        "widgets":{"offset":"xy"}},
+        {"type":"arc",         "widgets":{"offset":"xy", "radius":"int","startangle":"int", "endangle":"int", "counterclockwise":"bool"}},
+        {"type":"bcurve",      "widgets":{"offseta":"xy", "offsetb":"xy", "offsetc":"xy"}},
+        {"type":"linewidth",   "widgets":{"width":"int"}},
+        {"type":"fillStyle",   "widgets":{"color":"color"}},
+        {"type":"strokestyle", "widgets":{"color":"color"}},
+        {"type":"ptest"},
+        {"type":"begin"},
+        {"type":"close"},
+        {"type":"fill"}
+    ],
+    "actions":[
+        {"type":"url",         "widgets":{"url":"filename", "target":"text"}},
+        {"type":"groupvis",    "widgets":{"name":"text", "show":"bool"}},
+        {"type":"groupcolor",  "widgets":{"name":"text", "source":"text"}},
+        {"type":"objectvis",   "widgets":{"name":"text", "show":"bool"}},
+        {"type":"objectcolor", "widgets":{"name":"text", "source":"text"}}
+    ],
+    "widgets":{
+        "xy":{"x":"int","y":"int"},
+        "text":"string",
+        "bool":"boolean",
+        "filename":"url",
+        "shapename":"shape",
+        "color":"rgba"
+    },
+    "authorsettings":{
+    }
+}
