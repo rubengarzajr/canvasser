@@ -1,3 +1,8 @@
+function initCanvasser(vari, datafile){
+    window[vari] = new canvasser(datafile);
+}
+
+
 function canvasser(dataFile){
     requestJSON(dataFile, init);
     var act = new interaction();
@@ -24,7 +29,7 @@ function canvasser(dataFile){
         act.data = data;
         document.getElementById(data.settings.canvasparent).appendChild(act.canvas);
         act.canvas.addEventListener('mousemove', getMousePos, false);
-        act.canvas.addEventListener('mousedown', getClickPos, false);
+        act.canvas.addEventListener('mousedown', mouseDown, false);
         act.canvas.addEventListener('mouseup', mouseUp, false);
 
         act.data.images.forEach(function(image){
@@ -59,20 +64,34 @@ function canvasser(dataFile){
         this.mouseDown    = false;
         this.mouseDownCnt = 0;
         this.clickLeft    = false;
+        this.external     = false;
+    }
+
+    this.external = function(cList){
+        act.external = true;
+        console.log(act.mouseOver)
+        cList.forEach(function(cmd){
+            console.log(cmd);
+            if (cmd.command === "selectonly"){
+                    act.mouseOver = []
+                    act.data.objects.forEach(function(obj){
+                    if (obj.name === cmd.item) act.mouseOver.push(obj);
+                });
+            }
+        });
+        actions();
+        console.log(act.mouseOver)
     }
 
     function loop(){
-        
         if (act.mouseDown){
-            console.log(act.mouseDownCnt)
             act.mouseDownCnt ++;
+            actions();
         }
         act.context.clearRect(0,0,act.canvas.width,act.canvas.height);
         act.context.fillStyle    = "white";
         act.context.fillRect(0,0,act.canvas.width,act.canvas.height);
-        act.mouseOver = [];
-
-       
+        if (!act.external) act.mouseOver = [];
 
         act.data.objects.forEach(function(obj){
             // TODO: Add in fudge so null scale destination
@@ -164,15 +183,17 @@ function canvasser(dataFile){
     }
 
     function mouseUp(){
-        console.log("mouseup")
         act.mouseDown = false;
         act.mouseDownCnt = 0;
     }
 
-    function getClickPos(event){
-        console.log("mousedown")
+    function mouseDown(event){
+        act.external = false;
         act.mouseDown = true;
         act.mouseDOwnCnt = 0;
+    }
+
+    function actions(){
         act.mouseOver.forEach(function(over){
             if (over.clicklist === undefined) return;
             over.clicklist.forEach(function(action){
@@ -183,6 +204,13 @@ function canvasser(dataFile){
                     var target = document.getElementById(action.target);
                     if (target != undefined){
                         loadInto(action.url, target);
+                    }
+                }
+                if (action.type === 'copyelement'){
+                    var target = document.getElementById(action.target);
+                    var source = document.getElementById(action.source);
+                    if (target !== undefined && source !== undefined){
+                        target.innerHTML = source.innerHTML;
                     }
                 }
                 if (action.type === 'groupvis'){
@@ -221,28 +249,39 @@ function canvasser(dataFile){
                     act.data.objects.forEach(function(obj){
                         if (obj.group === undefined) return;
                         if (obj.group.indexOf(action.name) < 0) return;
-                        if (action.frame === "increment") obj.scale.destination += action.amount;
+                        if (action.frame === "increment") obj.scale.current += action.amount;
                         if (action.frame === "multiply"){
-                            obj.scale.destination = obj.scale.current * action.amount;
+                            obj.scale.current = obj.scale.current * action.amount;
                         }
-                        if (action.frame === "absolute")  obj.scale.destination =  action.amount;
+                        if (action.frame === "absolute")  obj.scale.current =  action.amount;
                     });
                 }
                 if (action.type === 'scaleobject'){
                     act.data.objects.forEach(function(obj){
                         if (obj.name === undefined) return;
                         if (obj.name !== action.name) return;
-                        if (action.frame === "increment") obj.scale.destination += action.amount;
+                        if (action.frame === "increment") obj.scale.current += action.amount;
                         if (action.frame === "multiply"){
-                            obj.scale.destination = obj.scale.current * action.amount;
+                            obj.scale.current = obj.scale.current * action.amount;
                         }
-                        if (action.frame === "absolute")  obj.scale.destination =  action.amount;
+                        if (action.frame === "absolute")  obj.scale.current =  action.amount;
+                    });
+                }
+                if (action.type === 'moveobject'){
+                    act.data.objects.forEach(function(obj){
+                        if (obj.name === undefined) return;
+                        if (obj.name !== action.name) return;
+                        if (action.frame === "absolute") obj.position = action.amount.slice();
+                        if (action.frame === "relative"){
+                            obj.position.x += action.amount.x;
+                            obj.position.y += action.amount.y;
+                        }
                     });
                 }
             });
         });
-
     }
+
 
     function loadInto(url, place){
         function reqListener () {

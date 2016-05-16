@@ -36,3 +36,29 @@ a{
     color: black;
     font-weight: bold;
 }
+
+.locationbank{
+    float: left;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.title_a{
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1.25em;
+}
+.title_b{
+    text-align: center;
+    font-size: 1.75em;
+    font-weight: bold;
+}
+
+.bottomlinks{
+    margin-left:auto;
+    margin-right:auto;
+}
+.bottomlinks td{
+    padding-left: 20px;
+    padding-right: 20px;
+}
