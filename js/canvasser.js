@@ -1,3 +1,6 @@
+//TODO: Check is mouse down when exits cause right now it keeps moving once you get back in
+
+
 function initCanvasser(vari, datafile){
     window[vari] = new canvasser(datafile);
 }
@@ -31,6 +34,8 @@ function canvasser(dataFile){
         act.canvas.addEventListener('mousemove', getMousePos, false);
         act.canvas.addEventListener('mousedown', mouseDown, false);
         act.canvas.addEventListener('mouseup', mouseUp, false);
+        act.canvas.addEventListener('mouseleave', mouseLeave, false);
+        act.canvas.addEventListener('onmouseenter', mouseEnter, false);
 
         act.data.images.forEach(function(image){
             var imageObj = new Image();
@@ -52,6 +57,7 @@ function canvasser(dataFile){
 
     function interaction(){
         this.position     = {x:0, y:0};
+        this.prevPosition = {x:0, y:0};
         this.canvas       = null;
         this.context      = null;
         this.currentTime  = null;
@@ -65,13 +71,12 @@ function canvasser(dataFile){
         this.mouseDownCnt = 0;
         this.clickLeft    = false;
         this.external     = false;
+        this.mode         = "none";
     }
 
     this.external = function(cList){
         act.external = true;
-        console.log(act.mouseOver)
         cList.forEach(function(cmd){
-            console.log(cmd);
             if (cmd.command === "selectonly"){
                     act.mouseOver = []
                     act.data.objects.forEach(function(obj){
@@ -80,12 +85,13 @@ function canvasser(dataFile){
             }
         });
         actions();
-        console.log(act.mouseOver)
     }
 
     function loop(){
+        console.log(act.mode +  act.mouseDownCnt);
         if (act.mouseDown){
             act.mouseDownCnt ++;
+            if (act.position.x !== act.prevPosition.x && act.position.y !== act.prevPosition.y && act.mouseDownCnt > 2) act.mode = "drag";
             actions();
         }
         act.context.clearRect(0,0,act.canvas.width,act.canvas.height);
@@ -131,6 +137,7 @@ function canvasser(dataFile){
             }
         });
 
+        act.prevPosition = {x:act.position.x, y:act.position.y};
         window.requestAnimationFrame(loop);
     }
 
@@ -149,10 +156,11 @@ function canvasser(dataFile){
         var sizer = scale * par.scale;
         ctx.beginPath();
         shapeData.forEach(function(shape){
-            if (shape.type === "move")   ctx.moveTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
-            if (shape.type === "arc")    ctx.arc(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.radius*sizer, shape.startangle, shape.endangle, shape.counterclockwise);
-            if (shape.type === "bcurve") ctx.bezierCurveTo(origin.x+shape.offseta.x*sizer, origin.y+shape.offseta.y*sizer, origin.x+shape.offsetb.x*sizer, origin.y+shape.offsetb.y*sizer, origin.x+shape.offsetc.x*sizer, origin.y+shape.offsetc.y*sizer);
-            if (shape.type === "line")   ctx.lineTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+            if (shape.type === "move")      ctx.moveTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+            if (shape.type === "rect")      ctx.rect(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.width*sizer,shape.height*sizer);
+            if (shape.type === "arc")       ctx.arc(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.radius*sizer, shape.startangle, shape.endangle, shape.counterclockwise);
+            if (shape.type === "bcurve")    ctx.bezierCurveTo(origin.x+shape.offseta.x*sizer, origin.y+shape.offseta.y*sizer, origin.x+shape.offsetb.x*sizer, origin.y+shape.offsetb.y*sizer, origin.x+shape.offsetc.x*sizer, origin.y+shape.offsetc.y*sizer);
+            if (shape.type === "line")      ctx.lineTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
             if (shape.type === "linewidth") ctx.lineWidth = shape.width*sizer;
             if (shape.type === "fillStyle") {
                 if (color === null) ctx.fillStyle = shape.color;
@@ -183,20 +191,37 @@ function canvasser(dataFile){
     }
 
     function mouseUp(){
-        act.mouseDown = false;
+        act.mode         = "none";
+        act.mouseDown    = false;
+        act.mouseDownCnt = 0;
+    }
+
+    function mouseEnter(){
+        act.mode         = "none";
+        act.mouseDown    = false;
+        act.mouseDownCnt = 0;
+    }
+
+
+    function mouseLeave(){
+        act.mode         = "none";
+        act.mouseDown    = false;
         act.mouseDownCnt = 0;
     }
 
     function mouseDown(event){
-        act.external = false;
-        act.mouseDown = true;
-        act.mouseDOwnCnt = 0;
+        act.mode         = "click";
+        act.external     = false;
+        act.mouseDown    = true;
+        act.mouseDownCnt = 0;
     }
 
     function actions(){
         act.mouseOver.forEach(function(over){
-            if (over.clicklist === undefined) return;
-            over.clicklist.forEach(function(action){
+            console.log(act.mode+"list " + act.position.x + " " + act.position.y + " " + act.prevPosition.x+ " " + act.prevPosition.y);
+            if (over[act.mode+"list"] === undefined) return;
+
+            over[act.mode+"list"].forEach(function(action){
                 if (action.type === 'console'){
                     console.log(action.text);
                 }
@@ -212,6 +237,15 @@ function canvasser(dataFile){
                     if (target !== undefined && source !== undefined){
                         target.innerHTML = source.innerHTML;
                     }
+                }
+                if (action.type === "slideobject"){
+                    act.data.objects.forEach(function(obj){
+                        if (obj.name === undefined) return;
+                        if (obj.name === action.name) {
+                            obj.position.x += act.position.x - act.prevPosition.x;
+                            obj.position.y += act.position.y - act.prevPosition.y
+                        }
+                    });
                 }
                 if (action.type === 'groupvis'){
                     act.data.objects.forEach(function(obj){
