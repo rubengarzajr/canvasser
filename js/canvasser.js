@@ -78,17 +78,19 @@ function canvasser(dataFile){
         act.external = true;
         cList.forEach(function(cmd){
             if (cmd.command === "selectonly"){
-                    act.mouseOver = []
+                    act.mouseOver = [];
+                    act.mode = "click";
                     act.data.objects.forEach(function(obj){
                     if (obj.name === cmd.item) act.mouseOver.push(obj);
                 });
             }
         });
+        
         actions();
     }
 
     function loop(){
-        console.log(act.mode +  act.mouseDownCnt);
+//        console.log(act.mode +  act.mouseDownCnt);
         if (act.mouseDown){
             act.mouseDownCnt ++;
             if (act.position.x !== act.prevPosition.x && act.position.y !== act.prevPosition.y && act.mouseDownCnt > 2) act.mode = "drag";
@@ -218,7 +220,7 @@ function canvasser(dataFile){
 
     function actions(){
         act.mouseOver.forEach(function(over){
-            console.log(act.mode+"list " + act.position.x + " " + act.position.y + " " + act.prevPosition.x+ " " + act.prevPosition.y);
+//            console.log(act.mode+"list " + act.position.x + " " + act.position.y + " " + act.prevPosition.x+ " " + act.prevPosition.y);
             if (over[act.mode+"list"] === undefined) return;
 
             over[act.mode+"list"].forEach(function(action){
