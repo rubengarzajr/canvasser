@@ -72,6 +72,7 @@ function canvasser(dataFile){
         this.clickLeft    = false;
         this.external     = false;
         this.mode         = "none";
+        this.dragging     = null;
     }
 
     this.external = function(cList){
@@ -85,16 +86,24 @@ function canvasser(dataFile){
                 });
             }
         });
-        
+
         actions();
     }
 
     function loop(){
-//        console.log(act.mode +  act.mouseDownCnt);
         if (act.mouseDown){
             act.mouseDownCnt ++;
-            if (act.position.x !== act.prevPosition.x && act.position.y !== act.prevPosition.y && act.mouseDownCnt > 2) act.mode = "drag";
+            if (act.position.x !== act.prevPosition.x && act.position.y !== act.prevPosition.y && act.mouseDownCnt > 2) {
+                act.mode = "drag";
+                act.canvas.style.cursor = "move";
+            }
             actions();
+            if (act.mode === "click") document.body.style.cursor.cursor = "default";
+            if (act.mode === "drag")  document.body.style.cursor.cursor = "move";
+        }
+        else
+        {
+            act.canvas.style.cursor = "default";
         }
         act.context.clearRect(0,0,act.canvas.width,act.canvas.height);
         act.context.fillStyle    = "white";
@@ -102,17 +111,6 @@ function canvasser(dataFile){
         if (!act.external) act.mouseOver = [];
 
         act.data.objects.forEach(function(obj){
-            // TODO: Add in fudge so null scale destination
-            if (obj.scale.destination != null){
-                if (obj.scale.current > obj.scale.destination){
-                    obj.scale.current -= obj.scale.rate;
-                }
-                if (obj.scale.current < obj.scale.destination){
-                    obj.scale.current += obj.scale.rate;
-                }
-                if (obj.scale.current <= 0) obj.scale.current = 0.1
-            }
-            if (!obj.show) return;
             if (obj.type === "shape"){
                 if (obj.parent !== undefined){
                     if (obj.parent.update){
@@ -123,19 +121,50 @@ function canvasser(dataFile){
                         });
                     }
                 }
-                var posCheck = drawShapes(act, obj.parent.object, obj.position, act.data.shapes[obj.shape], obj.color, obj.testp, act.position, obj.scale.current);
-                if (!obj.testp) return;
-                if (posCheck) act.mouseOver.push(obj);
+                if (obj.show){
+                    var posCheck = drawShapes(act, obj.parent.object, obj.position.current, act.data.shapes[obj.shape], obj.color, obj.testp, act.position, obj.scale.current);
+                    if (!obj.testp) return;
+                    if (posCheck) act.mouseOver.push(obj);
+                }
             }
             if (obj.type === "image"){
                 if (act.imageList[obj.image] === undefined) return;
-                var pos = {"x":obj.position.x, "y":obj.position.y};
-                if (obj.origin === "center") pos={"x":parseInt(pos.x-act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":parseInt(pos.y-act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
-                act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
-                if (!obj.testp) return;
 
-                var pixelData_img = act.imageList[obj.image].context.getImageData(act.position.x-obj.position.x, act.position.y-obj.position.y, 1, 1).data;
-		if (pixelData_img[3] != 0) act.mouseOver.push(obj);
+                if (obj.position.destination !== undefined){
+                    var dist = Math.sqrt( (obj.position.destination.x-obj.position.current.x)*(obj.position.destination.x-obj.position.current.x) + (obj.position.destination.y-obj.position.current.y)*(obj.position.destination.y-obj.position.current.y) );
+                    if (dist < obj.position.rate) {
+                        obj.position.current = {x:obj.position.destination.x, y:obj.position.destination.y};
+                        obj.position.destination = undefined;
+                    }
+                    else{
+                        var vec = {x:obj.position.destination.x-obj.position.current.x, y:obj.position.destination.y-obj.position.current.y};
+                        var magnitude = Math.sqrt(vec.x * vec.x + vec.y * vec.y);
+                        vec = {x:parseInt(vec.x/magnitude*obj.position.rate), y:parseInt(vec.y/magnitude*obj.position.rate)};
+                        obj.position.current = {x:obj.position.current.x + vec.x, y:obj.position.current.y + vec.y};
+                    }
+
+                }
+
+                if (obj.scale.destination !== undefined){
+                    if (obj.scale.current < obj.scale.destination) obj.scale.current += obj.scale.rate;
+                    if (obj.scale.current > obj.scale.destination) obj.scale.current -= obj.scale.rate;
+
+                    if (obj.scale.current === obj.scale.destination || obj.scale.current + obj.scale.rate >= obj.scale.destination && obj.scale.current - obj.scale.rate <= obj.scale.destination) {
+                        obj.scale.current = obj.scale.destination;
+                        if (obj.scale.hideafter) obj.show = false;
+                        obj.scale.destination = undefined;
+                        obj.scale.hideafter = false;
+                    }
+                }
+
+                var pos = {"x":obj.position.current.x, "y":obj.position.current.y};
+                if (obj.origin === "center") pos={"x":parseInt(pos.x-act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":parseInt(pos.y-act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
+                if (obj.show){
+                    act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
+                    if (!obj.testp) return;
+                    var pixelData_img = act.imageList[obj.image].context.getImageData(act.position.x-pos.x, act.position.y-pos.y, 1, 1).data;
+                    if (pixelData_img[3] != 0) act.mouseOver.push(obj);
+                }
             }
         });
 
@@ -149,7 +178,7 @@ function canvasser(dataFile){
         var colorIndex = 0;
         var par = {"x":0,"y":0, "scale":1};
         if (parent !== undefined) {
-            par = {"x":parent.position.x, "y":parent.position.y, "scale":parent.scale.current};
+            par = {"x":parent.position.current.x, "y":parent.position.current.y, "scale":parent.scale.current};
         }
         var origin = {
             "x":parseInt(pos.x * par.scale + par.x ),
@@ -196,6 +225,8 @@ function canvasser(dataFile){
         act.mode         = "none";
         act.mouseDown    = false;
         act.mouseDownCnt = 0;
+        if (act.dragging !== null) console.log(act.dragging.drop);
+        act.dragging     = null;
     }
 
     function mouseEnter(){
@@ -204,14 +235,14 @@ function canvasser(dataFile){
         act.mouseDownCnt = 0;
     }
 
-
     function mouseLeave(){
         act.mode         = "none";
         act.mouseDown    = false;
         act.mouseDownCnt = 0;
+        act.dragging     = null;
     }
 
-    function mouseDown(event){
+    function mouseDown(){
         act.mode         = "click";
         act.external     = false;
         act.mouseDown    = true;
@@ -220,10 +251,14 @@ function canvasser(dataFile){
 
     function actions(){
         act.mouseOver.forEach(function(over){
-//            console.log(act.mode+"list " + act.position.x + " " + act.position.y + " " + act.prevPosition.x+ " " + act.prevPosition.y);
             if (over[act.mode+"list"] === undefined) return;
 
             over[act.mode+"list"].forEach(function(action){
+                if (action.type === 'cleardown'){
+                    act.mode         = "none";
+                    act.mouseDown    = false;
+                    act.mouseDownCnt = 0;
+                }
                 if (action.type === 'console'){
                     console.log(action.text);
                 }
@@ -243,9 +278,11 @@ function canvasser(dataFile){
                 if (action.type === "slideobject"){
                     act.data.objects.forEach(function(obj){
                         if (obj.name === undefined) return;
+                        if (act.dragging !== null && obj.name !== act.dragging.name) return;
                         if (obj.name === action.name) {
-                            obj.position.x += act.position.x - act.prevPosition.x;
-                            obj.position.y += act.position.y - act.prevPosition.y
+                            obj.position.current.x += act.position.x - act.prevPosition.x;
+                            obj.position.current.y += act.position.y - act.prevPosition.y;
+                            act.dragging = {name:obj.name, drop:obj.droplist};
                         }
                     });
                 }
@@ -307,11 +344,45 @@ function canvasser(dataFile){
                     act.data.objects.forEach(function(obj){
                         if (obj.name === undefined) return;
                         if (obj.name !== action.name) return;
-                        if (action.frame === "absolute") obj.position = action.amount.slice();
-                        if (action.frame === "relative"){
-                            obj.position.x += action.amount.x;
-                            obj.position.y += action.amount.y;
+                        if (action.frame === "absolute") {
+                            obj.position.current = {x:action.amount.x, y:action.amount.y};
                         }
+                        if (action.frame === "relative"){
+                            obj.position.current.x += action.amount.x;
+                            obj.position.current.y += action.amount.y;
+                        }
+                    });
+                }
+                if (action.type === 'destscale'){
+                    act.data.objects.forEach(function(obj){
+                        if (action.filter === undefined) return;
+                        if (action.filter === "group"){
+                            if (obj.group.indexOf(action.name) < 0) return;
+                        }
+                        if (action.filter === "name"){
+                            if (obj.name !== action.name) return;
+                        }
+                        obj.scale.destination = action.destination;
+                        obj.scale.rate = action.rate;
+                        obj.scale.hideafter = action.hideafter;
+                    });
+                }
+                if (action.type === 'destposition'){
+                    act.data.objects.forEach(function(obj){
+                        if (action.filter === undefined) return;
+                        if (action.filter === "group"){
+                            if (obj.group.indexOf(action.name) < 0) return;
+                        }
+                        if (action.filter === "name"){
+                            if (obj.name !== action.name) return;
+                        }
+                        if (typeof action.destination === "string"){
+                            obj.position.destination = {x:obj.position[action.destination].x, y:obj.position[action.destination].y};
+                        }
+                        else{
+                            obj.position.destination = {x:action.destination.x, y:action.destination.y};
+                        }
+                        obj.position.rate = action.rate;
                     });
                 }
             });

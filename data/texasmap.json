@@ -1,0 +1,80 @@
+{
+        "objects":[
+            {"type":"shape", "show":true, "group":[],  "name":"bk", "shape":"sq",      "scale":{"current":1}, "position":{"current":{"x":0,"y":0}}, "parent":{}, "color":["rgba(250,250,250,1)"], "defaultcolor":["rgba(250,250,250,1)"], "selectcolor":["rgba(250,250,250,1)"], "testp":true, "draglist":[{"type":"slideobject","name":"texasmap"}], "clicklist":[]},
+            {"type":"image", "show":true, "group":["map","images"], "name":"texasmap", "image":"texas",     "scale":{"current":0.4}, "position":{"current":{"x": 360,"y": 350}}, "origin":"center",  "testp":true, "clicklist":[{"type":"console","text":"maaap"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_a",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x":-140,"y":-240}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_a"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_a","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_b",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x":-300,"y":-425}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_b"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_b","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_c",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x":-350,"y":-230}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_c"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_c","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_d",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x":-300,"y":-513}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_d"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_d","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_e",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x":-440,"y": 240}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_e"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_e","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_f",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x":-200,"y": 125}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_f"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_f","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_g",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x":-110,"y": 230}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_g"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_g","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_h",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x":-120,"y": 113}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_h"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_h","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_i",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 400,"y": 140}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_i"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_i","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_j",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 300,"y": 225}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_j"},    {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_j","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_k",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 240,"y": 670}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_k"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_k","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_l",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x":   0,"y":   0}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_l"},  {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_l","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_m",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 100,"y":   0}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_m"},  {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_m","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_n",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 822,"y":  42}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_n"},    {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_n","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_o",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 210,"y": 530}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_o"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_o","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_p",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 440,"y": 313}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_p"},  {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_p","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_q",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 600,"y":   0}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_q"},  {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_q","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_r",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 522,"y":  42}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_r"},    {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_r","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_s",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 710,"y": 130}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_s"}, {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_s","source":"selectcolor"}]},
+            {"type":"shape", "show":true, "group":["map","drops"],  "name":"drop_t",   "shape":"drop",      "scale":{"current":1}, "position":{"current":{"x": 140,"y": 650}}, "parent":{"name":"texasmap","update":true}, "color":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)", "rgba(255,255,255,1)"], "selectcolor":["rgba(243,243,243,1)", "rgba(217,81,1,1)"], "testp":true, "clicklist":[{"type":"copyelement", "target":"details","source":"drop_t"},  {"type":"groupcolor","name":"drops","source":"default"}, {"type":"objectcolor","name":"drop_t","source":"selectcolor"}]},
+            {"type":"image", "show":true, "group":["images"],       "name":"big",      "image":"icon_plus", "scale":{"current":1}, "position":{"current":{"x":  10,"y":  10}}, "origin":"default", "testp":true, "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":1.025}]},
+            {"type":"image", "show":true, "group":["images"],       "name":"small",    "image":"icon_minus","scale":{"current":1}, "position":{"current":{"x":  60,"y":  10}}, "origin":"default", "testp":true, "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]}
+        ],
+        "images":[
+            {"id": "texas",      "url":"image/tx-map-rough.png"},
+            {"id": "icon_plus",  "url":"image/icon_plus.png"},
+            {"id": "icon_minus", "url":"image/icon_minus.png"}
+        ],
+	"shapes": {
+            "sq":[
+                {"type":"rect","offset":{"x":0,"y": 0},"width":720,"height":700},
+                {"type":"fillStyle", "color":"yellow"},
+                {"type":"fill"},
+                {"type":"ptest"}
+            ],
+            "drop":[
+                {"type":"line","offset":{"x":0,"y": 0}},
+                {"type":"arc","offset":{"x":0,"y":-50}, "radius": 20, "startangle":2.826, "endangle":6.594, "counterclockwise":false },
+                {"type":"line","offset":{"x":0,"y":0}},
+                {"type":"linewidth", "width":1},
+                {"type":"fillStyle", "color":"purple"},
+                {"type":"fill"},
+                {"type":"ptest"},
+                {"type":"close"},
+                {"type":"begin"},
+                {"type":"arc","offset":{"x":0,"y":-50}, "radius": 10, "startangle":0, "endangle":6.24, "counterclockwise":false },
+                {"type":"fillStyle", "color":"yellow"},
+                {"type":"fill"}
+            ],
+            "cloud":[
+                {"type":"move","offset":{"x":170,"y":80}},
+                {"type":"bcurve","offseta":{"x":130,"y":100},"offsetb":{"x":130,"y":150},"offsetc":{"x":230,"y":150}},
+                {"type":"bcurve","offseta":{"x":250,"y":180},"offsetb":{"x":320,"y":180},"offsetc":{"x":340,"y":150}},
+                {"type":"bcurve","offseta":{"x":420,"y":150},"offsetb":{"x":420,"y":120},"offsetc":{"x":390,"y":100}},
+                {"type":"bcurve","offseta":{"x":430,"y": 40},"offsetb":{"x":370,"y": 30},"offsetc":{"x":340,"y": 50}},
+                {"type":"bcurve","offseta":{"x":320,"y":  5},"offsetb":{"x":250,"y": 20},"offsetc":{"x":250,"y": 50}},
+                {"type":"bcurve","offseta":{"x":200,"y":  5},"offsetb":{"x":150,"y": 20},"offsetc":{"x":170,"y": 80}},
+                {"type":"ptest"},
+                {"type":"linewidth", "width":4},
+                {"type":"strokestyle", "color":"rgba(255,165,0,1)"},
+                {"type":"stroke"},
+                {"type":"close"},
+                {"type":"begin"},
+                {"type":"arc", "offset":{"x":200,"y":0}, "radius": 10, "startangle":0, "endangle":6.24, "counterclockwise":false },
+                {"type":"fillStyle", "color":"yellow"},
+                {"type":"fill"}
+            ]
+
+	},
+	"settings": {
+		"canvaswidth": "720",
+		"canvasheight": "700",
+		"canvasdomname": "activity",
+                "canvasparent": "canvasholder"
+	}
+}
