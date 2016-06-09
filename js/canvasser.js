@@ -1,10 +1,8 @@
-//TODO: Check is mouse down when exits cause right now it keeps moving once you get back in
-
+// Canvasser v0.2 rubengarzajr@gmail.com
 
 function initCanvasser(vari, datafile){
     window[vari] = new canvasser(datafile);
 }
-
 
 function canvasser(dataFile){
     requestJSON(dataFile, init);
@@ -52,6 +50,11 @@ function canvasser(dataFile){
         imageObj.src = image.url;
         });
 
+        act.vars = {};
+        act.data.vars.forEach(function(v){
+           act.vars[v.name] = v.value;
+        });
+
         loop();
     }
 
@@ -66,7 +69,7 @@ function canvasser(dataFile){
         this.canvasSize   = {x:0, y:0};
         this.curveList    = [];
         this.imageList    = [];
-        this.mouseOver    = [];
+        this.applyAction  = [];
         this.mouseDown    = false;
         this.mouseDownCnt = 0;
         this.clickLeft    = false;
@@ -79,10 +82,10 @@ function canvasser(dataFile){
         act.external = true;
         cList.forEach(function(cmd){
             if (cmd.command === "selectonly"){
-                    act.mouseOver = [];
+                    act.applyAction = [];
                     act.mode = "click";
                     act.data.objects.forEach(function(obj){
-                    if (obj.name === cmd.item) act.mouseOver.push(obj);
+                    if (obj.name === cmd.item) act.applyAction.push(obj);
                 });
             }
         });
@@ -101,14 +104,11 @@ function canvasser(dataFile){
             if (act.mode === "click") document.body.style.cursor.cursor = "default";
             if (act.mode === "drag")  document.body.style.cursor.cursor = "move";
         }
-        else
-        {
+        else{
             act.canvas.style.cursor = "default";
         }
         act.context.clearRect(0,0,act.canvas.width,act.canvas.height);
-        act.context.fillStyle    = "white";
-        act.context.fillRect(0,0,act.canvas.width,act.canvas.height);
-        if (!act.external) act.mouseOver = [];
+        if (!act.external) act.applyAction = [];
 
         act.data.objects.forEach(function(obj){
             if (obj.type === "shape"){
@@ -124,7 +124,7 @@ function canvasser(dataFile){
                 if (obj.show){
                     var posCheck = drawShapes(act, obj.parent.object, obj.position.current, act.data.shapes[obj.shape], obj.color, obj.testp, act.position, obj.scale.current);
                     if (!obj.testp) return;
-                    if (posCheck) act.mouseOver.push(obj);
+                    if (posCheck) act.applyAction.push(obj);
                 }
             }
             if (obj.type === "image"){
@@ -163,7 +163,7 @@ function canvasser(dataFile){
                     act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
                     if (!obj.testp) return;
                     var pixelData_img = act.imageList[obj.image].context.getImageData(act.position.x-pos.x, act.position.y-pos.y, 1, 1).data;
-                    if (pixelData_img[3] != 0) act.mouseOver.push(obj);
+                    if (pixelData_img[3] != 0) act.applyAction.push(obj);
                 }
             }
         });
@@ -225,8 +225,12 @@ function canvasser(dataFile){
         act.mode         = "none";
         act.mouseDown    = false;
         act.mouseDownCnt = 0;
-        if (act.dragging !== null) console.log(act.dragging.drop);
-        act.dragging     = null;
+        if (act.dragging !== null){
+            act.applyAction = [act.dragging];
+            act.mode        = "drop";
+            act.dragging    = null;
+            actions();
+        }
     }
 
     function mouseEnter(){
@@ -250,7 +254,7 @@ function canvasser(dataFile){
     }
 
     function actions(){
-        act.mouseOver.forEach(function(over){
+        act.applyAction.forEach(function(over){
             if (over[act.mode+"list"] === undefined) return;
 
             over[act.mode+"list"].forEach(function(action){
@@ -262,11 +266,33 @@ function canvasser(dataFile){
                 if (action.type === 'console'){
                     console.log(action.text);
                 }
+                if (action.type === 'conditional'){
+                    if (action.check === 'position'){
+                        var item = undefined;
+                        var pos  = undefined;
+                        act.data.objects.forEach(function(obj){
+                            if (obj.name === action.itemtocheck) item = obj;
+                            if (obj.name === action.position)    testp = obj;
+                        });
+                        var pos = {"x":item.position.current.x, "y":item.position.current.y};
+                        var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
+                        if (pixelData_img[3] != 0) {
+                            act.applyAction.push(testp);
+                            act.mode = 'true';
+                            actions();
+                        }
+                    }
+                }
                 if (action.type === 'url'){
                     var target = document.getElementById(action.target);
                     if (target != undefined){
                         loadInto(action.url, target);
                     }
+                }
+                if (action.type === 'modvar'){
+                    console.log(act.vars);
+                    if (action.operation === "add") act.vars[action.name] += action.amount;
+                    console.log(act.vars);
                 }
                 if (action.type === 'copyelement'){
                     var target = document.getElementById(action.target);
@@ -282,7 +308,7 @@ function canvasser(dataFile){
                         if (obj.name === action.name) {
                             obj.position.current.x += act.position.x - act.prevPosition.x;
                             obj.position.current.y += act.position.y - act.prevPosition.y;
-                            act.dragging = {name:obj.name, drop:obj.droplist};
+                            act.dragging = obj;
                         }
                     });
                 }
@@ -305,7 +331,7 @@ function canvasser(dataFile){
                 if (action.type === 'objectvis'){
                     act.data.objects.forEach(function(obj){
                         if (obj.name === undefined) return;
-                        if (obj.name === action.name) obj.show = action.show
+                        if (obj.name === action.name) obj.show = action.show;
                     });
                 }
                 if (action.type === 'objectcolor'){
@@ -387,14 +413,14 @@ function canvasser(dataFile){
                 }
             });
         });
+        act.applyAction = [];
     }
 
 
     function loadInto(url, place){
-        function reqListener () {
+        function reqListener(){
             place.innerHTML = this.responseText;
         }
-
         var oReq = new XMLHttpRequest();
         oReq.addEventListener("load", reqListener);
         oReq.open("GET", url);
