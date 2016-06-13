@@ -6,7 +6,8 @@ function initCanvasser(vari, datafile){
 
 function canvasser(dataFile){
     requestJSON(dataFile, init);
-    var act = new interaction();
+    var act      = new interaction();
+    var pManager = new particleManager();
 
     function requestJSON(fileNamePath, returnFunction)
     {
@@ -23,6 +24,8 @@ function canvasser(dataFile){
     }
 
     function init(data){
+        pManager.create({name:"test1", position:{x:100,y:100}, on:true, count:100, image:"p", genType:"burst"});
+
         act.canvas  = document.createElement('canvas');
         act.context = act.canvas.getContext('2d');
         act.canvas.width  = data.settings.canvaswidth;
@@ -51,10 +54,11 @@ function canvasser(dataFile){
         });
 
         act.vars = {};
-        act.data.vars.forEach(function(v){
-           act.vars[v.name] = v.value;
-        });
-
+        if (act.data.vars != undefined){
+            act.data.vars.forEach(function(v){
+               act.vars[v.name] = v.value;
+            });
+        }
         loop();
     }
 
@@ -76,6 +80,73 @@ function canvasser(dataFile){
         this.external     = false;
         this.mode         = "none";
         this.dragging     = null;
+    }
+
+    function particleManager(){
+        var pSystemList = [];
+        this.create = function(obj){
+            var newPSystem = new pSystem();
+            newPSystem.name      = obj.name;
+            newPSystem.position  = obj.position;
+            newPSystem.on        = obj.on;
+            newPSystem.count     = obj.count;
+            newPSystem.image     = obj.image;
+
+            if (obj.genType === "burst"){
+                for (cnt =0; cnt < obj.count; cnt ++){
+                    var rndDir = {x:randInterval(-0.5,0.5),y:randInterval(-0.5,0.5)};
+                    var unit = getUnit(rndDir);
+                    newPSystem.createP({position:{x:400,y:400},rotation:0, dirNorm:unit, speed:{position:randInterval(4.5,7.5),rotation:0}, life:100});
+                }
+            }
+            pSystemList.push(newPSystem);
+
+        }
+
+        this.update = function(){
+            pSystemList.forEach(function(pSystem){
+                if (act.imageList[pSystem.image] !== undefined){
+                    var imgDim = {x:act.imageList[pSystem.image].imageData.naturalWidth/2, y:act.imageList[pSystem.image].imageData.naturalHeight/2};
+                    pSystem.pList.forEach(function(p){
+                        p.life --;
+                        p.position ={x:p.position.x+p.dirNorm.x*p.speed.position, y: p.position.y+p.dirNorm.y*p.speed.position}
+                        var scale = 1;
+                        if (p.life > 0) {
+                            var pos={"x":parseInt(p.position.x-imgDim.x*scale), "y":parseInt(p.position.y-imgDim.y*scale)};
+                            act.context.drawImage(act.imageList[pSystem.image].imageData, pos.x, pos.y, act.imageList[pSystem.image].imageData.naturalWidth*scale, act.imageList[pSystem.image].imageData.naturalHeight*scale);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function pSystem(){
+        this.name         = "";
+        this.position     = {x:0,y:0};
+        this.on           = false;
+        this.count        = 0;
+        this.image        = null;
+        this.forces       = [];
+        this.pList        = [];
+
+        function pTemplate(){
+            this.position     = {x:0,y:0};
+            this.rotation     = 0;
+            this.dirNorm      = {x:0,y:0};
+            this.speed        = {position:0, rotation:0};
+            this.life         = 0;
+        }
+
+        this.createP = function(obj){
+            var p = new pTemplate();
+            p.position = obj.position;
+            p.rotation = obj.rotation;
+            p.dirNorm  = obj.dirNorm;
+            p.speed    = obj.speed;
+            p.life     = obj.life;
+            this.pList.push(p);
+        }
     }
 
     this.external = function(cList){
@@ -111,8 +182,7 @@ function canvasser(dataFile){
         if (!act.external) act.applyAction = [];
 
         act.data.objects.forEach(function(obj){
-            if (obj.type === "shape"){
-                if (obj.parent !== undefined){
+            if (obj.parent !== undefined){
                     if (obj.parent.update){
                         act.data.objects.forEach(function(parent){
                             if (parent.name !== obj.parent.name) return;
@@ -121,14 +191,24 @@ function canvasser(dataFile){
                         });
                     }
                 }
+
+            if (obj.type === "shape"){
                 if (obj.show){
                     var posCheck = drawShapes(act, obj.parent.object, obj.position.current, act.data.shapes[obj.shape], obj.color, obj.testp, act.position, obj.scale.current);
                     if (!obj.testp) return;
                     if (posCheck) act.applyAction.push(obj);
                 }
             }
+
             if (obj.type === "image"){
                 if (act.imageList[obj.image] === undefined) return;
+
+                if (obj.parent !== undefined) {
+                    obj.position.current = {
+                        "x":obj.parent.object.position.current.x + (obj.position.offset !== undefined ? obj.position.offset.x : 0),
+                        "y":obj.parent.object.position.current.y + (obj.position.offset !== undefined ? obj.position.offset.y : 0),
+                        "scale":obj.parent.object.scale.current};
+                }
 
                 if (obj.position.destination !== undefined){
                     var dist = Math.sqrt( (obj.position.destination.x-obj.position.current.x)*(obj.position.destination.x-obj.position.current.x) + (obj.position.destination.y-obj.position.current.y)*(obj.position.destination.y-obj.position.current.y) );
@@ -138,7 +218,7 @@ function canvasser(dataFile){
                     }
                     else{
                         var vec = {x:obj.position.destination.x-obj.position.current.x, y:obj.position.destination.y-obj.position.current.y};
-                        var magnitude = Math.sqrt(vec.x * vec.x + vec.y * vec.y);
+                        var magnitude = getMagnitude(vec);
                         vec = {x:parseInt(vec.x/magnitude*obj.position.rate), y:parseInt(vec.y/magnitude*obj.position.rate)};
                         obj.position.current = {x:obj.position.current.x + vec.x, y:obj.position.current.y + vec.y};
                     }
@@ -167,7 +247,7 @@ function canvasser(dataFile){
                 }
             }
         });
-
+        pManager.update();
         act.prevPosition = {x:act.position.x, y:act.position.y};
         window.requestAnimationFrame(loop);
     }
@@ -256,7 +336,6 @@ function canvasser(dataFile){
     function actions(){
         act.applyAction.forEach(function(over){
             if (over[act.mode+"list"] === undefined) return;
-
             over[act.mode+"list"].forEach(function(action){
                 if (action.type === 'cleardown'){
                     act.mode         = "none";
@@ -268,8 +347,8 @@ function canvasser(dataFile){
                 }
                 if (action.type === 'conditional'){
                     if (action.check === 'position'){
-                        var item = undefined;
-                        var pos  = undefined;
+                        var item  = undefined;
+                        var testp = undefined;
                         act.data.objects.forEach(function(obj){
                             if (obj.name === action.itemtocheck) item = obj;
                             if (obj.name === action.position)    testp = obj;
@@ -277,7 +356,14 @@ function canvasser(dataFile){
                         var pos = {"x":item.position.current.x, "y":item.position.current.y};
                         var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
                         if (pixelData_img[3] != 0) {
-                            act.applyAction.push(testp);
+                            act.applyAction = [testp];
+                            act.mode = 'true';
+                            actions();
+                        }
+                    }
+                    if (action.check === "var"){
+                        if (act.vars[action.itemtocheck] === action.value){
+                            act.applyAction = [over];
                             act.mode = 'true';
                             actions();
                         }
@@ -290,9 +376,7 @@ function canvasser(dataFile){
                     }
                 }
                 if (action.type === 'modvar'){
-                    console.log(act.vars);
                     if (action.operation === "add") act.vars[action.name] += action.amount;
-                    console.log(act.vars);
                 }
                 if (action.type === 'copyelement'){
                     var target = document.getElementById(action.target);
@@ -425,6 +509,23 @@ function canvasser(dataFile){
         oReq.addEventListener("load", reqListener);
         oReq.open("GET", url);
         oReq.send();
+    }
+
+    function getMagnitude(vector){
+        return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+    }
+    function getUnit(vector){
+        var mag = getMagnitude(vector);
+        return {x:vector.x/mag, y:vector.y/mag};
+    }
+
+    function randInterval(min,max)
+    {
+        return Math.random()*(max-min)+min;
+    }
+    function randIntervalInt(min,max)
+    {
+        return Math.floor(Math.random()*(max-min+1)+min);
     }
 }
 
