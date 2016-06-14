@@ -24,8 +24,6 @@ function canvasser(dataFile){
     }
 
     function init(data){
-        pManager.create({name:"test1", position:{x:100,y:100}, on:true, count:100, image:"p", genType:"burst"});
-
         act.canvas  = document.createElement('canvas');
         act.context = act.canvas.getContext('2d');
         act.canvas.width  = data.settings.canvaswidth;
@@ -82,39 +80,66 @@ function canvasser(dataFile){
         this.dragging     = null;
     }
 
+    pManager.create({name:"test1", position:{current:{x:0,y:100},destination:{x:800,y:200}, rate:6}, on:true, image:"p", genType:"burst", emitCounter:100, emitRate:10, pLife:{min:19, max:40 },pFadePercent:{in:25,out:90}});
+
     function particleManager(){
         var pSystemList = [];
         this.create = function(obj){
-            var newPSystem = new pSystem();
-            newPSystem.name      = obj.name;
-            newPSystem.position  = obj.position;
-            newPSystem.on        = obj.on;
-            newPSystem.count     = obj.count;
-            newPSystem.image     = obj.image;
-
-            if (obj.genType === "burst"){
-                for (cnt =0; cnt < obj.count; cnt ++){
-                    var rndDir = {x:randInterval(-0.5,0.5),y:randInterval(-0.5,0.5)};
-                    var unit = getUnit(rndDir);
-                    newPSystem.createP({position:{x:400,y:400},rotation:0, dirNorm:unit, speed:{position:randInterval(4.5,7.5),rotation:0}, life:100});
-                }
-            }
+            var newPSystem          = new pSystem();
+            newPSystem.name         = obj.name;
+            newPSystem.position     = obj.position;
+            newPSystem.on           = obj.on;
+            newPSystem.count        = obj.count;
+            newPSystem.image        = obj.image;
+            newPSystem.emitCounter  = obj.emitCounter;
+            newPSystem.emitRate     = obj.emitRate;
+            newPSystem.pLife        = obj.pLife;
+            newPSystem.pFadePercent = obj.pFadePercent;
             pSystemList.push(newPSystem);
 
         }
 
         this.update = function(){
             pSystemList.forEach(function(pSystem){
+                
+                if (pSystem.emitCounter > 0){
+                    pSystem.emitCounter --;
+                    for (cnt =0; cnt < pSystem.emitRate; cnt ++){
+                        var rndDir = {x:randInterval(-0.5,0.5),y:randInterval(-0.5,0.5)};
+                        var rndLife = randIntervalInt(pSystem.pLife.min,pSystem.pLife.max);
+                        var unit = getUnit(rndDir);
+                        pSystem.createP({position:pSystem.position.current,rotation:0, dirNorm:unit, speed:{position:randInterval(4.5,9.5),rotation:0}, life:{max:rndLife, current:rndLife}});
+                    }
+                }
+
+                var newVals                  = lerpTo(pSystem.position.current, pSystem.position.destination, pSystem.position.rate);
+                pSystem.position.current     = newVals.newCurrent;
+                pSystem.position.destination = newVals.newDestination;
+                
                 if (act.imageList[pSystem.image] !== undefined){
                     var imgDim = {x:act.imageList[pSystem.image].imageData.naturalWidth/2, y:act.imageList[pSystem.image].imageData.naturalHeight/2};
+                    var out = true;
                     pSystem.pList.forEach(function(p){
-                        p.life --;
-                        p.position ={x:p.position.x+p.dirNorm.x*p.speed.position, y: p.position.y+p.dirNorm.y*p.speed.position}
-                        var scale = 1;
-                        if (p.life > 0) {
+                        p.life.current --;
+                        if (p.life.current > 0) {
+                            
+                            p.position  = {x:p.position.x+p.dirNorm.x*p.speed.position, y: p.position.y+p.dirNorm.y*p.speed.position}
+                            var scale   = 1;
+                            var lifeCnt = p.life.max - p.life.current;
+                            var pcent   = lifeCnt / p.life.max;
+
+                            var alpha = 1;
+                            
+                            pSystem.image = "p"
+                            if (pcent*100 < pSystem.pFadePercent.in) alpha = lifeCnt / (p.life.max*(pSystem.pFadePercent.in*0.01));
+                            if (pcent*100 > pSystem.pFadePercent.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.pFadePercent.out*0.01));
+
                             var pos={"x":parseInt(p.position.x-imgDim.x*scale), "y":parseInt(p.position.y-imgDim.y*scale)};
+                            act.context.globalAlpha =  alpha;
                             act.context.drawImage(act.imageList[pSystem.image].imageData, pos.x, pos.y, act.imageList[pSystem.image].imageData.naturalWidth*scale, act.imageList[pSystem.image].imageData.naturalHeight*scale);
+                            act.context.globalAlpha = 1
                         }
+                        out = false;
                     });
                 }
             });
@@ -123,8 +148,10 @@ function canvasser(dataFile){
 
     function pSystem(){
         this.name         = "";
-        this.position     = {x:0,y:0};
+        this.position     = {current:{x:0,y:0}, destination:{x:0,y:0}};
         this.on           = false;
+        this.emitCounter  = 0;
+        this.emitRate     = 0;
         this.count        = 0;
         this.image        = null;
         this.forces       = [];
@@ -209,21 +236,9 @@ function canvasser(dataFile){
                         "y":obj.parent.object.position.current.y + (obj.position.offset !== undefined ? obj.position.offset.y : 0),
                         "scale":obj.parent.object.scale.current};
                 }
-
-                if (obj.position.destination !== undefined){
-                    var dist = Math.sqrt( (obj.position.destination.x-obj.position.current.x)*(obj.position.destination.x-obj.position.current.x) + (obj.position.destination.y-obj.position.current.y)*(obj.position.destination.y-obj.position.current.y) );
-                    if (dist < obj.position.rate) {
-                        obj.position.current = {x:obj.position.destination.x, y:obj.position.destination.y};
-                        obj.position.destination = undefined;
-                    }
-                    else{
-                        var vec = {x:obj.position.destination.x-obj.position.current.x, y:obj.position.destination.y-obj.position.current.y};
-                        var magnitude = getMagnitude(vec);
-                        vec = {x:parseInt(vec.x/magnitude*obj.position.rate), y:parseInt(vec.y/magnitude*obj.position.rate)};
-                        obj.position.current = {x:obj.position.current.x + vec.x, y:obj.position.current.y + vec.y};
-                    }
-
-                }
+                var newVals              = lerpTo(obj.position.current, obj.position.destination, obj.position.rate);
+                obj.position.current     = newVals.newCurrent;
+                obj.position.destination = newVals.newDestination;
 
                 if (obj.scale.destination !== undefined){
                     if (obj.scale.current < obj.scale.destination) obj.scale.current += obj.scale.rate;
@@ -527,5 +542,23 @@ function canvasser(dataFile){
     {
         return Math.floor(Math.random()*(max-min+1)+min);
     }
+    function lerpTo(inCurrent, inDestination, rate){
+        if (inDestination === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
+        var current     = inCurrent;
+        var destination = inDestination;
+        var dist = Math.sqrt( (destination.x-current.x)*(destination.x-current.x) + (destination.y-current.y)*(destination.y-current.y) );
+        if (dist < rate) {
+            current = {x:destination.x, y:destination.y};
+            destination = undefined;
+        }
+        else{
+            var vec = {x:destination.x-current.x, y:destination.y-current.y};
+            var magnitude = getMagnitude(vec);
+            vec = {x:parseInt(vec.x/magnitude*rate), y:parseInt(vec.y/magnitude*rate)};
+            current = {x:current.x + vec.x, y:current.y + vec.y};
+        }
+    return {newCurrent:current, newDestination:destination};
+    }
+    
 }
 
