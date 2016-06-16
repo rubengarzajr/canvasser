@@ -12,5 +12,6 @@
         <a href="texasmap.php">Map: Texas</a><br>
         <a href="caddo.php">Navigation: Caddo</a><br>
         <a href="dragdrop.php">Drag & Drop: Critters</a><br>
+        <a href="eforensics.php">eforensics</a><br>
     </body>
 </html>

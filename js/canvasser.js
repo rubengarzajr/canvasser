@@ -80,99 +80,103 @@ function canvasser(dataFile){
         this.dragging     = null;
     }
 
-    pManager.create({name:"test1", position:{current:{x:0,y:100},destination:{x:800,y:200}, rate:6}, on:true, image:"p", genType:"burst", emitCounter:100, emitRate:10, pLife:{min:19, max:40 },pFadePercent:{in:25,out:90}});
+    pManager.create({system:{name:"test1", position:{current:{x:0,y:400},destination:{x:600,y:100}, rate:8}, on:true, image:"p", genType:"burst", emitCounter:100, emitRate:3},particles:{life:{min:19, max:80 },fadePercent:{in:25,out:90},scale:{min:0.25,max:1.5},speed:{position:{min:0, max:2},rotation:{min:-0.1, max:0.1}}}});
 
     function particleManager(){
         var pSystemList = [];
         this.create = function(obj){
-            var newPSystem          = new pSystem();
-            newPSystem.name         = obj.name;
-            newPSystem.position     = obj.position;
-            newPSystem.on           = obj.on;
-            newPSystem.count        = obj.count;
-            newPSystem.image        = obj.image;
-            newPSystem.emitCounter  = obj.emitCounter;
-            newPSystem.emitRate     = obj.emitRate;
-            newPSystem.pLife        = obj.pLife;
-            newPSystem.pFadePercent = obj.pFadePercent;
+            var newPSystem                 = new pSystem();
+            newPSystem.name                = obj.system.name;
+            newPSystem.position            = obj.system.position;
+            newPSystem.on                  = obj.system.on;
+            newPSystem.image               = obj.system.image;
+            newPSystem.emitCounter         = obj.system.emitCounter;
+            newPSystem.emitRate            = obj.system.emitRate;
+            newPSystem.pParams.life        = obj.particles.life;
+            newPSystem.pParams.fadePercent = obj.particles.fadePercent;
+            newPSystem.pParams.speed       = obj.particles.speed;
+            newPSystem.pParams.scale       = obj.particles.scale;
             pSystemList.push(newPSystem);
-
         }
+        function pSystem(){
+            this.name         = "";
+            this.position     = {current:{x:0,y:0}, destination:{x:0,y:0}};
+            this.on           = false;
+            this.emitCounter  = 0;
+            this.emitRate     = 0;
+            this.count        = 0;
+            this.image        = null;
+            this.forces       = [];
+            this.pList        = [];
+            this.pParams      ={life:{min:0,max:1},fadePercent:{in:5,out:95},scale:{min:1,max:1},speed:{position:{min:0, max:1 },rotation:{min:0,max:0}}};
 
-        this.update = function(){
+            function pTemplate(){
+                this.position     = {x:0,y:0};
+                this.rotation     = 0;
+                this.scale        = 1;
+                this.dirNorm      = {x:0,y:0};
+                this.speed        = {position:0, rotation:0};
+                this.life         = 0;
+            }
+
+            this.createP = function(obj){
+                var p = new pTemplate();
+                p.position = obj.position;
+                p.rotation = obj.rotation;
+                p.scale    = obj.scale;
+                p.dirNorm  = obj.dirNorm;
+                p.speed    = obj.speed;
+                p.life     = obj.life;
+                this.pList.push(p);
+            }
+        }
+            this.update = function(){
             pSystemList.forEach(function(pSystem){
-                
                 if (pSystem.emitCounter > 0){
                     pSystem.emitCounter --;
                     for (cnt =0; cnt < pSystem.emitRate; cnt ++){
-                        var rndDir = {x:randInterval(-0.5,0.5),y:randInterval(-0.5,0.5)};
-                        var rndLife = randIntervalInt(pSystem.pLife.min,pSystem.pLife.max);
-                        var unit = getUnit(rndDir);
-                        pSystem.createP({position:pSystem.position.current,rotation:0, dirNorm:unit, speed:{position:randInterval(4.5,9.5),rotation:0}, life:{max:rndLife, current:rndLife}});
+                        var rndDir  = {x:randInterval(-0.5,0.5),y:randInterval(-0.5,0.5)};
+                        var scale   = randInterval(pSystem.pParams.scale.min,pSystem.pParams.scale.max);
+                        var rndLife = randIntervalInt(pSystem.pParams.life.min,pSystem.pParams.life.max);
+                        var speed   = {position:randInterval(pSystem.pParams.speed.position.min,pSystem.pParams.speed.position.max),rotation:randInterval(pSystem.pParams.speed.rotation.min,pSystem.pParams.speed.rotation.max)}
+                        var unit    = getUnit(rndDir);
+                        pSystem.createP({position:pSystem.position.current, rotation:0,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
                     }
                 }
 
                 var newVals                  = lerpTo(pSystem.position.current, pSystem.position.destination, pSystem.position.rate);
                 pSystem.position.current     = newVals.newCurrent;
                 pSystem.position.destination = newVals.newDestination;
-                
+
                 if (act.imageList[pSystem.image] !== undefined){
                     var imgDim = {x:act.imageList[pSystem.image].imageData.naturalWidth/2, y:act.imageList[pSystem.image].imageData.naturalHeight/2};
-                    var out = true;
                     pSystem.pList.forEach(function(p){
                         p.life.current --;
-                        if (p.life.current > 0) {
-                            
+                        if (p.life.current > 0){
                             p.position  = {x:p.position.x+p.dirNorm.x*p.speed.position, y: p.position.y+p.dirNorm.y*p.speed.position}
-                            var scale   = 1;
+                            var scale   = p.scale;
                             var lifeCnt = p.life.max - p.life.current;
                             var pcent   = lifeCnt / p.life.max;
 
                             var alpha = 1;
-                            
-                            pSystem.image = "p"
-                            if (pcent*100 < pSystem.pFadePercent.in) alpha = lifeCnt / (p.life.max*(pSystem.pFadePercent.in*0.01));
-                            if (pcent*100 > pSystem.pFadePercent.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.pFadePercent.out*0.01));
+                            if (pcent*100 < pSystem.pParams.fadePercent.in)  alpha = lifeCnt / (p.life.max*(pSystem.pParams.fadePercent.in*0.01));
+                            if (pcent*100 > pSystem.pParams.fadePercent.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.pParams.fadePercent.out*0.01));
 
-                            var pos={"x":parseInt(p.position.x-imgDim.x*scale), "y":parseInt(p.position.y-imgDim.y*scale)};
+                            var pos     = {"x":parseInt(p.position.x+imgDim.x), "y":parseInt(p.position.y+imgDim.y)};
+                            p.rotation += p.speed.rotation;
+                            act.context.save();
+                            act.context.translate(pos.x, pos.y);
+                            act.context.globalCompositeOperation = 'source-over';   // overlay source-over destination-over source-in destination-in source-out destination-out source-atop destination-atop lighter xor copy 
                             act.context.globalAlpha =  alpha;
-                            act.context.drawImage(act.imageList[pSystem.image].imageData, pos.x, pos.y, act.imageList[pSystem.image].imageData.naturalWidth*scale, act.imageList[pSystem.image].imageData.naturalHeight*scale);
-                            act.context.globalAlpha = 1
+                            act.context.rotate(p.rotation);
+                            act.context.drawImage(act.imageList[pSystem.image].imageData, -imgDim.x*scale, -imgDim.y*scale, act.imageList[pSystem.image].imageData.naturalWidth*scale, act.imageList[pSystem.image].imageData.naturalHeight*scale);
+                            act.context.restore();
+                            act.context.globalAlpha = 1;
+                            act.context.globalCompositeOperation = 'source-over';
                         }
-                        out = false;
                     });
                 }
             });
-        }
-    }
-
-    function pSystem(){
-        this.name         = "";
-        this.position     = {current:{x:0,y:0}, destination:{x:0,y:0}};
-        this.on           = false;
-        this.emitCounter  = 0;
-        this.emitRate     = 0;
-        this.count        = 0;
-        this.image        = null;
-        this.forces       = [];
-        this.pList        = [];
-
-        function pTemplate(){
-            this.position     = {x:0,y:0};
-            this.rotation     = 0;
-            this.dirNorm      = {x:0,y:0};
-            this.speed        = {position:0, rotation:0};
-            this.life         = 0;
-        }
-
-        this.createP = function(obj){
-            var p = new pTemplate();
-            p.position = obj.position;
-            p.rotation = obj.rotation;
-            p.dirNorm  = obj.dirNorm;
-            p.speed    = obj.speed;
-            p.life     = obj.life;
-            this.pList.push(p);
         }
     }
 
@@ -231,10 +235,14 @@ function canvasser(dataFile){
                 if (act.imageList[obj.image] === undefined) return;
 
                 if (obj.parent !== undefined) {
+                    if (obj.position.offset === undefined){
+                        obj.position.offset = {x:obj.parent.object.position.current.x + obj.position.current.x, y:obj.parent.object.position.current.y + obj.position.current.y};
+                    }
                     obj.position.current = {
-                        "x":obj.parent.object.position.current.x + (obj.position.offset !== undefined ? obj.position.offset.x : 0),
-                        "y":obj.parent.object.position.current.y + (obj.position.offset !== undefined ? obj.position.offset.y : 0),
-                        "scale":obj.parent.object.scale.current};
+                        "x":obj.parent.object.position.current.x +  Math.floor(obj.position.offset.x * obj.parent.object.scale.current), //act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current),
+                        "y":obj.parent.object.position.current.y +  Math.floor(obj.position.offset.y * obj.parent.object.scale.current) //act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)
+                    };
+                    obj.scale.current = obj.parent.object.scale.current;
                 }
                 var newVals              = lerpTo(obj.position.current, obj.position.destination, obj.position.rate);
                 obj.position.current     = newVals.newCurrent;
@@ -253,11 +261,11 @@ function canvasser(dataFile){
                 }
 
                 var pos = {"x":obj.position.current.x, "y":obj.position.current.y};
-                if (obj.origin === "center") pos={"x":parseInt(pos.x-act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":parseInt(pos.y-act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
+                if (obj.origin === "center") pos={"x":Math.floor(pos.x-act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":Math.floor(pos.y-act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
                 if (obj.show){
                     act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
                     if (!obj.testp) return;
-                    var pixelData_img = act.imageList[obj.image].context.getImageData(act.position.x-pos.x, act.position.y-pos.y, 1, 1).data;
+                    var pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
                     if (pixelData_img[3] != 0) act.applyAction.push(obj);
                 }
             }
@@ -405,8 +413,15 @@ function canvasser(dataFile){
                         if (obj.name === undefined) return;
                         if (act.dragging !== null && obj.name !== act.dragging.name) return;
                         if (obj.name === action.name) {
-                            obj.position.current.x += act.position.x - act.prevPosition.x;
-                            obj.position.current.y += act.position.y - act.prevPosition.y;
+                            if (obj.parent !== undefined){
+                                if (obj.position.offset === undefined) obj.position[mover] = {x:0,y:0};
+                                obj.position.offset.x += (act.position.x - act.prevPosition.x) / obj.scale.current;
+                                obj.position.offset.y += (act.position.y - act.prevPosition.y) / obj.scale.current;
+                            }
+                            else{
+                                obj.position.current.x += (act.position.x - act.prevPosition.x);
+                                obj.position.current.y += (act.position.y - act.prevPosition.y);
+                            }
                             act.dragging = obj;
                         }
                     });
@@ -515,7 +530,6 @@ function canvasser(dataFile){
         act.applyAction = [];
     }
 
-
     function loadInto(url, place){
         function reqListener(){
             place.innerHTML = this.responseText;
@@ -557,8 +571,8 @@ function canvasser(dataFile){
             vec = {x:parseInt(vec.x/magnitude*rate), y:parseInt(vec.y/magnitude*rate)};
             current = {x:current.x + vec.x, y:current.y + vec.y};
         }
-    return {newCurrent:current, newDestination:destination};
+        return {newCurrent:current, newDestination:destination};
     }
-    
+
 }
 
