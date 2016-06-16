@@ -11,9 +11,9 @@
                     {"type":"objectvis","name":"caddo_02_bk", "show":true},
                     {"type":"destposition","filter":"name","name":"caddo_02_bk", "destination":{"x":200,"y":200}, "rate":5},
                     {"type":"destposition","filter":"group","name":"parent",     "destination":{"x":200,"y":200}, "rate":5},
-                    {"type":"destscale","filter":"group","name":"child2",     "destination": 1, "rate":0.075, "hideafter":false},
-                    {"type":"destscale","filter":"name", "name":"caddo_02_bk","destination": 1, "rate":0.05,  "hideafter":false},
-                    {"type":"destscale","filter":"group","name":"parent",     "destination": 0, "rate":0.025 , "hideafter":true}
+                    {"type":"scaledest","filter":"group","name":"child2",     "destination": 1, "rate":0.075, "hideafter":false},
+                    {"type":"scaledest","filter":"name", "name":"caddo_02_bk","destination": 1, "rate":0.05,  "hideafter":false},
+                    {"type":"scaledest","filter":"group","name":"parent",     "destination": 0, "rate":0.025 , "hideafter":true}
                 ]
             },
             {"type":"image", "show":false, "group":["bkgrounds"], "name":"caddo_02_bk", "image":"caddo_02bk", "scale":{"current":0}, "position":{"current":{"x":  200,"y":  200}}, "origin":"center", "testp":false, "clicklist":[]},
@@ -30,9 +30,9 @@
                     {"type":"cleardown"},
                     {"type":"groupvis","name":"parent", "show":true},
                     {"type":"copyelement","source":"tracesofthepast", "target":"details"},
-                    {"type":"destscale",    "filter":"group", "name":"parent",    "destination":1,      "rate":0.08,  "hideafter":false},
-                    {"type":"destscale",    "filter":"group", "name":"child2",    "destination":0,      "rate":0.075, "hideafter":true},
-                    {"type":"destscale",    "filter":"group", "name":"bkgrounds", "destination":0,      "rate":0.05,  "hideafter":true},
+                    {"type":"scaledest",    "filter":"group", "name":"parent",    "destination":1,      "rate":0.08,  "hideafter":false},
+                    {"type":"scaledest",    "filter":"group", "name":"child2",    "destination":0,      "rate":0.075, "hideafter":true},
+                    {"type":"scaledest",    "filter":"group", "name":"bkgrounds", "destination":0,      "rate":0.05,  "hideafter":true},
                     {"type":"destposition", "filter":"group", "name":"parent",    "destination":"home", "rate":9},
                     {"type":"objectvis","name":"back", "show":false}
                 ]

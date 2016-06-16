@@ -196,6 +196,7 @@ function canvasser(dataFile){
     }
 
     function loop(){
+        if (act.mode === "true") act.mode = "none";
         if (act.mouseDown){
             act.mouseDownCnt ++;
             if (act.position.x !== act.prevPosition.x && act.position.y !== act.prevPosition.y && act.mouseDownCnt > 2) {
@@ -392,15 +393,6 @@ function canvasser(dataFile){
                         }
                     }
                 }
-                if (action.type === 'url'){
-                    var target = document.getElementById(action.target);
-                    if (target != undefined){
-                        loadInto(action.url, target);
-                    }
-                }
-                if (action.type === 'modvar'){
-                    if (action.operation === "add") act.vars[action.name] += action.amount;
-                }
                 if (action.type === 'copyelement'){
                     var target = document.getElementById(action.target);
                     var source = document.getElementById(action.source);
@@ -408,28 +400,22 @@ function canvasser(dataFile){
                         target.innerHTML = source.innerHTML;
                     }
                 }
-                if (action.type === "slideobject"){
+                if (action.type === 'destposition'){
                     act.data.objects.forEach(function(obj){
-                        if (obj.name === undefined) return;
-                        if (act.dragging !== null && obj.name !== act.dragging.name) return;
-                        if (obj.name === action.name) {
-                            if (obj.parent !== undefined){
-                                if (obj.position.offset === undefined) obj.position[mover] = {x:0,y:0};
-                                obj.position.offset.x += (act.position.x - act.prevPosition.x) / obj.scale.current;
-                                obj.position.offset.y += (act.position.y - act.prevPosition.y) / obj.scale.current;
-                            }
-                            else{
-                                obj.position.current.x += (act.position.x - act.prevPosition.x);
-                                obj.position.current.y += (act.position.y - act.prevPosition.y);
-                            }
-                            act.dragging = obj;
+                        if (action.filter === undefined) return;
+                        if (action.filter === "group"){
+                            if (obj.group.indexOf(action.name) < 0) return;
                         }
-                    });
-                }
-                if (action.type === 'groupvis'){
-                    act.data.objects.forEach(function(obj){
-                        if (obj.group === undefined) return;
-                        if (obj.group.indexOf(action.name) > -1) obj.show = action.show
+                        if (action.filter === "name"){
+                            if (obj.name !== action.name) return;
+                        }
+                        if (typeof action.destination === "string"){
+                            obj.position.destination = {x:obj.position[action.destination].x, y:obj.position[action.destination].y};
+                        }
+                        else{
+                            obj.position.destination = {x:action.destination.x, y:action.destination.y};
+                        }
+                        obj.position.rate = action.rate;
                     });
                 }
                 if (action.type === 'groupcolor'){
@@ -442,10 +428,26 @@ function canvasser(dataFile){
                         if (action.source === "value")       obj.color = action.color;
                     });
                 }
-                if (action.type === 'objectvis'){
+                if (action.type === 'groupvis'){
+                    act.data.objects.forEach(function(obj){
+                        if (obj.group === undefined) return;
+                        if (obj.group.indexOf(action.name) > -1) obj.show = action.show
+                    });
+                }
+                if (action.type === 'modvar'){
+                    if (action.operation === "add") act.vars[action.name] += action.amount;
+                }
+                if (action.type === 'moveobject'){
                     act.data.objects.forEach(function(obj){
                         if (obj.name === undefined) return;
-                        if (obj.name === action.name) obj.show = action.show;
+                        if (obj.name !== action.name) return;
+                        if (action.frame === "absolute") {
+                            obj.position.current = {x:action.amount.x, y:action.amount.y};
+                        }
+                        if (action.frame === "relative"){
+                            obj.position.current.x += action.amount.x;
+                            obj.position.current.y += action.amount.y;
+                        }
                     });
                 }
                 if (action.type === 'objectcolor'){
@@ -456,6 +458,29 @@ function canvasser(dataFile){
                         if (action.source === "hover")       obj.color = obj.hovercolor;
                         if (action.source === "selectcolor") obj.color = obj.selectcolor;
                         if (action.source === "value")       obj.color = action.color;
+                    });
+                }
+                if (action.type === 'objectvis'){
+                    act.data.objects.forEach(function(obj){
+                        if (obj.name === undefined) return;
+                        if (obj.name === action.name) obj.show = action.show;
+                    });
+                }
+                if (action.type === 'pstart'){
+                    console.log("particles");
+                }
+                if (action.type === 'scaledest'){
+                    act.data.objects.forEach(function(obj){
+                        if (action.filter === undefined) return;
+                        if (action.filter === "group"){
+                            if (obj.group.indexOf(action.name) < 0) return;
+                        }
+                        if (action.filter === "name"){
+                            if (obj.name !== action.name) return;
+                        }
+                        obj.scale.destination = action.destination;
+                        obj.scale.rate = action.rate;
+                        obj.scale.hideafter = action.hideafter;
                     });
                 }
                 if (action.type === 'scalegroup'){
@@ -480,50 +505,29 @@ function canvasser(dataFile){
                         if (action.frame === "absolute")  obj.scale.current =  action.amount;
                     });
                 }
-                if (action.type === 'moveobject'){
+                if (action.type === "slideobject"){
                     act.data.objects.forEach(function(obj){
                         if (obj.name === undefined) return;
-                        if (obj.name !== action.name) return;
-                        if (action.frame === "absolute") {
-                            obj.position.current = {x:action.amount.x, y:action.amount.y};
-                        }
-                        if (action.frame === "relative"){
-                            obj.position.current.x += action.amount.x;
-                            obj.position.current.y += action.amount.y;
+                        if (act.dragging !== null && obj.name !== act.dragging.name) return;
+                        if (obj.name === action.name) {
+                            if (obj.parent !== undefined){
+                                if (obj.position.offset === undefined) obj.position[mover] = {x:0,y:0};
+                                obj.position.offset.x += (act.position.x - act.prevPosition.x) / obj.scale.current;
+                                obj.position.offset.y += (act.position.y - act.prevPosition.y) / obj.scale.current;
+                            }
+                            else{
+                                obj.position.current.x += (act.position.x - act.prevPosition.x);
+                                obj.position.current.y += (act.position.y - act.prevPosition.y);
+                            }
+                            act.dragging = obj;
                         }
                     });
                 }
-                if (action.type === 'destscale'){
-                    act.data.objects.forEach(function(obj){
-                        if (action.filter === undefined) return;
-                        if (action.filter === "group"){
-                            if (obj.group.indexOf(action.name) < 0) return;
-                        }
-                        if (action.filter === "name"){
-                            if (obj.name !== action.name) return;
-                        }
-                        obj.scale.destination = action.destination;
-                        obj.scale.rate = action.rate;
-                        obj.scale.hideafter = action.hideafter;
-                    });
-                }
-                if (action.type === 'destposition'){
-                    act.data.objects.forEach(function(obj){
-                        if (action.filter === undefined) return;
-                        if (action.filter === "group"){
-                            if (obj.group.indexOf(action.name) < 0) return;
-                        }
-                        if (action.filter === "name"){
-                            if (obj.name !== action.name) return;
-                        }
-                        if (typeof action.destination === "string"){
-                            obj.position.destination = {x:obj.position[action.destination].x, y:obj.position[action.destination].y};
-                        }
-                        else{
-                            obj.position.destination = {x:action.destination.x, y:action.destination.y};
-                        }
-                        obj.position.rate = action.rate;
-                    });
+                if (action.type === 'url'){
+                    var target = document.getElementById(action.target);
+                    if (target != undefined){
+                        loadInto(action.url, target);
+                    }
                 }
             });
         });
