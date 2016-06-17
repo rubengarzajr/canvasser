@@ -80,8 +80,6 @@ function canvasser(dataFile){
         this.dragging     = null;
     }
 
-    pManager.create({system:{name:"test1", position:{current:{x:0,y:400},destination:{x:600,y:100}, rate:8}, on:true, image:"p", genType:"burst", emitCounter:100, emitRate:3},particles:{life:{min:19, max:80 },fadePercent:{in:25,out:90},scale:{min:0.25,max:1.5},speed:{position:{min:0, max:2},rotation:{min:-0.1, max:0.1}}}});
-
     function particleManager(){
         var pSystemList = [];
         this.create = function(obj){
@@ -467,7 +465,13 @@ function canvasser(dataFile){
                     });
                 }
                 if (action.type === 'pstart'){
-                    console.log("particles");
+                        act.data.particles.forEach(function(obj){
+                        if (obj.system.name === undefined) return;
+                        console.log(obj)
+                        //if (obj.name === action.name) pManager.create({system:{name:"test1", position:{current:{x:0,y:400},destination:{x:600,y:100}, rate:8}, on:true, image:"p", genType:"burst", emitCounter:100, emitRate:3},particles:{life:{min:19, max:80 },fadePercent:{in:25,out:90},scale:{min:0.25,max:1.5},speed:{position:{min:0, max:2},rotation:{min:-0.1, max:0.1}}}});
+                        if (obj.system.name === action.name) pManager.create(obj);
+                        
+                    });
                 }
                 if (action.type === 'scaledest'){
                     act.data.objects.forEach(function(obj){
