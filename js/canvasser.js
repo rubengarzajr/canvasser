@@ -1,13 +1,15 @@
 // Canvasser v0.2 rubengarzajr@gmail.com
 
-function initCanvasser(vari, datafile){
-    window[vari] = new canvasser(datafile);
+function initCanvasser(vari, datafile, dataForm){
+    window[vari] = new canvasser(datafile, dataForm);
 }
 
-function canvasser(dataFile){
-    requestJSON(dataFile, init);
+function canvasser(interactiveData, dataForm){
     var act      = new interaction();
     var pManager = new particleManager();
+
+    if (dataForm == "file") requestJSON(interactiveData, init);
+    else init(interactiveData);
 
     function requestJSON(fileNamePath, returnFunction)
     {

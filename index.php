@@ -13,5 +13,7 @@
         <a href="caddo.php">Navigation: Caddo</a><br>
         <a href="dragdrop.php">Drag & Drop: Critters</a><br>
         <a href="eforensics.php">eforensics</a><br>
+        <a href="population.php">Population</a><br>
+        <a href="author.php">Author</a><br>
     </body>
 </html>

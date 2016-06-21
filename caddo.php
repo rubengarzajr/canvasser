@@ -8,7 +8,8 @@
         <link href="css/normalize.css" rel="stylesheet" type="text/css"/>
         <link href="css/canvasser.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body onload='initCanvasser("tex","data/caddo.json");'>
+    <body onload='initCanvasser("tex","data/caddo.json", "file");'>
+        <?php include 'header.php';?>
         <div class="title_a">World of the Caddo</div>
         <div class="title_b">Click on an image to visit an exhibit</div>
         <table>

@@ -8,7 +8,8 @@
         <link href="css/normalize.css" rel="stylesheet" type="text/css"/>
         <link href="css/canvasser.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body onload='initCanvasser("tex","data/eforensics.json");'>
+    <body onload='initCanvasser("tex","data/eforensics.json", "file");'>
+        <?php include 'header.php';?>
         <div class="title_a">Case File</div>
         <div class="title_b">Drag bones</div>
         <table>

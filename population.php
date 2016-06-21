@@ -8,9 +8,9 @@
         <link href="css/normalize.css" rel="stylesheet" type="text/css"/>
         <link href="css/canvasser.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body onload='initCanvasser("tex","data/dragdrop.json", "file");'>
+    <body onload='initCanvasser("tex","data/population.json", "file");'>
         <?php include 'header.php';?>
-        <div class="title_a">Drag and Drop</div>
+        <div class="title_a">Population Puzzlers!</div>
         <div id='canvasholder' style="float:left"></div>
     </body>
 </html>
