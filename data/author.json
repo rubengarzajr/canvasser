@@ -5,10 +5,10 @@
 	{"type":"canvasheight", "widgets":{"size":"int"}},
         {"type":"canvasparent", "widgets":{"parent":"text"}}
     ],
-    "object":[
-        {"type":"image", "widgets":{"name":"text", "group":"text", "show":"bool", "image":"imagedata",  "position":"xy" }},
-        {"type":"shape", "widgets":{"name":"text", "group":"text", "show":"bool", "shape":"shapedata", "position":"xy" },"widgetbank":["actions"] }
-    ],
+    "object":{
+        "image":{"widgets":{"name":"text", "group":"arraystrings", "show":"bool", "image":"imagedata", "position":"xyobjects" }},
+        "shape":{"widgets":{"name":"text", "group":"arraystrings", "show":"bool", "shape":"shapedata", "position":"xyobjects" },"widgetbank":["actions"] }
+    },
     "image":[
         {"type":"imagedata", "widgets":{"id":"text", "url":"filename"}}
     ],

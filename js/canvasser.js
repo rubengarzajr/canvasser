@@ -31,6 +31,7 @@ function canvasser(interactiveData, dataForm){
         act.canvas.width  = data.settings.canvaswidth;
         act.canvas.height = data.settings.canvasheight;
         act.data = data;
+        document.getElementById(data.settings.canvasparent).innerHTML = "";
         document.getElementById(data.settings.canvasparent).appendChild(act.canvas);
         act.canvas.addEventListener('mousemove', getMousePos, false);
         act.canvas.addEventListener('mousedown', mouseDown, false);
@@ -568,6 +569,7 @@ function canvasser(interactiveData, dataForm){
     }
     function lerpTo(inCurrent, inDestination, rate){
         if (inDestination === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
+        if (inDestination.x === undefined || inDestination.y === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
         var current     = inCurrent;
         var destination = inDestination;
         var dist = Math.sqrt( (destination.x-current.x)*(destination.x-current.x) + (destination.y-current.y)*(destination.y-current.y) );

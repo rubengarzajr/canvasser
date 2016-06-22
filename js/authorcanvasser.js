@@ -4,18 +4,18 @@ function initAuthorCanvasser(vari, datafile, dataForm){
 
 function authorcanvasser(dataFile, dataForm){
 
-    //requestJSON("data/author.json", initrules);
+    requestJSON("data/author.json", initrules);
 
     var authorData = {
         "objects":[
-            {"type":"image", "show":true, "group":["images","shiny"], "name":"test",  "image":"p",     "scale":{"current":1}, "position":{"current":{"x": 360,"y": 350}}, "origin":"center",  "testp":true, "clicklist":[{"type":"console","text":"hi"}]},
+            {"type":"image", "show":true, "group":["images","shiny"], "name":"test",  "image":"p",     "scale":{"current":1}, "position":{"current":{"x": 200,"y": 300}}, "origin":"center",  "testp":true, "clicklist":[{"type":"console","text":"hi"}]},
             {"type":"image", "show":true, "group":["images"],         "name":"minus", "image":"minus", "scale":{"current":1}, "position":{"current":{"x": 160,"y": 150}}, "origin":"center",  "testp":true, "clicklist":[{"type":"console","text":"hi"}]}
         ],
         images:[
-            {id:"p",  url:"image/particle.png"},
-            {id:"texas",  url:"image/tx-map-rough.png"},
             {id:"minus",  url:"image/icon_minus.png"},
             {id:"plus",  url:"image/icon_plus.png"},
+            {id:"p",  url:"image/particle.png"},
+            {id:"texas",  url:"image/tx-map-rough.png"},
             {id:"up",  url:"image/icon_up.png"},
             {id:"down",  url:"image/icon_down.png"},
             {id:"left",  url:"image/icon_left.png"},
@@ -23,8 +23,8 @@ function authorcanvasser(dataFile, dataForm){
             {id:"lsp",  url:"image/lsp.png"}
         ],
         settings: {
-		canvaswidth: 720,
-		canvasheight: 700,
+		canvaswidth: 400,
+		canvasheight: 400,
 		canvasdomname: "activity",
                 canvasparent: "canvasholder"
             }
@@ -52,7 +52,7 @@ function authorcanvasser(dataFile, dataForm){
         var objectHolder = document.getElementById("objectholder");
         var objects = '<table  width="100%">';
         authorData.objects.forEach(function(object){
-            objects += '<tr onclick="window.author.getProps(\'objects\',\''+ object.name +'\')">';
+            objects += '<tr onclick="window.author.getProps(\'objects\',\''+ object.name + '\')">';
             objects +='<td width="50%">' + object.name + '</td>';
             objects +='<td width="50%">' + object.type + '</td>';
             objects += '</tr>';
@@ -78,25 +78,112 @@ function authorcanvasser(dataFile, dataForm){
         authorData[type].forEach(function(finder){
             if (finder.name === name) {
                 var propHolder = document.getElementById("properties");
-                var prop = '<div class="proptitle">' + name + '</div>';
-                prop = printRecusiveObj(prop, finder, 0)
+                var prop = '<div class="proptitle">' + name + " : " + finder.type + '</div>';
+                prop = buildPropUI(prop, type, finder, 0)
                 propHolder.innerHTML = prop;
             }
         });
     }
 
-    function printRecusiveObj(output, obj, indent){
-        for(var prop in obj){
-            var indnt = "<br>";
-            for (var i = 0; i < indent; i++){
-                indnt +="&nbsp;&nbsp;&nbsp;"
+    this.setProps = function(type, name, prop, value){
+        authorData[type].forEach(function(finder){
+            if (finder.name === name) {
+                finder[prop] = value;
             }
-            if (get_type(obj[prop]) === "[object Object]"){
-                var tmp = prop;
-                output += indnt + printRecusiveObj(tmp, obj[prop], indent+1);
+        });
+    }
+
+
+    function buildPropUI(output, type, element, indent){
+        console.log(element.type);
+        console.log(rules.object[element.type])
+        for(var prop in rules.object[element.type].widgets){
+            pType = rules.object[element.type].widgets[prop];
+            console.log(prop + "  " + pType + "  " + element[prop])
+            if (pType === "text") output += "&nbsp;&nbsp;&nbsp;&nbsp;" + prop + '&nbsp;&nbsp;<input type="text" id="testing" value="'+ element[prop]+'"><br>';
+            if (pType === "bool") output += "&nbsp;&nbsp;&nbsp;&nbsp;" + prop + '&nbsp;&nbsp;<input type="checkbox" checked="'+ element[prop] +'" id="testing"><br>';
+            if (pType === "imagedata"){
+                imageList = ObjPartToArr(authorData.images, "id");
+                output += "&nbsp;&nbsp;&nbsp;&nbsp;" + prop +  buildSelect(imageList, type, element[prop], element.name, prop) + '<br>';
             }
-            else output += indnt + prop + ': ' + obj[prop];
+            if (pType === "xyobjects"){
+                for(var pos in element[prop]){
+                    var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}
+                    if (element[prop][pos] !== undefined){
+                        tempPos = element[prop][pos];
+                    }
+                    output += "&nbsp;&nbsp;&nbsp;&nbsp;" + pos +  '<input onchange="window.author.updateActivity(this, \''+ element.name + '\', \'' + 'position.'+pos+'.x' + '\', \''+ type + '\')" id="numx" type="number" value=' + tempPos.x + ' />' + '<br>';
+                    output += "&nbsp;&nbsp;&nbsp;&nbsp;" + pos +  '<input onchange="window.author.updateActivity(this, \''+ element.name + '\', \'' + 'position.'+pos+'.y' + '\', \''+ type + '\')" id="numx" type="number" value=' + tempPos.y + ' />' + '<br>';
+                }
+            }
         }
+        output += " " + element;
+        return output;
+    }
+
+    function ObjPartToArr(obj, part){
+        var out = [];
+        for(var prop in obj){
+            out.push(obj[prop][part]);
+        }
+        return out;
+    }
+
+    function buildSelect(list, type, defaultId, element, prop){
+        var out = '<select onchange="window.author.updateActivity(this, \''+ element + '\', \'' + prop + '\', \''+ type + '\')">';
+        list.forEach(function(listElement){
+            out += '<option value="'+ listElement + '"'+ (listElement === defaultId ? " selected" : "" )+ '>' + listElement + '</option>';
+           });
+        out += "</select>";
+        return out;
+    }
+
+    this.updateActivity = function(sel, element, prop, type){
+        authorData[type].forEach(function(finder){
+            if (finder.name === element) {
+                setSubProp(finder, prop, sel.value)
+            }
+        });
+        console.log(authorData);
+        initCanvasser("sample", authorData, "data");
+    }
+
+    function setSubProp(obj, desc, val){
+        var arr = desc.split(".");
+        while(arr.length > 1){
+            if (obj[arr[0]] === undefined) {
+                console.log(obj);
+                console.log(arr);
+                obj[arr[0]] = {}
+            }
+            obj = obj[arr.shift()];
+            
+        }
+        obj[arr[0]] = (isNaN(val) ? val : parseInt(val));
+    }
+
+    function printRecusiveObj(output, element, indent){
+        var indnt = "<br>";
+        for (var i = 0; i < indent; i++){
+            indnt +="&nbsp;&nbsp;&nbsp;"
+        }
+
+        if (get_type(element) === "[object Object]"){
+            for(var prop in element){
+                output += printRecusiveObj(indnt + prop, element[prop], indent+1);
+            }
+            return output;
+        }
+
+        if (get_type(element) === "[object Array]"){
+            element.forEach(function(arrayElement){
+                console.log(get_type(arrayElement) + " " + arrayElement);
+                output += printRecusiveObj(indnt, arrayElement, indent+1);
+            });
+            return output;
+        }
+        output += " " + element;
+        console.log(indent + " " + element );
         return output;
     }
 
@@ -109,33 +196,33 @@ function authorcanvasser(dataFile, dataForm){
 
     function initrules(data){
         rules = data;
-        var authorSpace = document.getElementById("authorspace");
-        data.createtypes.forEach(function(type){
-            authorSpace.innerHTML += "<br>" + type + "<br>";
-            rules[type].forEach(function(subtype){
-                authorSpace.innerHTML += "<br>Type: " + subtype.type + "<br>";
-                authorSpace.innerHTML += "Widgets:<br>";
-                for(var index in subtype.widgets) {
-                    //authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + " " + subtype.widgets[index] + "<br>";
-                    if (subtype.widgets[index] === "text") authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;<input type="text" id="testing"><br>';
-                    if (subtype.widgets[index] === "bool") authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;<input type="checkbox" id="testing"><br>';
-                    if (subtype.widgets[index] === "int")  authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;<input type="number" id="testing" step="1"><br>';
-                    if (subtype.widgets[index] === "xy")   authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;X&nbsp;<input type="number" id="testingx" step="1" maxlength="4">&nbsp;Y&nbsp;<input type="number" id="testingy" step="1" maxlength="4"><br>';
-                }
-                if (subtype.widgetbank !== undefined)
-                {
-                    authorSpace.innerHTML += "Widget Bank:<br>";
-                    subtype.widgetbank.forEach(function(bank){
-                        authorSpace.innerHTML += "&nbsp;&nbsp;" + bank + "<br>";
-                        for(var index in rules[bank]) {
-                            authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + rules[bank][index].type +  "<br>";
-                        }
-                    });
-                }
-            });
-            authorSpace.innerHTML += "<br>";
-        });
-        console.log(rules);
+//        var authorSpace = document.getElementById("authorspace");
+//        data.createtypes.forEach(function(type){
+//            authorSpace.innerHTML += "<br>" + type + "<br>";
+//            rules[type].forEach(function(subtype){
+//                authorSpace.innerHTML += "<br>Type: " + subtype.type + "<br>";
+//                authorSpace.innerHTML += "Widgets:<br>";
+//                for(var index in subtype.widgets) {
+//                    //authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + " " + subtype.widgets[index] + "<br>";
+//                    if (subtype.widgets[index] === "text") authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;<input type="text" id="testing"><br>';
+//                    if (subtype.widgets[index] === "bool") authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;<input type="checkbox" id="testing"><br>';
+//                    if (subtype.widgets[index] === "int")  authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;<input type="number" id="testing" step="1"><br>';
+//                    if (subtype.widgets[index] === "xy")   authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;X&nbsp;<input type="number" id="testingx" step="1" maxlength="4">&nbsp;Y&nbsp;<input type="number" id="testingy" step="1" maxlength="4"><br>';
+//                }
+//                if (subtype.widgetbank !== undefined)
+//                {
+//                    authorSpace.innerHTML += "Widget Bank:<br>";
+//                    subtype.widgetbank.forEach(function(bank){
+//                        authorSpace.innerHTML += "&nbsp;&nbsp;" + bank + "<br>";
+//                        for(var index in rules[bank]) {
+//                            authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + rules[bank][index].type +  "<br>";
+//                        }
+//                    });
+//                }
+//            });
+//            authorSpace.innerHTML += "<br>";
+//        });
+//        console.log(rules);
     }
 
     function init(data){
