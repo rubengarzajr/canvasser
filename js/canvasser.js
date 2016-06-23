@@ -9,6 +9,7 @@ function canvasser(interactiveData, dataForm){
     var pManager = new particleManager();
 
     if (dataForm == "file") requestJSON(interactiveData, init);
+    else if (dataForm == "string") init(JSON.parse(interactiveData));
     else init(interactiveData);
 
     function requestJSON(fileNamePath, returnFunction)

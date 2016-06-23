@@ -7,9 +7,9 @@ function authorcanvasser(dataFile, dataForm){
     requestJSON("data/author.json", initrules);
 
     var authorData = {
-        "objects":[
-            {"type":"image", "show":true, "group":["images","shiny"], "name":"test",  "image":"p",     "scale":{"current":1}, "position":{"current":{"x": 200,"y": 300}}, "origin":"center",  "testp":true, "clicklist":[{"type":"console","text":"hi"}]},
-            {"type":"image", "show":true, "group":["images"],         "name":"minus", "image":"minus", "scale":{"current":1}, "position":{"current":{"x": 160,"y": 150}}, "origin":"center",  "testp":true, "clicklist":[{"type":"console","text":"hi"}]}
+        objects:[
+            {type:"image", show:true, group:["images","shiny"], name:"test",  image:"p",     scale:{current:1}, position:{current:{x: 200,y: 300}, destination:{x: 160,y: 150}, rate:4}, origin:"center",  testp:true, clicklist:[{type:"console",text:"hi"}]},
+            {type:"image", show:true, group:["images"],         name:"minus", image:"minus", scale:{current:1}, position:{current:{x: 160,y: 150}}, origin:"center",  testp:true, "clicklist":[{type:"console",text:"hi"}]}
         ],
         images:[
             {id:"minus",  url:"image/icon_minus.png"},
@@ -20,19 +20,25 @@ function authorcanvasser(dataFile, dataForm){
             {id:"down",  url:"image/icon_down.png"},
             {id:"left",  url:"image/icon_left.png"},
             {id:"right",  url:"image/icon_right.png"},
-            {id:"lsp",  url:"image/lsp.png"}
+            {id:"si01",  url:"image/si01.png"}
         ],
         settings: {
-		canvaswidth: 400,
-		canvasheight: 400,
-		canvasdomname: "activity",
-                canvasparent: "canvasholder"
-            }
-        };
-    initCanvasser("sample", authorData, "data");
+            canvaswidth: 400,
+            canvasheight: 400,
+            canvasdomname: "activity",
+            canvasparent: "canvasholder"
+        }
+    };
+
+    console.log(JSON.stringify(authorData))
+    initCanvasser("sample", JSON.stringify(authorData), "string");
     updateObjects();
     updateImages();
     var rules = null;
+
+    this.reload = function(){
+        initCanvasser("sample", JSON.stringify(authorData), "string");
+    }
 
     function requestJSON(fileNamePath, returnFunction)
     {
@@ -77,44 +83,60 @@ function authorcanvasser(dataFile, dataForm){
     this.getProps = function(type, name){
         authorData[type].forEach(function(finder){
             if (finder.name === name) {
-                var propHolder = document.getElementById("properties");
-                var prop = '<div class="proptitle">' + name + " : " + finder.type + '</div>';
-                prop = buildPropUI(prop, type, finder, 0)
-                propHolder.innerHTML = prop;
+                document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + name + " : " + finder.type + '</div>';
+                var propUI = document.getElementById("properties");
+                var prop = '<div class="propbody">' ;
+                prop       = buildPropUI(prop, type, finder, 0);
+                propUI.innerHTML = prop + '</div>';
             }
         });
     }
-
-    this.setProps = function(type, name, prop, value){
-        authorData[type].forEach(function(finder){
-            if (finder.name === name) {
-                finder[prop] = value;
-            }
-        });
-    }
-
 
     function buildPropUI(output, type, element, indent){
-        console.log(element.type);
-        console.log(rules.object[element.type])
+        var win = 'window.author.updateActivity';
+        console.log("C2:", element.type, rules.object[element.type]);
         for(var prop in rules.object[element.type].widgets){
             pType = rules.object[element.type].widgets[prop];
-            console.log(prop + "  " + pType + "  " + element[prop])
-            if (pType === "text") output += "&nbsp;&nbsp;&nbsp;&nbsp;" + prop + '&nbsp;&nbsp;<input type="text" id="testing" value="'+ element[prop]+'"><br>';
-            if (pType === "bool") output += "&nbsp;&nbsp;&nbsp;&nbsp;" + prop + '&nbsp;&nbsp;<input type="checkbox" checked="'+ element[prop] +'" id="testing"><br>';
+            console.log("C3: " + prop + "  " + pType + "  " + element[prop])
+            if (pType === "text") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="auth_text" type="text" value="'+ element[prop]+'"><br>';
+            if (pType === "bool") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input type="checkbox" ' + (element[prop] ? "checked" : "") + ' onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + '\', \''+ type + '\', \'checked\')"><br>';
             if (pType === "imagedata"){
                 imageList = ObjPartToArr(authorData.images, "id");
-                output += "&nbsp;&nbsp;&nbsp;&nbsp;" + prop +  buildSelect(imageList, type, element[prop], element.name, prop) + '<br>';
+                output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div>' +  buildSelect(imageList, type, element[prop], element.name, prop) + '<br>';
             }
             if (pType === "xyobjects"){
-                for(var pos in element[prop]){
-                    var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}
-                    if (element[prop][pos] !== undefined){
-                        tempPos = element[prop][pos];
-                    }
-                    output += "&nbsp;&nbsp;&nbsp;&nbsp;" + pos +  '<input onchange="window.author.updateActivity(this, \''+ element.name + '\', \'' + 'position.'+pos+'.x' + '\', \''+ type + '\')" id="numx" type="number" value=' + tempPos.x + ' />' + '<br>';
-                    output += "&nbsp;&nbsp;&nbsp;&nbsp;" + pos +  '<input onchange="window.author.updateActivity(this, \''+ element.name + '\', \'' + 'position.'+pos+'.y' + '\', \''+ type + '\')" id="numx" type="number" value=' + tempPos.y + ' />' + '<br>';
+                output += '<div class="pos_holder"><div class="pos_title">' + prop + '</div>';
+                var hasDestination = false;
+                var hasRate = false
+                for(var posObj in element[prop]){
+                    if (posObj === "destination") hasDestination = true;
+                    if (posObj === "rate") hasRate = true;
                 }
+                if (!hasDestination) element[prop].destination = undefined;
+                if (!hasRate) element[prop].rate = 0;
+
+                for(var posObj in element[prop]){
+                    if (posObj === "rate"){
+                        var tempPos =  (element[prop][posObj] !== undefined ? tempPos = element[prop][posObj] : 0);
+                        output += '<div class="entrylabel c_entrylabel_pos w50">' + posObj + '</div><input class="auth_xy" onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+ '\', \''+ type + '\', \'value\')" id="numx" type="number" value=' + tempPos + ' />' + '<br>';
+                    }else{
+                        var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)};
+                        var hasXY = false;
+                        if (element[prop][posObj] !== undefined){
+                            tempPos = element[prop][posObj];
+                            hasXY = true;
+                        }
+                        output += '<div class="entrylabel c_entrylabel_pos w100">' + posObj + '</div><span ' +  (hasXY ? "" : 'style="display:none"') + '>';
+                        output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+'.x' + '\', \''+ type + '\', \'value\')" id="numx" type="number" value=' + tempPos.x + ' />';
+                        output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+'.y' + '\', \''+ type + '\', \'value\')" id="numx" type="number" value=' + tempPos.y + ' />';
+                        if (posObj !== 'current')  output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
+                        output += '</span>'
+                        if (!hasXY) output += '<div class ="divbutton" onclick="window.author.reload()">Enable</div>'
+                        output += '<br>';
+                    }
+                }
+
+                output += '</div>';
             }
         }
         output += " " + element;
@@ -130,7 +152,7 @@ function authorcanvasser(dataFile, dataForm){
     }
 
     function buildSelect(list, type, defaultId, element, prop){
-        var out = '<select onchange="window.author.updateActivity(this, \''+ element + '\', \'' + prop + '\', \''+ type + '\')">';
+        var out = '<select onchange="window.author.updateActivity(this, \''+ element + '\', \'' + prop + '\', \''+ type + '\', \'value\')">';
         list.forEach(function(listElement){
             out += '<option value="'+ listElement + '"'+ (listElement === defaultId ? " selected" : "" )+ '>' + listElement + '</option>';
            });
@@ -138,28 +160,32 @@ function authorcanvasser(dataFile, dataForm){
         return out;
     }
 
-    this.updateActivity = function(sel, element, prop, type){
+    this.updateActivity = function(sel, element, prop, type, thingToCheck){
+        var val = sel[thingToCheck];
+        console.log(val)
         authorData[type].forEach(function(finder){
             if (finder.name === element) {
-                setSubProp(finder, prop, sel.value)
+                setSubProp(finder, prop, val)
             }
         });
         console.log(authorData);
-        initCanvasser("sample", authorData, "data");
+        initCanvasser("sample", JSON.stringify(authorData), "string");
     }
 
+
     function setSubProp(obj, desc, val){
+        console.log(val)
+        console.log(isNaN(val))
         var arr = desc.split(".");
         while(arr.length > 1){
             if (obj[arr[0]] === undefined) {
                 console.log(obj);
                 console.log(arr);
-                obj[arr[0]] = {}
+                obj[arr[0]] = {};
             }
             obj = obj[arr.shift()];
-            
         }
-        obj[arr[0]] = (isNaN(val) ? val : parseInt(val));
+        obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : parseInt(val)));
     }
 
     function printRecusiveObj(output, element, indent){
@@ -196,33 +222,6 @@ function authorcanvasser(dataFile, dataForm){
 
     function initrules(data){
         rules = data;
-//        var authorSpace = document.getElementById("authorspace");
-//        data.createtypes.forEach(function(type){
-//            authorSpace.innerHTML += "<br>" + type + "<br>";
-//            rules[type].forEach(function(subtype){
-//                authorSpace.innerHTML += "<br>Type: " + subtype.type + "<br>";
-//                authorSpace.innerHTML += "Widgets:<br>";
-//                for(var index in subtype.widgets) {
-//                    //authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + " " + subtype.widgets[index] + "<br>";
-//                    if (subtype.widgets[index] === "text") authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;<input type="text" id="testing"><br>';
-//                    if (subtype.widgets[index] === "bool") authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;<input type="checkbox" id="testing"><br>';
-//                    if (subtype.widgets[index] === "int")  authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;<input type="number" id="testing" step="1"><br>';
-//                    if (subtype.widgets[index] === "xy")   authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;" + index + '&nbsp;&nbsp;X&nbsp;<input type="number" id="testingx" step="1" maxlength="4">&nbsp;Y&nbsp;<input type="number" id="testingy" step="1" maxlength="4"><br>';
-//                }
-//                if (subtype.widgetbank !== undefined)
-//                {
-//                    authorSpace.innerHTML += "Widget Bank:<br>";
-//                    subtype.widgetbank.forEach(function(bank){
-//                        authorSpace.innerHTML += "&nbsp;&nbsp;" + bank + "<br>";
-//                        for(var index in rules[bank]) {
-//                            authorSpace.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + rules[bank][index].type +  "<br>";
-//                        }
-//                    });
-//                }
-//            });
-//            authorSpace.innerHTML += "<br>";
-//        });
-//        console.log(rules);
     }
 
     function init(data){

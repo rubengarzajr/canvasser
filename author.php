@@ -14,11 +14,15 @@
     </head>
     <body onload="initAuthorCanvasser()">
         <?php include 'header.php';?>
+        <div id="menu">
+            <div class ="divbutton" onclick="window.author.reload()">Restart</div>
+        </div>
         <div id="graphical">
             <div id='canvasholder' class="activity"></div>
             <div id='imageholder' class="imagebank"></div>
             <div id='objectholder' class="objectbank"></div>
         </div>
+        <div id="propertiestitle"></div>
         <div id="properties"></div>
         <div id="authorspace"></div>
     </body>

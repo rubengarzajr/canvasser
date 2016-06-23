@@ -131,14 +131,117 @@ a{
 
 #properties{
     width:100%;
-    background-color: rgb(200,200,200);
+    text-align: center;
+}
+
+#propertiestitle{
+    width:100%;
+    text-align: center;
 }
 
 .proptitle{
-    width:100%;
+    width:99%;
     background-color: rgb(240,240,240);
     border: 2px black solid;
     text-align: center;
     font-size: 1.5em;
+    display: inline-block;
 }
 
+.propbody{
+    text-align: left;
+    margin: 10px 20px;
+}
+
+.auth_xy{
+    display: table-cell;
+    width:50px;
+    background-color:rgb(191, 212, 211);
+    margin-left: 0px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    padding: 4px;
+    border: 0px;
+    border-top: 1px rgb(191, 212, 211) solid;
+    border-bottom: 1px rgb(191, 212, 211) solid;
+}
+
+.auth_text{
+    background-color:rgb(212, 218, 226);
+    display: table-cell;
+    width:150px;
+    margin-left: 0px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    padding: 4px;
+    border: 0px;
+    border-top: 1px rgb(212, 218, 226) solid;
+    border-bottom: 1px rgb(212, 218, 226) solid;
+}
+
+.auth_rate{
+    width:50px;
+    background:rgb(191, 212, 211);
+}
+
+.divbutton{
+    cursor: pointer;
+    background-color: rgb(202, 255, 154);
+    border: 1px black solid;
+    display: inline-block;
+    padding: 4px;
+    margin: 2px;
+}
+
+.entrytitle{
+    display: table-cell;
+    padding: 4px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 3px;
+    margin-right: 0px;
+
+}
+
+.entrylabel{
+    padding: 4px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 3px;
+    margin-right: 0px;
+    display: inline-block;
+}
+
+.c_entrytitle_pos{
+    background-color:  rgb(191, 212, 211) ;
+    border: 1px rgb(191, 212, 211) solid;
+}
+
+.c_entrytitle_text{
+    background-color: rgb(204, 213, 239);
+    border: 1px rgb(191, 212, 211) solid;
+}
+
+.c_entrylabel_pos{
+    background-color: rgb(212, 226, 226);
+    border: 1px rgb(191, 212, 211) solid;
+}
+.w50{
+    width: 50px;
+}
+.w100{
+    width: 100px;
+}
+
+.pos_holder{
+    background-color: rgb(106, 127, 144);
+    border: 1px rgb(90, 90, 90) solid;
+    display: inline-block;
+}
+.pos_title{
+    display: block;
+    width: 100%;
+    background-color: rgb(212, 226, 226);
+    border-bottom: 1px black solid;
+    padding: 2px 0px;
+}
