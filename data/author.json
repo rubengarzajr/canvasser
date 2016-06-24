@@ -6,8 +6,8 @@
         {"type":"canvasparent", "widgets":{"parent":"text"}}
     ],
     "object":{
-        "image":{"widgets":{"name":"text", "group":"arraystrings", "show":"bool", "image":"imagedata", "position":"xyobjects" }},
-        "shape":{"widgets":{"name":"text", "group":"arraystrings", "show":"bool", "shape":"shapedata", "position":"xyobjects" },"widgetbank":["actions"] }
+        "image":{"widgets":{"name":"text", "group":"arraystrings", "parent":"text", "show":"bool", "image":"imagedata", "position":"posxy","scale":"scale", "testp":"bool", "clicklist":"activitylist", "draglist":"activitylist", "droplist":"activitylist", "truelist":"activitylist"}},
+        "shape":{"widgets":{"name":"text", "group":"arraystrings", "show":"bool", "shape":"shapedata", "position":"posxy" },"widgetbank":["actions"] }
     },
     "image":[
         {"type":"imagedata", "widgets":{"id":"text", "url":"filename"}}
@@ -28,11 +28,12 @@
         {"type":"fill"}
     ],
     "actions":[
-        {"type":"url",         "widgets":{"url":"filename", "target":"text"}},
-        {"type":"groupvis",    "widgets":{"name":"text", "show":"bool"}},
-        {"type":"groupcolor",  "widgets":{"name":"text", "source":"text"}},
-        {"type":"objectvis",   "widgets":{"name":"text", "show":"bool"}},
-        {"type":"objectcolor", "widgets":{"name":"text", "source":"text"}}
+        {"type":"console",     "widgets":[{"text":"text"}]},
+        {"type":"url",         "widgets":[{"url":"filename"}, {"target":"text"}]},
+        {"type":"groupvis",    "widgets":[{"name":"text"},    {"show":"bool"}]},
+        {"type":"groupcolor",  "widgets":[{"name":"text"},    {"source":"text"}]},
+        {"type":"objectvis",   "widgets":[{"name":"text"},    {"show":"bool"}]},
+        {"type":"objectcolor", "widgets":[{"name":"text"},    {"source":"text"}]}
     ],
     "widgets":{
         "xy":{"x":"int","y":"int"},

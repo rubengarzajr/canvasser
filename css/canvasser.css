@@ -235,8 +235,9 @@ a{
 
 .pos_holder{
     background-color: rgb(106, 127, 144);
-    border: 1px rgb(90, 90, 90) solid;
+    border: 1px rgb(106, 127, 144) solid;
     display: inline-block;
+    margin-left: 3px;
 }
 .pos_title{
     display: block;
@@ -244,4 +245,18 @@ a{
     background-color: rgb(212, 226, 226);
     border-bottom: 1px black solid;
     padding: 2px 0px;
+    text-indent: 4px;
+}
+
+.sellist{
+    border: 0px;
+    background: rgb(212, 209, 239);
+    padding: 4px;
+    width: 150px;
+}
+
+.checkbox{
+    width: 29px;
+    height: 29px;
+    vertical-align: middle;
 }

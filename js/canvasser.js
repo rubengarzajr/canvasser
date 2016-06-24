@@ -242,8 +242,8 @@ function canvasser(interactiveData, dataForm){
                         obj.position.offset = {x:obj.parent.object.position.current.x + obj.position.current.x, y:obj.parent.object.position.current.y + obj.position.current.y};
                     }
                     obj.position.current = {
-                        "x":obj.parent.object.position.current.x +  Math.floor(obj.position.offset.x * obj.parent.object.scale.current), //act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current),
-                        "y":obj.parent.object.position.current.y +  Math.floor(obj.position.offset.y * obj.parent.object.scale.current) //act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)
+                        "x":obj.parent.object.position.current.x +  Math.floor(obj.position.offset.x * obj.parent.object.scale.current),
+                        "y":obj.parent.object.position.current.y +  Math.floor(obj.position.offset.y * obj.parent.object.scale.current)
                     };
                     obj.scale.current = obj.parent.object.scale.current;
                 }
@@ -264,6 +264,10 @@ function canvasser(interactiveData, dataForm){
                 }
 
                 var pos = {"x":obj.position.current.x, "y":obj.position.current.y};
+                if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
+                    console.log(obj.scale.current)
+                    obj.scale.current = 0.01;
+                }
                 if (obj.origin === "center") pos={"x":Math.floor(pos.x-act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":Math.floor(pos.y-act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
                 if (obj.show){
                     act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);

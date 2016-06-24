@@ -86,31 +86,32 @@ function authorcanvasser(dataFile, dataForm){
                 document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + name + " : " + finder.type + '</div>';
                 var propUI = document.getElementById("properties");
                 var prop = '<div class="propbody">' ;
-                prop       = buildPropUI(prop, type, finder, 0);
+                prop       = buildPropUI(prop, type, finder);
                 propUI.innerHTML = prop + '</div>';
             }
         });
     }
 
-    function buildPropUI(output, type, element, indent){
+    function buildPropUI(output, type, element){
         var win = 'window.author.updateActivity';
         console.log("C2:", element.type, rules.object[element.type]);
         for(var prop in rules.object[element.type].widgets){
             pType = rules.object[element.type].widgets[prop];
-            console.log("C3: " + prop + "  " + pType + "  " + element[prop])
-            if (pType === "text") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="auth_text" type="text" value="'+ element[prop]+'"><br>';
-            if (pType === "bool") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input type="checkbox" ' + (element[prop] ? "checked" : "") + ' onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + '\', \''+ type + '\', \'checked\')"><br>';
+            if (pType === "text") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="auth_text" type="text" value="'+ element[prop]+'" onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + '\', \''+ type + '\', \'value\')"><br>';
+            if (pType === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="auth_text" type="text" value="'+ element[prop]+'"><br>';
+
+            if (pType === "bool") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="checkbox" type="checkbox" ' + (element[prop] ? "checked" : "") + ' onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + '\', \''+ type + '\', \'checked\')"><br>';
             if (pType === "imagedata"){
                 imageList = ObjPartToArr(authorData.images, "id");
                 output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div>' +  buildSelect(imageList, type, element[prop], element.name, prop) + '<br>';
             }
-            if (pType === "xyobjects"){
-                output += '<div class="pos_holder"><div class="pos_title">' + prop + '</div>';
+            if (pType === "posxy"){
+                output += '<div style="display:flex"><div class="pos_holder"><div class="pos_title">' + prop + '</div>';
                 var hasDestination = false;
-                var hasRate = false
+                var hasRate        = false;
                 for(var posObj in element[prop]){
                     if (posObj === "destination") hasDestination = true;
-                    if (posObj === "rate") hasRate = true;
+                    if (posObj === "rate") hasRate               = true;
                 }
                 if (!hasDestination) element[prop].destination = undefined;
                 if (!hasRate) element[prop].rate = 0;
@@ -127,19 +128,79 @@ function authorcanvasser(dataFile, dataForm){
                             hasXY = true;
                         }
                         output += '<div class="entrylabel c_entrylabel_pos w100">' + posObj + '</div><span ' +  (hasXY ? "" : 'style="display:none"') + '>';
-                        output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+'.x' + '\', \''+ type + '\', \'value\')" id="numx" type="number" value=' + tempPos.x + ' />';
-                        output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+'.y' + '\', \''+ type + '\', \'value\')" id="numx" type="number" value=' + tempPos.y + ' />';
+                        output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+'.x' + '\', \''+ type + '\', \'value\')" type="number" value=' + tempPos.x + ' />';
+                        output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+'.y' + '\', \''+ type + '\', \'value\')" type="number" value=' + tempPos.y + ' /> ';
                         if (posObj !== 'current')  output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
                         output += '</span>'
                         if (!hasXY) output += '<div class ="divbutton" onclick="window.author.reload()">Enable</div>'
                         output += '<br>';
                     }
                 }
+                output += '<div class ="divbutton" onclick="window.author.reload()">Add position</div>'
+                output += '</div>';
+            }
+            if (pType === "scale"){
+                output += '<div class="pos_holder"><div class="pos_title">' + prop + '</div>';
+                var hasDestination = false;
+                var hasRate        = false;
+                for(var scaleObj in element[prop]){
+                    if (scaleObj === "destination") hasDestination = true;
+                    if (scaleObj === "rate") hasRate               = true;
+                }
+                if (!hasDestination) element[prop].destination = undefined;
+                if (!hasRate) element[prop].rate               = 0;
 
+                for(var scaleObj in element[prop]){
+                    if (scaleObj === "rate"){
+                        var tempScale = (element[prop][scaleObj] !== undefined ? tempScale = element[prop][scaleObj] : 0);
+                        output += '<div class="entrylabel c_entrylabel_pos w50">' + scaleObj + '</div><input class="auth_xy" onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+scaleObj+ '\', \''+ type + '\', \'value\')" id="numx" type="number" value=' + tempScale + ' />' + '<br>';
+                    }else{
+                        var tempScale = 1;
+                        var hasScale = false;
+                        if (element[prop][scaleObj] !== undefined){
+                            tempScale = element[prop][scaleObj];
+                            hasScale = true;
+                        }
+                        output += '<div class="entrylabel c_entrylabel_pos w100">' + scaleObj + '</div><span ' +  (hasScale ? "" : 'style="display:none"') + '>';
+                        output += ' <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'scale.'+scaleObj + '\', \''+ type + '\', \'value\')" type="number" step="any" value=' + tempScale + ' />';
+                        if (scaleObj !== 'current')  output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
+                        output += '</span>'
+                        if (!hasScale) output += '<div class ="divbutton" onclick="window.author.reload()">Enable</div>'
+                        output += '<br>';
+                    }
+                }
+                output += '</div></div>';
+            }
+            if (pType === "activitylist"){
+                output += '<div><div class="pos_holder"><div class="pos_title">' + prop + '</div>';
+                console.log("---------")
+                console.log(prop)
+                console.log(element[prop])
+                if (element[prop] !== undefined){
+                    element[prop].forEach(function(actElement){
+                        rules.actions.forEach(function(template){
+                            if (template.type === actElement.type) console.log(template)
+                        });
+
+                        for(var actObj in actElement){
+                            console.log("actObj",actObj,"actElement",actElement)
+                            console.log("prop",prop,"type",type)
+                            output += '<div class="entrylabel c_entrylabel_pos w100">' + actObj + '</div>';
+                            output += '<input class="auth_text" type="text" value="'+ actElement[actObj]+'" onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + '.' + actObj + '\', \''+ type + '\', \'value\')"><br>';
+                        }
+                    });
+                    output += '<br>';
+                }
+                output += '<div class ="divbutton" onclick="window.author.reload()">Add Action</div>'
                 output += '</div>';
             }
         }
         output += " " + element;
+        return output;
+    }
+
+    function outText(label, value, cmd){
+        '<div class="entrylabel c_entrytitle_text w100">' + label + '</div><input class="auth_text" type="text" value="'+ value +'"><br>';
         return output;
     }
 
@@ -152,7 +213,7 @@ function authorcanvasser(dataFile, dataForm){
     }
 
     function buildSelect(list, type, defaultId, element, prop){
-        var out = '<select onchange="window.author.updateActivity(this, \''+ element + '\', \'' + prop + '\', \''+ type + '\', \'value\')">';
+        var out = '<select class="sellist" onchange="window.author.updateActivity(this, \''+ element + '\', \'' + prop + '\', \''+ type + '\', \'value\')">';
         list.forEach(function(listElement){
             out += '<option value="'+ listElement + '"'+ (listElement === defaultId ? " selected" : "" )+ '>' + listElement + '</option>';
            });
@@ -162,30 +223,23 @@ function authorcanvasser(dataFile, dataForm){
 
     this.updateActivity = function(sel, element, prop, type, thingToCheck){
         var val = sel[thingToCheck];
-        console.log(val)
         authorData[type].forEach(function(finder){
             if (finder.name === element) {
                 setSubProp(finder, prop, val)
             }
         });
         console.log(authorData);
+        updateObjects();
         initCanvasser("sample", JSON.stringify(authorData), "string");
     }
 
-
     function setSubProp(obj, desc, val){
-        console.log(val)
-        console.log(isNaN(val))
         var arr = desc.split(".");
         while(arr.length > 1){
-            if (obj[arr[0]] === undefined) {
-                console.log(obj);
-                console.log(arr);
-                obj[arr[0]] = {};
-            }
+            if (obj[arr[0]] === undefined) obj[arr[0]] = {};
             obj = obj[arr.shift()];
         }
-        obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : parseInt(val)));
+        obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
     }
 
     function printRecusiveObj(output, element, indent){
