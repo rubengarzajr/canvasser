@@ -6,7 +6,7 @@
         {"type":"canvasparent", "widgets":{"parent":"text"}}
     ],
     "object":{
-        "image":{"widgets":{"name":"text", "group":"arraystrings", "parent":"text", "show":"bool", "image":"imagedata", "position":"posxy","scale":"scale", "testp":"bool", "clicklist":"activitylist", "draglist":"activitylist", "droplist":"activitylist", "truelist":"activitylist"}},
+        "image":{"widgets":{"name":"text", "group":"arraystrings", "parent.name":"objectdata", "show":"bool", "image":"imagedata", "origin":"text", "position":"posxy","scale":"scale", "testp":"bool", "clicklist":"activitylist", "draglist":"activitylist", "droplist":"activitylist", "truelist":"activitylist"}},
         "shape":{"widgets":{"name":"text", "group":"arraystrings", "show":"bool", "shape":"shapedata", "position":"posxy" },"widgetbank":["actions"] }
     },
     "image":[
@@ -33,7 +33,8 @@
         {"type":"groupvis",    "widgets":[{"name":"text"},    {"show":"bool"}]},
         {"type":"groupcolor",  "widgets":[{"name":"text"},    {"source":"text"}]},
         {"type":"objectvis",   "widgets":[{"name":"text"},    {"show":"bool"}]},
-        {"type":"objectcolor", "widgets":[{"name":"text"},    {"source":"text"}]}
+        {"type":"objectcolor", "widgets":[{"name":"text"},    {"source":"text"}]},
+        {"type":"scaledest",   "widgets":[{"filter":"text"},  {"name":"text"}, {"destination":"xy"}, {"rate":"float"}]}
     ],
     "widgets":{
         "xy":{"x":"int","y":"int"},

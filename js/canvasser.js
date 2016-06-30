@@ -217,7 +217,7 @@ function canvasser(interactiveData, dataForm){
 
         act.data.objects.forEach(function(obj){
             if (obj.parent !== undefined){
-                    if (obj.parent.update){
+                    if (obj.parent.update || obj.parent.object === undefined){
                         act.data.objects.forEach(function(parent){
                             if (parent.name !== obj.parent.name) return;
                             obj.parent.object = parent;
@@ -237,9 +237,19 @@ function canvasser(interactiveData, dataForm){
             if (obj.type === "image"){
                 if (act.imageList[obj.image] === undefined) return;
 
-                if (obj.parent !== undefined) {
+                if (obj.parent !== undefined){
                     if (obj.position.offset === undefined){
-                        obj.position.offset = {x:obj.parent.object.position.current.x + obj.position.current.x, y:obj.parent.object.position.current.y + obj.position.current.y};
+                        obj.position.offset = {x:obj.position.current.x-obj.parent.object.position.current.x, y:obj.position.current.y-obj.parent.object.position.current.y};
+                    }
+
+                    if (obj.position.destination !== undefined){
+                        var dest = {
+                            "x":obj.parent.object.position.current.x +  Math.floor(obj.position.destination.x * obj.parent.object.scale.current),
+                            "y":obj.parent.object.position.current.y +  Math.floor(obj.position.destination.y * obj.parent.object.scale.current)
+                        };
+                        var newVals              = lerpTo(obj.position.offset, obj.position.destination, obj.position.rate);
+                        obj.position.offset      = newVals.newCurrent;
+                        obj.position.destination = (newVals.newDestination===undefined? undefined : obj.position.destination);
                     }
                     obj.position.current = {
                         "x":obj.parent.object.position.current.x +  Math.floor(obj.position.offset.x * obj.parent.object.scale.current),
@@ -475,10 +485,7 @@ function canvasser(interactiveData, dataForm){
                 if (action.type === 'pstart'){
                         act.data.particles.forEach(function(obj){
                         if (obj.system.name === undefined) return;
-                        console.log(obj)
-                        //if (obj.name === action.name) pManager.create({system:{name:"test1", position:{current:{x:0,y:400},destination:{x:600,y:100}, rate:8}, on:true, image:"p", genType:"burst", emitCounter:100, emitRate:3},particles:{life:{min:19, max:80 },fadePercent:{in:25,out:90},scale:{min:0.25,max:1.5},speed:{position:{min:0, max:2},rotation:{min:-0.1, max:0.1}}}});
                         if (obj.system.name === action.name) pManager.create(obj);
-                        
                     });
                 }
                 if (action.type === 'scaledest'){

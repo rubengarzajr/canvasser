@@ -2,7 +2,7 @@
         "objects":[
             {"type":"image", "show":true,  "group":["images"],    "name":"background",  "image":"caddo_bk",   "scale":{"current":0, "destination":1,"rate":0.04}, "position":{"current":{"x":  200,"y":  200}, "destination":{"x":  200,"y":  200}, "rate":4}, "origin":"center", "testp":false, "clicklist":[]},
             {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_01",    "image":"caddo_01",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  200,"y":   75}, "home":{"x":  200,"y":   75}}, "origin":"center", "testp":true,  "clicklist":[{"type":"cleardown"},{"type":"copyelement","source":"tracesofthepast", "target":"details"}]},
-            {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_02",    "image":"caddo_02",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  324,"y":  173}, "home":{"x":  324,"y":  173}}, "origin":"center", "testp":true,  
+            {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_02",    "image":"caddo_02",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  324,"y":  173}, "home":{"x":  324,"y":  173}}, "origin":"center", "testp":true,
                 "clicklist":[
                     {"type":"cleardown"},
                     {"type":"copyelement","source":"tracesofthepast", "target":"details"},
@@ -25,7 +25,7 @@
             {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_03",    "image":"caddo_03",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  286,"y":  322}, "home":{"x":  286,"y":  322}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
             {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_04",    "image":"caddo_04",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  115,"y":  322}, "home":{"x":  115,"y":  322}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
             {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_05",    "image":"caddo_05",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":   75,"y":  173}, "home":{"x":   75,"y":  173}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
-            {"type":"image", "show":false,  "group":["text"],     "name":"back",        "image":"back",       "scale":{"current":1},                              "position":{"current":{"x":  200,"y":  275}}, "origin":"center", "testp":true, 
+            {"type":"image", "show":false,  "group":["text"],     "name":"back",        "image":"back",       "scale":{"current":1},                              "position":{"current":{"x":  200,"y":  275}}, "origin":"center", "testp":true,
                 "clicklist":[
                     {"type":"cleardown"},
                     {"type":"groupvis","name":"parent", "show":true},

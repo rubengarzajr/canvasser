@@ -16,11 +16,15 @@
         <?php include 'header.php';?>
         <div id="menu">
             <div class ="divbutton" onclick="window.author.reload()">Restart</div>
+            <div class ="divbutton" onclick="window.author.view()">View</div>
         </div>
         <div id="graphical">
             <div id='canvasholder' class="activity"></div>
             <div id='imageholder' class="imagebank"></div>
-            <div id='objectholder' class="objectbank"></div>
+            <div id='objectbank' class="objectbank">
+                <div id='objectholder' ></div>
+                <div class="divbutton" onclick="window.author.addObject()">Add Object</div>
+            </div>
         </div>
         <div id="propertiestitle"></div>
         <div id="properties"></div>

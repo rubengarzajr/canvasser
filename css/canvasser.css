@@ -238,6 +238,7 @@ a{
     border: 1px rgb(106, 127, 144) solid;
     display: inline-block;
     margin-left: 3px;
+    margin-bottom: 10px;
 }
 .pos_title{
     display: block;
