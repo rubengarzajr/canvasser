@@ -62,7 +62,7 @@ function authorcanvasser(dataFile, dataForm){
         var objectHolder = document.getElementById("objectholder");
         var objects = '<table  width="100%">';
         authorData.objects.forEach(function(object){
-            objects += '<tr onclick="window.author.getProps(\'objects\',\''+ object.name + '\')">';
+            objects += '<tr class="clicktr" onclick="window.author.getProps(\'objects\',\''+ object.name + '\')">';
             objects +='<td width="50%">' + object.name + '</td>';
             objects +='<td width="50%">' + object.type + '</td>';
             objects += '</tr>';
@@ -155,7 +155,7 @@ function authorcanvasser(dataFile, dataForm){
                         output += '<div class="entrylabel c_entrylabel_pos w100">' + posObj + '</div><span ' +  (hasXY ? "" : 'style="display:none"') + '>';
                         output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+'.x' + '\', \''+ type + '\', \'value\')" type="number" value=' + tempPos.x + ' />';
                         output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+'.y' + '\', \''+ type + '\', \'value\')" type="number" value=' + tempPos.y + ' /> ';
-                        if (posObj !== 'current')  output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
+                        if (posObj !== 'current' && posObj !== 'offset')  output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
                         output += '</span>'
                         if (enable) output += '<div class ="divbutton" onclick="window.author.reload()">Enable</div>'
                         output += '<br>';
@@ -197,21 +197,26 @@ function authorcanvasser(dataFile, dataForm){
                 output += '</div></div>';
             }
             if (pType === "activitylist"){
+                var actList = [];
+                rules.actions.forEach(function(template){actList.push(template.type)});
                 output += '<div><div class="pos_holder"><div class="pos_title">' + prop + '</div>';
                 if (element[prop] !== undefined){
                     element[prop].forEach(function(actElement, idx){
+                        
                         rules.actions.forEach(function(template){
                             if (template.type === actElement.type) console.log(template)
                         });
+                        output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>' +  buildSelect(actList, type, actElement.type, element.name, prop) + '<br>';
 
                         for(var actObj in actElement){
+                            if (actObj === "type") continue;
                             output += '<div class="entrylabel c_entrylabel_pos w100">' + actObj + '</div>';
                             output += '<input class="auth_text" type="text" value="'+ actElement[actObj]+'" onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + "." + idx + '.' + actObj + '\', \''+ type + '\', \'value\')"><br>';
                         }
                     });
                     output += '<br>';
                 }
-                output += '<div class ="divbutton" onclick="window.author.reload()">Add Action</div>'
+                output += '<div class ="divbutton" onclick="window.author.addaction(\''+prop+'\')">Add Action</div>'
                 output += '</div>';
             }
         }
@@ -254,6 +259,12 @@ function authorcanvasser(dataFile, dataForm){
             }
         });
         initCanvasser("sample", JSON.stringify(authorData), "string");
+    }
+
+    this.addaction = function(list){
+        console.log(list);
+        console.log(rules.actions)
+        
     }
 
     function setSubProp(obj, desc, val){

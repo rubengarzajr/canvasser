@@ -261,3 +261,11 @@ a{
     height: 29px;
     vertical-align: middle;
 }
+
+.clicktr{
+    cursor: pointer;
+}
+
+.clicktr:hover{
+    background-color: yellow;
+}
