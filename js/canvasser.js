@@ -453,6 +453,13 @@ function canvasser(interactiveData, dataForm){
                 if (action.type === 'modvar'){
                     if (action.operation === "add") act.vars[action.name] += action.amount;
                 }
+                if (action.type === 'swapimage'){
+                    act.data.objects.forEach(function(obj){
+                        if (obj.name === undefined) return;
+                        if (obj.name !== action.name) return;
+                        obj.image = action.image;
+                    });
+                }
                 if (action.type === 'moveobject'){
                     act.data.objects.forEach(function(obj){
                         if (obj.name === undefined) return;

@@ -8,14 +8,8 @@
         <link href="css/normalize.css" rel="stylesheet" type="text/css"/>
         <link href="css/canvasser.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body onload='initCanvasser("tex","data/eforensics.json", "file");'>
+    <body onload='initCanvasser("tex","data/eyesexplorer.json", "file");'>
         <?php include 'header.php';?>
-        <div class="title_a">Case File Sample</div>
-        <table>
-            <tr>
-                <td>
-                    <div id='canvasholder' style="float:left"></div>
-                </td>
-            </tr>
+        <div id='canvasholder' style="float:left"></div>
     </body>
 </html>
