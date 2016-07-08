@@ -412,7 +412,7 @@ function canvasser(interactiveData, dataForm){
                 if (action.type === 'copyelement'){
                     var target = document.getElementById(action.target);
                     var source = document.getElementById(action.source);
-                    if (target !== undefined && source !== undefined){
+                    if (target !== undefined && source !== undefined && target !== null && source !== null){
                         target.innerHTML = source.innerHTML;
                     }
                 }

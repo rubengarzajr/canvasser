@@ -43,7 +43,12 @@ function authorcanvasser(dataFile, dataForm){
     this.view = function(){
         console.log(authorData);
     }
-
+    this.paste = function(){
+        var pasteData = document.getElementById("paste").value;
+        console.log(pasteData)
+        initCanvasser("sample", pasteData, "string");
+    }
+    
     function requestJSON(fileNamePath, returnFunction)
     {
         var xhr = new XMLHttpRequest();

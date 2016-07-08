@@ -17,6 +17,7 @@
         <div id="menu">
             <div class ="divbutton" onclick="window.author.reload()">Restart</div>
             <div class ="divbutton" onclick="window.author.view()">View</div>
+            <div class ="divbutton" onclick="window.author.paste()">Paste</div>
         </div>
         <div id="graphical">
             <div id='canvasholder' class="activity"></div>
@@ -26,6 +27,7 @@
                 <div class="divbutton" onclick="window.author.addObject()">Add Object</div>
             </div>
         </div>
+        <div id="pastediv"><textarea id="paste" rows="10" cols="100"></textarea></div>
         <div id="propertiestitle"></div>
         <div id="properties"></div>
         <div id="authorspace"></div>
