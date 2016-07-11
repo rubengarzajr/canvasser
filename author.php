@@ -16,18 +16,20 @@
         <?php include 'header.php';?>
         <div id="menu">
             <div class ="divbutton" onclick="window.author.reload()">Restart</div>
-            <div class ="divbutton" onclick="window.author.view()">View</div>
-            <div class ="divbutton" onclick="window.author.paste()">Paste</div>
+            <div class ="divbutton" onclick="window.author.view()">View JSON</div>
+            <div class ="divbutton" onclick="window.author.paste()">Update JSON</div>
+            <div class ="divbutton" onclick="window.author.toggleobjects()">Object List</div>
+            <div class ="divbutton" onclick="window.author.toggleimages()">Image List</div>
         </div>
         <div id="graphical">
             <div id='canvasholder' class="activity"></div>
-            <div id='imageholder' class="imagebank"></div>
-            <div id='objectbank' class="objectbank">
+            <div id='imageholder' style="display:block" class="imagebank"></div>
+            <div id='objectbank' style="display:block"  class="objectbank">
                 <div id='objectholder' ></div>
                 <div class="divbutton" onclick="window.author.addObject()">Add Object</div>
             </div>
         </div>
-        <div id="pastediv"><textarea id="paste" rows="10" cols="100"></textarea></div>
+        <div id="pastediv"><textarea id="paste" rows="10"></textarea></div>
         <div id="propertiestitle"></div>
         <div id="properties"></div>
         <div id="authorspace"></div>

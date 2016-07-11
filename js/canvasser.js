@@ -238,24 +238,32 @@ function canvasser(interactiveData, dataForm){
                 if (act.imageList[obj.image] === undefined) return;
 
                 if (obj.parent !== undefined){
+                    var parPos = {current:{x:0,y:0}};
+                    var parScl = {current:1};
+                    if (obj.parent.object !== undefined){
+                        parPos = obj.parent.object.position;
+                        parScl = obj.parent.object.scale;
+                    }
+
                     if (obj.position.offset === undefined){
-                        obj.position.offset = {x:obj.position.current.x-obj.parent.object.position.current.x, y:obj.position.current.y-obj.parent.object.position.current.y};
+                        obj.position.offset = {x:obj.position.current.x-parPos.current.x, y:obj.position.current.y-parPos.current.y};
                     }
 
                     if (obj.position.destination !== undefined){
                         var dest = {
-                            "x":obj.parent.object.position.current.x +  Math.floor(obj.position.destination.x * obj.parent.object.scale.current),
-                            "y":obj.parent.object.position.current.y +  Math.floor(obj.position.destination.y * obj.parent.object.scale.current)
+                            "x":parPos.current.x +  Math.floor(obj.position.destination.x * parScl.current),
+                            "y":parPos.current.y +  Math.floor(obj.position.destination.y * parScl.current)
                         };
                         var newVals              = lerpTo(obj.position.offset, obj.position.destination, obj.position.rate);
                         obj.position.offset      = newVals.newCurrent;
                         obj.position.destination = (newVals.newDestination===undefined? undefined : obj.position.destination);
                     }
+
                     obj.position.current = {
-                        "x":obj.parent.object.position.current.x +  Math.floor(obj.position.offset.x * obj.parent.object.scale.current),
-                        "y":obj.parent.object.position.current.y +  Math.floor(obj.position.offset.y * obj.parent.object.scale.current)
+                        "x":parPos.current.x +  Math.floor(obj.position.offset.x * parScl.current),
+                        "y":parPos.current.y +  Math.floor(obj.position.offset.y * parScl.current)
                     };
-                    obj.scale.current = obj.parent.object.scale.current;
+                    obj.scale.current = parScl.current;
                 }
                 var newVals              = lerpTo(obj.position.current, obj.position.destination, obj.position.rate);
                 obj.position.current     = newVals.newCurrent;

@@ -66,9 +66,9 @@ a{
 
 .header{
     display: block;
-    background-color: rgb(200,200,200);
+    background-color: rgb(243, 243, 243);
     padding-bottom: 20px;
-    border-bottom: 2px black solid;
+    border-bottom: 2px #dadada solid;
 }
 
 .titlecenter{
@@ -77,28 +77,34 @@ a{
     left: 0;
     right: 0;
     font-size: 2em;
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin-bottom: 15px;
 }
 
 .imagebank{
     float: right;
     background-image: url("../image/checker.jpg");
-    border: 2px black solid;
+    border: 2px rgb(165, 165, 165) solid;
+    border-radius: 4px;
     width: 200px;
     height: 600px;
     overflow-y: scroll;
     margin-right: 5px;
     margin-left: 5px;
+    box-shadow: 0 2px 2px 0 rgba(117, 117, 117, 0.45), 0 11px 5px 0 rgba(0, 0, 0, 0.19);
 }
 
 .objectbank{
     float: right;
-    border: 2px black solid;
+    border: 2px rgb(165, 165, 165) solid;
+    border-radius: 4px;
     width: 150px;
     height: 600px;
     overflow-y: scroll;
     margin-right: 5px;
     margin-left: 5px;
     background-color: white;
+    box-shadow: 0 2px 2px 0 rgba(117, 117, 117, 0.45), 0 11px 5px 0 rgba(0, 0, 0, 0.19);
 }
 
 .imagebank img {
@@ -110,7 +116,7 @@ a{
     background-color: white;
     padding-top: 5px;
     padding-bottom: 5px;
-    border: 2px black solid;
+    border: 1px rgb(200,200,200) solid;
 }
 
 .imageid{
@@ -121,7 +127,6 @@ a{
 #graphical{
     display: inline-block;
     width: 100%;
-    background-color: rgb(230,230,230);
 }
 
 .activity{
@@ -186,11 +191,13 @@ a{
 
 .divbutton{
     cursor: pointer;
-    background-color: rgb(202, 255, 154);
+    background-color: rgb(237, 255, 221);
     border: 1px black solid;
+    border-radius: 3px;
     display: inline-block;
     padding: 4px;
     margin: 2px;
+    box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
 }
 
 .entrytitle{
@@ -268,4 +275,18 @@ a{
 
 .clicktr:hover{
     background-color: yellow;
+}
+
+#paste{
+    width:98%;
+    margin-left: 1%;
+    margin-right: 1%;
+    box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+    border-radius: 4px;
+}
+
+#menu{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
 }

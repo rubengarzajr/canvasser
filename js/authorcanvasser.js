@@ -31,7 +31,6 @@ function authorcanvasser(dataFile, dataForm){
         }
     };
 
-    console.log(authorData);
     initCanvasser("sample", JSON.stringify(authorData), "string");
     updateObjects();
     updateImages();
@@ -41,14 +40,27 @@ function authorcanvasser(dataFile, dataForm){
         initCanvasser("sample", JSON.stringify(authorData), "string");
     }
     this.view = function(){
-        console.log(authorData);
+        document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
     }
     this.paste = function(){
         var pasteData = document.getElementById("paste").value;
-        console.log(pasteData)
+        authorData = JSON.parse(pasteData);
+        document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
+        updateImages();
+        updateObjects();
         initCanvasser("sample", pasteData, "string");
     }
-    
+    this.toggleobjects= function(){
+        var d = document.getElementById("objectbank");
+        if (d.style.display === "block") d.style.display="none";
+        else d.style.display = "block";
+    }
+    this.toggleimages= function(){
+        var d = document.getElementById("imageholder");
+        if (d.style.display === "block") d.style.display="none";
+        else d.style.display = "block";
+    }
+
     function requestJSON(fileNamePath, returnFunction)
     {
         var xhr = new XMLHttpRequest();
