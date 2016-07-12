@@ -40,15 +40,20 @@ function authorcanvasser(dataFile, dataForm){
         initCanvasser("sample", JSON.stringify(authorData), "string");
     }
     this.view = function(){
-        document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
+        //document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
+        document.getElementById("paste").value = JSON.stringify(authorData);
     }
     this.paste = function(){
         var pasteData = document.getElementById("paste").value;
         authorData = JSON.parse(pasteData);
-        document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
+        //document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
         updateImages();
         updateObjects();
         initCanvasser("sample", pasteData, "string");
+    }
+    this.format = function(){
+        var pasteData = document.getElementById("paste").value;
+        document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
     }
     this.toggleobjects= function(){
         var d = document.getElementById("objectbank");
@@ -59,6 +64,18 @@ function authorcanvasser(dataFile, dataForm){
         var d = document.getElementById("imageholder");
         if (d.style.display === "block") d.style.display="none";
         else d.style.display = "block";
+    }
+    this.togglejson= function(){
+        var s = document.getElementById("jsonmenu");
+        var b = document.getElementById("togglejson");
+        if (s.style.display === "block") {
+            s.style.display = "none";
+            b.src="image/icon_max_g.png";
+        }
+        else {
+            s.style.display = "block";
+            b.src="image/icon_min_g.png";
+        }
     }
 
     function requestJSON(fileNamePath, returnFunction)

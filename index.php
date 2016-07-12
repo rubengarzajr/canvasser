@@ -1,5 +1,3 @@
-<?php
-?>
 <html>
     <head>
         <title>Canvasser Samples</title>
@@ -9,6 +7,8 @@
         <link href="css/canvasser.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
+        <?php include 'header.php';?>
+        <br><br>
         <a href="texasmap.php">Exhibit Map of Texas</a><br>
         <a href="caddo.php">World of the Caddo Navigation</a><br>
         <a href="dragdrop.php">Meet The Critters</a><br>

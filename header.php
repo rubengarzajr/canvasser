@@ -11,8 +11,8 @@ and open the template in the editor.
     </head>
     <body>
         <div class="header">
-            <a href="index.php"><div class="titlecenter">Canvasser</div>
-            Home</a>
+            <a href="index.php"><div class="titlecenter">CANVASSER</div>
+            <div class ="divbutton" >Home</div></a>
         </div>
     </body>
 </html>
