@@ -9,13 +9,13 @@
             {"type":"image",    "show":true,  "group":["pic"],    "name":"pic6",    "image":"pic6",   "scale":{"current":1}, "position":{"current":{"x":  931,"y": 200},"destination":{"x":  931,"y": 44},"rate":4}, "origin":"default", "testp":false}
         ],
         "images":[
-            {"id": "bk",    "url":"image/eyesofexplorer/cabaza_nav_bk.png"},
-            {"id": "pic1",  "url":"image/eyesofexplorer/cabaza_nav_pick01.png"},
-            {"id": "pic2",  "url":"image/eyesofexplorer/cabaza_nav_pick02.png"},
-            {"id": "pic3",  "url":"image/eyesofexplorer/cabaza_nav_pick03.png"},
-            {"id": "pic4",  "url":"image/eyesofexplorer/cabaza_nav_pick04.png"},
-            {"id": "pic5",  "url":"image/eyesofexplorer/cabaza_nav_pick05.png"},
-            {"id": "pic6",  "url":"image/eyesofexplorer/cabaza_nav_pick06.png"}
+            {"id": "bk",    "url":"../image/eyesofexplorer/cabaza_nav_bk.png"},
+            {"id": "pic1",  "url":"../image/eyesofexplorer/cabaza_nav_pick01.png"},
+            {"id": "pic2",  "url":"../image/eyesofexplorer/cabaza_nav_pick02.png"},
+            {"id": "pic3",  "url":"../image/eyesofexplorer/cabaza_nav_pick03.png"},
+            {"id": "pic4",  "url":"../image/eyesofexplorer/cabaza_nav_pick04.png"},
+            {"id": "pic5",  "url":"../image/eyesofexplorer/cabaza_nav_pick05.png"},
+            {"id": "pic6",  "url":"../image/eyesofexplorer/cabaza_nav_pick06.png"}
         ],
 	"shapes": {
 	},

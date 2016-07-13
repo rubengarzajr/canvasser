@@ -12,7 +12,11 @@ and open the template in the editor.
     <body>
         <div class="header">
             <a href="index.php"><div class="titlecenter">CANVASSER</div>
-            <div class ="divbutton" >Home</div></a>
+            <?php
+            $url = $_SERVER['REQUEST_URI'];
+            $pos = strpos($url, "index");
+            if (!$pos) echo '<div class ="divbutton" >Home</div></a>';
+            ?>
         </div>
     </body>
 </html>

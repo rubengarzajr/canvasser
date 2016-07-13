@@ -563,6 +563,9 @@ function canvasser(interactiveData, dataForm){
                         loadInto(action.url, target);
                     }
                 }
+                if (action.type === 'loadpage'){
+                    window.location.href = action.url;
+                }
             });
         });
         act.applyAction = [];

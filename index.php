@@ -9,13 +9,14 @@
     <body>
         <?php include 'header.php';?>
         <br><br>
-        <a href="texasmap.php">Exhibit Map of Texas</a><br>
-        <a href="caddo.php">World of the Caddo Navigation</a><br>
-        <a href="dragdrop.php">Meet The Critters</a><br>
-        <a href="eyesofexplorer.php">Eyes of the Explorer Navigation</a><br>
-        <a href="poppuzzle.php">Population Puzzlers</a><br>
+        <a href="activities/texasmap.php">Exhibit Map of Texas</a><br>
+        <a href="activities/caddo.php">World of the Caddo Navigation</a><br>
+        <a href="activities/bonfire.php">Bonfire</a><br>
+        <a href="activities/dragdrop.php">Meet The Critters</a><br>
+        <a href="activities/eyesofexplorer.php">Eyes of the Explorer Navigation</a><br>
+        <a href="activities/poppuzzle.php">Population Puzzlers</a><br>
         <br>
-        <a href="eforensics.php">eforensics: Case File Bone Drag Example</a><br>
+        <a href="activities/eforensics.php">eforensics: Case File Bone Drag Example</a><br>
         <br>
         <a href="author.php">Author</a><br>
     </body>

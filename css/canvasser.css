@@ -89,7 +89,12 @@ a{
     padding-bottom: 10px;
     border-bottom: 2px #dadada solid;
     box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    height: 45px;
+}
 
+.titlebar{
+    background-color: rgb(118, 150, 218);
+    cursor: move;
 }
 
 .titlecenter{
@@ -102,10 +107,8 @@ a{
     color: crimson;
 }
 
-#objectbank{
+.skinnybank{
     float: right;
-    width: 150px;
-    height: 600px;
     background-color: rgb(106, 127, 144);
     border: 1px rgb(106, 127, 144) solid;
     margin-right: 5px;
@@ -117,8 +120,8 @@ a{
 }
 
  #objectholder{
-    height: 500px;
     width: 130px;
+    height: 500px;
     border: 2px rgb(165, 165, 165) solid;
     border-radius: 4px;
     overflow-y: scroll;
@@ -130,30 +133,22 @@ a{
     box-shadow: 0 2px 2px 0 rgba(117, 117, 117, 0.45), 0 11px 5px 0 rgba(0, 0, 0, 0.19);
 }
 
-#imagebank{
-    background-color: rgb(106, 127, 144);
-    border: 1px rgb(106, 127, 144) solid;
-    float: right;
-    width: 150px;
-    height: 600px;
-    margin-right: 5px;
-    margin-left: 5px;
-    border-radius: 4px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
+.padlr{
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
-
 #imageholder {
-    background-image: url("../image/checker.jpg");
+    width: 130px;
+    height: 500px;
+    background-image: url("../image/checker.png");
     border: 2px rgb(165, 165, 165) solid;
     border-radius: 4px;
-    width: 135px;
-    height: 500px;
     overflow-y: scroll;
-    margin-right: 5px;
-    margin-left: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
     box-shadow: 0 2px 2px 0 rgba(117, 117, 117, 0.45), 0 11px 5px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -163,10 +158,10 @@ a{
 }
 
 .imagetext{
-    background-color: white;
+    font-family: selecttext;
+    font-size: 1.6em;
     padding-top: 5px;
     padding-bottom: 5px;
-    border: 1px rgb(200,200,200) solid;
 }
 
 .imageid{
@@ -181,7 +176,14 @@ a{
 
 .activity{
     float:left;
+    border: 2px rgb(100,100,100) solid;
+}
+
+.authoractivity{
     border: 2px white solid;
+    box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+    margin-bottom: 5px;
+    background-color: white;
 }
 
 #properties{
@@ -249,6 +251,19 @@ a{
     padding: 4px;
     margin: 2px;
     box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+}
+
+.divmenu{
+    color: rgb(220,220,220);
+    cursor: pointer;
+    font-family: button;
+    display: inline-block;
+    padding: 2px;
+    margin: 2px;
+}
+
+.divmenu:hover{
+    color: white;
 }
 
 .wintitle{

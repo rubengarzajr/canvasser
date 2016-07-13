@@ -3,15 +3,11 @@
 <html>
     <head>
         <title>Canvasser</title>
-        <script src="js/canvasser.js" type="text/javascript"></script>
-        <link rel="shortcut icon" href="favicon.ico" />
-        <link href="css/normalize.css" rel="stylesheet" type="text/css"/>
-        <link href="css/canvasser.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body onload='initCanvasser("tex","data/texasmap.json", "file");'>
-        <?php include 'header.php';?>
-        <div class="title_a">Texas Map</div>
-        <div class="title_b">Click on the map locations to visit an exhibit</div>
+    <body onload='initCanvasser("tex","../data/caddo.json", "file");'>
+        <?php include 'activityheader.php';?>
+        <div class="title_a">World of the Caddo</div>
+        <div class="title_b">Click on an image to visit an exhibit</div>
         <table>
             <tr>
                 <td>
@@ -19,22 +15,25 @@
                 </td>
                 <td>
                     <div id='details' class="contentspace" style="float:left"></div>
-                    <div id='drop_a' style="display: none;">
-                        <div class="title">Drop A</div>
-                        <div class="subtitle">Subtitle A</div>
+                    <div id='tracesofthepast' style="display: none;">
+                        <img src="image/caddo/page/tracescollage.jpg" alt=""/>
+                        <div class="title">Traces of the Past</div>
                         <div class="divspace">&nbsp;</div>
-                        <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
+                        <div class="">For many years, archeologists have been studying the abandoned places where ancient Caddo people lived. They search for clues about what Caddo life was like hundreds of years ago. These clues may be objects, such as pottery, or they may be stains and patterns in the soil where a village once stood.</div>
+                        <div class="">In the sections below, you can learn more about how archeologists learn about the ancient Caddo world. In our "Virtual Museum," you can look at some of the objects the Caddo left behind. You will see the unusual pottery they made, the types of jewelry they wore, and the precious items they buried in their mysterious mounds. As you look at these objects, perhaps you will get a better feeling for what ancient Caddo life was like.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
                     </div>
-                    <div id='drop_b' style="display: none;">
-                        <div class="title">Drop B</div>
-                        <div class="subtitle">Subtitle B</div>
+                    <div id='clay' style="display: none;">
+                        <div class="title">Amazing Clay</div>
                         <div class="divspace">&nbsp;</div>
-                        The bag from Horseshoe Ranch Cave, with its fascinating contents shown in order of their removal by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
-                        <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
-                        <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/caddo_02_clay01.jpg" alt=""/>
+                        <div class="">Caddo women made incredible pottery in many shapes, sizes, and designs. They used the coil method to form the pots. After the pots dried for a few days, sharp sticks were used to "engrave" designs on some of them. After polishing with a smooth stone, the vessels were fired in an open wood fire to "bake" them and make them strong.</div>
+                        <img src="image/caddo/page/caddo_02_clay02.jpg" alt=""/>
+                        <div class="">Clay creatures!</div>
+                        <img src="image/caddo/page/caddo_02_clay03.jpg" alt=""/>
+                        <div class="">Caddo women made incredible pottery in many shapes, sizes, and designs. They used the coil method to form the pots. After the pots dried for a few days, sharp sticks were used to "engrave" designs on some of them. After polishing with a smooth stone, the vessels were fired in an open wood fire to "bake" them and make them strong.</div>
+                        <img src="image/caddo/page/caddo_02_clay04.jpg" alt=""/>
+                        <div class="">Caddo women made incredible pottery in many shapes, sizes, and designs. They used the coil method to form the pots. After the pots dried for a few days, sharp sticks were used to "engrave" designs on some of them. After polishing with a smooth stone, the vessels were fired in an open wood fire to "bake" them and make them strong.</div>
                     </div>
                     <div id='drop_c' style="display: none;">
                         <div class="title">Drop C</div>
@@ -43,7 +42,7 @@
                         The bag from by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_d' style="display: none;">
                         <div class="title">Drop D</div>
@@ -52,7 +51,7 @@
                         A rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_e' style="display: none;">
                         <div class="title">Drop E</div>
@@ -61,7 +60,7 @@
                         In order of their removal by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_e' style="display: none;">
                         <div class="title">Drop E</div>
@@ -70,7 +69,7 @@
                         Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_f' style="display: none;">
                         <div class="title">Drop F</div>
@@ -79,7 +78,7 @@
                         The monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_g' style="display: none;">
                         <div class="title">Drop G</div>
@@ -88,7 +87,7 @@
                         Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_h' style="display: none;">
                         <div class="title">Drop H</div>
@@ -97,7 +96,7 @@
                         Order of their removal by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_i' style="display: none;">
                         <div class="title">Drop I</div>
@@ -106,7 +105,7 @@
                         Contents shown in order of their removal by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_j' style="display: none;">
                         <div class="title">Drop J</div>
@@ -115,8 +114,8 @@
                         Sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/pinetreemound.jpg" alt=""/>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/pinetreemound.jpg" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_k' style="display: none;">
                         <div class="title">Drop K</div>
@@ -125,7 +124,7 @@
                         If enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_l' style="display: none;">
                         <div class="title">Drop L</div>
@@ -134,7 +133,7 @@
                         B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_m' style="display: none;">
                         <div class="title">Drop M</div>
@@ -143,7 +142,7 @@
                         Dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_n' style="display: none;">
                         <div class="title">Drop N</div>
@@ -152,7 +151,7 @@
                         4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_o' style="display: none;">
                         <div class="title">Drop O</div>
@@ -161,7 +160,7 @@
                         Shown in order of their removal by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_p' style="display: none;">
                         <div class="title">Drop P</div>
@@ -170,7 +169,7 @@
                         Shown in order of their removal by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_q' style="display: none;">
                         <div class="title">Drop Q</div>
@@ -179,7 +178,7 @@
                         Shown in order of their removal by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_r' style="display: none;">
                         <div class="title">Drop R</div>
@@ -188,7 +187,7 @@
                         Shown in order of their removal by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_s' style="display: none;">
                         <div class="title">Drop S</div>
@@ -197,7 +196,7 @@
                         Shown in order of their removal by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
                     <div id='drop_t' style="display: none;">
                         <div class="title">Drop T</div>
@@ -206,78 +205,8 @@
                         Shown in order of their removal by analysts at the University of Texas in 1936 . Radiocarbon dated to ca. 4200 cal. B.P., during the time that the monumental Pecos River Style rock art began to flourish, the cache offers a rare--if enigmatic--glimpse into the traditions of Lower Pecos people. Reflecting both the mundane and sacred, the bag has been described as a hunter's pouch and a medicine bundle. Photo by James Neely, TARL Archives
                         <div class="">See more at: <a href="http://www.texasmonthly.com/politics/what-nobody-says-about-austin/#sthash.Z2RPg6Nc.dpuf">Texas Monthly</a>.</div>
                         <div class="divspace">&nbsp;</div>
-                        <img src="image/dates.png" alt=""/>
+                        <img src="image/caddo/page/dates.png" alt=""/>
                     </div>
-                </td>
-            </tr>
-        </table>
-        <table class="bottomlinks">
-            <tr>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_a"}])'>Pin A</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_e"}])'>Pin E</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_i"}])'>Pin I</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_m"}])'>Pin M</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_q"}])'>Pin Q</div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_b"}])'>Pin B</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_f"}])'>Pin F</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_j"}])'>Pin J</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_n"}])'>Pin N</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_r"}])'>Pin R</div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_c"}])'>Pin C</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_g"}])'>Pin G</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_k"}])'>Pin K</div>
-                </td>
-                <td>
-                   <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_o"}])'>Pin O</div>
-                </td>
-                <td>
-                   <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_s"}])'>Pin S</div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_d"}])'>Pin D</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_h"}])'>Pin H</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_l"}])'>Pin L</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_p"}])'>Pin P</div>
-                </td>
-                <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_t"}])'>Pin T</div>
                 </td>
             </tr>
         </table>

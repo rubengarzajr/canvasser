@@ -1,11 +1,20 @@
 function initAuthorCanvasser(vari, datafile, dataForm){
     window.author = new authorcanvasser(datafile, dataForm);
+    
 }
 
 function authorcanvasser(dataFile, dataForm){
 
     requestJSON("data/author.json", initrules);
-
+    
+    var UIdata = {
+        mousedown: false,
+        moveElement: null,
+        mousePos: {x:0,y:0},
+        offset: {x:0,y:0},
+        zidx: 25
+    };
+    
     var authorData = {
         objects:[
             {type:"image", show:true, group:["images","shiny"], name:"test",  image:"p",     scale:{current:1}, position:{current:{x: 200,y: 300}, destination:{x: 160,y: 150}, rate:4}, origin:"center",  testp:true, clicklist:[{type:"console",text:"hi"}]},
@@ -30,11 +39,54 @@ function authorcanvasser(dataFile, dataForm){
             canvasparent: "canvasholder"
         }
     };
-
+    document.getElementById("canvasmover").addEventListener("mousedown", function(){moveObjD("canvasbank")}, false);
+    document.getElementById("objectmover").addEventListener("mousedown", function(){moveObjD("objectbank")}, false);
+    document.getElementById("imagemover").addEventListener("mousedown", function(){moveObjD("imagebank")}, false);
+//    document.getElementById("jsonmover").addEventListener("mousedown", function(){moveObjD("jsonbank")}, false);
+    window.addEventListener("mouseup", moveObjU, false);
+    window.addEventListener("mousemove", mouseMove, false);
     initCanvasser("sample", JSON.stringify(authorData), "string");
     updateObjects();
     updateImages();
     var rules = null;
+    loop();
+
+    function loop(){
+        if (UIdata.moveElement !== null){
+            UIdata.moveElement.style.left = UIdata.mousePos.x  - UIdata.offset.x + "px";
+            UIdata.moveElement.style.top  = UIdata.mousePos.y  - UIdata.offset.y + "px";
+        }
+        window.requestAnimationFrame(loop);
+    }
+
+    function mouseMove(ev){
+        UIdata.mousePos = {x:ev.clientX, y:ev.clientY };
+
+        if (UIdata.moveElement !== null){
+            if (document.selection) {
+              document.selection.empty()
+            } else {
+              window.getSelection().removeAllRanges()
+            }
+        }
+    }
+
+    function moveObjD(element){
+        UIdata.mousedown   = true;
+        UIdata.moveElement = document.getElementById(element);
+        UIdata.zidx ++;
+        UIdata.moveElement.style.zIndex = UIdata.zidx;
+        var off = {x:0, y:0};
+        if (UIdata.moveElement.style.left !== "") off.x = UIdata.mousePos.x - parseInt(UIdata.moveElement.style.left.slice(0,-2));
+        if (UIdata.moveElement.style.top  !== "") off.y = UIdata.mousePos.y - parseInt(UIdata.moveElement.style.top.slice(0,-2));
+        UIdata.offset      = {x:off.x, y:off.y};
+    }
+
+    function moveObjU(ev){
+        UIdata.mousedown = false;
+        UIdata.moveElement = null;
+    }
+
 
     this.reload = function(){
         initCanvasser("sample", JSON.stringify(authorData), "string");
@@ -55,16 +107,19 @@ function authorcanvasser(dataFile, dataForm){
         var pasteData = document.getElementById("paste").value;
         document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
     }
-    this.toggleobjects= function(){
-        var d = document.getElementById("objectbank");
-        if (d.style.display === "block") d.style.display="none";
-        else d.style.display = "block";
+    this.toggleminmax= function(element, minmax, maxsize){
+        var d = document.getElementById(element);
+        var b = document.getElementById(minmax);
+        if (d.style.display === "block"){
+            d.style.display="none";
+            b.src="image/icon_max_g.png";
+        }
+        else {
+            d.style.display = "block";
+            b.src="image/icon_min_g.png";
+        }
     }
-    this.toggleimages= function(){
-        var d = document.getElementById("imageholder");
-        if (d.style.display === "block") d.style.display="none";
-        else d.style.display = "block";
-    }
+
     this.togglejson= function(){
         var s = document.getElementById("jsonmenu");
         var b = document.getElementById("togglejson");
@@ -236,7 +291,6 @@ function authorcanvasser(dataFile, dataForm){
                 output += '<div><div class="pos_holder"><div class="pos_title">' + prop + '</div>';
                 if (element[prop] !== undefined){
                     element[prop].forEach(function(actElement, idx){
-                        
                         rules.actions.forEach(function(template){
                             if (template.type === actElement.type) console.log(template)
                         });
@@ -298,7 +352,7 @@ function authorcanvasser(dataFile, dataForm){
     this.addaction = function(list){
         console.log(list);
         console.log(rules.actions)
-        
+
     }
 
     function setSubProp(obj, desc, val){
@@ -345,7 +399,6 @@ function authorcanvasser(dataFile, dataForm){
         return output;
     }
 
-
     function get_type(thing){
         if(thing===null)return "[object Null]"; // special case
         return Object.prototype.toString.call(thing);
@@ -375,6 +428,6 @@ function authorcanvasser(dataFile, dataForm){
         imageObj.src = image.url;
         });
 
-        loop();
+        
     }
 }
