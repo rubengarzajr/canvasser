@@ -14,7 +14,7 @@ function authorcanvasser(dataFile, dataForm){
         offset: {x:0,y:0},
         zidx: 25
     };
-    
+
     var authorData = {
         objects:[
             {type:"image", show:true, group:["images","shiny"], name:"test",  image:"p",     scale:{current:1}, position:{current:{x: 200,y: 300}, destination:{x: 160,y: 150}, rate:4}, origin:"center",  testp:true, clicklist:[{type:"console",text:"hi"}]},
@@ -39,10 +39,12 @@ function authorcanvasser(dataFile, dataForm){
             canvasparent: "canvasholder"
         }
     };
-    document.getElementById("canvasmover").addEventListener("mousedown", function(){moveObjD("canvasbank")}, false);
-    document.getElementById("objectmover").addEventListener("mousedown", function(){moveObjD("objectbank")}, false);
-    document.getElementById("imagemover").addEventListener("mousedown", function(){moveObjD("imagebank")}, false);
-//    document.getElementById("jsonmover").addEventListener("mousedown", function(){moveObjD("jsonbank")}, false);
+    document.getElementById("canvasmover").addEventListener("mousedown",  function(){moveObjD("canvasbank")},  false);
+    document.getElementById("objectmover").addEventListener("mousedown",  function(){moveObjD("objectbank")},  false);
+    document.getElementById("imagemover").addEventListener("mousedown",   function(){moveObjD("imagebank")},   false);
+    document.getElementById("jsonmover").addEventListener("mousedown",    function(){moveObjD("jsonbank")},    false);
+    document.getElementById("settingmover").addEventListener("mousedown", function(){moveObjD("settingbank")}, false);
+
     window.addEventListener("mouseup", moveObjU, false);
     window.addEventListener("mousemove", mouseMove, false);
     initCanvasser("sample", JSON.stringify(authorData), "string");

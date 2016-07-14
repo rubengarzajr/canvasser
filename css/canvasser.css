@@ -111,11 +111,7 @@ a{
     float: right;
     background-color: rgb(106, 127, 144);
     border: 1px rgb(106, 127, 144) solid;
-    margin-right: 5px;
-    margin-left: 5px;
     border-radius: 4px;
-    margin-top: 10px;
-    margin-bottom: 10px;
     border-radius: 4px;
 }
 
@@ -130,7 +126,6 @@ a{
     margin-top: 5px;
     margin-bottom: 5px;
     background-color: white;
-    box-shadow: 0 2px 2px 0 rgba(117, 117, 117, 0.45), 0 11px 5px 0 rgba(0, 0, 0, 0.19);
 }
 
 .padlr{
@@ -149,7 +144,6 @@ a{
     margin-right: auto;
     margin-top: 5px;
     margin-bottom: 5px;
-    box-shadow: 0 2px 2px 0 rgba(117, 117, 117, 0.45), 0 11px 5px 0 rgba(0, 0, 0, 0.19);
 }
 
 #imageholder img {
@@ -358,21 +352,9 @@ a{
 }
 
 #paste{
-    width:98%;
-    margin-left: 1%;
-    margin-right: 1%;
     border-radius: 4px;
 }
 
-#pastediv{
-    background-color: rgb(106, 127, 144);
-    border: 1px rgb(106, 127, 144) solid;
-    margin-left: 1%;
-    margin-right: 1%;
-    border-radius: 4px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
 
 
 
