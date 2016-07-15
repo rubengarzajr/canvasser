@@ -39,12 +39,12 @@ function authorcanvasser(dataFile, dataForm){
             canvasparent: "canvasholder"
         }
     };
-    document.getElementById("canvasmover").addEventListener("mousedown",  function(){moveObjD("canvasbank")},  false);
-    document.getElementById("objectmover").addEventListener("mousedown",  function(){moveObjD("objectbank")},  false);
-    document.getElementById("imagemover").addEventListener("mousedown",   function(){moveObjD("imagebank")},   false);
-    document.getElementById("jsonmover").addEventListener("mousedown",    function(){moveObjD("jsonbank")},    false);
-    document.getElementById("settingmover").addEventListener("mousedown", function(){moveObjD("settingbank")}, false);
-
+    document.getElementById("canvasmover").addEventListener("mousedown",     function(){moveObjD("canvasbank")},     false);
+    document.getElementById("objectmover").addEventListener("mousedown",     function(){moveObjD("objectbank")},     false);
+    document.getElementById("imagemover").addEventListener("mousedown",      function(){moveObjD("imagebank")},      false);
+    document.getElementById("jsonmover").addEventListener("mousedown",       function(){moveObjD("jsonbank")},       false);
+    document.getElementById("settingmover").addEventListener("mousedown",    function(){moveObjD("settingbank")},    false);
+    document.getElementById("propertiesmover").addEventListener("mousedown", function(){moveObjD("propertiesbank")}, false);
     window.addEventListener("mouseup", moveObjU, false);
     window.addEventListener("mousemove", mouseMove, false);
     initCanvasser("sample", JSON.stringify(authorData), "string");

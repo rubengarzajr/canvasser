@@ -108,10 +108,8 @@ a{
 }
 
 .skinnybank{
-    float: right;
     background-color: rgb(106, 127, 144);
     border: 1px rgb(106, 127, 144) solid;
-    border-radius: 4px;
     border-radius: 4px;
 }
 
@@ -181,27 +179,34 @@ a{
 }
 
 #properties{
-    width:100%;
     text-align: center;
+    background-color: white;
+    overflow: auto;
+    resize: both;
+    height: 200px;
+    margin-bottom: 5px;
 }
 
 #propertiestitle{
     width:100%;
     text-align: center;
+    background-color: rgb(212, 226, 226);
+    border-bottom: 2px rgb(106, 127, 144) solid;
 }
 
 .proptitle{
-    width:99%;
-    background-color: rgb(240,240,240);
-    border: 2px black solid;
     text-align: center;
     font-size: 1.5em;
     display: inline-block;
+    font-family: selecttext;
 }
 
 .propbody{
     text-align: left;
-    margin: 10px 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+
 }
 
 .auth_xy{

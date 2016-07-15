@@ -78,24 +78,37 @@
             </div>
         </div>
 
-            <div id='settingbank' class="skinnybank" style="position:absolute;left:245px; top:80px;">
-                <div class="titlebar" id="settingmover">
-                    <div class="wintitle">Settings</div>
-                    <div class="sp_05 right"></div>
-                    <div class ="right" onclick="window.author.toggleminmax('settingcontents', 'togglesetting', 664)" style="margin-top: 2px;"><img id="togglesetting" src="image/icon_max_g.png"/></div>
+        <div id='settingbank' class="skinnybank" style="position:absolute;left:245px; top:80px;">
+            <div class="titlebar" id="settingmover">
+                <div class="wintitle">Settings</div>
+                <div class="sp_05 right"></div>
+                <div class ="right" onclick="window.author.toggleminmax('settingcontents', 'togglesetting', 664)" style="margin-top: 2px;"><img id="togglesetting" src="image/icon_max_g.png"/></div>
+            </div>
+            <div id="settingcontents" class="padlr" style="display:none">
+                <div id="settingmenu" class="submenu">
+                    <div class="divmenu" onclick="window.author.addObject()">Add</div>
+                    <div class="divmenu" onclick="window.author.deleteObject()">Delete</div>
                 </div>
-                <div id="settingcontents" class="padlr" style="display:none">
-                    <div id="settingmenu" class="submenu">
-                        <div class="divmenu" onclick="window.author.addObject()">Add</div>
-                        <div class="divmenu" onclick="window.author.deleteObject()">Delete</div>
-                    </div>
-                    <div id="settingholder"></div>
-                </div>
+                <div id="settingholder"></div>
             </div>
         </div>
 
-        <div id="propertiestitle"></div>
-        <div id="properties"></div>
-        <div id="authorspace"></div>
+        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:390px; top:80px;">
+            <div class="titlebar" id="propertiesmover">
+                <div class="wintitle">Properties</div>
+                <div class="sp_05 right"></div>
+                <div class ="right" onclick="window.author.toggleminmax('propertiescontents', 'toggleproperties', 664)" style="margin-top: 2px;"><img id="toggleproperties" src="image/icon_max_g.png"/></div>
+            </div>
+            <div id="propertiescontents" class="padlr" style="display:none">
+                <div id="propertiesmenu" class="submenu">
+                    <div class="divmenu" onclick="window.author.addObject()">Add</div>
+                    <div class="divmenu" onclick="window.author.deleteObject()">Delete</div>
+                </div>
+                <div id="propertiestitle"></div>
+                <div id="properties"></div>
+                <div id="authorspace"></div>
+            </div>
+        </div>
+
     </body>
 </html>
