@@ -1,12 +1,10 @@
 function initAuthorCanvasser(vari, datafile, dataForm){
     window.author = new authorcanvasser(datafile, dataForm);
-    
 }
 
 function authorcanvasser(dataFile, dataForm){
-
     requestJSON("data/author.json", initrules);
-    
+
     var UIdata = {
         mousedown: false,
         moveElement: null,
@@ -45,7 +43,7 @@ function authorcanvasser(dataFile, dataForm){
     document.getElementById("jsonmover").addEventListener("mousedown",       function(){moveObjD("jsonbank")},       false);
     document.getElementById("settingmover").addEventListener("mousedown",    function(){moveObjD("settingbank")},    false);
     document.getElementById("propertiesmover").addEventListener("mousedown", function(){moveObjD("propertiesbank")}, false);
-    window.addEventListener("mouseup", moveObjU, false);
+    window.addEventListener("mouseup",   moveObjU,  false);
     window.addEventListener("mousemove", mouseMove, false);
     initCanvasser("sample", JSON.stringify(authorData), "string");
     updateObjects();
@@ -151,9 +149,9 @@ function authorcanvasser(dataFile, dataForm){
 
     function updateObjects(){
         var objectHolder = document.getElementById("objectholder");
-        var objects = '<table  width="100%">';
+        var objects = '<table class="objtable" width="100%">';
         authorData.objects.forEach(function(object){
-            objects += '<tr class="clicktr" onclick="window.author.getProps(\'objects\',\''+ object.name + '\')">';
+            objects += '<tr class="clicktr" id="'+object.name+'" onclick="window.author.getProps(\'objects\',\''+ object.name + '\')">';
             objects +='<td width="50%">' + object.name + '</td>';
             objects +='<td width="50%">' + object.type + '</td>';
             objects += '</tr>';

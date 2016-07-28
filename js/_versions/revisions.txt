@@ -1,0 +1,23 @@
+TODO:
+--------------
+Add LERP time in addition to rate
+Scale offset for children
+Parenting multiple levels
+Concept of transformation for objects
+
+
+
+Canvasser v0.3
+--------------
+Added fade
+Use "object" insted of "name" when given filter group / name option. Commands affected: destposition
+Replaced objectvis and groupvis with vis.
+Replaced objectcolor and groupcolor with shapecolor
+Changed scalegroup and scaleobject to scale
+This broke compatability with v0.2
+
+
+
+Canvasser v0.2
+--------------
+Basic functionality complete

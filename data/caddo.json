@@ -9,11 +9,11 @@
                     {"type":"groupvis","name":"child2", "show":true},
                     {"type":"objectvis","name":"back", "show":true},
                     {"type":"objectvis","name":"caddo_02_bk", "show":true},
-                    {"type":"destposition","filter":"name","name":"caddo_02_bk", "destination":{"x":200,"y":200}, "rate":5},
-                    {"type":"destposition","filter":"group","name":"parent",     "destination":{"x":200,"y":200}, "rate":5},
-                    {"type":"scaledest","filter":"group","name":"child2",     "destination": 1, "rate":0.075, "hideafter":false},
-                    {"type":"scaledest","filter":"name", "name":"caddo_02_bk","destination": 1, "rate":0.05,  "hideafter":false},
-                    {"type":"scaledest","filter":"group","name":"parent",     "destination": 0, "rate":0.025 , "hideafter":true}
+                    {"type":"destposition", "filter":"object", "name":"caddo_02_bk",  "destination":{"x":200,"y":200}, "rate":5},
+                    {"type":"destposition", "filter":"group",  "name":"parent",       "destination":{"x":200,"y":200}, "rate":5},
+                    {"type":"scaledest",    "filter":"group",  "name":"child2",       "destination": 1, "rate":0.075,  "hideafter":false},
+                    {"type":"scaledest",    "filter":"object", "name":"caddo_02_bk",  "destination": 1, "rate":0.05,   "hideafter":false},
+                    {"type":"scaledest",    "filter":"group",  "name":"parent",       "destination": 0, "rate":0.025 , "hideafter":true}
                 ]
             },
             {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_03",    "image":"caddo_03",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  286,"y":  322}, "home":{"x":  286,"y":  322}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},

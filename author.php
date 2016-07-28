@@ -12,7 +12,7 @@
         <link href="css/normalize.css" rel="stylesheet" type="text/css"/>
         <link href="css/canvasser.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body onload="initAuthorCanvasser()">
+    <body onload="initAuthorCanvasser()" class="authorbk">
         <?php include 'header.php';?>
         <div id="menu">
         </div>

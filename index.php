@@ -10,6 +10,8 @@
         <?php include 'header.php';?>
         <br><br>
         <a href="activities/texasmap.php">Exhibit Map of Texas</a><br>
+        <a href="activities/arenosa_archeology.php">Arenosa Archeology</a><br>
+        <a href="activities/hinds_cave.php">Hind's Cave</a><br>
         <a href="activities/caddo.php">World of the Caddo Navigation</a><br>
         <a href="activities/bonfire.php">Bonfire</a><br>
         <a href="activities/dragdrop.php">Meet The Critters</a><br>

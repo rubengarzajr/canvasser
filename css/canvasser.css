@@ -3,7 +3,7 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
-/* 
+/*
     Created on : May 5, 2016, 12:09:42 PM
     Author     : user
 */
@@ -222,6 +222,10 @@ a{
     border-bottom: 1px rgb(191, 212, 211) solid;
 }
 
+.authorbk{
+    background-image: url("../image/grid.png");
+}
+
 .auth_text{
     background-color:rgb(212, 218, 226);
     display: table-cell;
@@ -349,11 +353,33 @@ a{
 .clicktr{
     cursor: pointer;
     font-family: selecttext;
-    font-size: 1.6em
+    font-size: 1.6em;
+    padding: 0px;
 }
 
-.clicktr:hover{
-    background-color: yellow;
+.objtable{
+    border-collapse: collapse;
+}
+
+
+.objtable tr:nth-child(even){
+    background-color:rgb(241,241,241);
+    color: rgb(120,120,120);
+}
+
+.objtable tr:nth-child(odd){
+    background-color: rgb(236,236,236);
+    color: rgb(125,125,125);
+}
+
+.objtable tr:hover{
+    background-color: rgb(255,255,255);
+    color:black;
+}
+
+.clicktr td{
+    padding: 0px;
+
 }
 
 #paste{

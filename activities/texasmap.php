@@ -15,7 +15,7 @@
                 </td>
                 <td>
                     <div id='details' class="contentspace" style="float:left"></div>
-                    <div id='drop_a' style="display: none;">
+                    <div id='drop_1' style="display: none;">
                         <div class="title">Drop A</div>
                         <div class="subtitle">Subtitle A</div>
                         <div class="divspace">&nbsp;</div>
@@ -23,7 +23,7 @@
                         <div class="divspace">&nbsp;</div>
                         <img src="../image/dates.png" alt=""/>
                     </div>
-                    <div id='drop_b' style="display: none;">
+                    <div id='drop_2' style="display: none;">
                         <div class="title">Drop B</div>
                         <div class="subtitle">Subtitle B</div>
                         <div class="divspace">&nbsp;</div>
@@ -32,7 +32,7 @@
                         <div class="divspace">&nbsp;</div>
                         <img src="../image/dates.png" alt=""/>
                     </div>
-                    <div id='drop_c' style="display: none;">
+                    <div id='drop_3' style="display: none;">
                         <div class="title">Drop C</div>
                         <div class="subtitle">Subtitle B</div>
                         <div class="divspace">&nbsp;</div>
@@ -210,13 +210,13 @@
         <table class="bottomlinks">
             <tr>
                 <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_a"}])'>Pin A</div>
+                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_1"}])'>Pin 1</div>
                 </td>
                 <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_e"}])'>Pin E</div>
+                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_2"}])'>Pin 2</div>
                 </td>
                 <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_i"}])'>Pin I</div>
+                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_3"}])'>Pin 3</div>
                 </td>
                 <td>
                     <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_m"}])'>Pin M</div>

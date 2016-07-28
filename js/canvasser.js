@@ -1,4 +1,4 @@
-// Canvasser v0.2 rubengarzajr@gmail.com
+// Canvasser v0.3 rubengarzajr@gmail.com
 
 function initCanvasser(vari, datafile, dataForm){
     window[vari] = new canvasser(datafile, dataForm);
@@ -101,13 +101,6 @@ function canvasser(interactiveData, dataForm){
             pSystemList.push(newPSystem);
         }
         function pSystem(){
-            this.name         = "";
-            this.position     = {current:{x:0,y:0}, destination:{x:0,y:0}};
-            this.on           = false;
-            this.emitCounter  = 0;
-            this.emitRate     = 0;
-            this.count        = 0;
-            this.image        = null;
             this.forces       = [];
             this.pList        = [];
             this.pParams      ={life:{min:0,max:1},fadePercent:{in:5,out:95},scale:{min:1,max:1},speed:{position:{min:0, max:1 },rotation:{min:0,max:0}}};
@@ -193,7 +186,6 @@ function canvasser(interactiveData, dataForm){
                 });
             }
         });
-
         actions();
     }
 
@@ -217,14 +209,13 @@ function canvasser(interactiveData, dataForm){
 
         act.data.objects.forEach(function(obj){
             if (obj.parent !== undefined){
-                    if (obj.parent.update || obj.parent.object === undefined){
-                        act.data.objects.forEach(function(parent){
-                            if (parent.name !== obj.parent.name) return;
-                            obj.parent.object = parent;
-                            obj.parent.update = false;
-                        });
-                    }
+                if (obj.parent.object === undefined){
+                    act.data.objects.forEach(function(parent){
+                        if (parent.name !== obj.parent.name) return;
+                        obj.parent.object = parent;
+                    });
                 }
+            }
 
             if (obj.type === "shape"){
                 if (obj.show){
@@ -238,21 +229,24 @@ function canvasser(interactiveData, dataForm){
                 if (act.imageList[obj.image] === undefined) return;
 
                 if (obj.parent !== undefined){
-                    var parPos = {current:{x:0,y:0}};
-                    var parScl = {current:1};
+                    var parentPos = {current:{x:0,y:0}};
+                    var parentScl = {current:1};
                     if (obj.parent.object !== undefined){
-                        parPos = obj.parent.object.position;
-                        parScl = obj.parent.object.scale;
+                        parentPos = obj.parent.object.position;
+                        parentScl = obj.parent.object.scale;
                     }
 
                     if (obj.position.offset === undefined){
-                        obj.position.offset = {x:obj.position.current.x-parPos.current.x, y:obj.position.current.y-parPos.current.y};
+                        obj.position.offset = {x:obj.position.current.x-parentPos.current.x, y:obj.position.current.y-parentPos.current.y};
+                    }
+                    if (obj.scale.offset === undefined){
+                        obj.scale.offset = obj.scale.current-parentScl.current;
                     }
 
                     if (obj.position.destination !== undefined){
                         var dest = {
-                            "x":parPos.current.x +  Math.floor(obj.position.destination.x * parScl.current),
-                            "y":parPos.current.y +  Math.floor(obj.position.destination.y * parScl.current)
+                            "x":parentPos.current.x +  Math.floor(obj.position.destination.x * parentScl.current),
+                            "y":parentPos.current.y +  Math.floor(obj.position.destination.y * parentScl.current)
                         };
                         var newVals              = lerpTo(obj.position.offset, obj.position.destination, obj.position.rate);
                         obj.position.offset      = newVals.newCurrent;
@@ -260,35 +254,28 @@ function canvasser(interactiveData, dataForm){
                     }
 
                     obj.position.current = {
-                        "x":parPos.current.x +  Math.floor(obj.position.offset.x * parScl.current),
-                        "y":parPos.current.y +  Math.floor(obj.position.offset.y * parScl.current)
+                        "x":parentPos.current.x +  Math.floor(obj.position.offset.x * parentScl.current),
+                        "y":parentPos.current.y +  Math.floor(obj.position.offset.y * parentScl.current)
                     };
-                    obj.scale.current = parScl.current;
+
+                    obj.scale.current = parentScl.current;
                 }
                 var newVals              = lerpTo(obj.position.current, obj.position.destination, obj.position.rate);
                 obj.position.current     = newVals.newCurrent;
                 obj.position.destination = newVals.newDestination;
 
-                if (obj.scale.destination !== undefined){
-                    if (obj.scale.current < obj.scale.destination) obj.scale.current += obj.scale.rate;
-                    if (obj.scale.current > obj.scale.destination) obj.scale.current -= obj.scale.rate;
-
-                    if (obj.scale.current === obj.scale.destination || obj.scale.current + obj.scale.rate >= obj.scale.destination && obj.scale.current - obj.scale.rate <= obj.scale.destination) {
-                        obj.scale.current = obj.scale.destination;
-                        if (obj.scale.hideafter) obj.show = false;
-                        obj.scale.destination = undefined;
-                        obj.scale.hideafter = false;
-                    }
-                }
+                lerpOne(obj, "scale");
+                lerpOne(obj, "opacity");
 
                 var pos = {"x":obj.position.current.x, "y":obj.position.current.y};
                 if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
-                    console.log(obj.scale.current)
                     obj.scale.current = 0.01;
                 }
                 if (obj.origin === "center") pos={"x":Math.floor(pos.x-act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":Math.floor(pos.y-act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
                 if (obj.show){
+                    act.context.globalAlpha = obj.opacity.current !== undefined ? obj.opacity.current : 1;
                     act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
+                    act.context.globalAlpha = 1;
                     if (!obj.testp) return;
                     var pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
                     if (pixelData_img[3] != 0) act.applyAction.push(obj);
@@ -298,6 +285,22 @@ function canvasser(interactiveData, dataForm){
         pManager.update();
         act.prevPosition = {x:act.position.x, y:act.position.y};
         window.requestAnimationFrame(loop);
+    }
+
+    function lerpOne(obj, item){
+        if (obj[item] === undefined) obj[item] = {current:1, rate:0};
+        if (obj[item].destination !== undefined){
+            if (obj[item].showbefore) {obj.show = true; obj[item].showbefore = false;}
+            if (obj[item].current < obj[item].destination) obj[item].current += obj[item].rate;
+            if (obj[item].current > obj[item].destination) obj[item].current -= obj[item].rate;
+
+            if (obj[item].current === obj[item].destination || obj[item].current + obj[item].rate >= obj[item].destination && obj[item].current - obj[item].rate <= obj[item].destination) {
+                obj[item].current = obj[item].destination;
+                if (obj[item].hideafter) obj.show = false;
+                obj[item].destination = undefined;
+                obj[item].hideafter = false;
+            }
+        }
     }
 
     function drawShapes(act, parent, pos, shapeData, color, doTest, testP, scale){
@@ -426,37 +429,35 @@ function canvasser(interactiveData, dataForm){
                 }
                 if (action.type === 'destposition'){
                     act.data.objects.forEach(function(obj){
-                        if (action.filter === undefined) return;
-                        if (action.filter === "group"){
-                            if (obj.group.indexOf(action.name) < 0) return;
-                        }
-                        if (action.filter === "name"){
-                            if (obj.name !== action.name) return;
-                        }
+                        if (!checkAction(action, obj)) return;
                         if (typeof action.destination === "string"){
                             obj.position.destination = {x:obj.position[action.destination].x, y:obj.position[action.destination].y};
                         }
                         else{
                             obj.position.destination = {x:action.destination.x, y:action.destination.y};
                         }
-                        obj.position.rate = action.rate;
+                        if (action.rate !== undefined)     obj.position.rate     = action.rate;
+                        if (action.duration !== undefined) obj.position.duration = action.duration;
                     });
                 }
-                if (action.type === 'groupcolor'){
+                if (action.type === 'fade'){
                     act.data.objects.forEach(function(obj){
-                        if (obj.group === undefined) return;
-                        if (obj.group.indexOf(action.name) < 0) return;
-                        if (action.source === "default")     obj.color = obj.defaultcolor;
-                        if (action.source === "hover")       obj.color = obj.hovercolor;
-                        if (action.source === "selectcolor") obj.color = obj.selectcolor;
-                        if (action.source === "value")       obj.color = action.color;
+                        if (!checkAction(action, obj)) return;
+                        if (obj.opacity === undefined) obj.opacity = {};
+                        if (typeof action.destination === "string"){
+                            obj.opacity.destination = obj.opacity[action.destination];
+                        }
+                        else{
+                            obj.opacity.destination = action.destination;
+                        }
+                        if (action.rate !== undefined)     obj.opacity.rate     = action.rate;
+                        if (action.duration !== undefined) obj.opacity.duration = action.duration;
+                        obj.opacity.showbefore = action.showbefore !== undefined ? action.showbefore : true;
+                        obj.opacity.hideafter = action.hideafter !== undefined ? action.hideafter : false;
                     });
                 }
-                if (action.type === 'groupvis'){
-                    act.data.objects.forEach(function(obj){
-                        if (obj.group === undefined) return;
-                        if (obj.group.indexOf(action.name) > -1) obj.show = action.show
-                    });
+                if (action.type === 'loadpage'){
+                    window.location.href = action.url;
                 }
                 if (action.type === 'modvar'){
                     if (action.operation === "add") act.vars[action.name] += action.amount;
@@ -481,62 +482,38 @@ function canvasser(interactiveData, dataForm){
                         }
                     });
                 }
-                if (action.type === 'objectcolor'){
-                    act.data.objects.forEach(function(obj){
-                        if (obj.name === undefined) return;
-                        if (obj.name !== action.name) return;
-                        if (action.source === "default")     obj.color = obj.defaultcolor;
-                        if (action.source === "hover")       obj.color = obj.hovercolor;
-                        if (action.source === "selectcolor") obj.color = obj.selectcolor;
-                        if (action.source === "value")       obj.color = action.color;
-                    });
-                }
-                if (action.type === 'objectvis'){
-                    act.data.objects.forEach(function(obj){
-                        if (obj.name === undefined) return;
-                        if (obj.name === action.name) obj.show = action.show;
-                    });
-                }
                 if (action.type === 'pstart'){
-                        act.data.particles.forEach(function(obj){
+                    act.data.particles.forEach(function(obj){
                         if (obj.system.name === undefined) return;
                         if (obj.system.name === action.name) pManager.create(obj);
                     });
                 }
+                if (action.type === 'scale'){
+                    act.data.objects.forEach(function(obj){
+                        if (!checkAction(action, obj)) return;
+                        if (action.frame === "increment") obj.scale.current += action.amount;
+                        if (action.frame === "multiply"){
+                            obj.scale.current = obj.scale.current * action.amount;
+                        }
+                        if (action.frame === "absolute")  obj.scale.current =  action.amount;
+                    });
+                }
                 if (action.type === 'scaledest'){
                     act.data.objects.forEach(function(obj){
-                        if (action.filter === undefined) return;
-                        if (action.filter === "group"){
-                            if (obj.group.indexOf(action.name) < 0) return;
-                        }
-                        if (action.filter === "name"){
-                            if (obj.name !== action.name) return;
-                        }
+                        if (!checkAction(action, obj)) return;
                         obj.scale.destination = action.destination;
-                        obj.scale.rate = action.rate;
-                        obj.scale.hideafter = action.hideafter;
+                        obj.scale.rate        = action.rate;
+                        obj.scale.showbefore  = action.showbefore !== undefined ? action.showbefore : true;
+                        obj.scale.hideafter   = action.hideafter  !== undefined ? action.hideafter : false;
                     });
                 }
-                if (action.type === 'scalegroup'){
+                if (action.type === 'shapecolor'){
                     act.data.objects.forEach(function(obj){
-                        if (obj.group === undefined) return;
-                        if (obj.group.indexOf(action.name) < 0) return;
-                        if (action.frame === "increment") obj.scale.current += action.amount;
-                        if (action.frame === "multiply"){
-                            obj.scale.current = obj.scale.current * action.amount;
-                        }
-                        if (action.frame === "absolute")  obj.scale.current =  action.amount;
-                    });
-                }
-                if (action.type === 'scaleobject'){
-                    act.data.objects.forEach(function(obj){
-                        if (obj.name === undefined) return;
-                        if (obj.name !== action.name) return;
-                        if (action.frame === "increment") obj.scale.current += action.amount;
-                        if (action.frame === "multiply"){
-                            obj.scale.current = obj.scale.current * action.amount;
-                        }
-                        if (action.frame === "absolute")  obj.scale.current =  action.amount;
+                        if (!checkAction(action, obj)) return;
+                        if (action.source === "default")     obj.color = obj.defaultcolor;
+                        if (action.source === "hover")       obj.color = obj.hovercolor;
+                        if (action.source === "selectcolor") obj.color = obj.selectcolor;
+                        if (action.source === "value")       obj.color = action.color;
                     });
                 }
                 if (action.type === "slideobject"){
@@ -563,12 +540,26 @@ function canvasser(interactiveData, dataForm){
                         loadInto(action.url, target);
                     }
                 }
-                if (action.type === 'loadpage'){
-                    window.location.href = action.url;
+                if (action.type === 'vis'){
+                    act.data.objects.forEach(function(obj){
+                        if (!checkAction(action, obj)) return;
+                        obj.show = action.show
+                    });
                 }
             });
         });
         act.applyAction = [];
+    }
+
+    function checkAction(action, obj){
+        if (action.filter === undefined) return false;
+        if (action.filter === "group"){
+            if (obj.group.indexOf(action.name) < 0) return false;
+        }
+        if (action.filter === "object"){
+            if (obj.name !== action.name) return false;
+        }
+        return true;
     }
 
     function loadInto(url, place){
@@ -615,6 +606,4 @@ function canvasser(interactiveData, dataForm){
         }
         return {newCurrent:current, newDestination:destination};
     }
-
 }
-
