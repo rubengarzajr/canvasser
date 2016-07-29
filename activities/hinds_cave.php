@@ -7,6 +7,7 @@
     <body onload='initCanvasser("tex","../data/hinds_cave.json", "file");'>
         <?php include 'activityheader.php';?>
         <div class="title_a">Hind's Cave</div>
+        <div style="width: 100%; height: 300px; background-color: rgb(200,200,200);"></div>
         <div id='canvasholder' style="min-height: 100%; min-width: 100%; text-align: center;position:absolute;"></div>
         <script type="text/javascript">
             function hide_floater(element){

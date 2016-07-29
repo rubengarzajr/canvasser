@@ -10,7 +10,7 @@ Concept of transformation for objects
 Canvasser v0.3
 --------------
 Added fade
-Use "object" insted of "name" when given filter group / name option. Commands affected: destposition
+Use "object" instead of "name" when given filter group / name option. Commands affected: destposition
 Replaced objectvis and groupvis with vis.
 Replaced objectcolor and groupcolor with shapecolor
 Changed scalegroup and scaleobject to scale
