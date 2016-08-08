@@ -14,7 +14,7 @@
             }
         </script>
         <style>
-            .darkbox{min-height: 100%; min-width: 100%; background-color: rgba(0,0,0,0.85); text-align: center; position:absolute;color:white;}
+            .darkbox{height: 100%; min-width: 100%; background-color: rgba(0,0,0,0.85); text-align: center; position:fixed;color:white;left:0;top:0;padding-top:10px;overflow-y: scroll;padding-top:40px;}
         </style>
         <div id="s01" style="display:none"><div class="darkbox"><img src="http://tbh.laits.utexas.edu/wp-content/uploads/canvasser/explore_arenosa_archeology/arenosa_sq01a.jpg" onclick='hide_floater("display_arenosa")'><br> TExt Test dgsfgfg</div></div>
         <div id="s02" style="display:none"><div class="darkbox"><img src="http://tbh.laits.utexas.edu/wp-content/uploads/canvasser/explore_arenosa_archeology/arenosa_sq02a.jpg" onclick='hide_floater("display_arenosa")'></div></div>

@@ -18,6 +18,7 @@
         <a href="activities/dragdrop.php">Meet The Critters</a><br>
         <a href="activities/eyesofexplorer.php">Eyes of the Explorer Navigation</a><br>
         <a href="activities/poppuzzle.php">Population Puzzlers</a><br>
+        <a href="activities/map_plateaus.php">Map Plateaus & Canyonlands</a><br>
         <br>
         <a href="activities/eforensics.php">eforensics: Case File Bone Drag Example</a><br>
         <br>
