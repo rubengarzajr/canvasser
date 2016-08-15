@@ -1,0 +1,97 @@
+Alignment Specs for
+
+TBH PREHISTORIC MAIN
+Trans Pecos Mountains and Basins
+
+-Main map
+X: 90
+Y: 9
+
+
+-Sidebar Buttons (Subsequent buttons are 48px down)
+X: 0
+Y: 94
+
+
+
+--- LAY OF THE LAND (This section does not have text on rollover - squares open a pop-up image/camption)
+
+--Squares
+187, 76
+217, 75
+239, 81
+235, 137
+296, 82
+316, 73
+379, 69
+390, 77
+441, 97
+485, 143
+456, 176
+396, 204
+331, 179
+290, 184
+329, 199
+326, 240
+628, 204
+492, 248
+452, 297
+579, 312
+418, 328
+477, 333
+427, 372
+458, 384
+467, 358
+483, 395
+487, 377
+503, 398
+511, 363
+521, 397
+532, 367
+542, 382
+140, 270
+220, 276
+
+
+
+---ANCIENT PLACES
+
+--Triangles
+190, 88     Padre Canyon
+203, 127    Alamo Canyon
+287, 180    Wind Canyon
+598, 165    Squawteat Peak
+444, 252    Carved Rock Shelter
+442, 311    Paradise
+493, 321    Bee Cave Canyon
+507, 351    Rosillo Peak
+476, 369    Cairn Burials (Rough Run)
+501, 382    J.C. Kelley
+455, 408    Cairn Burials (Las Haciendas)
+
+--Circles
+157, 67     Hueco Tanks
+379, 81     Granado Cave
+374, 340    La Junta de los Rios
+595, 417    Cueva Pilota
+152, 198    Madera Quemada
+231, 243    Fire Cracker Pueblo
+257, 239    Ceremonial Cave
+
+
+
+---HISTORIC ENCOUNTERS
+
+--Triangles
+295, 69     Salt Mining
+399, 356    Fort Leaton
+442, 397    Big Bend Presidio (San Carlos)
+536, 395    Big Bend Presidio (San Vicente)
+109, 290    Dona Ana
+
+--Circles
+157, 67     Hueco Tanks
+395, 195    Fort Davis
+374, 341    La Junta de los Rios
+505, 386    Wax Camos
+213, 340    El Paso Missions

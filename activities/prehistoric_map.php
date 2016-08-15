@@ -4,9 +4,9 @@
     <head>
         <title>Canvasser</title>
     </head>
-    <body onload='initCanvasser("tex","../data/texas_regions.json", "file");'>
+    <body onload='initCanvasser("tex","../data/prehistoric_map.json", "file");'>
         <?php include 'activityheader.php';?>
-        <div class="title_a">Texas Regions</div>
+        <div class="title_a">Prehistoric Map</div>
         <div id='canvasholder' style="min-height: 100%; min-width: 100%; text-align: center;position:absolute;"></div>
         <script type="text/javascript">
             function hide_floater(element){

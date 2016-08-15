@@ -7,13 +7,22 @@ Concept of transformation for objects
 
 
 
+Canvasser v0.4
+--------------
+Added paths for easier url handling.
+Simplified particle handling
+Added touch interactions for mobile devices.
+Particles not compatible with v0.3
+
+
+
 Canvasser v0.3
 --------------
 Added fade
 Use "object" instead of "name" when given filter group / name option. Commands affected: destposition
 Replaced objectvis and groupvis with vis.
 Replaced objectcolor and groupcolor with shapecolor
-Changed scalegroup and scaleobject to scale
+Replaced scalegroup and scaleobject with scale
 This broke compatability with v0.2
 
 
