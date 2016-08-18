@@ -12,6 +12,7 @@ Canvasser v0.4
 Added paths for easier url handling.
 Simplified particle handling
 Added touch interactions for mobile devices.
+Added textFill and font settings to the shape type.
 Particles not compatible with v0.3
 
 

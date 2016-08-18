@@ -1,4 +1,4 @@
-// Canvasser v0.4 rubengarzajr@gmail.com
+// Canvasser v0.3 rubengarzajr@gmail.com
 
 function initCanvasser(vari, datafile, dataForm){
     window[vari] = new canvasser(datafile, dataForm);
@@ -34,17 +34,12 @@ function canvasser(interactiveData, dataForm){
         act.data = data;
         document.getElementById(data.settings.canvasparent).innerHTML = "";
         document.getElementById(data.settings.canvasparent).appendChild(act.canvas);
-        act.canvas.addEventListener('mousemove',    getMousePos, false);
-        act.canvas.addEventListener('mousedown',    mouseDown,   false);
-        act.canvas.addEventListener('mouseup',      mouseUp,     false);
-        act.canvas.addEventListener('mouseleave',   mouseLeave,  false);
-        act.canvas.addEventListener('onmouseenter', mouseEnter,  false);
-        act.canvas.addEventListener("touchstart", touchDown, false);
-        act.canvas.addEventListener("touchmove",  touchMove, false);
-        act.canvas.addEventListener("touchend",   touchUp,   false);
-        if (act.data.paths !== undefined){
-            act.data.paths.forEach(function(path){act.pathList[path.id] = path.url;});
-        }
+        act.canvas.addEventListener('mousemove', getMousePos, false);
+        act.canvas.addEventListener('mousedown', mouseDown, false);
+        act.canvas.addEventListener('mouseup', mouseUp, false);
+        act.canvas.addEventListener('mouseleave', mouseLeave, false);
+        act.canvas.addEventListener('onmouseenter', mouseEnter, false);
+
         act.data.images.forEach(function(image){
             var imageObj = new Image();
             imageObj.onload = function() {
@@ -57,7 +52,6 @@ function canvasser(interactiveData, dataForm){
                 act.imageList[image.id].context.drawImage(this, 0, 0, this.width, this.height);
             };
 
-        if (image.path != undefined) image.url = act.pathList[image.path] + '/' + image.url;
         imageObj.src = image.url;
         });
 
@@ -73,51 +67,84 @@ function canvasser(interactiveData, dataForm){
     function interaction(){
         this.position     = {x:0, y:0};
         this.prevPosition = {x:0, y:0};
+        this.canvas       = null;
+        this.context      = null;
+        this.currentTime  = null;
+        this.data         = null;
+        this.previousTime = null;
+        this.canvasSize   = {x:0, y:0};
         this.curveList    = [];
         this.imageList    = [];
-        this.pathList     = [];
         this.applyAction  = [];
         this.mouseDown    = false;
         this.mouseDownCnt = 0;
+        this.clickLeft    = false;
         this.external     = false;
         this.mode         = "none";
         this.dragging     = null;
-        this.touch        = [];
     }
 
     function particleManager(){
         var pSystemList = [];
-
         this.create = function(obj){
-            var newPSystem   = new pSystem();
-            newPSystem.info  = obj;
+            var newPSystem                 = new pSystem();
+            newPSystem.name                = obj.system.name;
+            newPSystem.position            = obj.system.position;
+            newPSystem.on                  = obj.system.on;
+            newPSystem.image               = obj.system.image;
+            newPSystem.emitCounter         = obj.system.emitCounter;
+            newPSystem.emitRate            = obj.system.emitRate;
+            newPSystem.pParams.life        = obj.particles.life;
+            newPSystem.pParams.fadePercent = obj.particles.fadePercent;
+            newPSystem.pParams.speed       = obj.particles.speed;
+            newPSystem.pParams.scale       = obj.particles.scale;
             pSystemList.push(newPSystem);
         }
-
         function pSystem(){
-            this.pList = [];
-        }
+            this.forces       = [];
+            this.pList        = [];
+            this.pParams      ={life:{min:0,max:1},fadePercent:{in:5,out:95},scale:{min:1,max:1},speed:{position:{min:0, max:1 },rotation:{min:0,max:0}}};
 
-        this.update = function(){
+            function pTemplate(){
+                this.position     = {x:0,y:0};
+                this.rotation     = 0;
+                this.scale        = 1;
+                this.dirNorm      = {x:0,y:0};
+                this.speed        = {position:0, rotation:0};
+                this.life         = 0;
+            }
+
+            this.createP = function(obj){
+                var p = new pTemplate();
+                p.position = obj.position;
+                p.rotation = obj.rotation;
+                p.scale    = obj.scale;
+                p.dirNorm  = obj.dirNorm;
+                p.speed    = obj.speed;
+                p.life     = obj.life;
+                this.pList.push(p);
+            }
+        }
+            this.update = function(){
             pSystemList.forEach(function(pSystem){
-                if (pSystem.info.emitCounter > 0){
-                    pSystem.info.emitCounter --;
-                    for (cnt =0; cnt < pSystem.info.emitRate; cnt ++){
+                if (pSystem.emitCounter > 0){
+                    pSystem.emitCounter --;
+                    for (cnt =0; cnt < pSystem.emitRate; cnt ++){
                         var rndDir  = {x:randInterval(-0.5,0.5),y:randInterval(-0.5,0.5)};
-                        var scale   = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
-                        var rndLife = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
-                        var speed   = {position:randInterval(pSystem.info.pParams.speed.position.min,pSystem.info.pParams.speed.position.max),rotation:randInterval(pSystem.info.pParams.speed.rotation.min,pSystem.info.pParams.speed.rotation.max)}
+                        var scale   = randInterval(pSystem.pParams.scale.min,pSystem.pParams.scale.max);
+                        var rndLife = randIntervalInt(pSystem.pParams.life.min,pSystem.pParams.life.max);
+                        var speed   = {position:randInterval(pSystem.pParams.speed.position.min,pSystem.pParams.speed.position.max),rotation:randInterval(pSystem.pParams.speed.rotation.min,pSystem.pParams.speed.rotation.max)}
                         var unit    = getUnit(rndDir);
-                        pSystem.pList.push({position:pSystem.info.position.current, rotation:0,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
+                        pSystem.createP({position:pSystem.position.current, rotation:0,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
                     }
                 }
 
-                var newVals                       = lerpTo(pSystem.info.position.current, pSystem.info.position.destination, pSystem.info.position.rate);
-                pSystem.info.position.current     = newVals.newCurrent;
-                pSystem.info.position.destination = newVals.newDestination;
+                var newVals                  = lerpTo(pSystem.position.current, pSystem.position.destination, pSystem.position.rate);
+                pSystem.position.current     = newVals.newCurrent;
+                pSystem.position.destination = newVals.newDestination;
 
-                if (act.imageList[pSystem.info.image] !== undefined){
-                    var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
+                if (act.imageList[pSystem.image] !== undefined){
+                    var imgDim = {x:act.imageList[pSystem.image].imageData.naturalWidth/2, y:act.imageList[pSystem.image].imageData.naturalHeight/2};
                     pSystem.pList.forEach(function(p){
                         p.life.current --;
                         if (p.life.current > 0){
@@ -127,8 +154,8 @@ function canvasser(interactiveData, dataForm){
                             var pcent   = lifeCnt / p.life.max;
 
                             var alpha = 1;
-                            if (pcent*100 < pSystem.info.pParams.fadePercent.in)  alpha = lifeCnt / (p.life.max*(pSystem.info.pParams.fadePercent.in*0.01));
-                            if (pcent*100 > pSystem.info.pParams.fadePercent.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.info.pParams.fadePercent.out*0.01));
+                            if (pcent*100 < pSystem.pParams.fadePercent.in)  alpha = lifeCnt / (p.life.max*(pSystem.pParams.fadePercent.in*0.01));
+                            if (pcent*100 > pSystem.pParams.fadePercent.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.pParams.fadePercent.out*0.01));
 
                             var pos     = {"x":parseInt(p.position.x+imgDim.x), "y":parseInt(p.position.y+imgDim.y)};
                             p.rotation += p.speed.rotation;
@@ -137,7 +164,7 @@ function canvasser(interactiveData, dataForm){
                             act.context.globalCompositeOperation = 'source-over';   // overlay source-over destination-over source-in destination-in source-out destination-out source-atop destination-atop lighter xor copy 
                             act.context.globalAlpha =  alpha;
                             act.context.rotate(p.rotation);
-                            act.context.drawImage(act.imageList[pSystem.info.image].imageData, -imgDim.x*scale, -imgDim.y*scale, act.imageList[pSystem.info.image].imageData.naturalWidth*scale, act.imageList[pSystem.info.image].imageData.naturalHeight*scale);
+                            act.context.drawImage(act.imageList[pSystem.image].imageData, -imgDim.x*scale, -imgDim.y*scale, act.imageList[pSystem.image].imageData.naturalWidth*scale, act.imageList[pSystem.image].imageData.naturalHeight*scale);
                             act.context.restore();
                             act.context.globalAlpha = 1;
                             act.context.globalCompositeOperation = 'source-over';
@@ -159,6 +186,7 @@ function canvasser(interactiveData, dataForm){
                 });
             }
         });
+
         actions();
     }
 
@@ -190,10 +218,12 @@ function canvasser(interactiveData, dataForm){
                 }
             }
 
-            if (obj.type === "shape" && obj.show){
-                var posCheck = drawShapes(act, obj.parent.object, obj.position.current, act.data.shapes[obj.shape], obj.color, obj.testp, act.position, obj.scale.current);
-                if (!obj.testp) return;
-                if (posCheck) act.applyAction.push(obj);
+            if (obj.type === "shape"){
+                if (obj.show){
+                    var posCheck = drawShapes(act, obj.parent.object, obj.position.current, act.data.shapes[obj.shape], obj.color, obj.testp, act.position, obj.scale.current);
+                    if (!obj.testp) return;
+                    if (posCheck) act.applyAction.push(obj);
+                }
             }
 
             if (obj.type === "image"){
@@ -300,11 +330,6 @@ function canvasser(interactiveData, dataForm){
                 else ctx.fillStyle = color[colorIndex];
             }
             if (shape.type === "fill") ctx.fill();
-            if (shape.type === "filltext") {
-                ctx.fillStyle = color[colorIndex];
-                ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
-            }
-            if (shape.type === "font") ctx.font = shape.size*sizer + "px " + shape.font;
             if (shape.type === "strokestyle"){
                 if (color === null) ctx.strokeStyle = shape.color;
                 else ctx.strokeStyle = color[colorIndex];
@@ -358,47 +383,6 @@ function canvasser(interactiveData, dataForm){
         act.external     = false;
         act.mouseDown    = true;
         act.mouseDownCnt = 0;
-    }
-
-    function touchDown(event){
-        event.preventDefault();
-        var rect = act.canvas.getBoundingClientRect();
-        for (var i = 0; i < event.changedTouches.length; i++) {
-            act.touch.push(copyTouch(event.changedTouches[i]));
-            act.position = {x:event.changedTouches[i].pageX-rect.left, y:event.changedTouches[i].pageY-rect.top};
-        }
-        act.mode         = "click";
-        act.external     = false;
-        act.mouseDown    = true;
-        act.mouseDownCnt = 0;
-    }
-
-    function touchMove(event){
-        var rect = act.canvas.getBoundingClientRect();
-        event.preventDefault();
-        for (var i = 0; i < event.changedTouches.length; i++) {
-            var idx = event.changedTouches[i].identifier;
-            if (idx >= 0) {
-                act.position = {x:event.changedTouches[i].pageX-rect.left, y:event.changedTouches[i].pageY-rect.top};
-                act.touch.splice(idx, 1, copyTouch(event.changedTouches[i]));  // swap in the new touch record
-            }
-        }
-    }
-
-    function touchUp(event){
-        event.preventDefault();
-        var rect = act.canvas.getBoundingClientRect();
-        for (var i = 0; i < event.changedTouches.length; i++) {
-            var idx = event.changedTouches[i].identifier;
-            if (idx >= 0) {
-                act.position = {x:event.changedTouches[i].pageX-rect.left, y:event.changedTouches[i].pageY-rect.top};
-                act.touch.splice(idx, 1);  // swap in the new touch record
-            }
-        }
-    }
-
-    function copyTouch(touch) {
-        return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
     }
 
     function actions(){
@@ -501,8 +485,8 @@ function canvasser(interactiveData, dataForm){
                 }
                 if (action.type === 'pstart'){
                     act.data.particles.forEach(function(obj){
-                        if (obj.name === undefined) return;
-                        if (obj.name === action.name) pManager.create(obj);
+                        if (obj.system.name === undefined) return;
+                        if (obj.system.name === action.name) pManager.create(obj);
                     });
                 }
                 if (action.type === 'scale'){
