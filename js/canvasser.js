@@ -163,6 +163,7 @@ function canvasser(interactiveData, dataForm){
     }
 
     function loop(){
+        act.canvas.scale = act.canvas.scrollWidth / act.canvas.width;
         if (act.mode === "true") act.mode = "none";
         if (act.mouseDown){
             act.mouseDownCnt ++;
@@ -325,7 +326,7 @@ function canvasser(interactiveData, dataForm){
 
     function getMousePos(event) {
         var rect = act.canvas.getBoundingClientRect();
-        act.position = {x:event.clientX-rect.left, y:event.clientY-rect.top};
+        act.position = {x:(event.clientX-rect.left)/act.canvas.scale, y:(event.clientY-rect.top)/act.canvas.scale};
     }
 
     function mouseUp(){
@@ -365,7 +366,7 @@ function canvasser(interactiveData, dataForm){
         var rect = act.canvas.getBoundingClientRect();
         for (var i = 0; i < event.changedTouches.length; i++) {
             act.touch.push(copyTouch(event.changedTouches[i]));
-            act.position = {x:event.changedTouches[i].pageX-rect.left, y:event.changedTouches[i].pageY-rect.top};
+            act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
         }
         act.mode         = "click";
         act.external     = false;
@@ -379,7 +380,7 @@ function canvasser(interactiveData, dataForm){
         for (var i = 0; i < event.changedTouches.length; i++) {
             var idx = event.changedTouches[i].identifier;
             if (idx >= 0) {
-                act.position = {x:event.changedTouches[i].pageX-rect.left, y:event.changedTouches[i].pageY-rect.top};
+                act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
                 act.touch.splice(idx, 1, copyTouch(event.changedTouches[i]));  // swap in the new touch record
             }
         }
@@ -391,7 +392,7 @@ function canvasser(interactiveData, dataForm){
         for (var i = 0; i < event.changedTouches.length; i++) {
             var idx = event.changedTouches[i].identifier;
             if (idx >= 0) {
-                act.position = {x:event.changedTouches[i].pageX-rect.left, y:event.changedTouches[i].pageY-rect.top};
+                act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
                 act.touch.splice(idx, 1);  // swap in the new touch record
             }
         }

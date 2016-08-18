@@ -25,6 +25,8 @@
         <br>
         <a href="activities/eforensics.php">eforensics: Case File Bone Drag Example</a><br>
         <br>
+        <a href="activities/responsive.php">Responsive Test</a><br>
+        <br>
         <a href="author.php">Author</a><br>
     </body>
 </html>

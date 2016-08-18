@@ -4,6 +4,9 @@
     <head>
         <title>Canvasser</title>
     </head>
+    <style>
+        canvas{width:75%;}
+    </style>
     <body onload='initCanvasser("tex","../data/texasmap.json", "file");'>
         <?php include 'activityheader.php';?>
         <div class="title_a">Texas Map</div>
