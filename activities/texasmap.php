@@ -213,10 +213,10 @@
         <table class="bottomlinks">
             <tr>
                 <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_1"}])'>Pin 1</div>
+                    <div class="locationbank" data-canvasser="tex" data-canvasser-command='[{"command":"selectonly", "item":"drop_1"}]'>Pin 1</div>
                 </td>
                 <td>
-                    <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_2"}])'>Pin 2</div>
+                    <div class="locationbank" data-canvasser="tex" data-canvasser-command='[{"command":"selectonly", "item":"drop_2"}]'>Pin 2</div>
                 </td>
                 <td>
                     <div class="locationbank" onclick='window.tex.external([{"command":"selectonly", "item":"drop_3"}])'>Pin 3</div>

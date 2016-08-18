@@ -1,10 +1,10 @@
 // Canvasser v0.4 rubengarzajr@gmail.com
 
 function initCanvasser(vari, datafile, dataForm){
-    window[vari] = new canvasser(datafile, dataForm);
+    window[vari] = new canvasser(vari, datafile, dataForm);
 }
 
-function canvasser(interactiveData, dataForm){
+function canvasser(vari, interactiveData, dataForm){
     var act      = new interaction();
     var pManager = new particleManager();
 
@@ -67,6 +67,12 @@ function canvasser(interactiveData, dataForm){
                act.vars[v.name] = v.value;
             });
         }
+
+        var externals = document.querySelectorAll('[data-canvasser="'+vari+'"]');
+        externals.forEach(function(element){
+            element.addEventListener("click", function(){window[vari].external(JSON.parse(element.getAttribute('data-canvasser-command')))});
+        });
+
         loop();
     }
 

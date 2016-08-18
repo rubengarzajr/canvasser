@@ -14,6 +14,7 @@ Simplified particle handling
 Added touch interactions for mobile devices.
 Added textFill and font settings to the shape type.
 Handles css scaling based on width.  Responsive.
+Added event listener creation for elements with data-attribute of canvasser=canvasername.
 Particles not compatible with v0.3
 
 
