@@ -12,8 +12,7 @@ function canvasser(vari, interactiveData, dataForm){
     else if (dataForm == "string") init(JSON.parse(interactiveData));
     else init(interactiveData);
 
-    function requestJSON(fileNamePath, returnFunction)
-    {
+    function requestJSON(fileNamePath, returnFunction){
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (xhr.readyState == 4) {
@@ -152,7 +151,7 @@ function canvasser(vari, interactiveData, dataForm){
                     });
                 }
             });
-        }
+        };
     }
 
     this.external = function(cList){
