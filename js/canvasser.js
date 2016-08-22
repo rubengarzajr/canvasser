@@ -69,10 +69,11 @@ function canvasser(vari, interactiveData, dataForm){
         }
 
         var externals = document.querySelectorAll('[data-canvasser="'+vari+'"]');
-        externals.forEach(function(element){
-            element.addEventListener("click", function(){window[vari].external(JSON.parse(element.getAttribute('data-canvasser-command')))});
-        });
-
+        if (externals.length > 0){
+            externals.forEach(function(element){
+                element.addEventListener("click", function(){window[vari].external(JSON.parse(element.getAttribute('data-canvasser-command')))});
+            });
+        }
         loop();
     }
 
