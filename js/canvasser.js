@@ -67,7 +67,7 @@ function canvasser(vari, interactiveData, dataForm){
             });
         }
 
-        var externals = document.querySelectorAll('[data-canvasser="'+vari+'"]');
+        var externals = Array.from(document.querySelectorAll('[data-canvasser="'+vari+'"]'));
         if (externals.length > 0){
             externals.forEach(function(element){
                 element.addEventListener("click", function(){window[vari].external(JSON.parse(element.getAttribute('data-canvasser-command')))});
@@ -599,19 +599,20 @@ function canvasser(vari, interactiveData, dataForm){
     function getMagnitude(vector){
         return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
     }
+
     function getUnit(vector){
         var mag = getMagnitude(vector);
         return {x:vector.x/mag, y:vector.y/mag};
     }
 
-    function randInterval(min,max)
-    {
+    function randInterval(min,max){
         return Math.random()*(max-min)+min;
     }
-    function randIntervalInt(min,max)
-    {
+
+    function randIntervalInt(min,max){
         return Math.floor(Math.random()*(max-min+1)+min);
     }
+
     function lerpTo(inCurrent, inDestination, rate){
         if (inDestination === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
         if (inDestination.x === undefined || inDestination.y === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
