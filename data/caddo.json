@@ -1,31 +1,31 @@
 {
         "objects":[
-            {"type":"image", "show":true,  "group":["images"],    "name":"background",  "image":"caddo_bk",   "scale":{"current":0, "destination":1,"rate":0.04}, "position":{"current":{"x":  200,"y":  200}}, "origin":"center", "testp":false, "clicklist":[]},
-            {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_01",    "image":"caddo_01",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  207,"y":   75}, "home":{"x":  207,"y":   75}}, "origin":"center", "testp":true,  "clicklist":[{"type":"cleardown"},{"type":"copyelement","source":"tracesofthepast", "target":"details"}]},
-            {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_02",    "image":"caddo_02",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  334,"y":  173}, "home":{"x":  334,"y":  173}}, "origin":"center", "testp":true,
+            {"type":"image", "show":true,  "group":["images"],    "name":"background",  "image":"caddo_bk",   "scale":{"current":0, "destination":1,"rate":0.04}, "position":{"current":{"x":  210,"y":  210}}, "origin":"center", "testp":false, "clicklist":[]},
+            {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_01",    "image":"caddo_01",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  210,"y":   75}, "home":{"x":  207,"y":   75}}, "origin":"center", "testp":true,  "clicklist":[{"type":"cleardown"},{"type":"copyelement","source":"caddo_01", "target":"details"}]},
+            {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_02",    "image":"caddo_02",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  344,"y":  173}, "home":{"x":  334,"y":  173}}, "origin":"center", "testp":true,
                 "clicklist":[
                     {"type":"cleardown"},
                     {"type":"copyelement","source":"tracesofthepast", "target":"details"},
                     {"type":"groupvis","name":"child2", "show":true},
                     {"type":"objectvis","name":"back", "show":true},
                     {"type":"objectvis","name":"caddo_02_bk", "show":true},
-                    {"type":"destposition", "filter":"object", "name":"caddo_02_bk",  "destination":{"x":200,"y":200}, "rate":5},
-                    {"type":"destposition", "filter":"group",  "name":"parent",       "destination":{"x":200,"y":200}, "rate":5},
+                    {"type":"destposition", "filter":"object", "name":"caddo_02_bk",  "destination":{"x":210,"y":210}, "rate":5},
+                    {"type":"destposition", "filter":"group",  "name":"parent",       "destination":{"x":210,"y":210}, "rate":5},
                     {"type":"scaledest",    "filter":"group",  "name":"child2",       "destination": 1, "rate":0.075,  "hideafter":false},
                     {"type":"scaledest",    "filter":"object", "name":"caddo_02_bk",  "destination": 1, "rate":0.05,   "hideafter":false},
                     {"type":"scaledest",    "filter":"group",  "name":"parent",       "destination": 0, "rate":0.025 , "hideafter":true}
                 ]
             },
-            {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_03",    "image":"caddo_03",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  286,"y":  322}, "home":{"x":  286,"y":  322}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
+            {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_03",    "image":"caddo_03",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  296,"y":  322}, "home":{"x":  286,"y":  322}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
             {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_04",    "image":"caddo_04",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  129,"y":  322}, "home":{"x":  129,"y":  322}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
             {"type":"image", "show":true,  "group":["parent"],    "name":"caddo_05",    "image":"caddo_05",   "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":   81,"y":  173}, "home":{"x":   81,"y":  173}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
-            {"type":"image", "show":false, "group":["bkgrounds"], "name":"caddo_02_bk", "image":"caddo_02bk", "scale":{"current":0}, "position":{"current":{"x":  200,"y":  200}}, "origin":"center", "testp":false, "clicklist":[]},
-            {"type":"image", "show":false, "group":["child2"],    "name":"caddo_02a",   "image":"caddo_02a",  "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  200,"y":   75}, "home":{"x":  200,"y":   75}}, "origin":"center", "testp":true,  "clicklist":[{"type":"cleardown"},{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
+            {"type":"image", "show":false, "group":["bkgrounds"], "name":"caddo_02_bk", "image":"caddo_02bk", "scale":{"current":0}, "position":{"current":{"x":  210,"y":  210}}, "origin":"center", "testp":false, "clicklist":[]},
+            {"type":"image", "show":false, "group":["child2"],    "name":"caddo_02a",   "image":"caddo_02a",  "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  210,"y":   75}, "home":{"x":  210,"y":   75}}, "origin":"center", "testp":true,  "clicklist":[{"type":"cleardown"},{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
             {"type":"image", "show":false, "group":["child2"],    "name":"caddo_02b",   "image":"caddo_02b",  "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  324,"y":  173}, "home":{"x":  324,"y":  173}}, "origin":"center", "testp":true,  "clicklist":[{"type":"cleardown"},{"type":"copyelement","source":"clay", "target":"details"}]},
             {"type":"image", "show":false, "group":["child2"],    "name":"caddo_02c",   "image":"caddo_02c",  "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  286,"y":  322}, "home":{"x":  286,"y":  322}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
             {"type":"image", "show":false, "group":["child2"],    "name":"caddo_02d",   "image":"caddo_02d",  "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":  115,"y":  322}, "home":{"x":  115,"y":  322}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
             {"type":"image", "show":false, "group":["child2"],    "name":"caddo_02e",   "image":"caddo_02e",  "scale":{"current":0, "destination":1,"rate":0.05}, "position":{"current":{"x":   75,"y":  173}, "home":{"x":   75,"y":  173}}, "origin":"center", "testp":true,  "clicklist":[{"type":"scaleobject","name":"texasmap", "frame":"multiply", "amount":0.975}]},
-            {"type":"image", "show":false,  "group":["text"],     "name":"back",        "image":"back",       "scale":{"current":1},                              "position":{"current":{"x":  200,"y":  259}}, "origin":"center", "testp":true,
+            {"type":"image", "show":false,  "group":["text"],     "name":"back",        "image":"back",       "scale":{"current":1},                              "position":{"current":{"x":  210,"y":  259}}, "origin":"center", "testp":true,
                 "clicklist":[
                     {"type":"cleardown"},
                     {"type":"groupvis","name":"parent", "show":true},
@@ -56,8 +56,8 @@
 	"shapes": {
 	},
 	"settings": {
-		"canvaswidth": "400",
-		"canvasheight": "400",
+		"canvaswidth": "420",
+		"canvasheight": "420",
 		"canvasdomname": "activity",
                 "canvasparent": "canvasholder"
 	}

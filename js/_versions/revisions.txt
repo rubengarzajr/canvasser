@@ -4,6 +4,14 @@ Add LERP time in addition to rate
 Scale offset for children
 Parenting multiple levels
 Concept of transformation for objects
+absolute scale = prevent it from scaling with parent
+
+
+Canvasser v0.5
+--------------
+TODO:Action when dragging over other item.
+Add anchor link # to url once clicked a copy element
+Handles #external anchor link in url to select item on canvasser start
 
 
 

@@ -19,7 +19,7 @@
         <a href="activities/eyesofexplorer.php">Eyes of the Explorer Navigation</a><br>
         <a href="activities/poppuzzle.php">Population Puzzlers</a><br>
         <a href="activities/prehistoric_map.php">Prehistoric Map</a><br>
-        <a href="activities/map_coastal.php">Prehistoric Map: Coastal</a><br>
+        <a href="activities/map_coastal.php#lls10">Prehistoric Map: Coastal</a><br>
         <a href="activities/map_plains.php">Prehistoric Map: Plains</a><br>
         <a href="activities/map_plateaus.php">Prehistoric Map: Plateaus & Canyonlands</a><br>
         <a href="activities/map_transpecos.php">Prehistoric Map: Trans Pecos</a><br>

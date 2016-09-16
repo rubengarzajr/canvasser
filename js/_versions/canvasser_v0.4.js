@@ -1,4 +1,4 @@
-// Canvasser v0.45 rubengarzajr@gmail.com
+// Canvasser v0.4 rubengarzajr@gmail.com
 
 function initCanvasser(vari, datafile, dataForm){
     window[vari] = new canvasser(vari, datafile, dataForm);
@@ -14,8 +14,8 @@ function canvasser(vari, interactiveData, dataForm){
 
     function requestJSON(fileNamePath, returnFunction){
         var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function(){
-            if (xhr.readyState == 4){
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
                 returnFunction(JSON.parse(xhr.responseText));
             }
             if (xhr.status == 404) console.error("JSON File Load Error: " + xhr.statusText + " " + xhr.readyState);
@@ -46,7 +46,7 @@ function canvasser(vari, interactiveData, dataForm){
         }
         act.data.images.forEach(function(image){
             var imageObj = new Image();
-            imageObj.onload = function(){
+            imageObj.onload = function() {
                 act.imageList[image.id] = {};
                 act.imageList[image.id].imageData = this;
                 act.imageList[image.id].canvas = document.createElement('canvas');
@@ -73,8 +73,6 @@ function canvasser(vari, interactiveData, dataForm){
                 element.addEventListener("click", function(){window[vari].external(JSON.parse(element.getAttribute('data-canvasser-command')))});
             });
         }
-        if (window.location.hash !== "") window[vari].external([{"command":"selectonly", "item":window.location.hash.substring(1)}]);
-
         loop();
     }
 
@@ -142,7 +140,7 @@ function canvasser(vari, interactiveData, dataForm){
                             p.rotation += p.speed.rotation;
                             act.context.save();
                             act.context.translate(pos.x, pos.y);
-                            act.context.globalCompositeOperation = 'source-over';   // overlay source-over destination-over source-in destination-in source-out destination-out source-atop destination-atop lighter xor copy
+                            act.context.globalCompositeOperation = 'source-over';   // overlay source-over destination-over source-in destination-in source-out destination-out source-atop destination-atop lighter xor copy 
                             act.context.globalAlpha =  alpha;
                             act.context.rotate(p.rotation);
                             act.context.drawImage(act.imageList[pSystem.info.image].imageData, -imgDim.x*scale, -imgDim.y*scale, act.imageList[pSystem.info.image].imageData.naturalWidth*scale, act.imageList[pSystem.info.image].imageData.naturalHeight*scale);
@@ -180,6 +178,8 @@ function canvasser(vari, interactiveData, dataForm){
                 act.canvas.style.cursor = "move";
             }
             actions();
+            if (act.mode === "click") document.body.style.cursor.cursor = "default";
+            if (act.mode === "drag")  document.body.style.cursor.cursor = "move";
         }
         else{
             act.canvas.style.cursor = "default";
@@ -188,7 +188,6 @@ function canvasser(vari, interactiveData, dataForm){
         if (!act.external) act.applyAction = [];
 
         act.data.objects.forEach(function(obj){
-
             if (obj.parent !== undefined){
                 if (obj.parent.object === undefined){
                     act.data.objects.forEach(function(parent){
@@ -450,7 +449,6 @@ function canvasser(vari, interactiveData, dataForm){
                     var source = document.getElementById(action.source);
                     if (target !== undefined && source !== undefined && target !== null && source !== null){
                         target.innerHTML = source.innerHTML;
-                        window.location.hash = over.name;
                     }
                 }
                 if (action.type === 'destposition'){
@@ -559,9 +557,6 @@ function canvasser(vari, interactiveData, dataForm){
                             act.dragging = obj;
                         }
                     });
-                }
-                if (action.type === "slideover"){
-                    console.log("slideOver");
                 }
                 if (action.type === 'url'){
                     var target = document.getElementById(action.target);
