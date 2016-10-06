@@ -312,6 +312,19 @@ function canvasser(vari, interactiveData, dataForm){
                 ctx.fillStyle = color[colorIndex];
                 ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
             }
+            if (shape.type === "stroketext") {
+                ctx.lineWidth = shape.stroke;
+                ctx.strokeStyle = color[colorIndex];
+                ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+            }
+            if (shape.type === "outlinetext") {
+                ctx.lineWidth   = shape.stroke;
+                ctx.strokeStyle = color[colorIndex];
+                ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+                colorIndex ++
+                ctx.fillStyle = color[colorIndex];
+                ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+            }
             if (shape.type === "font") ctx.font = shape.size*sizer + "px " + shape.font;
             if (shape.type === "strokestyle"){
                 if (color === null) ctx.strokeStyle = shape.color;

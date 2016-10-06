@@ -12,7 +12,7 @@ Canvasser v0.5
 TODO:Action when dragging over other item.
 Add anchor link # to url once clicked a copy element
 Handles #external anchor link in url to select item on canvasser start
-
+Added StokeText and OutlineText
 
 
 Canvasser v0.4
