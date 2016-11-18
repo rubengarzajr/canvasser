@@ -479,6 +479,9 @@ function canvasser(vari, interactiveData, dataForm){
                         if (action.duration !== undefined) obj.position.duration = action.duration;
                     });
                 }
+                if (action.type === 'execute'){
+                    window[action.function](action.params);
+                }
                 if (action.type === 'fade'){
                     act.data.objects.forEach(function(obj){
                         if (!checkAction(action, obj)) return;
