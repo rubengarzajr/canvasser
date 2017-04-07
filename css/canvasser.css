@@ -279,7 +279,7 @@ a{
 }
 
 .submenu{
-    
+
 }
 .entrytitle{
     display: table-cell;
@@ -320,7 +320,12 @@ a{
 .w100{
     width: 100px;
 }
-
+.w200{
+    width: 200px;
+}
+.w400{
+    width: 400px;
+}
 .pos_holder{
     background-color: rgb(106, 127, 144);
     border: 1px rgb(106, 127, 144) solid;

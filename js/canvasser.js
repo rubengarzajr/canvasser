@@ -1,174 +1,176 @@
 // Canvasser v0.45 rubengarzajr@gmail.com
 
 function initCanvasser(vari, datafile, dataForm){
-    window[vari] = new canvasser(vari, datafile, dataForm);
+  window[vari] = new canvasser(vari, datafile, dataForm);
 }
 
 function canvasser(vari, interactiveData, dataForm){
-    var act      = new interaction();
-    var pManager = new particleManager();
+  var act      = new interaction();
+  var pManager = new particleManager();
 
-    if (dataForm == "file") requestJSON(interactiveData, init);
-    else if (dataForm == "string") init(JSON.parse(interactiveData));
-    else init(interactiveData);
+  if (dataForm == "file") requestJSON(interactiveData, init);
+  else if (dataForm == "string") init(JSON.parse(interactiveData));
+  else init(interactiveData);
 
-    function requestJSON(fileNamePath, returnFunction){
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function(){
-            if (xhr.readyState == 4){
-                returnFunction(JSON.parse(xhr.responseText));
-            }
-            if (xhr.status == 404) console.error("JSON File Load Error: " + xhr.statusText + " " + xhr.readyState);
-        }
-        xhr.overrideMimeType('application/json');
-        xhr.open('GET', fileNamePath, true);
-        xhr.send(null);
+  function requestJSON(fileNamePath, returnFunction){
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+      if (xhr.readyState == 4){
+        returnFunction(JSON.parse(xhr.responseText));
+      }
+      if (xhr.status == 404) console.error("JSON File Load Error: " + xhr.statusText + " " + xhr.readyState);
+    }
+    xhr.overrideMimeType('application/json');
+    xhr.open('GET', fileNamePath, true);
+    xhr.send(null);
+  }
+
+  function init(data){
+    act.canvas  = document.createElement('canvas');
+    act.context = act.canvas.getContext('2d');
+    act.canvas.width  = data.settings.canvaswidth;
+    act.canvas.height = data.settings.canvasheight;
+    act.data = data;
+    document.getElementById(data.settings.canvasparent).innerHTML = "";
+    document.getElementById(data.settings.canvasparent).appendChild(act.canvas);
+    act.canvas.addEventListener('mousemove',    getMousePos, false);
+    act.canvas.addEventListener('mousedown',    mouseDown,   false);
+    act.canvas.addEventListener('mouseup',      mouseUp,     false);
+    act.canvas.addEventListener('mouseleave',   mouseLeave,  false);
+    act.canvas.addEventListener('onmouseenter', mouseEnter,  false);
+    act.canvas.addEventListener("touchstart", touchDown, false);
+    act.canvas.addEventListener("touchmove",  touchMove, false);
+    act.canvas.addEventListener("touchend",   touchUp,   false);
+    if (act.data.paths !== undefined){
+      act.data.paths.forEach(function(path){act.pathList[path.id] = path.url;});
+    }
+    act.data.images.forEach(function(image){
+      var imageObj = new Image();
+      imageObj.onload = function(){
+        act.imageList[image.id] = {};
+        act.imageList[image.id].imageData = this;
+        act.imageList[image.id].canvas = document.createElement('canvas');
+        act.imageList[image.id].canvas.width = this.width;
+        act.imageList[image.id].canvas.height = this.height;
+      //  if (this.height === 0) console.log("og no "  )
+        act.imageList[image.id].context = act.imageList[image.id].canvas.getContext('2d');
+        act.imageList[image.id].context.drawImage(this, 0, 0, this.width, this.height);
+      };
+
+      if (image.path != undefined) image.url = act.pathList[image.path] + '/' + image.url;
+      imageObj.src = image.url + '?' + new Date().getTime();
+      imageObj.setAttribute('crossOrigin', 'anonymous');
+    });
+
+    act.vars = {};
+    if (act.data.vars != undefined){
+      act.data.vars.forEach(function(v){
+       act.vars[v.name] = v.value;
+      });
     }
 
-    function init(data){
-        act.canvas  = document.createElement('canvas');
-        act.context = act.canvas.getContext('2d');
-        act.canvas.width  = data.settings.canvaswidth;
-        act.canvas.height = data.settings.canvasheight;
-        act.data = data;
-        document.getElementById(data.settings.canvasparent).innerHTML = "";
-        document.getElementById(data.settings.canvasparent).appendChild(act.canvas);
-        act.canvas.addEventListener('mousemove',    getMousePos, false);
-        act.canvas.addEventListener('mousedown',    mouseDown,   false);
-        act.canvas.addEventListener('mouseup',      mouseUp,     false);
-        act.canvas.addEventListener('mouseleave',   mouseLeave,  false);
-        act.canvas.addEventListener('onmouseenter', mouseEnter,  false);
-        act.canvas.addEventListener("touchstart", touchDown, false);
-        act.canvas.addEventListener("touchmove",  touchMove, false);
-        act.canvas.addEventListener("touchend",   touchUp,   false);
-        if (act.data.paths !== undefined){
-            act.data.paths.forEach(function(path){act.pathList[path.id] = path.url;});
-        }
-        act.data.images.forEach(function(image){
-            var imageObj = new Image();
-            imageObj.onload = function(){
-                act.imageList[image.id] = {};
-                act.imageList[image.id].imageData = this;
-                act.imageList[image.id].canvas = document.createElement('canvas');
-                act.imageList[image.id].canvas.width = this.width;
-                act.imageList[image.id].canvas.height = this.height;
-                act.imageList[image.id].context = act.imageList[image.id].canvas.getContext('2d');
-                act.imageList[image.id].context.drawImage(this, 0, 0, this.width, this.height);
-            };
+    var externals = Array.from(document.querySelectorAll('[data-canvasser="'+vari+'"]'));
+    if (externals.length > 0){
+      externals.forEach(function(element){
+        element.addEventListener("click", function(){window[vari].external(JSON.parse(element.getAttribute('data-canvasser-command')))});
+      });
+    }
+    if (window.location.hash !== "") window[vari].external([{"command":"selectonly", "item":window.location.hash.substring(1)}]);
 
-        if (image.path != undefined) image.url = act.pathList[image.path] + '/' + image.url;
-        imageObj.src = image.url;
+    loop();
+  }
+
+  function interaction(){
+    this.position     = {x:0, y:0};
+    this.prevPosition = {x:0, y:0};
+    this.curveList    = [];
+    this.imageList    = [];
+    this.pathList     = [];
+    this.applyAction  = [];
+    this.mouseDown    = false;
+    this.mouseDownCnt = 0;
+    this.external     = false;
+    this.mode         = "none";
+    this.dragging     = null;
+    this.touch        = [];
+  }
+
+  function particleManager(){
+    var pSystemList = [];
+
+    this.create = function(obj){
+      var newPSystem   = new pSystem();
+      newPSystem.info  = obj;
+      pSystemList.push(newPSystem);
+    }
+
+    function pSystem(){
+      this.pList = [];
+    }
+
+    this.update = function(){
+      pSystemList.forEach(function(pSystem){
+        if (pSystem.info.emitCounter > 0){
+          pSystem.info.emitCounter --;
+          for (cnt =0; cnt < pSystem.info.emitRate; cnt ++){
+            var rndDir  = {x:randInterval(-0.5,0.5),y:randInterval(-0.5,0.5)};
+            var scale   = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
+            var rndLife = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
+            var speed   = {position:randInterval(pSystem.info.pParams.speed.position.min,pSystem.info.pParams.speed.position.max),rotation:randInterval(pSystem.info.pParams.speed.rotation.min,pSystem.info.pParams.speed.rotation.max)}
+            var unit    = getUnit(rndDir);
+            pSystem.pList.push({position:pSystem.info.position.current, rotation:0,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
+          }
+        }
+
+        var newVals                       = lerpTo(pSystem.info.position.current, pSystem.info.position.destination, pSystem.info.position.rate);
+        pSystem.info.position.current     = newVals.newCurrent;
+        pSystem.info.position.destination = newVals.newDestination;
+
+        if (act.imageList[pSystem.info.image] == undefined) return;
+        var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
+        pSystem.pList.forEach(function(p){
+          p.life.current --;
+          if (p.life.current > 0){
+            p.position  = {x:p.position.x+p.dirNorm.x*p.speed.position, y: p.position.y+p.dirNorm.y*p.speed.position}
+            var scale   = p.scale;
+            var lifeCnt = p.life.max - p.life.current;
+            var pcent   = lifeCnt / p.life.max;
+
+            var alpha = 1;
+            if (pcent*100 < pSystem.info.pParams.fadePercent.in)  alpha = lifeCnt / (p.life.max*(pSystem.info.pParams.fadePercent.in*0.01));
+            if (pcent*100 > pSystem.info.pParams.fadePercent.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.info.pParams.fadePercent.out*0.01));
+
+            var pos     = {"x":parseInt(p.position.x+imgDim.x), "y":parseInt(p.position.y+imgDim.y)};
+            p.rotation += p.speed.rotation;
+            act.context.save();
+            act.context.translate(pos.x, pos.y);
+            act.context.globalCompositeOperation = 'source-over';   // overlay source-over destination-over source-in destination-in source-out destination-out source-atop destination-atop lighter xor copy
+            act.context.globalAlpha =  alpha;
+            act.context.rotate(p.rotation);
+            act.context.drawImage(act.imageList[pSystem.info.image].imageData, -imgDim.x*scale, -imgDim.y*scale, act.imageList[pSystem.info.image].imageData.naturalWidth*scale, act.imageList[pSystem.info.image].imageData.naturalHeight*scale);
+            act.context.restore();
+            act.context.globalAlpha = 1;
+            act.context.globalCompositeOperation = 'source-over';
+          }
         });
 
-        act.vars = {};
-        if (act.data.vars != undefined){
-            act.data.vars.forEach(function(v){
-               act.vars[v.name] = v.value;
-            });
-        }
+      });
+    };
+  }
 
-        var externals = Array.from(document.querySelectorAll('[data-canvasser="'+vari+'"]'));
-        if (externals.length > 0){
-            externals.forEach(function(element){
-                element.addEventListener("click", function(){window[vari].external(JSON.parse(element.getAttribute('data-canvasser-command')))});
-            });
-        }
-        if (window.location.hash !== "") window[vari].external([{"command":"selectonly", "item":window.location.hash.substring(1)}]);
-
-        loop();
-    }
-
-    function interaction(){
-        this.position     = {x:0, y:0};
-        this.prevPosition = {x:0, y:0};
-        this.curveList    = [];
-        this.imageList    = [];
-        this.pathList     = [];
-        this.applyAction  = [];
-        this.mouseDown    = false;
-        this.mouseDownCnt = 0;
-        this.external     = false;
-        this.mode         = "none";
-        this.dragging     = null;
-        this.touch        = [];
-    }
-
-    function particleManager(){
-        var pSystemList = [];
-
-        this.create = function(obj){
-            var newPSystem   = new pSystem();
-            newPSystem.info  = obj;
-            pSystemList.push(newPSystem);
-        }
-
-        function pSystem(){
-            this.pList = [];
-        }
-
-        this.update = function(){
-            pSystemList.forEach(function(pSystem){
-                if (pSystem.info.emitCounter > 0){
-                    pSystem.info.emitCounter --;
-                    for (cnt =0; cnt < pSystem.info.emitRate; cnt ++){
-                        var rndDir  = {x:randInterval(-0.5,0.5),y:randInterval(-0.5,0.5)};
-                        var scale   = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
-                        var rndLife = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
-                        var speed   = {position:randInterval(pSystem.info.pParams.speed.position.min,pSystem.info.pParams.speed.position.max),rotation:randInterval(pSystem.info.pParams.speed.rotation.min,pSystem.info.pParams.speed.rotation.max)}
-                        var unit    = getUnit(rndDir);
-                        pSystem.pList.push({position:pSystem.info.position.current, rotation:0,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
-                    }
-                }
-
-                var newVals                       = lerpTo(pSystem.info.position.current, pSystem.info.position.destination, pSystem.info.position.rate);
-                pSystem.info.position.current     = newVals.newCurrent;
-                pSystem.info.position.destination = newVals.newDestination;
-
-                if (act.imageList[pSystem.info.image] !== undefined){
-                    var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
-                    pSystem.pList.forEach(function(p){
-                        p.life.current --;
-                        if (p.life.current > 0){
-                            p.position  = {x:p.position.x+p.dirNorm.x*p.speed.position, y: p.position.y+p.dirNorm.y*p.speed.position}
-                            var scale   = p.scale;
-                            var lifeCnt = p.life.max - p.life.current;
-                            var pcent   = lifeCnt / p.life.max;
-
-                            var alpha = 1;
-                            if (pcent*100 < pSystem.info.pParams.fadePercent.in)  alpha = lifeCnt / (p.life.max*(pSystem.info.pParams.fadePercent.in*0.01));
-                            if (pcent*100 > pSystem.info.pParams.fadePercent.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.info.pParams.fadePercent.out*0.01));
-
-                            var pos     = {"x":parseInt(p.position.x+imgDim.x), "y":parseInt(p.position.y+imgDim.y)};
-                            p.rotation += p.speed.rotation;
-                            act.context.save();
-                            act.context.translate(pos.x, pos.y);
-                            act.context.globalCompositeOperation = 'source-over';   // overlay source-over destination-over source-in destination-in source-out destination-out source-atop destination-atop lighter xor copy
-                            act.context.globalAlpha =  alpha;
-                            act.context.rotate(p.rotation);
-                            act.context.drawImage(act.imageList[pSystem.info.image].imageData, -imgDim.x*scale, -imgDim.y*scale, act.imageList[pSystem.info.image].imageData.naturalWidth*scale, act.imageList[pSystem.info.image].imageData.naturalHeight*scale);
-                            act.context.restore();
-                            act.context.globalAlpha = 1;
-                            act.context.globalCompositeOperation = 'source-over';
-                        }
-                    });
-                }
-            });
-        };
-    }
-
-    this.external = function(cList){
-        act.external = true;
-        cList.forEach(function(cmd){
-            if (cmd.command === "selectonly"){
-                    act.applyAction = [];
-                    act.mode = "click";
-                    act.data.objects.forEach(function(obj){
-                    if (obj.name === cmd.item) act.applyAction.push(obj);
-                });
-            }
+  this.external = function(cList){
+    act.external = true;
+    cList.forEach(function(cmd){
+      if (cmd.command === "selectonly"){
+        act.applyAction = [];
+        act.mode = "click";
+        act.data.objects.forEach(function(obj){
+          if (obj.name === cmd.item) act.applyAction.push(obj);
         });
-        actions();
-    }
+      }
+    });
+    actions();
+  }
 
     function loop(){
         act.canvas.scale = act.canvas.scrollWidth / act.canvas.width;

@@ -13,202 +13,112 @@ function authorcanvasser(dataFile, dataForm){
         zidx: 25
     };
 
-    var authorData = {
-        objects:[
-            {type:"image", show:true, group:["images","shiny"], name:"test",  image:"p",     scale:{current:1}, position:{current:{x: 200,y: 300}, destination:{x: 160,y: 150}, rate:4}, origin:"center",  testp:true, clicklist:[{type:"console",text:"hi"}]},
-            {type:"image", show:true, group:["images"],         name:"minus", image:"minus", scale:{current:1}, position:{current:{x: 160,y: 150}}, origin:"center",  testp:true, "clicklist":[{type:"console",text:"hi"}]},
-            {type:"image", show:true, group:["images"],         name:"child", image:"si01",  parent:{name:"test"}, scale:{current:1}, position:{current:{x: 200,y: 200}}, origin:"center",  testp:true, "clicklist":[{type:"console",text:"hi"}]}
-        ],
-        images:[
-            {id:"minus",  url:"image/icon_minus.png"},
-            {id:"plus",  url:"image/icon_plus.png"},
-            {id:"p",  url:"image/particle.png"},
-            {id:"texas",  url:"image/tx-map-rough.png"},
-            {id:"up",  url:"image/icon_up.png"},
-            {id:"down",  url:"image/icon_down.png"},
-            {id:"left",  url:"image/icon_left.png"},
-            {id:"right",  url:"image/icon_right.png"},
-            {id:"si01",  url:"image/si01.png"}
-        ],
-        settings: {
-            canvaswidth: 400,
-            canvasheight: 400,
-            canvasdomname: "activity",
-            canvasparent: "canvasholder"
-        }
-    };
-    
     authorData = {
     "objects":[
-{"type":"image","show":true,"group":["images"],"name":"bkimg","image":"backgr","scale":{"current":0.4},"position":{"current":{"x":360,"y":350}},"origin":"center","testp":true,"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b01","image":"b01","scale":{"current":1,"rate":0},"position":{"current":{"x":-550,"y":-270},"offset":{"x":-550,"y":-270},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b01"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b02","image":"b02","scale":{"current":1,"rate":0},"position":{"current":{"x":-520,"y":-620},"offset":{"x":-550,"y":-720},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b02"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b03","image":"b03","scale":{"current":1,"rate":0},"position":{"current":{"x":-300,"y":100},"offset":{"x":-300,"y":100},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b03"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b04","image":"b04","scale":{"current":1,"rate":0},"position":{"current":{"x":-260,"y":100},"offset":{"x":-260,"y":100},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b04"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b05","image":"b05","scale":{"current":1,"rate":0},"position":{"current":{"x":-310,"y":100},"offset":{"x":-310,"y":100},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b05"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b06","image":"b06","scale":{"current":1,"rate":0},"position":{"current":{"x":250,"y":-620},"offset":{"x":-230,"y":110},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b06"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b07","image":"b07","scale":{"current":1,"rate":0},"position":{"current":{"x":-205,"y":110},"offset":{"x":-205,"y":110},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b07"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b08","image":"b08","scale":{"current":1,"rate":0},"position":{"current":{"x":-350,"y":100},"offset":{"x":-350,"y":100},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b08"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b09","image":"b09","scale":{"current":1,"rate":0},"position":{"current":{"x":-450,"y":10},"offset":{"x":-450,"y":10},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b09"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b10","image":"b10","scale":{"current":1,"rate":0},"position":{"current":{"x":-420,"y":-250},"offset":{"x":-420,"y":-250},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b10"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b11","image":"b11","scale":{"current":1,"rate":0},"position":{"current":{"x":-150,"y":-300},"offset":{"x":-150,"y":-300},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b11"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b12","image":"b12","scale":{"current":1,"rate":0},"position":{"current":{"x":-540,"y":-30},"offset":{"x":-540,"y":-30},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b12"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b13","image":"b13","scale":{"current":1,"rate":0},"position":{"current":{"x":-200,"y":100},"offset":{"x":-200,"y":100},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b13"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b14","image":"b14","scale":{"current":1,"rate":0},"position":{"current":{"x":-400,"y":-690},"offset":{"x":-400,"y":-690},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b14"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b15","image":"b15","scale":{"current":1,"rate":0},"position":{"current":{"x":-450,"y":-50},"offset":{"x":-450,"y":-50},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b15"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b16","image":"b16","scale":{"current":1,"rate":0},"position":{"current":{"x":-120,"y":100},"offset":{"x":-120,"y":100},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b16"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b17","image":"b17","scale":{"current":1,"rate":0},"position":{"current":{"x":-400,"y":80},"offset":{"x":-400,"y":80},"rate":0},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b17"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b18","image":"b18","scale":{"current":1},"position":{"current":{"x":290,"y":-60}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b18"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b19","image":"b19","scale":{"current":1},"position":{"current":{"x":260,"y":-70}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b19"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b20","image":"b20","scale":{"current":1},"position":{"current":{"x":250,"y":-100}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b20"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b21","image":"b21","scale":{"current":1},"position":{"current":{"x":260,"y":-130}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b21"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b22","image":"b22","scale":{"current":1},"position":{"current":{"x":250,"y":-250}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b22"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b23","image":"b23","scale":{"current":1},"position":{"current":{"x":240,"y":-180}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b23"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b24","image":"b24","scale":{"current":1},"position":{"current":{"x":130,"y":-280}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b24"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b25","image":"b25","scale":{"current":1},"position":{"current":{"x":-120,"y":-280}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b25"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b26","image":"b26","scale":{"current":1},"position":{"current":{"x":280,"y":-400}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b26"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b27","image":"b27","scale":{"current":1},"position":{"current":{"x":-270,"y":-190}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b27"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b28","image":"b28","scale":{"current":1},"position":{"current":{"x":-300,"y":-240}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b28"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b29","image":"b29","scale":{"current":1},"position":{"current":{"x":-400,"y":-50}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b29"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b30","image":"b30","scale":{"current":1},"position":{"current":{"x":-160,"y":100}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b30"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b31","image":"b31","scale":{"current":1},"position":{"current":{"x":-220,"y":-320}},"parent":{"name":"bkimg","update":true},"testp":true,"draglist":[
-{"type":"slideobject","name":"b31"}],"clicklist":[]},
-{"type":"image","show":true,"group":["images"],"name":"big","image":"icon_plus","scale":{"current":1},"position":{"current":{"x":10,"y":10}},"origin":"default","testp":true,"clicklist":[
-{"type":"scale","filter":"object","name":"bkimg","frame":"multiply","amount":1.025}]},
-{"type":"image","show":true,"group":["images"],"name":"small","image":"icon_minus","scale":{"current":1},"position":{"current":{"x":60,"y":10}},"origin":"default","testp":true,"clicklist":[
-{"type":"scale","filter":"object","name":"bkimg","frame":"multiply","amount":0.975}]},
-{"type":"shape","show":true,"group":["drag"],"name":"bk","shape":"sq","scale":{"current":1},"position":{"current":{"x":0,"y":0}},"parent":{},"color":["rgba(250,250,250,0)"],"defaultcolor":["rgba(250,250,250,0)"],"selectcolor":["rgba(250,250,250,1)"],"testp":true,"draglist":[
+{"type":"image","show":true,"group":["images"],"name":"bkimg","image":"backgr","scale":{"current":1},"position":{"current":{"x":360,"y":350}},"origin":"center","testp":true,"clicklist":[]},
+{"type":"image","show":true,"group":["bones"],"name":"d1","image":"d1","scale":{"current":1,"rate":0},"position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[
+{"type":"slideobject","name":"d1"}],"clicklist":[]},
+{"type":"image","show":true,"group":["bones"],"name":"b30","image":"c1","scale":{"current":1},"position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[
+{"type":"slideobject","name":"b30"}],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","name":"images","show":false}]},
+{"type":"image","show":true,"group":["bones"],"name":"b31","image":"c2","scale":{"current":1},"position":{"current":{"x":20,"y":75}},"testp":true,"draglist":[
+{"type":"slideobject","name":"b31"}],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","name":"images","show":true}]},
+{"type":"shape","show":true,"group":["drag"],"name":"bk","shape":"sq","scale":{"current":1},"position":{"current":{"x":40,"y":40}},"parent":{},"color":["rgba(250,250,250,0)"],"defaultcolor":["rgba(250,250,250,0)"],"selectcolor":["rgba(250,250,250,1)"],"testp":true,"draglist":[
 {"type":"slideobject","name":"bkimg"}],"clicklist":[]}],
 "images":[
-    {"id":"backgr",    "url":"image/eforensics/activity_bk.png"},
-    {"id":"b01",       "url":"image/eforensics/bone01.png"},
-    {"id":"b02",       "url":"image/eforensics/bone02.png"},
-    {"id":"b03",       "url":"image/eforensics/bone03.png"},
-    {"id":"b04",       "url":"image/eforensics/bone04.png"},
-    {"id":"b05",       "url":"image/eforensics/bone05.png"},
-    {"id":"b06",       "url":"image/eforensics/bone06.png"},
-    {"id":"b07",       "url":"image/eforensics/bone07.png"},
-    {"id":"b08",       "url":"image/eforensics/bone08.png"},
-    {"id":"b09",       "url":"image/eforensics/bone09.png"},
-    {"id":"b10",       "url":"image/eforensics/bone10.png"},
-    {"id":"b11",       "url":"image/eforensics/bone11.png"},
-    {"id":"b12",       "url":"image/eforensics/bone12.png"},
-    {"id":"b13",       "url":"image/eforensics/bone13.png"},
-    {"id":"b14",       "url":"image/eforensics/bone14.png"},
-    {"id":"b15",       "url":"image/eforensics/bone15.png"},
-    {"id":"b16",       "url":"image/eforensics/bone16.png"},
-    {"id":"b17",       "url":"image/eforensics/bone17.png"},
-    {"id":"b18",       "url":"image/eforensics/bone18.png"},
-    {"id":"b19",       "url":"image/eforensics/bone19.png"},
-    {"id":"b20",       "url":"image/eforensics/bone20.png"},
-    {"id":"b21",       "url":"image/eforensics/bone21.png"},
-    {"id":"b22",       "url":"image/eforensics/bone22.png"},
-    {"id":"b23",       "url":"image/eforensics/bone23.png"},
-    {"id":"b24",       "url":"image/eforensics/bone24.png"},
-    {"id":"b25",       "url":"image/eforensics/bone25.png"},
-    {"id":"b26",       "url":"image/eforensics/bone26.png"},
-    {"id":"b27",       "url":"image/eforensics/bone27.png"},
-    {"id":"b28",       "url":"image/eforensics/bone28.png"},
-    {"id":"b29",       "url":"image/eforensics/bone29.png"},
-    {"id":"b30",       "url":"image/eforensics/bone30.png"},
-    {"id":"b31",       "url":"image/eforensics/bone31.png"},
-    {"id":"icon_plus", "url":"image/icon_plus.png"},
-    {"id":"icon_minus","url":"image/icon_minus.png"}
+    {"id":"backgr",   "url":"./image/sample/background_400px.png"},
+    {"id":"c1",      "url":"./image/sample/sample_click_1.png"},
+    {"id":"c2",      "url":"./image/sample/sample_click_2.png"},
+    {"id":"c3",      "url":"./image/sample/sample_click_3.png"},
+    {"id":"d1",      "url":"./image/sample/sample_drag_1.png"}
+],
+"paths":[
+    {"id":"use",   "url":"./image/sample"}
 ],
 "shapes":{
-    "sq":[{"type":"rect","offset":{"x":0,"y":0},"width":720,"height":700}, {"type":"fillStyle","color":"yellow"}, {"type":"fill"}, {"type":"ptest"}]
+    "sq":[{"type":"rect","offset":{"x":0,"y":0},"width":600,"height":600}, {"type":"fillStyle","color":"yellow"}, {"type":"fill"}, {"type":"ptest"}]
 },
 "settings":{
-    "canvaswidth":"720",
-    "canvasheight":"700",
+    "canvaswidth":"600",
+    "canvasheight":"600",
     "canvasdomname":"activity",
     "canvasparent":"canvasholder"}
 }
-    
-    
-    document.getElementById("canvasmover").addEventListener("mousedown",     function(){moveObjD("canvasbank")},     false);
-    document.getElementById("objectmover").addEventListener("mousedown",     function(){moveObjD("objectbank")},     false);
-    document.getElementById("imagemover").addEventListener("mousedown",      function(){moveObjD("imagebank")},      false);
-    document.getElementById("jsonmover").addEventListener("mousedown",       function(){moveObjD("jsonbank")},       false);
-    document.getElementById("settingmover").addEventListener("mousedown",    function(){moveObjD("settingbank")},    false);
-    document.getElementById("propertiesmover").addEventListener("mousedown", function(){moveObjD("propertiesbank")}, false);
-    window.addEventListener("mouseup",   moveObjU,  false);
-    window.addEventListener("mousemove", mouseMove, false);
+
+
+  document.getElementById("canvasmover").addEventListener("mousedown",     function(){moveObjD("canvasbank")},     false);
+  document.getElementById("objectmover").addEventListener("mousedown",     function(){moveObjD("objectbank")},     false);
+  document.getElementById("imagemover").addEventListener("mousedown",      function(){moveObjD("imagebank")},      false);
+  document.getElementById("jsonmover").addEventListener("mousedown",       function(){moveObjD("jsonbank")},       false);
+  document.getElementById("settingmover").addEventListener("mousedown",    function(){moveObjD("settingbank")},    false);
+  document.getElementById("propertiesmover").addEventListener("mousedown", function(){moveObjD("propertiesbank")}, false);
+  window.addEventListener("mouseup",   moveObjU,  false);
+  window.addEventListener("mousemove", mouseMove, false);
+  initCanvasser("sample", JSON.stringify(authorData), "string");
+  updateObjects();
+  updateImages();
+  var rules = null;
+  loop();
+
+  function loop(){
+    if (UIdata.moveElement !== null){
+      UIdata.moveElement.style.left = UIdata.mousePos.x  - UIdata.offset.x + "px";
+      UIdata.moveElement.style.top  = UIdata.mousePos.y  - UIdata.offset.y + "px";
+    }
+    window.requestAnimationFrame(loop);
+  }
+
+  function mouseMove(ev){
+    UIdata.mousePos = {x:ev.clientX, y:ev.clientY };
+
+    if (UIdata.moveElement !== null){
+      if (document.selection) {
+        document.selection.empty()
+      } else {
+        window.getSelection().removeAllRanges()
+      }
+    }
+  }
+
+  function moveObjD(element){
+    UIdata.mousedown   = true;
+    UIdata.moveElement = document.getElementById(element);
+    UIdata.zidx ++;
+    UIdata.moveElement.style.zIndex = UIdata.zidx;
+    var off = {x:0, y:0};
+    if (UIdata.moveElement.style.left !== "") off.x = UIdata.mousePos.x - parseInt(UIdata.moveElement.style.left.slice(0,-2));
+    if (UIdata.moveElement.style.top  !== "") off.y = UIdata.mousePos.y - parseInt(UIdata.moveElement.style.top.slice(0,-2));
+    UIdata.offset      = {x:off.x, y:off.y};
+  }
+
+  function moveObjU(ev){
+    UIdata.mousedown = false;
+    UIdata.moveElement = null;
+  }
+
+  this.reload = function(){
     initCanvasser("sample", JSON.stringify(authorData), "string");
-    updateObjects();
-    updateImages();
-    var rules = null;
-    loop();
-
-    function loop(){
-        if (UIdata.moveElement !== null){
-            UIdata.moveElement.style.left = UIdata.mousePos.x  - UIdata.offset.x + "px";
-            UIdata.moveElement.style.top  = UIdata.mousePos.y  - UIdata.offset.y + "px";
-        }
-        window.requestAnimationFrame(loop);
-    }
-
-    function mouseMove(ev){
-        UIdata.mousePos = {x:ev.clientX, y:ev.clientY };
-
-        if (UIdata.moveElement !== null){
-            if (document.selection) {
-              document.selection.empty()
-            } else {
-              window.getSelection().removeAllRanges()
-            }
-        }
-    }
-
-    function moveObjD(element){
-        UIdata.mousedown   = true;
-        UIdata.moveElement = document.getElementById(element);
-        UIdata.zidx ++;
-        UIdata.moveElement.style.zIndex = UIdata.zidx;
-        var off = {x:0, y:0};
-        if (UIdata.moveElement.style.left !== "") off.x = UIdata.mousePos.x - parseInt(UIdata.moveElement.style.left.slice(0,-2));
-        if (UIdata.moveElement.style.top  !== "") off.y = UIdata.mousePos.y - parseInt(UIdata.moveElement.style.top.slice(0,-2));
-        UIdata.offset      = {x:off.x, y:off.y};
-    }
-
-    function moveObjU(ev){
-        UIdata.mousedown = false;
-        UIdata.moveElement = null;
-    }
-
-
-    this.reload = function(){
-        initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+  this.load_click = function(){
+    document.getElementById("uploader").click();
+  }
+    this.load = function(){
+      var file = document.getElementById("uploader").files[0];
+      if (file) {
+          var reader = new FileReader();
+          reader.readAsText(file, "UTF-8");
+          reader.onload = function (evt) {
+              document.getElementById("paste").innerHTML = evt.target.result;
+          }
+          reader.onerror = function (evt) {
+              document.getElementById("paste").innerHTML = "error reading file";
+          }
+      }
+      // var pasteData = document.getElementById("paste").value;
+      // authorData = JSON.parse(pasteData);
+      // //document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
+      // updateImages();
+      // updateObjects();
+      // initCanvasser("sample", pasteData, 'file');
     }
     this.view = function(){
         //document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
@@ -270,7 +180,7 @@ function authorcanvasser(dataFile, dataForm){
         var objectHolder = document.getElementById("objectholder");
         var objects = '<table class="objtable" width="100%">';
         authorData.objects.forEach(function(object){
-            objects += '<tr class="clicktr" id="'+object.name+'" onclick="window.author.getProps(\'objects\',\''+ object.name + '\')">';
+            objects += '<tr class="clicktr" id="'+object.name+'" onclick="window.author.getPropsObject(\'objects\',\''+ object.name + '\')">';
             objects +='<td width="50%">' + object.name + '</td>';
             objects +='<td width="50%">' + object.type + '</td>';
             objects += '</tr>';
@@ -283,7 +193,7 @@ function authorcanvasser(dataFile, dataForm){
         var imageHolder = document.getElementById("imageholder");
         var images = "<table>";
         authorData.images.forEach(function(image){
-            images += '<tr>';
+            images += '<tr class="clicktr" id="'+image.id+'" onclick="window.author.getPropsImages(\'images\',\''+ image.id + '\')">'
             images +='<td class="imageid"><div class="imagetext">' + image.id + '</div></td>';
             images +='<td width="50%"><img src="' + image.url + '" alt="' + image.id + '"></td>';
             images += '</tr>';
@@ -298,25 +208,45 @@ function authorcanvasser(dataFile, dataForm){
         initCanvasser("sample", JSON.stringify(authorData), "string");
     }
 
-    this.getProps = getProps;
-    function getProps(type, name){
-        console.log("GETPROPS", type, name)
-        authorData[type].forEach(function(selectedObj){
-            if (selectedObj.name === name) {
-                document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + name + " : " + selectedObj.type + '</div>';
-                var propUI = document.getElementById("properties");
-                var prop = '<div class="propbody">' ;
-                prop       = buildPropUI(prop, type, selectedObj);
-                propUI.innerHTML = prop + '</div>';
-            }
-        });
+  this.getPropsObject = getPropsObject;
+  function getPropsObject(type, name){
+    authorData[type].forEach(function(selectedObj){
+      if (selectedObj.name === name) {
+        document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + name + " : " + selectedObj.type + '</div>';
+        var propUI = document.getElementById("properties");
+        var prop = '<div class="propbody">' ;
+        prop       = buildPropUI(prop, type, selectedObj);
+        propUI.innerHTML = prop + '</div>';
+      }
+    });
+  }
+
+  this.getPropsImages = getPropsImages;
+  function getPropsImages(type, id){
+    authorData[type].forEach(function(selectedImg){
+      if (selectedImg.id === id) {
+        console.log(selectedImg)
+        document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + id + " : " + selectedImg.url + '</div>';
+        var propUI = document.getElementById("properties");
+        var prop = '<div class="propbody">' ;
+        prop       = buildPropUIimage(prop, selectedImg);
+        propUI.innerHTML = prop + '</div>';
+      }
+    });
+  }
+
+    function buildPropUIimage(output, element){
+      var win = 'window.author.updateActivity';
+
+      output += '<div class="entrylabel c_entrytitle_text w50">URL</div><input class="auth_text w400" type="text" value="'+ element.url +'" onchange="'+win+'(this, \''+ element.id + '\', \'' + "url" + '\', \''+ "url" + '\', \'value\')"><br>';
+
+      return output;
     }
 
     function buildPropUI(output, type, element){
         var win = 'window.author.updateActivity';
         for(var prop in rules.object[element.type].widgets){
             pType = rules.object[element.type].widgets[prop];
-            //if (pType === "text") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="auth_text" type="text" value="'+ element[prop]+'" onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + '\', \''+ type + '\', \'value\')"><br>';
 
             if (pType === "text") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="auth_text" type="text" value="'+ getSubProp(element, prop) +'" onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + '\', \''+ type + '\', \'value\')"><br>';
             if (pType === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="auth_text" type="text" value="'+ element[prop]+'"><br>';
@@ -446,7 +376,6 @@ function authorcanvasser(dataFile, dataForm){
 
     function buildSelect(list, type, defaultId, element, prop){
         var out = '<select class="sellist" onchange="window.author.updateActivity(this, \''+ element + '\', \'' + prop + '\', \''+ type + '\', \'value\')">';
-        //var id = getProps("objects",prop)
         console.log("HEY LOOK",list, type, defaultId, element, prop)
         list.unshift("---NONE---");
         list.forEach(function(listElement){
@@ -462,7 +391,7 @@ function authorcanvasser(dataFile, dataForm){
             if (finder.name === element) {
                 setSubProp(finder, prop, val)
                 updateObjects();
-                getProps("objects",finder.name)
+                getPropsObject("objects",finder.name)
             }
         });
         initCanvasser("sample", JSON.stringify(authorData), "string");
@@ -547,6 +476,6 @@ function authorcanvasser(dataFile, dataForm){
         imageObj.src = image.url;
         });
 
-        
+
     }
 }
