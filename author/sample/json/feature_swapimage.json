@@ -1,0 +1,25 @@
+{
+  "objects":[
+    {"id":"image", "type":"image", "show":true,  "group":[], "image":"image2",   "scale":{"current":4, "destination":4,"rate":0}, "position":{"current":{"x":  200,"y":  50}}, "origin":"default", "testp":false, "clicklist":[]},
+    {"id":"c1", "type":"image", "show":true, "group":[], "image":"click1", "scale":{"current":1}, "position":{"current":{"x":0,"y":50}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"swapimage","id":"image","image":"image1"}]},
+    {"id":"c2", "type":"image", "show":true, "group":[], "image":"click2", "scale":{"current":1}, "position":{"current":{"x":0,"y":110}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"swapimage","id":"image","image":"image2"}]}
+
+  ],
+  "paths":[
+    {"id":"use",   "url":"../image/sample"}
+  ],
+  "images":[
+    {"id":"click1",  "path":"use", "url":"sample_click_1.png"},
+    {"id":"click2",  "path":"use", "url":"sample_click_2.png"},
+    {"id":"image1",  "path":"use", "url":"sample_graphic_1.png"},
+    {"id":"image2",  "path":"use", "url":"sample_graphic_2.png"}
+  ],
+  "shapes": {
+  },
+  "settings": {
+    "canvaswidth": "400",
+    "canvasheight": "400",
+    "canvasdomid": "activity",
+    "canvasparent": "canvasholder"
+  }
+}

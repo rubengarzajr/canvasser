@@ -1,0 +1,26 @@
+{
+  "objects":[
+    {"id":"background", "type":"image", "show":true,  "group":[], "image":"grid",   "scale":{"current":4, "destination":4,"rate":0}, "position":{"current":{"x":  0,"y":  0}}, "origin":"default", "testp":false, "clicklist":[]},
+    {"id":"c1", "type":"image", "show":true, "group":[], "image":"click1", "scale":{"current":1}, "position":{"current":{"x":300,"y":550}}, "origin":"center", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"swapimage","id":"background","image":"grid"}]},
+    {"id":"c2", "type":"image", "show":true, "group":[], "image":"click2", "scale":{"current":1}, "position":{"current":{"x":450,"y":550}}, "origin":"center", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"swapimage","id":"background","image":"gridSm"}]}
+
+  ],
+  "paths":[
+    {"id":"use",   "url":"../image/sample"}
+  ],
+  "images":[
+    {"id":"click1", "path":"use", "url":"sample_click_1.png"},
+    {"id":"click2", "path":"use", "url":"sample_click_2.png"},
+    {"id":"click3", "path":"use", "url":"sample_click_3.png"},
+    {"id":"grid",    "path":"use", "url":"background_400px.png"},
+    {"id":"gridSm",    "path":"use", "url":"background_10px.png"}
+  ],
+  "shapes": {
+  },
+  "settings": {
+    "canvaswidth": "1200",
+    "canvasheight": "1200",
+    "canvasdomid": "activity",
+    "canvasparent": "canvasholder"
+  }
+}

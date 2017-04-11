@@ -65,7 +65,7 @@ function canvasser(vari, interactiveData, dataForm){
     act.vars = {};
     if (act.data.vars != undefined){
       act.data.vars.forEach(function(v){
-       act.vars[v.name] = v.value;
+       act.vars[v.id] = v.value;
       });
     }
 
@@ -101,6 +101,8 @@ function canvasser(vari, interactiveData, dataForm){
     this.create = function(obj){
       var newPSystem   = new pSystem();
       newPSystem.info  = obj;
+      //if (newPSystem.info.position.home) newPSystem.info.position.current = {x:newPSystem.info.position.home.x, y:newPSystem.info.position.home.y};
+      newPSystem.info.currentEmitCounter = obj.emitCounter;
       pSystemList.push(newPSystem);
     }
 
@@ -109,9 +111,9 @@ function canvasser(vari, interactiveData, dataForm){
     }
 
     this.update = function(){
-      pSystemList.forEach(function(pSystem){
-        if (pSystem.info.emitCounter > 0){
-          pSystem.info.emitCounter --;
+      pSystemList.forEach(function(pSystem, index, particleList){
+        if (pSystem.info.currentEmitCounter > 0){
+          pSystem.info.currentEmitCounter --;
           for (cnt =0; cnt < pSystem.info.emitRate; cnt ++){
             var rndDir  = {x:randInterval(-0.5,0.5),y:randInterval(-0.5,0.5)};
             var scale   = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
@@ -128,9 +130,11 @@ function canvasser(vari, interactiveData, dataForm){
 
         if (act.imageList[pSystem.info.image] == undefined) return;
         var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
+        var keepParticleSystem = false;
         pSystem.pList.forEach(function(p){
           p.life.current --;
           if (p.life.current > 0){
+            keepParticleSystem = true;
             p.position  = {x:p.position.x+p.dirNorm.x*p.speed.position, y: p.position.y+p.dirNorm.y*p.speed.position}
             var scale   = p.scale;
             var lifeCnt = p.life.max - p.life.current;
@@ -153,7 +157,7 @@ function canvasser(vari, interactiveData, dataForm){
             act.context.globalCompositeOperation = 'source-over';
           }
         });
-
+        if (!keepParticleSystem) particleList.splice(index, 1);
       });
     };
   }
@@ -165,7 +169,7 @@ function canvasser(vari, interactiveData, dataForm){
         act.applyAction = [];
         act.mode = "click";
         act.data.objects.forEach(function(obj){
-          if (obj.name === cmd.item) act.applyAction.push(obj);
+          if (obj.id === cmd.item) act.applyAction.push(obj);
         });
       }
     });
@@ -194,7 +198,7 @@ function canvasser(vari, interactiveData, dataForm){
             if (obj.parent !== undefined){
                 if (obj.parent.object === undefined){
                     act.data.objects.forEach(function(parent){
-                        if (parent.name !== obj.parent.name) return;
+                        if (parent.id !== obj.parent.id) return;
                         obj.parent.object = parent;
                     });
                 }
@@ -268,161 +272,161 @@ function canvasser(vari, interactiveData, dataForm){
         window.requestAnimationFrame(loop);
     }
 
-    function lerpOne(obj, item){
-        if (obj[item] === undefined) obj[item] = {current:1, rate:0};
-        if (obj[item].destination !== undefined){
-            if (obj[item].showbefore) {obj.show = true; obj[item].showbefore = false;}
-            if (obj[item].current < obj[item].destination) obj[item].current += obj[item].rate;
-            if (obj[item].current > obj[item].destination) obj[item].current -= obj[item].rate;
+  function lerpOne(obj, item){
+    if (obj[item] === undefined) obj[item] = {current:1, rate:0};
+    if (obj[item].destination !== undefined){
+      if (obj[item].showbefore) {obj.show = true; obj[item].showbefore = false;}
+      if (obj[item].current < obj[item].destination) obj[item].current += obj[item].rate;
+      if (obj[item].current > obj[item].destination) obj[item].current -= obj[item].rate;
 
-            if (obj[item].current === obj[item].destination || obj[item].current + obj[item].rate >= obj[item].destination && obj[item].current - obj[item].rate <= obj[item].destination) {
-                obj[item].current = obj[item].destination;
-                if (obj[item].hideafter) obj.show = false;
-                obj[item].destination = undefined;
-                obj[item].hideafter = false;
-            }
-        }
+      if (obj[item].current === obj[item].destination || obj[item].current + obj[item].rate >= obj[item].destination && obj[item].current - obj[item].rate <= obj[item].destination) {
+        obj[item].current = obj[item].destination;
+        if (obj[item].hideafter) obj.show = false;
+        obj[item].destination = undefined;
+        obj[item].hideafter = false;
+      }
     }
+  }
 
-    function drawShapes(act, parent, pos, shapeData, color, doTest, testP, scale){
-        var ctx = act.context;
-        var test = false;
-        var colorIndex = 0;
-        var par = {"x":0,"y":0, "scale":1};
-        if (parent !== undefined) {
-            par = {"x":parent.position.current.x, "y":parent.position.current.y, "scale":parent.scale.current};
-        }
-        var origin = {
-            "x":parseInt(pos.x * par.scale + par.x ),
-            "y":parseInt(pos.y * par.scale + par.y )
-        }
-        var sizer = scale * par.scale;
+  function drawShapes(act, parent, pos, shapeData, color, doTest, testP, scale){
+    var ctx = act.context;
+    var test = false;
+    var colorIndex = 0;
+    var par = {"x":0,"y":0, "scale":1};
+    if (parent !== undefined) {
+      par = {"x":parent.position.current.x, "y":parent.position.current.y, "scale":parent.scale.current};
+    }
+    var origin = {
+      "x":parseInt(pos.x * par.scale + par.x ),
+      "y":parseInt(pos.y * par.scale + par.y )
+    }
+    var sizer = scale * par.scale;
+    ctx.beginPath();
+    shapeData.forEach(function(shape){
+      if (shape.type === "move")      ctx.moveTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+      if (shape.type === "rect")      ctx.rect(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.width*sizer,shape.height*sizer);
+      if (shape.type === "arc")       ctx.arc(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.radius*sizer, shape.startangle, shape.endangle, shape.counterclockwise);
+      if (shape.type === "bcurve")    ctx.bezierCurveTo(origin.x+shape.offseta.x*sizer, origin.y+shape.offseta.y*sizer, origin.x+shape.offsetb.x*sizer, origin.y+shape.offsetb.y*sizer, origin.x+shape.offsetc.x*sizer, origin.y+shape.offsetc.y*sizer);
+      if (shape.type === "line")      ctx.lineTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+      if (shape.type === "linewidth") ctx.lineWidth = shape.width*sizer;
+      if (shape.type === "fillStyle") {
+          if (color === null) ctx.fillStyle = shape.color;
+          else ctx.fillStyle = color[colorIndex];
+      }
+      if (shape.type === "fill") ctx.fill();
+      if (shape.type === "filltext") {
+        ctx.fillStyle = color[colorIndex];
+        ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+      }
+      if (shape.type === "stroketext") {
+        ctx.lineWidth = shape.stroke;
+        ctx.strokeStyle = color[colorIndex];
+        ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+      }
+      if (shape.type === "outlinetext") {
+        ctx.lineWidth   = shape.stroke;
+        ctx.strokeStyle = color[colorIndex];
+        ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+        colorIndex ++
+        ctx.fillStyle = color[colorIndex];
+        ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+      }
+      if (shape.type === "font") ctx.font = shape.size*sizer + "px " + shape.font;
+      if (shape.type === "strokestyle"){
+        if (color === null) ctx.strokeStyle = shape.color;
+        else ctx.strokeStyle = color[colorIndex];
+      }
+      if (shape.type === "stroke") ctx.stroke();
+      if (shape.type === "ptest" && doTest){
+        if (ctx.isPointInPath(testP.x, testP.y)) test = true;
+      }
+      if (shape.type === "close") ctx.closePath();
+      if (shape.type === "begin") {
         ctx.beginPath();
-        shapeData.forEach(function(shape){
-            if (shape.type === "move")      ctx.moveTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
-            if (shape.type === "rect")      ctx.rect(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.width*sizer,shape.height*sizer);
-            if (shape.type === "arc")       ctx.arc(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.radius*sizer, shape.startangle, shape.endangle, shape.counterclockwise);
-            if (shape.type === "bcurve")    ctx.bezierCurveTo(origin.x+shape.offseta.x*sizer, origin.y+shape.offseta.y*sizer, origin.x+shape.offsetb.x*sizer, origin.y+shape.offsetb.y*sizer, origin.x+shape.offsetc.x*sizer, origin.y+shape.offsetc.y*sizer);
-            if (shape.type === "line")      ctx.lineTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
-            if (shape.type === "linewidth") ctx.lineWidth = shape.width*sizer;
-            if (shape.type === "fillStyle") {
-                if (color === null) ctx.fillStyle = shape.color;
-                else ctx.fillStyle = color[colorIndex];
-            }
-            if (shape.type === "fill") ctx.fill();
-            if (shape.type === "filltext") {
-                ctx.fillStyle = color[colorIndex];
-                ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
-            }
-            if (shape.type === "stroketext") {
-                ctx.lineWidth = shape.stroke;
-                ctx.strokeStyle = color[colorIndex];
-                ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
-            }
-            if (shape.type === "outlinetext") {
-                ctx.lineWidth   = shape.stroke;
-                ctx.strokeStyle = color[colorIndex];
-                ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
-                colorIndex ++
-                ctx.fillStyle = color[colorIndex];
-                ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
-            }
-            if (shape.type === "font") ctx.font = shape.size*sizer + "px " + shape.font;
-            if (shape.type === "strokestyle"){
-                if (color === null) ctx.strokeStyle = shape.color;
-                else ctx.strokeStyle = color[colorIndex];
-            }
-            if (shape.type === "stroke") ctx.stroke();
-            if (shape.type === "ptest" && doTest){
-                if (ctx.isPointInPath(testP.x, testP.y)) test = true;
-            }
-            if (shape.type === "close") ctx.closePath();
-            if (shape.type === "begin") {
-                ctx.beginPath();
-                colorIndex ++;
-            }
-        });
-        ctx.closePath();
-        return test;
-   }
+        colorIndex ++;
+      }
+    });
+    ctx.closePath();
+    return test;
+  }
 
-    function getMousePos(event) {
-        var rect = act.canvas.getBoundingClientRect();
-        act.position = {x:(event.clientX-rect.left)/act.canvas.scale, y:(event.clientY-rect.top)/act.canvas.scale};
-    }
+  function getMousePos(event) {
+    var rect = act.canvas.getBoundingClientRect();
+    act.position = {x:(event.clientX-rect.left)/act.canvas.scale, y:(event.clientY-rect.top)/act.canvas.scale};
+  }
 
-    function mouseUp(){
-        act.mode         = "none";
-        act.mouseDown    = false;
-        act.mouseDownCnt = 0;
-        if (act.dragging !== null){
-            act.applyAction = [act.dragging];
-            act.mode        = "drop";
-            act.dragging    = null;
-            actions();
-        }
+  function mouseUp(){
+    act.mode         = "none";
+    act.mouseDown    = false;
+    act.mouseDownCnt = 0;
+    if (act.dragging !== null){
+      act.applyAction = [act.dragging];
+      act.mode        = "drop";
+      act.dragging    = null;
+      actions();
     }
+  }
 
-    function mouseEnter(){
-        act.mode         = "none";
-        act.mouseDown    = false;
-        act.mouseDownCnt = 0;
-    }
+  function mouseEnter(){
+    act.mode         = "none";
+    act.mouseDown    = false;
+    act.mouseDownCnt = 0;
+  }
 
-    function mouseLeave(){
-        act.mode         = "none";
-        act.mouseDown    = false;
-        act.mouseDownCnt = 0;
-        act.dragging     = null;
-    }
+  function mouseLeave(){
+    act.mode         = "none";
+    act.mouseDown    = false;
+    act.mouseDownCnt = 0;
+    act.dragging     = null;
+  }
 
-    function mouseDown(){
-        act.mode         = "click";
-        act.external     = false;
-        act.mouseDown    = true;
-        act.mouseDownCnt = 0;
-    }
+  function mouseDown(){
+    act.mode         = "click";
+    act.external     = false;
+    act.mouseDown    = true;
+    act.mouseDownCnt = 0;
+  }
 
-    function touchDown(event){
-        event.preventDefault();
-        var rect = act.canvas.getBoundingClientRect();
-        for (var i = 0; i < event.changedTouches.length; i++) {
-            act.touch.push(copyTouch(event.changedTouches[i]));
-            act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
-        }
-        act.mode         = "click";
-        act.external     = false;
-        act.mouseDown    = true;
-        act.mouseDownCnt = 0;
+  function touchDown(event){
+    event.preventDefault();
+    var rect = act.canvas.getBoundingClientRect();
+    for (var i = 0; i < event.changedTouches.length; i++) {
+      act.touch.push(copyTouch(event.changedTouches[i]));
+      act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
     }
+    act.mode         = "click";
+    act.external     = false;
+    act.mouseDown    = true;
+    act.mouseDownCnt = 0;
+  }
 
-    function touchMove(event){
-        var rect = act.canvas.getBoundingClientRect();
-        event.preventDefault();
-        for (var i = 0; i < event.changedTouches.length; i++) {
-            var idx = event.changedTouches[i].identifier;
-            if (idx >= 0) {
-                act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
-                act.touch.splice(idx, 1, copyTouch(event.changedTouches[i]));  // swap in the new touch record
-            }
-        }
+  function touchMove(event){
+    var rect = act.canvas.getBoundingClientRect();
+    event.preventDefault();
+    for (var i = 0; i < event.changedTouches.length; i++) {
+      var idx = event.changedTouches[i].identifier;
+      if (idx >= 0) {
+        act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
+        act.touch.splice(idx, 1, copyTouch(event.changedTouches[i]));  // swap in the new touch record
+      }
     }
+  }
 
-    function touchUp(event){
-        event.preventDefault();
-        var rect = act.canvas.getBoundingClientRect();
-        for (var i = 0; i < event.changedTouches.length; i++) {
-            var idx = event.changedTouches[i].identifier;
-            if (idx >= 0) {
-                act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
-                act.touch.splice(idx, 1);  // swap in the new touch record
-            }
-        }
+  function touchUp(event){
+    event.preventDefault();
+    var rect = act.canvas.getBoundingClientRect();
+    for (var i = 0; i < event.changedTouches.length; i++) {
+      var idx = event.changedTouches[i].identifier;
+      if (idx >= 0) {
+        act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
+        act.touch.splice(idx, 1);  // swap in the new touch record
+      }
     }
+  }
 
-    function copyTouch(touch) {
-        return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
-    }
+  function copyTouch(touch) {
+    return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
+  }
 
     function actions(){
         act.applyAction.forEach(function(over){
@@ -441,8 +445,8 @@ function canvasser(vari, interactiveData, dataForm){
                         var item  = undefined;
                         var testp = undefined;
                         act.data.objects.forEach(function(obj){
-                            if (obj.name === action.itemtocheck) item = obj;
-                            if (obj.name === action.position)    testp = obj;
+                            if (obj.id === action.itemtocheck) item = obj;
+                            if (obj.id === action.position)    testp = obj;
                         });
                         var pos = {"x":item.position.current.x, "y":item.position.current.y};
                         var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
@@ -465,7 +469,7 @@ function canvasser(vari, interactiveData, dataForm){
                     var source = document.getElementById(action.source);
                     if (target !== undefined && source !== undefined && target !== null && source !== null){
                         target.innerHTML = source.innerHTML;
-                        window.location.hash = over.name;
+                        window.location.hash = over.id;
                     }
                 }
                 if (action.type === 'destposition'){
@@ -504,19 +508,19 @@ function canvasser(vari, interactiveData, dataForm){
                     window.location.href = action.url;
                 }
                 if (action.type === 'modvar'){
-                    if (action.operation === "add") act.vars[action.name] += action.amount;
+                    if (action.operation === "add") act.vars[action.id] += action.amount;
                 }
                 if (action.type === 'swapimage'){
                     act.data.objects.forEach(function(obj){
-                        if (obj.name === undefined) return;
-                        if (obj.name !== action.name) return;
+                        if (obj.id  === undefined) return;
+                        if (obj.id !== action.id) return;
                         obj.image = action.image;
                     });
                 }
                 if (action.type === 'moveobject'){
                     act.data.objects.forEach(function(obj){
-                        if (obj.name === undefined) return;
-                        if (obj.name !== action.name) return;
+                        if (obj.id === undefined) return;
+                        if (obj.id !== action.id) return;
                         if (action.frame === "absolute") {
                             obj.position.current = {x:action.amount.x, y:action.amount.y};
                         }
@@ -528,8 +532,8 @@ function canvasser(vari, interactiveData, dataForm){
                 }
                 if (action.type === 'pstart'){
                     act.data.particles.forEach(function(obj){
-                        if (obj.name === undefined) return;
-                        if (obj.name === action.name) pManager.create(obj);
+                        if (obj.id === undefined) return;
+                        if (obj.id === action.id) pManager.create(obj);
                     });
                 }
                 if (action.type === 'scale'){
@@ -562,9 +566,9 @@ function canvasser(vari, interactiveData, dataForm){
                 }
                 if (action.type === "slideobject"){
                     act.data.objects.forEach(function(obj){
-                        if (obj.name === undefined) return;
-                        if (act.dragging !== null && obj.name !== act.dragging.name) return;
-                        if (obj.name === action.name) {
+                        if (obj.id === undefined) return;
+                        if (act.dragging !== null && obj.id !== act.dragging.id) return;
+                        if (obj.id === action.id) {
                             if (obj.parent !== undefined){
                                 if (obj.position.offset === undefined) obj.position[mover] = {x:0,y:0};
                                 obj.position.offset.x += (act.position.x - act.prevPosition.x) / obj.scale.current;
@@ -598,60 +602,60 @@ function canvasser(vari, interactiveData, dataForm){
         act.applyAction = [];
     }
 
-    function checkAction(action, obj){
-        if (action.filter === undefined) return false;
-        if (action.filter === "group"){
-            if (obj.group.indexOf(action.name) < 0) return false;
-        }
-        if (action.filter === "object"){
-            if (obj.name !== action.name) return false;
-        }
-        return true;
+  function checkAction(action, obj){
+    if (action.filter === undefined) return false;
+    if (action.filter === "group"){
+      if (obj.group.indexOf(action.id) < 0) return false;
     }
+    if (action.filter === "object"){
+      if (obj.id !== action.id) return false;
+    }
+    return true;
+  }
 
-    function loadInto(url, place){
-        function reqListener(){
-            place.innerHTML = this.responseText;
-        }
-        var oReq = new XMLHttpRequest();
-        oReq.addEventListener("load", reqListener);
-        oReq.open("GET", url);
-        oReq.send();
+  function loadInto(url, place){
+    function reqListener(){
+      place.innerHTML = this.responseText;
     }
+    var oReq = new XMLHttpRequest();
+    oReq.addEventListener("load", reqListener);
+    oReq.open("GET", url);
+    oReq.send();
+  }
 
-    function getMagnitude(vector){
-        return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-    }
+  function getMagnitude(vector){
+    return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+  }
 
-    function getUnit(vector){
-        var mag = getMagnitude(vector);
-        return {x:vector.x/mag, y:vector.y/mag};
-    }
+  function getUnit(vector){
+    var mag = getMagnitude(vector);
+    return {x:vector.x/mag, y:vector.y/mag};
+  }
 
-    function randInterval(min,max){
-        return Math.random()*(max-min)+min;
-    }
+  function randInterval(min,max){
+    return Math.random()*(max-min)+min;
+  }
 
-    function randIntervalInt(min,max){
-        return Math.floor(Math.random()*(max-min+1)+min);
-    }
+  function randIntervalInt(min,max){
+    return Math.floor(Math.random()*(max-min+1)+min);
+  }
 
-    function lerpTo(inCurrent, inDestination, rate){
-        if (inDestination === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
-        if (inDestination.x === undefined || inDestination.y === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
-        var current     = inCurrent;
-        var destination = inDestination;
-        var dist = Math.sqrt( (destination.x-current.x)*(destination.x-current.x) + (destination.y-current.y)*(destination.y-current.y) );
-        if (dist < rate) {
-            current = {x:destination.x, y:destination.y};
-            destination = undefined;
-        }
-        else{
-            var vec = {x:destination.x-current.x, y:destination.y-current.y};
-            var magnitude = getMagnitude(vec);
-            vec = {x:parseInt(vec.x/magnitude*rate), y:parseInt(vec.y/magnitude*rate)};
-            current = {x:current.x + vec.x, y:current.y + vec.y};
-        }
-        return {newCurrent:current, newDestination:destination};
+  function lerpTo(inCurrent, inDestination, rate){
+    if (inDestination === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
+    if (inDestination.x === undefined || inDestination.y === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
+    var current     = inCurrent;
+    var destination = inDestination;
+    var dist = Math.sqrt( (destination.x-current.x)*(destination.x-current.x) + (destination.y-current.y)*(destination.y-current.y) );
+    if (dist < rate) {
+      current = {x:destination.x, y:destination.y};
+      destination = undefined;
     }
+    else{
+      var vec = {x:destination.x-current.x, y:destination.y-current.y};
+      var magnitude = getMagnitude(vec);
+      vec = {x:parseInt(vec.x/magnitude*rate), y:parseInt(vec.y/magnitude*rate)};
+      current = {x:current.x + vec.x, y:current.y + vec.y};
+    }
+    return {newCurrent:current, newDestination:destination};
+  }
 }

@@ -1,35 +1,30 @@
 function initAuthorCanvasser(vari, datafile, dataForm){
-    window.author = new authorcanvasser(datafile, dataForm);
+  window.author = new authorcanvasser(datafile, dataForm);
 }
 
 function authorcanvasser(dataFile, dataForm){
-    requestJSON("./json/author.json", initrules);
+  requestJSON("./json/author.json", initrules);
 
-    var UIdata = {
-        mousedown: false,
-        moveElement: null,
-        mousePos: {x:0,y:0},
-        offset: {x:0,y:0},
-        zidx: 25
-    };
+  var UIdata = {
+    mousedown: false,
+    moveElement: null,
+    mousePos: {x:0,y:0},
+    offset: {x:0,y:0},
+    zidx: 25
+  };
 
-    authorData = {
-    "objects":[
-{"type":"image","show":true,"group":["images"],"name":"bkimg","image":"backgr","scale":{"current":1},"position":{"current":{"x":360,"y":350}},"origin":"center","testp":true,"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"d1","image":"d1","scale":{"current":1,"rate":0},"position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[
-{"type":"slideobject","name":"d1"}],"clicklist":[]},
-{"type":"image","show":true,"group":["bones"],"name":"b30","image":"c1","scale":{"current":1},"position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[
-{"type":"slideobject","name":"b30"}],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","name":"images","show":false}]},
-{"type":"image","show":true,"group":["bones"],"name":"b31","image":"c2","scale":{"current":1},"position":{"current":{"x":20,"y":75}},"testp":true,"draglist":[
-{"type":"slideobject","name":"b31"}],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","name":"images","show":true}]},
-{"type":"shape","show":true,"group":["drag"],"name":"bk","shape":"sq","scale":{"current":1},"position":{"current":{"x":40,"y":40}},"parent":{},"color":["rgba(250,250,250,0)"],"defaultcolor":["rgba(250,250,250,0)"],"selectcolor":["rgba(250,250,250,1)"],"testp":true,"draglist":[
-{"type":"slideobject","name":"bkimg"}],"clicklist":[]}],
+  authorData = {
+"objects":[
+{"id":"bkimg","type":"image","show":true,"group":["images"],"image":"backgr","scale":{"current":1},"position":{"current":{"x":360,"y":350}},"origin":"center","testp":true,"clicklist":[]},
+{"id":"drag_button", "type":"image","show":true,"group":["buttons"],"image":"drag1","scale":{"current":1,"rate":0},"position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[{"type":"slideobject","id":"drag_button"}],"clicklist":[]},
+{"id":"click_button_on","type":"image","show":true,"group":["buttons"],"image":"click1","scale":{"current":1},"position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]},
+{"id":"click_button_off","type":"image","show":true,"group":["buttons"],"image":"click2","scale":{"current":1},"position":{"current":{"x":20,"y":75}},"testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":true}]}
+],
 "images":[
     {"id":"backgr",  "url":"./sample/image/sample/background_400px.png"},
-    {"id":"c1",      "url":"./sample/image/sample/sample_click_1.png"},
-    {"id":"c2",      "url":"./sample/image/sample/sample_click_2.png"},
-    {"id":"c3",      "url":"./sample/image/sample/sample_click_3.png"},
-    {"id":"d1",      "url":"./sample/image/sample/sample_drag_1.png"}
+    {"id":"click1",  "url":"./sample/image/sample/sample_click_1.png"},
+    {"id":"click2",  "url":"./sample/image/sample/sample_click_2.png"},
+    {"id":"drag1",   "url":"./sample/image/sample/sample_drag_1.png"}
 ],
 "paths":[
     {"id":"use",   "url":"./image/sample"}
@@ -42,8 +37,7 @@ function authorcanvasser(dataFile, dataForm){
     "canvasheight":"600",
     "canvasdomname":"activity",
     "canvasparent":"canvasholder"}
-}
-
+};
 
   document.getElementById("canvasmover").addEventListener("mousedown",     function(){moveObjD("canvasbank")},     false);
   document.getElementById("objectmover").addEventListener("mousedown",     function(){moveObjD("objectbank")},     false);
@@ -101,166 +95,149 @@ function authorcanvasser(dataFile, dataForm){
   this.load_click = function(){
     document.getElementById("uploader").click();
   }
-    this.load = function(){
-      var file = document.getElementById("uploader").files[0];
-      if (file) {
-          var reader = new FileReader();
-          reader.readAsText(file, "UTF-8");
-          reader.onload = function (evt) {
-              document.getElementById("paste").innerHTML = evt.target.result;
-          }
-          reader.onerror = function (evt) {
-              document.getElementById("paste").innerHTML = "error reading file";
-          }
+  this.load = function(){
+    var file = document.getElementById("uploader").files[0];
+    if (file) {
+      var reader = new FileReader();
+      reader.readAsText(file, "UTF-8");
+      reader.onload = function (evt) {
+        document.getElementById("paste").innerHTML = evt.target.result;
       }
-      // var pasteData = document.getElementById("paste").value;
-      // authorData = JSON.parse(pasteData);
-      // //document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
-      // updateImages();
-      // updateObjects();
-      // initCanvasser("sample", pasteData, 'file');
+      reader.onerror = function (evt) {
+        document.getElementById("paste").innerHTML = "error reading file";
+      }
     }
-    this.view = function(){
-        //document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
-        document.getElementById("paste").value = JSON.stringify(authorData);
+  }
+  this.view = function(){
+    document.getElementById("paste").value = JSON.stringify(authorData);
+  }
+  this.paste = function(){
+    var pasteData = document.getElementById("paste").value;
+    authorData = JSON.parse(pasteData);
+    updateImages();
+    updateObjects();
+    initCanvasser("sample", pasteData, "string");
+  }
+  this.format = function(){
+    var pasteData = document.getElementById("paste").value;
+    document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
+  }
+  this.toggleminmax= function(element, minmax, maxsize){
+    var d = document.getElementById(element);
+    var b = document.getElementById(minmax);
+    if (d.style.display === "block"){
+      d.style.display="none";
+      b.src="image/icon_max_g.png";
     }
-    this.paste = function(){
-        var pasteData = document.getElementById("paste").value;
-        authorData = JSON.parse(pasteData);
-        //document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
-        updateImages();
-        updateObjects();
-        initCanvasser("sample", pasteData, "string");
+    else {
+      d.style.display = "block";
+      b.src="image/icon_min_g.png";
     }
-    this.format = function(){
-        var pasteData = document.getElementById("paste").value;
-        document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
-    }
-    this.toggleminmax= function(element, minmax, maxsize){
-        var d = document.getElementById(element);
-        var b = document.getElementById(minmax);
-        if (d.style.display === "block"){
-            d.style.display="none";
-            b.src="image/icon_max_g.png";
-        }
-        else {
-            d.style.display = "block";
-            b.src="image/icon_min_g.png";
-        }
-    }
+  }
 
-    this.togglejson= function(){
-        var s = document.getElementById("jsonmenu");
-        var b = document.getElementById("togglejson");
-        if (s.style.display === "block") {
-            s.style.display = "none";
-            b.src="image/icon_max_g.png";
-        }
-        else {
-            s.style.display = "block";
-            b.src="image/icon_min_g.png";
-        }
+  this.togglejson= function(){
+    var s = document.getElementById("jsonmenu");
+    var b = document.getElementById("togglejson");
+    if (s.style.display === "block") {
+      s.style.display = "none";
+      b.src="image/icon_max_g.png";
     }
-
-    function requestJSON(fileNamePath, returnFunction)
-    {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4) {
-                returnFunction(JSON.parse(xhr.responseText));
-            }
-            if (xhr.status == 404) console.error("JSON File Load Error: " + xhr.statusText + " " + xhr.readyState);
-        }
-        xhr.overrideMimeType('application/json');
-        xhr.open('GET', fileNamePath, true);
-        xhr.send(null);
+    else {
+      s.style.display = "block";
+      b.src="image/icon_min_g.png";
     }
+  }
 
-    function updateObjects(){
-        var objectHolder = document.getElementById("objectholder");
-        var objects = '<table class="objtable" width="100%">';
-        authorData.objects.forEach(function(object){
-            objects += '<tr class="clicktr" id="'+object.name+'" onclick="window.author.getPropsObject(\'objects\',\''+ object.name + '\')">';
-            objects +='<td width="50%">' + object.name + '</td>';
-            objects +='<td width="50%">' + object.type + '</td>';
-            objects += '</tr>';
-        });
-        objects +='</table>';
-        objectHolder.innerHTML = objects;
+  function requestJSON(fileNamePath, returnFunction)
+  {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4) {
+        returnFunction(JSON.parse(xhr.responseText));
+      }
+      if (xhr.status == 404) console.error("JSON File Load Error: " + xhr.statusText + " " + xhr.readyState);
     }
+    xhr.overrideMimeType('application/json');
+    xhr.open('GET', fileNamePath, true);
+    xhr.send(null);
+  }
 
-    function updateImages(){
-        var imageHolder = document.getElementById("imageholder");
-        var images = "<table>";
-        authorData.images.forEach(function(image){
-            images += '<tr class="clicktr" id="'+image.id+'" onclick="window.author.getPropsImages(\'images\',\''+ image.id + '\')">'
-            images +='<td class="imageid"><div class="imagetext">' + image.id + '</div></td>';
-            images +='<td width="50%"><img src="' + image.url + '" alt="' + image.id + '"></td>';
-            images += '</tr>';
-        });
-        images +='</table>';
-        imageHolder.innerHTML = images;
-    }
+  function updateObjects(){
+    var objectHolder = document.getElementById("objectholder");
+    var objects = '<table class="objtable" width="100%">';
+    authorData.objects.forEach(function(object){
+      objects += '<tr class="clicktr" id="'+object.id+'" onclick="window.author.getProps(\'objects\',\''+ object.id + '\')">';
+      objects +='<td width="50%">' + object.id + '</td>';
+      objects +='<td width="50%">' + object.type + '</td>';
+      objects += '</tr>';
+    });
+    objects +='</table>';
+    objectHolder.innerHTML = objects;
+  }
 
-    this.addObject = function(){
-        authorData.objects.push({name:"wee", type:"image",  show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
-        updateObjects();
-        initCanvasser("sample", JSON.stringify(authorData), "string");
-    }
+  function updateImages(){
+    var imageHolder = document.getElementById("imageholder");
+    var images = "<table>";
+    authorData.images.forEach(function(image){
+      images += '<tr class="clicktr" id="'+image.id+'" onclick="window.author.getProps(\'images\',\''+ image.id + '\')">'
+      images +='<td class="imageid"><div class="imagetext">' + image.id + '</div></td>';
+      images +='<td width="50%"><img src="' + image.url + '" alt="' + image.id + '"></td>';
+      images += '</tr>';
+    });
+    images +='</table>';
+    imageHolder.innerHTML = images;
+  }
 
-  this.getPropsObject = getPropsObject;
-  function getPropsObject(type, name){
-    authorData[type].forEach(function(selectedObj){
-      if (selectedObj.name === name) {
-        document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + name + " : " + selectedObj.type + '</div>';
+  this.addImage = function(){
+    authorData.images.push({id:"newImage",  url:"./image/no_image.png"});
+    updateImages();
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+  this.addObject = function(){
+    authorData.objects.push({id:"wee", type:"image",  show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
+    updateObjects();
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+  this.getProps = getProps;
+  function getProps(type, id){
+    authorData[type].forEach(function(selected){
+      if (selected.id === id) {
+        document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + (type === 'objects' ? 'Object: ' + id + ' : ' + selected.type : 'Image: ' + id) + '</div>';
         var propUI = document.getElementById("properties");
         var prop = '<div class="propbody">' ;
-        prop       = buildPropUI(prop, type, selectedObj);
+        if (type === 'objects') prop = buildPropUI(prop, type, selected);
+        else prop = buildPropUIimage(prop, selected);
         propUI.innerHTML = prop + '</div>';
       }
     });
   }
-
-  this.getPropsImages = getPropsImages;
-  function getPropsImages(type, id){
-    authorData[type].forEach(function(selectedImg){
-      if (selectedImg.id === id) {
-        console.log(selectedImg)
-        document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + id + " : " + selectedImg.url + '</div>';
-        var propUI = document.getElementById("properties");
-        var prop = '<div class="propbody">' ;
-        prop       = buildPropUIimage(prop, selectedImg);
-        propUI.innerHTML = prop + '</div>';
-      }
-    });
+  function buildPropUIimage(output, element){
+    var win = 'window.author.updateActivity';
+    output += '<div class="entrylabel c_entrytitle_text w50">URL</div><input class="auth_text w400" type="text" value="'+ element.url +'" onchange="'+win+'(this, \''+ element.id + '\', \'' + "url" + '\', \''+ "images" + '\', \'value\')"><br>';
+    updateImages();
+    return output;
   }
-
-    function buildPropUIimage(output, element){
-      var win = 'window.author.updateActivity';
-
-      output += '<div class="entrylabel c_entrytitle_text w50">URL</div><input class="auth_text w400" type="text" value="'+ element.url +'" onchange="'+win+'(this, \''+ element.id + '\', \'' + "url" + '\', \''+ "url" + '\', \'value\')"><br>';
-
-      return output;
-    }
 
     function buildPropUI(output, type, element){
         var win = 'window.author.updateActivity';
         for(var prop in rules.object[element.type].widgets){
             pType = rules.object[element.type].widgets[prop];
 
-            if (pType === "text") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="auth_text" type="text" value="'+ getSubProp(element, prop) +'" onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + '\', \''+ type + '\', \'value\')"><br>';
+            if (pType === "text") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="auth_text" type="text" value="'+ getSubProp(element, prop) +'" onchange="'+win+'(this, \''+ element.id + '\', \'' + prop + '\', \''+ type + '\', \'value\')"><br>';
             if (pType === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="auth_text" type="text" value="'+ element[prop]+'"><br>';
 
-            if (pType === "bool") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="checkbox" type="checkbox" ' + (element[prop] ? "checked" : "") + ' onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + '\', \''+ type + '\', \'checked\')"><br>';
+            if (pType === "bool") output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div><input class="checkbox" type="checkbox" ' + (element[prop] ? "checked" : "") + ' onchange="'+win+'(this, \''+ element.id + '\', \'' + prop + '\', \''+ type + '\', \'checked\')"><br>';
             if (pType === "imagedata"){
                 var imageList = ObjPartToArr(authorData.images, "id");
-                output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div>' +  buildSelect(imageList, type, element[prop], element.name, prop) + '<br>';
+                output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div>' +  buildSelect(imageList, type, element[prop], element.id, prop) + '<br>';
             }
             if (pType === "objectdata"){
-                var objectList = ObjPartToArr(authorData.objects, "name");
-                console.log("HEEEEE", objectList, type, element[prop], element.name, prop);
+                var objectList = ObjPartToArr(authorData.objects, "id");
+                console.log("HEEEEE", objectList, type, element[prop], element.id, prop);
                 console.log("SUB",getSubProp(element, prop));
-                output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div>' +  buildSelect(objectList, type, getSubProp(element, prop), element.name, prop) + '<br>';
+                output += '<div class="entrylabel c_entrytitle_text w100">' + prop + '</div>' +  buildSelect(objectList, type, getSubProp(element, prop), element.id, prop) + '<br>';
             }
             if (pType === "posxy"){
                 output += '<div style="display:flex"><div class="pos_holder"><div class="pos_title">' + prop + '</div>';
@@ -279,7 +256,7 @@ function authorcanvasser(dataFile, dataForm){
                 for(var posObj in element[prop]){
                     if (posObj === "rate"){
                         var tempPos =  (element[prop][posObj] !== undefined ? tempPos = element[prop][posObj] : 0);
-                        output += '<div class="entrylabel c_entrylabel_pos w50">' + posObj + '</div><input class="auth_xy" onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+ '\', \''+ type + '\', \'value\')" id="numx" type="number" value=' + tempPos + ' />' + '<br>';
+                        output += '<div class="entrylabel c_entrylabel_pos w50">' + posObj + '</div><input class="auth_xy" onchange="'+win+'(this, \''+ element.id + '\', \'' + 'position.'+posObj+ '\', \''+ type + '\', \'value\')" id="numx" type="number" value=' + tempPos + ' />' + '<br>';
                     }else{
                         var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)};
                         var hasXY = false;
@@ -291,8 +268,8 @@ function authorcanvasser(dataFile, dataForm){
                         }
                         if (posObj === "current" && element.parent !== undefined) {hasXY = false; enable=false;}
                         output += '<div class="entrylabel c_entrylabel_pos w100">' + posObj + '</div><span ' +  (hasXY ? "" : 'style="display:none"') + '>';
-                        output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+'.x' + '\', \''+ type + '\', \'value\')" type="number" value=' + tempPos.x + ' />';
-                        output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+posObj+'.y' + '\', \''+ type + '\', \'value\')" type="number" value=' + tempPos.y + ' /> ';
+                        output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.id + '\', \'' + 'position.'+posObj+'.x' + '\', \''+ type + '\', \'value\')" type="number" value=' + tempPos.x + ' />';
+                        output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.id + '\', \'' + 'position.'+posObj+'.y' + '\', \''+ type + '\', \'value\')" type="number" value=' + tempPos.y + ' /> ';
                         if (posObj !== 'current' && posObj !== 'offset')  output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
                         output += '</span>'
                         if (enable) output += '<div class ="divbutton" onclick="window.author.reload()">Enable</div>'
@@ -316,7 +293,7 @@ function authorcanvasser(dataFile, dataForm){
                 for(var scaleObj in element[prop]){
                     if (scaleObj === "rate"){
                         var tempScale = (element[prop][scaleObj] !== undefined ? tempScale = element[prop][scaleObj] : 0);
-                        output += '<div class="entrylabel c_entrylabel_pos w50">' + scaleObj + '</div><input class="auth_xy" onchange="'+win+'(this, \''+ element.name + '\', \'' + 'position.'+scaleObj+ '\', \''+ type + '\', \'value\')" id="numx" type="number" value=' + tempScale + ' />' + '<br>';
+                        output += '<div class="entrylabel c_entrylabel_pos w50">' + scaleObj + '</div><input class="auth_xy" onchange="'+win+'(this, \''+ element.id + '\', \'' + 'position.'+scaleObj+ '\', \''+ type + '\', \'value\')" id="numx" type="number" value=' + tempScale + ' />' + '<br>';
                     }else{
                         var tempScale = 1;
                         var hasScale = false;
@@ -325,7 +302,7 @@ function authorcanvasser(dataFile, dataForm){
                             hasScale = true;
                         }
                         output += '<div class="entrylabel c_entrylabel_pos w100">' + scaleObj + '</div><span ' +  (hasScale ? "" : 'style="display:none"') + '>';
-                        output += ' <input class="auth_xy"  onchange="'+win+'(this, \''+ element.name + '\', \'' + 'scale.'+scaleObj + '\', \''+ type + '\', \'value\')" type="number" step="any" value=' + tempScale + ' />';
+                        output += ' <input class="auth_xy"  onchange="'+win+'(this, \''+ element.id + '\', \'' + 'scale.'+scaleObj + '\', \''+ type + '\', \'value\')" type="number" step="any" value=' + tempScale + ' />';
                         if (scaleObj !== 'current')  output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
                         output += '</span>'
                         if (!hasScale) output += '<div class ="divbutton" onclick="window.author.reload()">Enable</div>'
@@ -343,12 +320,12 @@ function authorcanvasser(dataFile, dataForm){
                         rules.actions.forEach(function(template){
                             if (template.type === actElement.type) console.log(template)
                         });
-                        output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>' +  buildSelect(actList, type, actElement.type, element.name, prop) + '<br>';
+                        output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>' +  buildSelect(actList, type, actElement.type, element.id, prop) + '<br>';
 
                         for(var actObj in actElement){
                             if (actObj === "type") continue;
                             output += '<div class="entrylabel c_entrylabel_pos w100">' + actObj + '</div>';
-                            output += '<input class="auth_text" type="text" value="'+ actElement[actObj]+'" onchange="'+win+'(this, \''+ element.name + '\', \'' + prop + "." + idx + '.' + actObj + '\', \''+ type + '\', \'value\')"><br>';
+                            output += '<input class="auth_text" type="text" value="'+ actElement[actObj]+'" onchange="'+win+'(this, \''+ element.id + '\', \'' + prop + "." + idx + '.' + actObj + '\', \''+ type + '\', \'value\')"><br>';
                         }
                     });
                     output += '<br>';
@@ -387,11 +364,13 @@ function authorcanvasser(dataFile, dataForm){
 
     this.updateActivity = function(sel, element, prop, type, thingToCheck){
         var val = sel[thingToCheck];
+        console.log(val)
+        console.log(type,authorData[type])
         authorData[type].forEach(function(finder){
-            if (finder.name === element) {
+            if (finder.id === element) {
                 setSubProp(finder, prop, val)
                 updateObjects();
-                getPropsObject("objects",finder.name)
+                getProps("objects",finder.id)
             }
         });
         initCanvasser("sample", JSON.stringify(authorData), "string");

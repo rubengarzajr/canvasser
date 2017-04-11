@@ -7,7 +7,7 @@
     <style>
         canvas{width:75%;}
     </style>
-    <body onload='initCanvasser("tex","../data/texasmap.json", "file");'>
+    <body onload='initCanvasser("tex","../json/texasmap.json", "file");'>
         <?php include 'activityheader.php';?>
         <div class="title_a">Texas Map</div>
         <div class="title_b">Click on the map locations to visit an exhibit</div>

@@ -9,68 +9,75 @@ and open the template in the editor.
 */
 
 @font-face {
-    font-family: title;
-    src: url(../font/advancedpixel.woff);
+  font-family: title;
+  src: url(../font/advancedpixel.woff);
 }
 
 @font-face {
-    font-family: button;
-    src: url(../font/CharriotDeluxe.woff);
+  font-family: button;
+  src: url(../font/CharriotDeluxe.woff);
 }
 
 @font-face {
-    font-family: selecttext;
-    src: url(../font/alterebro-pixel-font.woff);
+  font-family: selecttext;
+  src: url(../font/alterebro-pixel-font.woff);
 }
 
 .right{
-    float: right;
+  float: right;
 }
 
 .title{
-    text-align: center;
-    font-size: 2.25em;
-    margin-bottom: 10px;
+  text-align: center;
+  font-size: 2.25em;
+  margin-bottom: 10px;
 }
 
 .subtitle{
-    text-align: center;
-    font-size: 1.25em;
+  text-align: center;
+  font-size: 1.25em;
 }
 
 .divspace{
-    padding-bottom: 25px;
+  padding-bottom: 25px;
 }
 
 td{
-    vertical-align: top;
+  vertical-align: top;
 }
 
 .contentspace{
-    margin: 5px 20px;
+  margin: 5px 20px;
 }
 
 a{
-    font-size: 1.1em;
-    color: black;
-    font-weight: bold;
+  font-size: 1.1em;
+  color: black;
+  font-weight: bold;
 }
 
 .locationbank{
-    float: left;
-    margin-right: 15px;
-    cursor: pointer;
+  float: left;
+  margin-right: 15px;
+  cursor: pointer;
 }
 
 .title_a{
-    margin-top: 20px;
-    text-align: center;
-    font-size: 1.25em;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.25em;
 }
 .title_b{
-    text-align: center;
-    font-size: 1.75em;
-    font-weight: bold;
+  text-align: center;
+  font-size: 1.75em;
+  font-weight: bold;
+}
+.title_c{
+  text-align: left;
+  font-size: 1.75em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: 29px;
 }
 
 .bottomlinks{
@@ -159,6 +166,7 @@ a{
 .imageid{
     width:60%;
     vertical-align:middle;
+    font-size: 15px;
 }
 
 #graphical{
