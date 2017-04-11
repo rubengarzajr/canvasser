@@ -1,0 +1,32 @@
+{
+        "objects":[
+            {"type":"image",    "show":true,  "group":["pic"],    "name":"bk",      "image":"bk",     "scale":{"current":1}, "position":{"current":{"x":    0,"y":  0},"destination":{"x":    0,"y":  0},"rate":4}, "origin":"default", "testp":false},
+            {"type":"image",    "show":true,  "group":["pic"],    "name":"pic1",    "image":"pic1",   "scale":{"current":1}, "position":{"current":{"x":  131,"y": 200},"destination":{"x":  131,"y": 44},"rate":4}, "origin":"default", "testp":false},
+            {"type":"image",    "show":true,  "group":["pic"],    "name":"pic2",    "image":"pic2",   "scale":{"current":1}, "position":{"current":{"x":  291,"y": 200},"destination":{"x":  291,"y": 44},"rate":4}, "origin":"default", "testp":false},
+            {"type":"image",    "show":true,  "group":["pic"],    "name":"pic3",    "image":"pic3",   "scale":{"current":1}, "position":{"current":{"x":  451,"y": 200},"destination":{"x":  451,"y": 44},"rate":4}, "origin":"default", "testp":false},
+            {"type":"image",    "show":true,  "group":["pic"],    "name":"pic4",    "image":"pic4",   "scale":{"current":1}, "position":{"current":{"x":  611,"y": 200},"destination":{"x":  611,"y": 44},"rate":4}, "origin":"default", "testp":false},
+            {"type":"image",    "show":true,  "group":["pic"],    "name":"pic5",    "image":"pic5",   "scale":{"current":1}, "position":{"current":{"x":  771,"y": 200},"destination":{"x":  771,"y": 44},"rate":4}, "origin":"default", "testp":false},
+            {"type":"image",    "show":true,  "group":["pic"],    "name":"pic6",    "image":"pic6",   "scale":{"current":1}, "position":{"current":{"x":  931,"y": 200},"destination":{"x":  931,"y": 44},"rate":4}, "origin":"default", "testp":false}
+        ],
+        "images":[
+            {"id": "bk",    "url":"../image/eyesofexplorer/cabaza_nav_bk.png"},
+            {"id": "pic1",  "url":"../image/eyesofexplorer/cabaza_nav_pick01.png"},
+            {"id": "pic2",  "url":"../image/eyesofexplorer/cabaza_nav_pick02.png"},
+            {"id": "pic3",  "url":"../image/eyesofexplorer/cabaza_nav_pick03.png"},
+            {"id": "pic4",  "url":"../image/eyesofexplorer/cabaza_nav_pick04.png"},
+            {"id": "pic5",  "url":"../image/eyesofexplorer/cabaza_nav_pick05.png"},
+            {"id": "pic6",  "url":"../image/eyesofexplorer/cabaza_nav_pick06.png"}
+        ],
+	"shapes": {
+	},
+	"settings": {
+		"canvaswidth": "1200",
+		"canvasheight": "206",
+		"canvasdomname": "activity",
+                "canvasparent": "canvasholder"
+	},
+        "vars": [
+        ],
+        "particles":[
+        ]
+}

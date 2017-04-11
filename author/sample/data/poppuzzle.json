@@ -1,0 +1,53 @@
+{
+        "objects":[
+            {"type":"image",    "show":true,  "group":["pic"],       "name":"bk",       "image":"bk",       "scale":{"current":1}, "position":{"current":{"x":    0,"y":   0}}, "origin":"default", "testp":false},
+            {"type":"image",    "show":false, "group":["q_side"],    "name":"bk_side",  "image":"bk_side",  "scale":{"current":1}, "position":{"current":{"x":  780,"y":   0}}, "origin":"default", "testp":false},
+            {"type":"image",    "show":false, "group":["q_side"],    "name":"back",     "image":"back",     "scale":{"current":1}, "position":{"current":{"x":  800,"y": 734}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","name":"q0", "show":true}, {"type":"vis","filter":"group","name":"subq", "show":false},{"type":"vis","filter":"group","name":"q_side", "show":false}]},
+            {"type":"image",    "show":true,  "group":["q0"],        "name":"q1",       "image":"q1",       "scale":{"current":1}, "position":{"current":{"x":  800,"y": 500}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","name":"q0", "show":false},{"type":"vis","filter":"group","name":"subq", "show":false},{"type":"vis","filter":"group","name":"q_side", "show":true},{"type":"vis","filter":"group","name":"q1", "show":true}]},
+            {"type":"image",    "show":true,  "group":["q0"],        "name":"q2",       "image":"q2",       "scale":{"current":1}, "position":{"current":{"x":  800,"y": 550}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","name":"q0", "show":false},{"type":"vis","filter":"group","name":"subq", "show":false},{"type":"vis","filter":"group","name":"q_side", "show":true},{"type":"vis","filter":"group","name":"q2", "show":true}]},
+            {"type":"image",    "show":true,  "group":["q0"],        "name":"q3",       "image":"q3",       "scale":{"current":1}, "position":{"current":{"x":  800,"y": 600}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","name":"q0", "show":false},{"type":"vis","filter":"group","name":"subq", "show":false},{"type":"vis","filter":"group","name":"q_side", "show":true},{"type":"vis","filter":"group","name":"q3", "show":true}]},
+            {"type":"image",    "show":true,  "group":["q0"],        "name":"q4",       "image":"q4",       "scale":{"current":1}, "position":{"current":{"x":  800,"y": 650}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","name":"q0", "show":false},{"type":"vis","filter":"group","name":"subq", "show":false},{"type":"vis","filter":"group","name":"q_side", "show":true},{"type":"vis","filter":"group","name":"q4", "show":true}]},
+            {"type":"image",    "show":false,  "group":["q1","subq"], "name":"q1_title", "image":"q1_title", "scale":{"current":1}, "position":{"current":{"x": 815,"y":  65}}, "origin":"default", "testp":true},
+            {"type":"image",    "show":false,  "group":["q1","subq"], "name":"q1a",      "image":"q1a",      "scale":{"current":1}, "position":{"current":{"x": 800,"y": 350}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"vis","filter":"object","name":"q1hint", "show":true},{"type":"swapimage","name":"q1a", "image":"q_incorrect"}]},
+            {"type":"image",    "show":false,  "group":["q1","subq"], "name":"q1b",      "image":"q1b",      "scale":{"current":1}, "position":{"current":{"x": 800,"y": 400}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"vis","filter":"object","name":"q1hint", "show":true},{"type":"swapimage","name":"q1b", "image":"q_incorrect"}]},
+            {"type":"image",    "show":false,  "group":["q1","subq"], "name":"q1c",      "image":"q1c",      "scale":{"current":1}, "position":{"current":{"x": 800,"y": 450}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"vis","filter":"object","name":"q1hint", "show":true},{"type":"swapimage","name":"q1c", "image":"q_incorrect"}]},
+            {"type":"image",    "show":false,  "group":["q1","subq"], "name":"q1d",      "image":"q1d",      "scale":{"current":1}, "position":{"current":{"x": 800,"y": 500}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"vis","filter":"object","name":"q1correct", "show":true}]},
+            {"type":"image",    "show":false,  "group":["subq"], "name":"q1correct",     "image":"q1correct","scale":{"current":1}, "position":{"current":{"x": 800,"y": 550}}, "origin":"default", "testp":false},
+            {"type":"image",    "show":false,  "group":["subq"], "name":"q1hint",        "image":"q1hint",   "scale":{"current":1}, "position":{"current":{"x":   0,"y": 140}}, "origin":"default", "testp":false},
+            {"type":"image",    "show":false,  "group":["q2","subq"], "name":"q2_title", "image":"q2_title", "scale":{"current":1}, "position":{"current":{"x": 800,"y":   4}}, "origin":"default", "testp":true},
+            {"type":"image",    "show":false,  "group":["q3","subq"], "name":"q3_title", "image":"q3_title", "scale":{"current":1}, "position":{"current":{"x": 800,"y":   4}}, "origin":"default", "testp":true},
+            {"type":"image",    "show":false,  "group":["q4","subq"], "name":"q4_title", "image":"q4_title", "scale":{"current":1}, "position":{"current":{"x": 800,"y":   4}}, "origin":"default", "testp":true}
+        ],
+        "images":[
+            {"id": "bk",          "url":"../image/poppuzzle/poppuzzle_bk.png"},
+            {"id": "back",        "url":"../image/poppuzzle/pop_back.png"},
+            {"id": "q1",          "url":"../image/poppuzzle/q1.png"},
+            {"id": "q1a",         "url":"../image/poppuzzle/q1a.png"},
+            {"id": "q1b",         "url":"../image/poppuzzle/q1b.png"},
+            {"id": "q1c",         "url":"../image/poppuzzle/q1c.png"},
+            {"id": "q1d",         "url":"../image/poppuzzle/q1d.png"},
+            {"id": "q1correct",   "url":"../image/poppuzzle/q1_correct.png"},
+            {"id": "q_incorrect", "url":"../image/poppuzzle/q_incorrect.png"},
+            {"id": "q1hint",      "url":"../image/poppuzzle/q1_hint.png"},
+            {"id": "q2",          "url":"../image/poppuzzle/q2.png"},
+            {"id": "q3",          "url":"../image/poppuzzle/q3.png"},
+            {"id": "q4",          "url":"../image/poppuzzle/q4.png"},
+            {"id": "q1_title",    "url":"../image/poppuzzle/q1_title.png"},
+            {"id": "q2_title",    "url":"../image/poppuzzle/q2_title.png"},
+            {"id": "q3_title",    "url":"../image/poppuzzle/q3_title.png"},
+            {"id": "q4_title",    "url":"../image/poppuzzle/q4_title.png"},
+            {"id": "bk_side",     "url":"../image/poppuzzle/poppuzzle_side_bk.png"}
+        ],
+	"shapes": {
+	},
+	"settings": {
+		"canvaswidth": "1000",
+		"canvasheight": "800",
+		"canvasdomname": "activity",
+                "canvasparent": "canvasholder"
+	},
+        "vars": [
+        ],
+        "particles":[
+        ]
+}

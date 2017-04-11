@@ -10,7 +10,7 @@ and open the template in the editor.
 
 @font-face {
     font-family: title;
-    src: url(../font/04B_30__.woff);
+    src: url(../font/advancedpixel.woff);
 }
 
 @font-face {
@@ -223,7 +223,7 @@ a{
 }
 
 .authorbk{
-    background-image: url("../image/grid.png");
+    background-image: url("../author/image/grid.png");
 }
 
 .auth_text{
