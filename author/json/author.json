@@ -28,13 +28,13 @@
     {"type":"fill"}
   ],
   "actions":[
+    {"type":"cleardown",   "widgets":[]},
     {"type":"console",     "widgets":[{"text":"text"}]},
+    {"type":"groupcolor",  "widgets":[{"id":"text"},      {"source":"text"}]},
+    {"type":"objectcolor", "widgets":[{"id":"text"},      {"source":"text"}]},
+    {"type":"scaledest",   "widgets":[{"filter":"text"},  {"name":"text"},    {"destination":"xy"}, {"rate":"float"}]},
     {"type":"url",         "widgets":[{"url":"filename"}, {"target":"text"}]},
-    {"type":"groupvis",    "widgets":[{"name":"text"},    {"show":"bool"}]},
-    {"type":"groupcolor",  "widgets":[{"name":"text"},    {"source":"text"}]},
-    {"type":"objectvis",   "widgets":[{"name":"text"},    {"show":"bool"}]},
-    {"type":"objectcolor", "widgets":[{"name":"text"},    {"source":"text"}]},
-    {"type":"scaledest",   "widgets":[{"filter":"text"},  {"name":"text"}, {"destination":"xy"}, {"rate":"float"}]}
+    {"type":"vis",         "widgets":[{"id":"text"},      {"filter":"text"},  {"show":"bool"}]}
   ],
   "widgets":{
     "xy":{"x":"int","y":"int"},

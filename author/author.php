@@ -13,7 +13,10 @@
     <link href="../css/canvasser.css" rel="stylesheet" type="text/css"/>
   </head>
   <body onload="initAuthorCanvasser()" class="authorbk">
-    <?php include 'header.php';?>
+    <div class="header">
+      <a href="../index.html"><div class="titlecenter">CANVASSER</div>
+      <div class ="divbutton" >Home</div></a>
+    </div>
     <div id="menu">
     </div>
     <div id="graphical">

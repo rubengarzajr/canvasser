@@ -1,0 +1,22 @@
+{
+  "objects":[
+    {"id":"c1",    "type":"image", "show":true, "group":[], "image":"click1", "scale":{"current":1}, "position":{"current":{"x":0,"y":50}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"copyelement","source":"copy1","target":"display"}]},
+    {"id":"c2",    "type":"image", "show":true, "group":[], "image":"click2", "scale":{"current":1}, "position":{"current":{"x":0,"y":110}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"copyelement","source":"copy2","target":"display"}]}
+
+  ],
+  "paths":[
+    {"id":"use",   "url":"../image/sample"}
+  ],
+  "images":[
+    {"id":"click1",  "path":"use", "url":"sample_click_1.png"},
+    {"id":"click2",  "path":"use", "url":"sample_click_2.png"}
+  ],
+  "shapes": {
+  },
+  "settings": {
+    "canvaswidth": "400",
+    "canvasheight": "200",
+    "canvasdomid": "activity",
+    "canvasparent": "canvasholder"
+  }
+}
