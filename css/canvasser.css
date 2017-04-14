@@ -141,7 +141,7 @@ a{
 #imageholder {
     width: 130px;
     height: 500px;
-    background-image: url("../image/checker.png");
+    background-image: url("../author/sample/image/checker.png");
     border: 2px rgb(165, 165, 165) solid;
     border-radius: 4px;
     overflow-y: scroll;
