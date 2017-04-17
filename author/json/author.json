@@ -17,10 +17,10 @@
         {"field":"position",  "type":"posxy"},
         {"field":"scale",     "type":"scale"},
         {"field":"testp",     "type":"bool"},
-        {"field":"clicklist", "type":"activitylist"},
-        {"field":"draglist",  "type":"activitylist"},
-        {"field":"droplist",  "type":"activitylist"},
-        {"field":"truelist",  "type":"activitylist"}
+        {"field":"clicklist", "type":"actions"},
+        {"field":"draglist",  "type":"actions"},
+        {"field":"droplist",  "type":"actions"},
+        {"field":"truelist",  "type":"actions"}
       ]
     },
     "shape":{

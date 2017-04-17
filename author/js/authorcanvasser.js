@@ -218,66 +218,77 @@ function authorcanvasser(dataFile, dataForm){
     window.rules.image.imagedata.widgets.forEach(function(widget, idx, source){
       output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
       output += '<input class="auth_text w400" type="text" value="'+ image[widget.field];
-      output += '" onchange="window.author.updateActivity(this,' + "'images', 'text', '" + image.id  + '\', \''+widget.field+'\', \'none\')"><br>';
+      output =+ buildFnString('window.author.updateActivity', ['images', 'text', image.id, widget.fields, 'none'], true);
+      output += '><br>';
     });
     updateImages();
     return output;
   }
 
-  function buildPropUIObject(output, element){
+  function buildPropUIObject(output, object){
     var win = 'window.author.updateActivity';
-    window.rules.object[element.type].widgets.forEach(function(widget, idx, source){
+    window.rules.object[object.type].widgets.forEach(function(widget, idx, source){
       if (widget.type === "text") {
         output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div>';
-        output += '<input class="auth_text" type="text" value="'+ element[widget.field] + '" ';
-        output += 'onchange=window.author.updateActivity(this,\'objects\',\'text\',';
-        output +=  "'"+ element.id + "','" + widget.field + "',";
-        output +=  "'none')";
+        output += '<input class="auth_text" type="text" value="'+ object[widget.field] + '" ';
+        output +=  buildFnString('window.author.updateActivity', ['objects','text',object.id, widget.field,'none'], true);
         output +=   '>'  + "<br>";
       }
-      if (widget.type === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="auth_text" type="text" value="'+ element[widget.field]+'"><br>';
+      if (widget.type === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="auth_text" type="text" value="'+ object[widget.field]+'"><br>';
 
-      if (widget.type === "bool") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="checkbox" type="checkbox" ' + (element[widget.field] ? "checked" : "") + ' onchange="'+win+'(this, \''+ widget.type + '\', \'' + element.id   + '\', \''+ widget.field + '\', \'checked\')"><br>';
+      if (widget.type === "bool") {
+        output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="checkbox" type="checkbox" ' + (object[widget.field] ? "checked " : "");
+        //output += ' onchange="'+win+'(this, \''+ widget.type + '\', \'' + object.id   + '\', \''+ widget.field + '\', \'checked\')"><br>';
+        output += buildFnString('window.author.updateItem', [object.id, widget.field], true) + '><br>';
+     }
       if (widget.type === "imagedata"){
         var imageList = ObjPartToArr(authorData.images, "id");
-        output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div>' +  buildSelect(imageList, widget.type, element[widget.field], element.id, widget.field) + '<br>';
+        output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div>';
+        output += buildSelect('window.author.updateItem',  object.id, imageList, object[widget.field], widget.field) + '<br>';
       }
       if (widget.type === "objectdata"){
         var objectList = ObjPartToArr(authorData.objects, "id");
-        output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div>' +  buildSelect(objectList, widget.type, getSubProp(element, widget.field), element.id, widget.field) + '<br>';
+        output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div>';
+        output += buildSelect('window.author.updateActivity',  object.id, objectList, widget.type, getSubProp(object, widget.field), widget.field) + '<br>';
       }
       if (widget.type === "posxy"){
         output += '<div style="display:flex"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
         var hasDestination = false;
         var hasRate        = false;
         var hasOffset      = false;
-        for(var posObj in element[widget.field]){
+        for(var posObj in object[widget.field]){
           if (posObj === "destination") hasDestination = true;
           if (posObj === "offset")      hasOffset      = true;
           if (posObj === "rate")        hasRate        = true;
         }
-        if (element.parent !== undefined && !hasOffset) element[widget.field].offset = element[widget.field].current;
-        if (!hasDestination) element[widget.field].destination = undefined;
-        if (!hasRate) element[widget.field].rate = 0;
+        if (object.parent !== undefined && !hasOffset) object[widget.field].offset = object[widget.field].current;
+        if (!hasDestination) object[widget.field].destination = undefined;
+        if (!hasRate) object[widget.field].rate = 0;
 
-        for(var posObj in element[widget.field]){
+        for(var posObj in object[widget.field]){
           if (posObj === "rate"){
-            var tempPos =  (element[widget.field][posObj] !== undefined ? tempPos = element[widget.field][posObj] : 0);
-            output += '<div class="entrylabel c_entrylabel_pos w50">' + posObj + '</div><input class="auth_xy" onchange="'+win+'(this, \''+ element.id + '\', \'' + 'position.'+posObj+ '\', \''+ widget.type + '\', \'value\')" id="numx" type="number" value=' + tempPos + ' />' + '<br>';
+            var tempPos =  (object[widget.field][posObj] !== undefined ? tempPos = object[widget.field][posObj] : 0);
+            output += '<div class="entrylabel c_entrylabel_pos w50">' + posObj + '</div><input class="auth_xy"';
+            output += ' onchange="window.author.updatePosition(this,'
+            output += " '"+ object.id + "', '" + posObj + '\')" type="number" value=' + tempPos + ' />' + '<br>';
           }else{
             var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)};
             var hasXY = false;
             var enable = true;
-            if (element[widget.field][posObj] !== undefined){
-              tempPos = element[widget.field][posObj];
+            if (object[widget.field][posObj] !== undefined){
+              tempPos = object[widget.field][posObj];
               hasXY = true;
               enable = false;
             }
-            if (posObj === "current" && element.parent !== undefined) {hasXY = false; enable=false;}
+            if (posObj === "current" && object.parent !== undefined) {hasXY = false; enable=false;}
             output += '<div class="entrylabel c_entrylabel_pos w100">' + posObj + '</div><span ' +  (hasXY ? "" : 'style="display:none"') + '>';
-            output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.id + '\', \'' + 'position.'+posObj+'.x' + '\', \''+ widget.type + '\', \'value\')" type="number" value=' + tempPos.x + ' />';
-            output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy"  onchange="'+win+'(this, \''+ element.id + '\', \'' + 'position.'+posObj+'.y' + '\', \''+ widget.type + '\', \'value\')" type="number" value=' + tempPos.y + ' /> ';
-            if (posObj !== 'current' && posObj !== 'offset')  output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
+            output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy" ';
+            output += buildFnString('window.author.updateItem', [object.id, 'position.'+posObj+'.x'], true);
+            output += 'type="number" value=' + tempPos.x + ' />';
+            output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy" ';
+            output += buildFnString('window.author.updateItem', [object.id, 'position.'+posObj+'y'], true);
+            output += 'type="number" value=' + tempPos.y + ' />';
+            if (posObj !== 'current' && posObj !== 'offset') output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
             output += '</span>'
             if (enable) output += '<div class ="divbutton" onclick="window.author.reload()">Enable</div>'
             output += '<br>';
@@ -290,26 +301,26 @@ function authorcanvasser(dataFile, dataForm){
         output += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
         var hasDestination = false;
         var hasRate        = false;
-        for(var scaleObj in element[widget.field]){
+        for(var scaleObj in object[widget.field]){
           if (scaleObj === "destination") hasDestination = true;
           if (scaleObj === "rate") hasRate               = true;
         }
-        if (!hasDestination) element[widget.field].destination = undefined;
-        if (!hasRate) element[widget.field].rate = 0;
+        if (!hasDestination) object[widget.field].destination = undefined;
+        if (!hasRate) object[widget.field].rate = 0;
 
-        for (var scaleObj in element[widget.field]){
+        for (var scaleObj in object[widget.field]){
           if (scaleObj === "rate"){
-            var tempScale = (element[widget.field][scaleObj] !== undefined ? tempScale = element[widget.field][scaleObj] : 0);
-            output += '<div class="entrylabel c_entrylabel_pos w50">' + scaleObj + '</div><input class="auth_xy" onchange="'+win+'(this, \''+ element.id + '\', \'' + 'position.'+scaleObj+ '\', \''+ widget.type + '\', \'value\')" id="numx" type="number" value=' + tempScale + ' />' + '<br>';
+            var tempScale = (object[widget.field][scaleObj] !== undefined ? tempScale = object[widget.field][scaleObj] : 0);
+            output += '<div class="entrylabel c_entrylabel_pos w50">' + scaleObj + '</div><input class="auth_xy" onchange="'+win+'(this, \''+ object.id + '\', \'' + 'position.'+scaleObj+ '\', \''+ widget.type + '\', \'value\')" id="numx" type="number" value=' + tempScale + ' />' + '<br>';
           }else{
             var tempScale = 1;
             var hasScale = false;
-            if (element[widget.field][scaleObj] !== undefined){
-              tempScale = element[widget.field][scaleObj];
+            if (object[widget.field][scaleObj] !== undefined){
+              tempScale = object[widget.field][scaleObj];
               hasScale = true;
             }
             output += '<div class="entrylabel c_entrylabel_pos w100">' + scaleObj + '</div><span ' +  (hasScale ? "" : 'style="display:none"') + '>';
-            output += ' <input class="auth_xy"  onchange="'+win+'(this, \''+ element.id + '\', \'' + 'scale.'+scaleObj + '\', \''+ widget.type + '\', \'value\')" type="number" step="any" value=' + tempScale + ' />';
+            output += ' <input class="auth_xy"  onchange="'+win+'(this, \''+ object.id + '\', \'' + 'scale.'+scaleObj + '\', \''+ widget.type + '\', \'value\')" type="number" step="any" value=' + tempScale + ' />';
             if (scaleObj !== 'current')  output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
             output += '</span>'
             if (!hasScale) output += '<div class ="divbutton" onclick="window.author.reload()">Enable</div>'
@@ -318,27 +329,35 @@ function authorcanvasser(dataFile, dataForm){
         }
         output += '</div></div>';
       }
-      if (widget.type === "activitylist"){
+      if (widget.type === "actions"){
           var actList = [];
           window.rules.actions.forEach(function(template){actList.push(template.type)});
           output += '<div><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
-          if (element[widget.field] !== undefined){
-            element[widget.field].forEach(function(actElement, idx){
-              output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>' +  buildSelect(actList, widget.type, actElement.type, element.id, widget.field, idx) + '<br>';
-              for(var actObj in actElement){
+          if (object[widget.field] !== undefined){
+            object[widget.field].forEach(function(actobject, idx){
+              output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>' +  buildSelect('window.author.updateActionList',  object.id, actList, widget.type, actobject.type, widget.field, idx) + '<br>';
+              for(var actObj in actobject){
                   if (actObj === "type") continue;
                   output += '<div class="entrylabel c_entrylabel_pos w100">' + actObj + '</div>';
-                  output += '<input class="auth_text" type="text" value="'+ actElement[actObj]+'" onchange="'+win+'(this, \''+ element.id + '\', \'' + widget.field + '\',\'' + idx + '\',\'' + actObj + '\', \''+ widget.type + '\', \'value\')"><br>';
+                  output += '<input class="auth_text" type="text" value="'+ actobject[actObj]+'" onchange="window.author.updateActionList(this, \''+ object.id + '\', \'' + widget.field + '\',\'' + idx + '\',\'' + actObj + '\', \''+ widget.type + '\', \'value\')"><br>';
               }
             });
             output += '<br>';
           }
-          output += '<div class ="divbutton" onclick="window.author.addaction(\''+element.id+'\',\''+widget.field+'\')">Add Action</div>'
+          output += '<div class ="divbutton" onclick="window.author.addaction(\''+object.id+'\',\''+widget.field+'\')">Add Action</div>'
           output += '</div>';
       }
     });
-    output += " " + element;
+    output += " " + object;
     return output;
+  }
+
+  function buildFnString(fn, params, change){
+    var str = (change ? 'onchange=' : '') + '"' + fn + '(this';
+    params.forEach(function(pName){
+      str += ", '" + pName + "'";
+    });
+    return str + ')" ';
   }
 
   function outText(label, value, cmd){
@@ -354,22 +373,80 @@ function authorcanvasser(dataFile, dataForm){
     return out;
   }
 
-  function buildSelect(list, type, defaultId, element, prop, idx){
-    var out = '<select class="sellist" onchange="window.author.updateActivity(this, \''+ type  + '\', \'' +  element + '\', \''+ prop + '\', \''+ idx +'\')">';
-    list.unshift("---NONE---");
-    list.forEach(function(listElement){
-      out += '<option value="'+ listElement + '"'+ (listElement === defaultId ? " selected" : "" )+ '>' + listElement + '</option>';
+  function buildSelect(fn, object, list, defaultId, prop){
+    var out = '<select class="sellist"'
+    out += buildFnString(fn, [object, prop], true) + '>';
+    var newList = list.slice();
+    newList.unshift("---NONE---");
+    newList.forEach(function(listObject){
+      out += '<option value="'+ listObject + '"'+ (listObject === defaultId ? " selected" : "" )+ '>' + listObject + '</option>';
     });
     out += "</select>";
     return out;
   }
 
+  this.updateItem = function(domElement, objectId, paramPath){
+    var newVal = domElement.value.toString();
+    if (domElement.type === 'checkbox') newVal = domElement.checked
+    var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
+    setSubProp(objGet, paramPath, newVal);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  };
+
+  this.updateSelect = function(domElement, objectId, positionId, axisId){
+    var objGet = authorData[type].filter(function(finder){return (finder.id === id);})[0];
+
+    var newRule = window.rules.actions.filter(function(ruleName){console.log(ruleName.elementType, domElement.value); return ruleName.elementType === domElement.value})[0];
+    if (listIndex === "none"){
+      objGet[prop] = domElement.value;
+    } else {
+      objGet[prop][listIndex] = {type:domElement.value};
+      newRule.widgets.forEach(function(rule){
+        var keys = Object.keys(rule);
+        keys.forEach(function(key){
+          objGet[prop][listIndex][key] = rule[key];
+        });
+      });
+    }
+    if (type === 'objects') updateObjects();
+    if (type === 'images') updateImages();
+    getProps(type, id);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+
+  this.updateActionList = function(domElement, type, elementType, id, prop, listIndex){
+    var objGet;
+    objGet = authorData.objects.filter(function(finder){return (finder.id === id);})[0];
+    objGet = objGet[prop][listIndex];
+
+    console.log(objGet)
+    var newRule = window.rules.actions.filter(function(ruleName){console.log(ruleName.elementType, domElement.value); return ruleName.elementType === domElement.value})[0];
+
+    if (listIndex === "none"){
+      objGet[prop] = domElement.value;
+    } else {
+      objGet[prop][listIndex] = {type:domElement.value};
+      newRule.widgets.forEach(function(rule){
+        var keys = Object.keys(rule);
+        keys.forEach(function(key){
+          objGet[prop][listIndex][key] = rule[key];
+        });
+      });
+    }
+    updateObjects();
+    getProps(type, id);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+
   this.updateActivity = function(domElement, type, elementType, id, prop, listIndex){
     console.log(authorData)
-    console.log(id)
+    console.log("domElement, type, elementType, id, prop, listIndex")
+    console.log(domElement, type, elementType, id, prop, listIndex)
     var objGet = authorData[type].filter(function(finder){return (finder.id === id);})[0];
-    console.log(objGet)
-    var newRule = window.rules.actions.filter(function(ruleName){ return ruleName.elementType === domElement.value})[0];
+
+    var newRule = window.rules.actions.filter(function(ruleName){console.log(ruleName.elementType, domElement.value); return ruleName.elementType === domElement.value})[0];
     if (listIndex === "none"){
       objGet[prop] = domElement.value;
     } else {
