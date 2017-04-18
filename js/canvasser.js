@@ -230,8 +230,8 @@ function canvasser(vari, interactiveData, dataForm){
 
                     if (obj.position.destination !== undefined){
                         var dest = {
-                            "x":parentPos.current.x +  Math.floor(obj.position.destination.x * parentScl.current),
-                            "y":parentPos.current.y +  Math.floor(obj.position.destination.y * parentScl.current)
+                            "x":parentPos.current.x + Math.floor(obj.position.destination.x * parentScl.current),
+                            "y":parentPos.current.y + Math.floor(obj.position.destination.y * parentScl.current)
                         };
                         var newVals              = lerpTo(obj.position.offset, obj.position.destination, obj.position.rate);
                         obj.position.offset      = newVals.newCurrent;
@@ -274,12 +274,13 @@ function canvasser(vari, interactiveData, dataForm){
 
   function lerpOne(obj, item){
     if (obj[item] === undefined) obj[item] = {current:1, rate:0};
+    var rateMod = obj[item].rate*0.1;
     if (obj[item].destination !== undefined){
       if (obj[item].showbefore) {obj.show = true; obj[item].showbefore = false;}
-      if (obj[item].current < obj[item].destination) obj[item].current += obj[item].rate;
-      if (obj[item].current > obj[item].destination) obj[item].current -= obj[item].rate;
+      if (obj[item].current < obj[item].destination) obj[item].current += rateMod;
+      if (obj[item].current > obj[item].destination) obj[item].current -= rateMod;
 
-      if (obj[item].current === obj[item].destination || obj[item].current + obj[item].rate >= obj[item].destination && obj[item].current - obj[item].rate <= obj[item].destination) {
+      if (obj[item].current === obj[item].destination || obj[item].current + rateMod >= obj[item].destination && obj[item].current - rateMod <= obj[item].destination) {
         obj[item].current = obj[item].destination;
         if (obj[item].hideafter) obj.show = false;
         obj[item].destination = undefined;
@@ -646,15 +647,25 @@ function canvasser(vari, interactiveData, dataForm){
     var current     = inCurrent;
     var destination = inDestination;
     var dist = Math.sqrt( (destination.x-current.x)*(destination.x-current.x) + (destination.y-current.y)*(destination.y-current.y) );
-    if (dist < rate) {
+    if (dist < rate+1) {
       current = {x:destination.x, y:destination.y};
       destination = undefined;
     }
     else{
-      var vec = {x:destination.x-current.x, y:destination.y-current.y};
-      var magnitude = getMagnitude(vec);
-      vec = {x:parseInt(vec.x/magnitude*rate), y:parseInt(vec.y/magnitude*rate)};
-      current = {x:current.x + vec.x, y:current.y + vec.y};
+      //TODO: New lerp smoother but has negative issues when a child
+      //     var vec = {x:destination.x-current.x, y:destination.y-current.y};
+      //     var magnitude = getMagnitude(vec);
+      //     vec = {x:parseInt(vec.x/magnitude*rate), y:parseInt(vec.y/magnitude*rate)};
+      //     current = {x:current.x + vec.x, y:current.y + vec.y};
+      var x = current.x;
+      var y = current.y;
+      if (destination.x === current.x){
+        y = current.y + (current.y <= destination.y ? rate : -rate);
+      }else{
+        x = current.x + (current.x <= destination.x ? rate : -rate);
+        y = current.y + (x - current.x) * (destination.y - current.y) / ( destination.x - current.x);
+      }
+      current = {x:x, y:y};
     }
     return {newCurrent:current, newDestination:destination};
   }

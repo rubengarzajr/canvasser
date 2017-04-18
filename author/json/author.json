@@ -13,7 +13,7 @@
         {"field":"parent.id", "type":"objectdata"},
         {"field":"show",      "type":"bool"},
         {"field":"image",     "type":"imagedata"},
-        {"field":"origin",    "type":"text"},
+        {"field":"origin",    "type":"select", "id":"objectorigin"},
         {"field":"position",  "type":"posxy"},
         {"field":"scale",     "type":"scale"},
         {"field":"testp",     "type":"bool"},
@@ -72,6 +72,9 @@
     "filename":"url",
     "shapename":"shape",
     "color":"rgba"
+  },
+  "select":{
+    "objectorigin":{"list":["upper_left", "center"]}
   },
   "authorsettings":{
   }
