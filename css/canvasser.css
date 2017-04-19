@@ -23,6 +23,10 @@ and open the template in the editor.
   src: url(../font/alterebro-pixel-font.woff);
 }
 
+.actionspacer{
+  margin-top: 15px;
+}
+
 .right{
   float: right;
 }
@@ -81,231 +85,231 @@ a{
 }
 
 .bottomlinks{
-    margin-left:auto;
-    margin-right:auto;
+  margin-left:auto;
+  margin-right:auto;
 }
 .bottomlinks td{
-    padding-left: 20px;
-    padding-right: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .header{
-    display: block;
-    background-color: rgb(243, 243, 243);
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px #dadada solid;
-    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    height: 45px;
+  display: block;
+  background-color: rgb(243, 243, 243);
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px #dadada solid;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  height: 45px;
 }
 
 .titlebar{
-    background-color: rgb(118, 150, 218);
-    cursor: move;
+  background-color: rgb(118, 150, 218);
+  cursor: move;
 }
 
 .titlecenter{
-    font-family: title;
-    text-align: center;
-    position: absolute;
-    left: 0;
-    right: 0;
-    font-size: 2em;
-    color: crimson;
+  font-family: title;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  font-size: 2em;
+  color: crimson;
 }
 
 .skinnybank{
-    background-color: rgb(106, 127, 144);
-    border: 1px rgb(106, 127, 144) solid;
-    border-radius: 4px;
+  background-color: rgb(106, 127, 144);
+  border: 1px rgb(106, 127, 144) solid;
+  border-radius: 4px;
 }
 
  #objectholder{
-    width: 130px;
-    height: 500px;
-    border: 2px rgb(165, 165, 165) solid;
-    border-radius: 4px;
-    overflow-y: scroll;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    background-color: white;
+  width: 130px;
+  height: 500px;
+  border: 2px rgb(165, 165, 165) solid;
+  border-radius: 4px;
+  overflow-y: scroll;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background-color: white;
 }
 
 .padlr{
-    padding-left: 5px;
-    padding-right: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 #imageholder {
-    width: 130px;
-    height: 500px;
-    background-image: url("../author/sample/image/checker.png");
-    border: 2px rgb(165, 165, 165) solid;
-    border-radius: 4px;
-    overflow-y: scroll;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 5px;
-    margin-bottom: 5px;
+  width: 130px;
+  height: 500px;
+  background-image: url("../author/sample/image/checker.png");
+  border: 2px rgb(165, 165, 165) solid;
+  border-radius: 4px;
+  overflow-y: scroll;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 #imageholder img {
-    width:100%;
-    height:auto;
+  width:100%;
+  height:auto;
 }
 
 .imagetext{
-    font-family: selecttext;
-    font-size: 1.6em;
-    padding-top: 5px;
-    padding-bottom: 5px;
+  font-family: selecttext;
+  font-size: 1.6em;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .imageid{
-    width:60%;
-    vertical-align:middle;
-    font-size: 15px;
+  width:60%;
+  vertical-align:middle;
+  font-size: 15px;
 }
 
 #graphical{
-    display: inline-block;
-    width: 100%;
+  display: inline-block;
+  width: 100%;
 }
 
 .activity{
-    float:left;
-    border: 2px rgb(100,100,100) solid;
+  float:left;
+  border: 2px rgb(100,100,100) solid;
 }
 
 .authoractivity{
-    border: 2px white solid;
-    box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
-    margin-bottom: 5px;
-    background-color: white;
+  border: 2px white solid;
+  box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+  margin-bottom: 5px;
+  background-color: white;
 }
 
 #properties{
-    text-align: center;
-    background-color: white;
-    overflow: auto;
-    resize: both;
-    height: 200px;
-    margin-bottom: 5px;
+  text-align: center;
+  background-color: white;
+  overflow: auto;
+  resize: both;
+  height: 200px;
+  margin-bottom: 5px;
 }
 
 #propertiestitle{
-    width:100%;
-    text-align: center;
-    background-color: rgb(212, 226, 226);
-    border-bottom: 2px rgb(106, 127, 144) solid;
+  width:100%;
+  text-align: center;
+  background-color: rgb(212, 226, 226);
+  border-bottom: 2px rgb(106, 127, 144) solid;
 }
 
 .proptitle{
-    text-align: center;
-    font-size: 1.5em;
-    display: inline-block;
-    font-family: selecttext;
+  text-align: center;
+  font-size: 1.5em;
+  display: inline-block;
+  font-family: selecttext;
 }
 
 .propbody{
-    text-align: left;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-bottom: 5px;
+  text-align: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
 
 }
 
 .auth_xy{
-    display: table-cell;
-    width:50px;
-    background-color:rgb(191, 212, 211);
-    margin-left: 0px;
-    margin-top: 3px;
-    margin-bottom: 3px;
-    padding: 4px;
-    border: 0px;
-    border-top: 1px rgb(191, 212, 211) solid;
-    border-bottom: 1px rgb(191, 212, 211) solid;
+  display: table-cell;
+  width:50px;
+  background-color:rgb(191, 212, 211);
+  margin-left: 0px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 4px;
+  border: 0px;
+  border-top: 1px rgb(191, 212, 211) solid;
+  border-bottom: 1px rgb(191, 212, 211) solid;
 }
 
 .authorbk{
-    background-image: url("../author/image/grid.png");
+  background-image: url("../author/image/grid.png");
 }
 
 .auth_text{
-    background-color:rgb(212, 218, 226);
-    display: table-cell;
-    width:150px;
-    margin-left: 0px;
-    margin-top: 3px;
-    margin-bottom: 3px;
-    padding: 4px;
-    border: 0px;
-    border-top: 1px rgb(212, 218, 226) solid;
-    border-bottom: 1px rgb(212, 218, 226) solid;
+  background-color:rgb(212, 218, 226);
+  display: table-cell;
+  width:150px;
+  margin-left: 0px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 4px;
+  border: 0px;
+  border-top: 1px rgb(212, 218, 226) solid;
+  border-bottom: 1px rgb(212, 218, 226) solid;
 }
 
 .auth_rate{
-    width:50px;
-    background:rgb(191, 212, 211);
+  width:50px;
+  background:rgb(191, 212, 211);
 }
 
 .divbutton{
-    cursor: pointer;
-    font-family: button;
-    background-color: rgb(237, 255, 221);
-    border: 1px black solid;
-    border-radius: 3px;
-    display: inline-block;
-    padding: 4px;
-    margin: 2px;
-    box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+  cursor: pointer;
+  font-family: button;
+  background-color: rgb(237, 255, 221);
+  border: 1px black solid;
+  border-radius: 3px;
+  display: inline-block;
+  padding: 4px;
+  margin: 2px;
+  box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
 }
 
 .divmenu{
-    color: rgb(220,220,220);
-    cursor: pointer;
-    font-family: button;
-    display: inline-block;
-    padding: 2px;
-    margin: 2px;
+  color: rgb(220,220,220);
+  cursor: pointer;
+  font-family: button;
+  display: inline-block;
+  padding: 2px;
+  margin: 2px;
 }
 
 .divmenu:hover{
-    color: white;
+  color: white;
 }
 
 .wintitle{
-    font-family: button;
-    color: white;
-    font-size: 1.25em;
-    display: inline-block;
-    padding: 4px;
-    margin: 2px;
+  font-family: button;
+  color: white;
+  font-size: 1.25em;
+  display: inline-block;
+  padding: 4px;
+  margin: 2px;
 }
 
 .submenu{
 
 }
 .entrytitle{
-    display: table-cell;
-    padding: 4px;
-    margin-top: 3px;
-    margin-bottom: 3px;
-    margin-left: 3px;
-    margin-right: 0px;
+  display: table-cell;
+  padding: 4px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  margin-left: 3px;
+  margin-right: 0px;
 
 }
 
 .entrylabel{
-    padding: 4px;
-    margin-top: 3px;
-    margin-bottom: 3px;
-    margin-left: 3px;
-    margin-right: 0px;
-    display: inline-block;
+  padding: 4px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  margin-left: 3px;
+  margin-right: 0px;
+  display: inline-block;
 }
 
 .c_entrytitle_pos{

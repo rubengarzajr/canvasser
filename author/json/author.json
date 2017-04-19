@@ -10,7 +10,7 @@
       "widgets":[
         {"field":"id",        "type":"text"},
         {"field":"group",     "type":"arraystrings"},
-        {"field":"parent.id", "type":"objectdata"},
+        {"field":"parent.id", "type":"objlist"},
         {"field":"show",      "type":"bool"},
         {"field":"image",     "type":"imagedata"},
         {"field":"origin",    "type":"select", "id":"objectorigin"},
@@ -63,7 +63,7 @@
     {"type":"objectcolor", "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
     {"type":"scaledest",   "widgets":[{"field":"filter", "type":"text"},     {"field":"name",    "type":"text"},   {"field":"destination",  "type":"xy"}, {"field":"rate",  "type":"float"}]},
     {"type":"url",         "widgets":[{"field":"url",    "type":"filename"}, {"field":"target",  "type":"text"}]},
-    {"type":"vis",         "widgets":[{"field":"id",     "type":"text"},     {"field":"filter",  "type":"text"},   {"field":"show",         "type":"bool"}]}
+    {"type":"vis",         "widgets":[{"field":"id",     "type":"text"},     {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
   ],
   "widgets":{
     "xy":{"x":"int","y":"int"},
@@ -74,7 +74,8 @@
     "color":"rgba"
   },
   "select":{
-    "objectorigin":{"list":["upper_left", "center"]}
+    "objectorigin":{"list":["upper_left", "center"]},
+    "filtertype":{"list":["object", "group"]}
   },
   "authorsettings":{
   }
