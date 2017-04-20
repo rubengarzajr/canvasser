@@ -225,36 +225,40 @@ function authorcanvasser(dataFile, dataForm){
     return output;
   }
 
-  function handleBoolean(object, widget){
+  function handleBoolean(object, widget, path){
     var str = '';
-    str += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="checkbox" type="checkbox" ' + (object[widget.field] ? "checked " : "");
-    str += buildFnString('window.author.updateItem', [object.id, widget.field], true) + '><br>';
+    var defaultId = getSubProp(object, path);
+    str += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
+    str += buildFnString('window.author.updateItem', [object.id, path], true) + '><br>';
     return str;
   }
-  function handleObjectList(object, widget){
+  function handleObjectList(object, widget, path){
     var str = '';
     var objectList = ObjPartToArr(authorData.objects, "id");
     var defaultId = getSubProp(object, widget.field);
-    str += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div>';
-    str += buildSelect('window.author.updateItem',  object.id, objectList, defaultId, widget.field) + '<br>';
+    str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    str += buildSelect('window.author.updateItem',  object.id, objectList, defaultId, path) + '<br>';
     return str;
   }
   function handleSelect(object, widget, path){
     var str = '';
     var selOp =  window.rules.select[widget.id].list;
     var defaultId = getSubProp(object, path);
-    str += '<div class="entrylabel c_entrytitle_text w100">' + widget.field  + '</div>'
-    str += buildSelect('window.author.updateItem',  object.id, selOp,  defaultId, widget.field, path) + '<br>';
+    str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    str += buildSelect('window.author.updateItem',  object.id, selOp,  defaultId, path) + '<br>';
     return str;
   }
   function handleText(object, widget, path){
     var str = '';
     var defaultId = getSubProp(object, path);
-    str += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div>';
+    str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += '<input class="auth_text" type="text" value="'+ defaultId + '" ';
-    str +=  buildFnString('window.author.updateItem', [object.id, path], true);
+    str += buildFnString('window.author.updateItem', [object.id, path], true);
     str +=   '>'  + "<br>";
     return str;
+  }
+  function handleAction(object, widget, path){
+
   }
 
   function buildPropUIObject(output, object){
@@ -263,13 +267,13 @@ function authorcanvasser(dataFile, dataForm){
       if (widget.type === "text")         output += handleText(object, widget, widget.field);
       if (widget.type === "select")       output += handleSelect(object, widget, widget.field);
       if (widget.type === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="auth_text" type="text" value="'+ object[widget.field]+'"><br>';
-      if (widget.type === "bool")         output += handleBoolean(object, widget);
+      if (widget.type === "bool")         output += handleBoolean(object, widget, widget.field);
       if (widget.type === "imagedata"){
         var imageList = ObjPartToArr(authorData.images, "id");
-        output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div>';
+        output += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
         output += buildSelect('window.author.updateItem',  object.id, imageList, object[widget.field], widget.field) + '<br>';
       }
-      if (widget.type === "objlist")   output += handleObjectList(object, widget);
+      if (widget.type === "objlist")   output += handleObjectList(object, widget, widget.field);
 
       if (widget.type === "posxy"){
         output += '<div style="display:flex"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
@@ -348,9 +352,9 @@ function authorcanvasser(dataFile, dataForm){
             output += ' <input class="auth_xy" ';
             output += buildFnString('window.author.updateItem', [object.id, 'scale.'+scaleObj], true);
             output += 'type="number" value=' +tempScale + ' />';
-            if (scaleObj !== 'current')  output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
+            if (scaleObj !== 'current')  output += buildDiv('divbutton', 'Disable', 'window.author.reload', []);
             output += '</span>'
-            if (!hasScale) output += '<div class ="divbutton"  onclick="window.author.createScale(\''+object.id+'\',\'destination\')">Enable</div>'
+            if (!hasScale) output += buildDiv('divbutton', 'Enable', 'window.author.createScale', [object.id, 'destination']);
             output += '<br>';
           }
         }
@@ -364,21 +368,22 @@ function authorcanvasser(dataFile, dataForm){
             object[widget.field].forEach(function(actobject, idx){
               var actionWidgets = window.rules.actions.filter(function(type){ return type.type === actobject.type})[0].widgets;
               output += '<div class="actionspacer"></div><div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-              output += buildSelect('window.author.updateActionList',  object.id, actionsList, actobject.type, actobject.type, widget.field, idx) + '<br>';
+              console.log(object.id, actionsList, actobject.type, actobject.type, widget.field, idx)
+              output += buildSelect('window.author.updateActionList',  object.id, actionsList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
 
               actionWidgets.forEach(function(subWidget, idxPart){
                 var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
                 if (subWidget.type === "text")    output += handleText(object, subWidget, widgetPath);
-                if (subWidget.type === 'bool')    output += handleBoolean(object, subWidget);
+                if (subWidget.type === 'bool')    output += handleBoolean(object, subWidget, widgetPath);
                 if (subWidget.type === 'select')  output += handleSelect(object, subWidget, widgetPath);
-                if (subWidget.type === 'objlist') output += handleObjectList(object, subWidget);
+                if (subWidget.type === 'objlist') output += handleObjectList(object, subWidget, widgetPath);
 
               });
 
             });
             output += '<br>';
           }
-          output += '<div class ="divbutton" onclick="window.author.addaction(\''+object.id+'\',\''+widget.field+'\')">Add Action</div>'
+          output += buildDiv('divbutton', 'Add Action', 'window.author.addaction', [object.id, widget.field]);
           output += '</div>';
       }
     });
@@ -407,7 +412,20 @@ function authorcanvasser(dataFile, dataForm){
     return out;
   }
 
-  function buildSelect(fn, object, list, defaultId, prop, path){
+  function buildDiv(classes, content, clicker, params){
+    var click = ''
+    if (clicker !== undefined) {
+      click = ' onclick="' + clicker + '(';
+      params.forEach(function(param, index){
+        click += "'" +  param + "'";
+        if (index < params.length-1) click +=',';
+      });
+      click += ') ";'
+    }
+    return '<div class="' + classes + '"' + click + '>' + content + '</div>';
+  }
+
+  function buildSelect(fn, object, list, defaultId, path){
     var out = '<select class="sellist"';
     out += buildFnString(fn, [object, path], true) + '>';
     var newList = list.slice();
@@ -470,29 +488,21 @@ function authorcanvasser(dataFile, dataForm){
     initCanvasser("sample", JSON.stringify(authorData), "string");
   }
 
-
-  this.updateActionList = function(domElement, type, elementType, id, prop, listIndex){
-    console.log(type, elementType, id, prop, listIndex)
-    var objGet;
-    objGet = authorData.objects.filter(function(finder){return (finder.id === id);})[0];
-    objGet = objGet[prop][listIndex];
-
-    console.log(objGet)
+  this.updateActionList = function(domElement, objectId, paramPath){
+    var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
+    var prop = getSubProp(objGet, paramPath);
+    this.updateItem(domElement, objectId, paramPath)
     var newRule = window.rules.actions.filter(function(ruleName){console.log(ruleName.elementType, domElement.value); return ruleName.elementType === domElement.value})[0];
 
-    if (listIndex === "none"){
-      objGet[prop] = domElement.value;
-    } else {
-      objGet[prop][listIndex] = {type:domElement.value};
-      newRule.widgets.forEach(function(rule){
-        var keys = Object.keys(rule);
-        keys.forEach(function(key){
-          objGet[prop][listIndex][key] = rule[key];
-        });
-      });
-    }
+    // newRule.widgets.forEach(function(rule){
+    //   var keys = Object.keys(rule);
+    //   keys.forEach(function(key){
+    //     objGet[prop][listIndex][key] = rule[key];
+    //   });
+    // });
+
     updateObjects();
-    getProps(type, id);
+    getProps('objects', objectId);
     initCanvasser("sample", JSON.stringify(authorData), "string");
   }
 
