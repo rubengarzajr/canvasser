@@ -4,7 +4,7 @@
     <head>
         <title>Canvasser</title>
     </head>
-    <body onload='initCanvasser("tex","../data/dragdrop.json", "file");'>
+    <body onload='initCanvasser("tex","../json/dragdrop.json", "file");'>
         <?php include 'activityheader.php';?>
         <div class="title_a">Drag and Drop</div>
         <div id='canvasholder' style="float:left"></div>

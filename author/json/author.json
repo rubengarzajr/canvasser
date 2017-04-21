@@ -20,7 +20,8 @@
         {"field":"clicklist", "type":"actions"},
         {"field":"draglist",  "type":"actions"},
         {"field":"droplist",  "type":"actions"},
-        {"field":"truelist",  "type":"actions"}
+        {"field":"truelist",  "type":"actions"},
+        {"field":"falselist", "type":"actions"}
       ]
     },
     "shape":{
@@ -57,25 +58,31 @@
     {"type":"fill"}
   ],
   "actions":[
-    {"type":"cleardown",   "widgets":[]},
-    {"type":"console",     "widgets":[{"field":"text",   "type":"text"}]},
-    {"type":"groupcolor",  "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
-    {"type":"objectcolor", "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
-    {"type":"scaledest",   "widgets":[{"field":"filter", "type":"text"},     {"field":"name",    "type":"text"},   {"field":"destination",  "type":"xy"}, {"field":"rate",  "type":"float"}]},
-    {"type":"url",         "widgets":[{"field":"url",    "type":"filename"}, {"field":"target",  "type":"text"}]},
-    {"type":"vis",         "widgets":[{"field":"id",     "type":"text"},     {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
+    {"type":"cleardown",    "widgets":[]},
+    {"type":"console",      "widgets":[{"field":"text",   "type":"text"}]},
+    {"type":"conditional",  "widgets":[{"field":"check",  "type":"select", "id":"conditionaltype"},{"field":"itemtocheck",   "type":"objlist"}, {"field":"position",   "type":"objlist"}]},
+    {"type":"destposition", "widgets":[{"field":"id", "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"destination",  "type":"posxy"}, {"field":"rate",   "type":"number"}]},
+    {"type":"groupcolor",   "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
+    {"type":"loadpage",     "widgets":[{"field":"url",    "type":"text"}]},
+    {"type":"objectcolor",  "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
+    {"type":"scaledest",    "widgets":[{"field":"filter", "type":"text"},     {"field":"name",    "type":"text"},   {"field":"destination",  "type":"xy"}, {"field":"rate",  "type":"float"}]},
+    {"type":"slideobject",  "widgets":[{"field":"id", "type":"objlist"}]},
+    {"type":"url",          "widgets":[{"field":"url",    "type":"filename"}, {"field":"target",  "type":"text"}]},
+    {"type":"vis",          "widgets":[{"field":"id",     "type":"text"},     {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
   ],
   "widgets":{
-    "xy":{"x":"int","y":"int"},
-    "text":"string",
     "bool":"boolean",
+    "color":"rgba",
     "filename":"url",
+    "number":"number",
     "shapename":"shape",
-    "color":"rgba"
+    "text":"string",
+    "xy":{"x":"int","y":"int"}
   },
   "select":{
     "objectorigin":{"list":["upper_left", "center"]},
-    "filtertype":{"list":["object", "group"]}
+    "filtertype":{"list":["object", "group"]},
+    "conditionaltype":{"list":["position"]}
   },
   "authorsettings":{
   }

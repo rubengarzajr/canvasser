@@ -443,18 +443,24 @@ function canvasser(vari, interactiveData, dataForm){
                 }
                 if (action.type === 'conditional'){
                     if (action.check === 'position'){
-                        var item  = undefined;
-                        var testp = undefined;
-                        act.data.objects.forEach(function(obj){
-                            if (obj.id === action.itemtocheck) item = obj;
-                            if (obj.id === action.position)    testp = obj;
-                        });
+                        var item  = act.data.objects.filter(function(obj){return obj.id === action.itemtocheck})[0];
+                        var testp = act.data.objects.filter(function(obj){return obj.id === action.position})[0];
                         var pos = {"x":item.position.current.x, "y":item.position.current.y};
+                        if (item.origin === "center") {
+                          //TODO: Not working
+                          var oPos = item.position.current
+                            pos={"x":Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current), "y":Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
+                        }
+
                         var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
                         if (pixelData_img[3] != 0) {
                             act.applyAction = [testp];
                             act.mode = 'true';
                             actions();
+                        } else {
+                          act.applyAction = [testp];
+                          act.mode = 'false';
+                          actions();
                         }
                     }
                     if (action.check === "var"){
