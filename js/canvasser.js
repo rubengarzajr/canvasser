@@ -511,6 +511,9 @@ function canvasser(vari, interactiveData, dataForm){
                         obj.opacity.hideafter = action.hideafter !== undefined ? action.hideafter : false;
                     });
                 }
+                if (action.type === 'loadinto'){
+                    initCanvasser(action.vari, action.url, 'file');
+                }
                 if (action.type === 'loadpage'){
                     window.location.href = action.url;
                 }
@@ -577,13 +580,13 @@ function canvasser(vari, interactiveData, dataForm){
                         if (act.dragging !== null && obj.id !== act.dragging.id) return;
                         if (obj.id === action.id) {
                             if (obj.parent !== undefined){
-                                if (obj.position.offset === undefined) obj.position[mover] = {x:0,y:0};
-                                obj.position.offset.x += (act.position.x - act.prevPosition.x) / obj.scale.current;
-                                obj.position.offset.y += (act.position.y - act.prevPosition.y) / obj.scale.current;
+                              if (obj.position.offset === undefined) obj.position[mover] = {x:0,y:0};
+                              if (!action.constrainx) obj.position.offset.x += (act.position.x - act.prevPosition.x) / obj.scale.current;
+                              if (!action.constrainy) obj.position.offset.y += (act.position.y - act.prevPosition.y) / obj.scale.current;
                             }
                             else{
-                                obj.position.current.x += (act.position.x - act.prevPosition.x);
-                                obj.position.current.y += (act.position.y - act.prevPosition.y);
+                              if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
+                              if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
                             }
                             act.dragging = obj;
                         }

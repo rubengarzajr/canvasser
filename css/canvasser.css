@@ -124,6 +124,17 @@ a{
   border-radius: 4px;
 }
 
+.font-larger{
+  font-size:larger;
+}
+
+.font-small{
+  font-size: small;
+}
+
+.mw400{
+  min-width:400px;
+}
  #objectholder{
   width: 130px;
   height: 500px;

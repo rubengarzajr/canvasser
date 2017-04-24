@@ -63,6 +63,7 @@ function authorcanvasser(dataFile, dataForm){
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);
   initCanvasser("sample", JSON.stringify(authorData), "string");
+  updateSettings();
   updateObjects();
   updateImages();
   loop();
@@ -162,6 +163,20 @@ function authorcanvasser(dataFile, dataForm){
     }
   }
 
+  function updateSettings(){
+    var settingHolder = document.getElementById("settingholder");
+    var settings = '<table class="objtable" width="100%">';
+
+    Object.keys(authorData.settings).forEach(function(setting){
+      settings += '<tr class="clicktr" id="'+setting+'" onclick="window.author.getSetting(\''+ setting + '\')">';
+      settings +='<td width="50%">' + setting + '</td>';
+      settings +='<td width="50%">' + authorData.settings[setting] + '</td>';
+      settings += '</tr>';
+    });
+    settings +='</table>';
+    settingHolder.innerHTML = settings;
+  }
+
   function updateObjects(){
     var objectHolder = document.getElementById("objectholder");
     var objects = '<table class="objtable" width="100%">';
@@ -198,6 +213,20 @@ function authorcanvasser(dataFile, dataForm){
     authorData.objects.push({id:"wee", type:"image",  show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
     updateObjects();
     initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+  this.getSetting = getSetting;
+  function getSetting(setting){
+    document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Setting:' + setting  + '</div>';
+    var propUI = document.getElementById("properties");
+    var type = window.rules.settings[setting].type === "text" ? "text" : "number";
+    var prop = '<div class="propbody">' ;
+    prop += '<div class="entrylabel c_entrytitle_text w200">'+setting+'</div>';
+    prop += '<input class="auth_text w200" type="'+ type +'" ';
+    prop += 'value="'+ authorData.settings[setting] + '" ';
+    prop += buildFnString('window.author.updateSetting', [setting], true);
+    prop += '><br>';
+    propUI.innerHTML = prop + '</div>';
   }
 
   this.getProps = getProps;
@@ -383,14 +412,13 @@ function authorcanvasser(dataFile, dataForm){
       if (widget.type === "actions"){
           var actionsList = [];
           window.rules.actions.forEach(function(template){actionsList.push(template.type)});
-          output += '<div><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
+          output += '<div><div class="pos_holder mw400"><div class="pos_title">' + widget.display + '</div>';
           if (object[widget.field] !== undefined){
             object[widget.field].forEach(function(actobject, idx){
               var actionWidgets = window.rules.actions.filter(function(type){ return type.type === actobject.type});
               if (actionWidgets.length === 0) return;
               actionWidgets = actionWidgets[0].widgets;
               output += '<div class="actionspacer"></div><div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-              console.log(object.id, actionsList, actobject.type, actobject.type, widget.field, idx)
               output += buildSelect('window.author.updateActionList',  object.id, actionsList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
 
               actionWidgets.forEach(function(subWidget, idxPart){
@@ -517,18 +545,16 @@ function authorcanvasser(dataFile, dataForm){
     this.updateItem(domElement, objectId, paramPath)
     var newRule = window.rules.actions.filter(function(ruleName){console.log(ruleName.elementType, domElement.value); return ruleName.elementType === domElement.value})[0];
 
-    // newRule.widgets.forEach(function(rule){
-    //   var keys = Object.keys(rule);
-    //   keys.forEach(function(key){
-    //     objGet[prop][listIndex][key] = rule[key];
-    //   });
-    // });
-
     updateObjects();
     getProps('objects', objectId);
     initCanvasser("sample", JSON.stringify(authorData), "string");
   }
 
+  this.updateSetting = function(domElement, setting){
+    authorData.settings[setting] = domElement.value;
+    updateSettings();
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
 
   this.updateActivity = function(domElement, type, elementType, id, prop, listIndex){
     var objGet = authorData[type].filter(function(finder){return (finder.id === id);})[0];

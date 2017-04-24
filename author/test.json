@@ -1,0 +1,91 @@
+{
+  "objects": [{
+      "id": "bkimg",
+      "type": "image",
+      "show": true,
+      "group": ["images"],
+      "image": "backgr",
+      "scale": {
+        "current": 1
+      },
+      "position": {
+        "current": {
+          "x": 360,
+          "y": 350
+        }
+      },
+      "origin": "center",
+      "testp": true,
+      "clicklist": []
+    },
+    {
+      "id": "drag_button",
+      "type": "image",
+      "show": true,
+      "group": ["buttons"],
+      "image": "drag1",
+      "scale": {
+        "current": 1,
+        "rate": 0
+      },
+      "position": {
+        "current": {
+          "x": 155,
+          "y": 30
+        },
+        "rate": 0
+      },
+      "testp": true,
+      "draglist": [{
+        "type": "slideobject",
+        "id": "drag_button"
+      }],
+      "clicklist": []
+    }
+  ],
+  "images": [{
+      "id": "backgr",
+      "url": "./sample/image/sample/background_400px.png"
+    },
+    {
+      "id": "click1",
+      "url": "./sample/image/sample/sample_click_1.png"
+    },
+    {
+      "id": "click2",
+      "url": "./sample/image/sample/sample_click_2.png"
+    },
+    {
+      "id": "drag1",
+      "url": "./sample/image/sample/sample_drag_1.png"
+    }
+  ],
+  "paths": [{
+    "id": "use",
+    "url": "./image/sample"
+  }],
+  "shapes": {
+    "sq": [{
+      "type": "rect",
+      "offset": {
+        "x": 0,
+        "y": 0
+      },
+      "width": 600,
+      "height": 600
+    }, {
+      "type": "fillStyle",
+      "color": "yellow"
+    }, {
+      "type": "fill"
+    }, {
+      "type": "ptest"
+    }]
+  },
+  "settings": {
+    "canvaswidth": "600",
+    "canvasheight": "600",
+    "canvasdomname": "activity",
+    "canvasparent": "canvasholder"
+  }
+}

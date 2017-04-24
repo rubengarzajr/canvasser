@@ -1,10 +1,11 @@
 {
   "createtypes":["object","image","shape","settings"],
-  "settings":[
-    {"type":"canvaswidth",  "widgets":[{"field":"size",   "type":"int"}]},
-    {"type":"canvasheight", "widgets":[{"field":"size",   "type":"int"}]},
-    {"type":"canvasparent", "widgets":[{"field":"parent", "type":"text"}]}
-  ],
+  "settings":{
+    "canvasdomname": {"type":"text"},
+    "canvaswidth":   {"type":"int"},
+    "canvasheight":  {"type":"int"},
+    "canvasparent":  {"type":"text"}
+  },
   "object":{
     "image":{
       "widgets":[
@@ -17,11 +18,11 @@
         {"field":"position",  "type":"posxy"},
         {"field":"scale",     "type":"scale"},
         {"field":"testp",     "type":"bool"},
-        {"field":"clicklist", "type":"actions"},
-        {"field":"draglist",  "type":"actions"},
-        {"field":"droplist",  "type":"actions"},
-        {"field":"truelist",  "type":"actions"},
-        {"field":"falselist", "type":"actions"}
+        {"field":"clicklist", "type":"actions", "display":"Click/Touch Event"},
+        {"field":"draglist",  "type":"actions", "display":"Drag Event"},
+        {"field":"droplist",  "type":"actions", "display":"Drop Event"},
+        {"field":"truelist",  "type":"actions", "display":"Conditional True"},
+        {"field":"falselist", "type":"actions", "display":"Conditional False"}
       ]
     },
     "shape":{
@@ -61,12 +62,13 @@
     {"type":"cleardown",    "widgets":[]},
     {"type":"console",      "widgets":[{"field":"text",   "type":"text"}]},
     {"type":"conditional",  "widgets":[{"field":"check",  "type":"select", "id":"conditionaltype"},{"field":"itemtocheck",   "type":"objlist"}, {"field":"position",   "type":"objlist"}]},
-    {"type":"destposition", "widgets":[{"field":"id", "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"destination",  "type":"posxy"}, {"field":"rate",   "type":"number"}]},
+    {"type":"loadinto",     "widgets":[{"field":"url",    "type":"text"},     {"field":"vari",    "type":"text"}]},
+    {"type":"destposition", "widgets":[{"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"destination",  "type":"posxy"}, {"field":"rate",   "type":"number"}]},
     {"type":"groupcolor",   "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
     {"type":"loadpage",     "widgets":[{"field":"url",    "type":"text"}]},
     {"type":"objectcolor",  "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
-    {"type":"scaledest",    "widgets":[{"field":"filter", "type":"text"},     {"field":"name",    "type":"text"},   {"field":"destination",  "type":"xy"}, {"field":"rate",  "type":"float"}]},
-    {"type":"slideobject",  "widgets":[{"field":"id", "type":"objlist"}]},
+    {"type":"scaledest",    "widgets":[{"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"destination",    "type":"number"},  {"field":"showbefore",  "type":"bool"},   {"field":"hideafter",  "type":"bool"}, {"field":"rate",  "type":"number"}]},
+    {"type":"slideobject",  "widgets":[{"field":"id",     "type":"objlist"}, {"field":"constrainx",     "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
     {"type":"url",          "widgets":[{"field":"url",    "type":"filename"}, {"field":"target",  "type":"text"}]},
     {"type":"vis",          "widgets":[{"field":"id",     "type":"text"},     {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
   ],
