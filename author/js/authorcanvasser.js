@@ -30,6 +30,7 @@ function authorcanvasser(dataFile, dataForm){
 
   var authorData = {
 "objects":[
+{"id":"bk", "type":"shape", "show":true, "group":[], "shape":"sq",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":0,"y":0}}, "color":["rgba(100,100,100,1)"], "defaultcolor":["rgba(102,102,102,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]},
 {"id":"bkimg","type":"image","show":true,"group":["images"],"image":"backgr","scale":{"current":1},"position":{"current":{"x":360,"y":350}},"origin":"center","testp":true,"clicklist":[]},
 {"id":"drag_button", "type":"image","show":true,"group":["buttons"],"image":"drag1","scale":{"current":1,"rate":0},"position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[{"type":"slideobject","id":"drag_button"}],"clicklist":[]},
 {"id":"click_button_on","type":"image","show":true,"group":["buttons"],"image":"click1","scale":{"current":1},"position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]},
@@ -44,8 +45,16 @@ function authorcanvasser(dataFile, dataForm){
 "paths":[
     {"id":"use",   "url":"./image/sample"}
 ],
-"shapes":{
-    "sq":[{"type":"rect","offset":{"x":0,"y":0},"width":600,"height":600}, {"type":"fillStyle","color":"yellow"}, {"type":"fill"}, {"type":"ptest"}]
+"shapes": {
+  "sq":[
+      {"type":"rect","offset":{"x":0,"y": 0},"width":600,"height":600},
+      {"type":"fillStyle", "color":"blue"},
+      {"type":"fill"}
+  ],
+  "t1":[
+    {"type":"font", "size":20, "font":"arial"},
+    {"type":"filltext", "text":"Load Into 1", "offset":{"x":0,"y": 10}}
+  ]
 },
 "settings":{
     "canvaswidth":"600",
@@ -55,6 +64,7 @@ function authorcanvasser(dataFile, dataForm){
 };
 
   document.getElementById("canvasmover").addEventListener("mousedown",     function(){moveObjD("canvasbank")},     false);
+  document.getElementById("shapemover").addEventListener("mousedown",      function(){moveObjD("shapebank")},      false);
   document.getElementById("objectmover").addEventListener("mousedown",     function(){moveObjD("objectbank")},     false);
   document.getElementById("imagemover").addEventListener("mousedown",      function(){moveObjD("imagebank")},      false);
   document.getElementById("jsonmover").addEventListener("mousedown",       function(){moveObjD("jsonbank")},       false);
@@ -66,6 +76,7 @@ function authorcanvasser(dataFile, dataForm){
   updateSettings();
   updateObjects();
   updateImages();
+  updateShapes();
   loop();
 
   function loop(){
@@ -203,6 +214,18 @@ function authorcanvasser(dataFile, dataForm){
     imageHolder.innerHTML = images;
   }
 
+  function updateShapes(){
+    var imageHolder = document.getElementById("shapeholder");
+    var images = "<table>";
+    Object.keys(authorData.shapes).forEach(function(shape){
+      images += '<tr class="clicktr" id="'+shape+'" onclick="window.author.getShape(\''+ shape + '\')">'
+      images +='<td class="shapeid"><div class="imagetext">' + shape + '</div></td>';
+      images += '</tr>';
+    });
+    images +='</table>';
+    imageHolder.innerHTML = images;
+  }
+
   this.addImage = function(){
     authorData.images.push({id:"newImage",  url:"./image/no_image.png"});
     updateImages();
@@ -226,6 +249,19 @@ function authorcanvasser(dataFile, dataForm){
     prop += 'value="'+ authorData.settings[setting] + '" ';
     prop += buildFnString('window.author.updateSetting', [setting], true);
     prop += '><br>';
+    propUI.innerHTML = prop + '</div>';
+  }
+
+  this.getShape = getShape;
+  function getShape(id){
+    console.log(authorData)
+    thisProp = authorData.shapes[id];
+    if (thisProp === undefined) return;
+    document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + (type === 'objects' ? 'Object: ' + id + ' : ' + thisProp.type : 'Image: ' + id) + '</div>';
+    var propUI = document.getElementById("properties");
+    var prop = '<div class="propbody">' ;
+    if (type === 'objects') prop = buildPropUIObject(prop, thisProp);
+    else prop = buildPropUIimage(prop, thisProp);
     propUI.innerHTML = prop + '</div>';
   }
 

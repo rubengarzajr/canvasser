@@ -205,9 +205,10 @@ function canvasser(vari, interactiveData, dataForm){
             }
 
             if (obj.type === "shape" && obj.show){
-                var posCheck = drawShapes(act, obj.parent.object, obj.position.current, act.data.shapes[obj.shape], obj.color, obj.testp, act.position, obj.scale.current);
-                if (!obj.testp) return;
-                if (posCheck) act.applyAction.push(obj);
+              var objParent = obj.parent != undefined ? obj.parent.object : undefined;
+              var posCheck = drawShapes(act, objParent, obj.position.current, act.data.shapes[obj.shape], obj.color, obj.testp, act.position, obj.scale.current);
+              if (!obj.testp) return;
+              if (posCheck) act.applyAction.push(obj);
             }
 
             if (obj.type === "image"){
@@ -565,6 +566,13 @@ function canvasser(vari, interactiveData, dataForm){
                         obj.scale.hideafter   = action.hideafter  !== undefined ? action.hideafter : false;
                     });
                 }
+                if (action.type === 'set'){
+                    act.data.objects.forEach(function(obj){
+                        if (!checkAction(action, obj)) return;
+                        console.log(obj, action.prop, action.newvalue)
+                        setSubProp(obj, action.prop, action.newvalue.toString());
+                    });
+                }
                 if (action.type === 'shapecolor'){
                     act.data.objects.forEach(function(obj){
                         if (!checkAction(action, obj)) return;
@@ -648,6 +656,15 @@ function canvasser(vari, interactiveData, dataForm){
 
   function randIntervalInt(min,max){
     return Math.floor(Math.random()*(max-min+1)+min);
+  }
+
+  function setSubProp(obj, desc, val){
+    var arr = desc.split(".");
+    while(arr.length > 1){
+      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
+      obj = obj[arr.shift()];
+    }
+    obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
   }
 
   function lerpTo(inCurrent, inDestination, rate){

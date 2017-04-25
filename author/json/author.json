@@ -68,6 +68,7 @@
     {"type":"loadpage",     "widgets":[{"field":"url",    "type":"text"}]},
     {"type":"objectcolor",  "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
     {"type":"scaledest",    "widgets":[{"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"destination",    "type":"number"},  {"field":"showbefore",  "type":"bool"},   {"field":"hideafter",  "type":"bool"}, {"field":"rate",  "type":"number"}]},
+    {"type":"set",          "widgets":[{"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
     {"type":"slideobject",  "widgets":[{"field":"id",     "type":"objlist"}, {"field":"constrainx",     "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
     {"type":"url",          "widgets":[{"field":"url",    "type":"filename"}, {"field":"target",  "type":"text"}]},
     {"type":"vis",          "widgets":[{"field":"id",     "type":"text"},     {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}

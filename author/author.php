@@ -33,6 +33,7 @@
           <div id='canvasholder' class="authoractivity"></div>
         </div>
       </div>
+
       <div id='imagebank' class="skinnybank" style="position:absolute;left:10px; top:80px;">
         <div class="titlebar" id="imagemover">
           <div class="wintitle">Images</div>
@@ -45,6 +46,22 @@
             <div class="divmenu" onclick="window.author.deleteImage()">Delete</div>
           </div>
           <div id="imageholder"></div>
+        </div>
+      </div>
+
+
+      <div id='shapebank' class="skinnybank" style="position:absolute;left:139px; top:80px;">
+        <div class="titlebar" id="shapemover">
+          <div class="wintitle">Shapes</div>
+          <div class="sp_05 right"></div>
+          <div class ="right" onclick="window.author.toggleminmax('shapecontents', 'toggleshapes', 664)" style="margin-top: 2px;"><img id="toggleshapes" src="image/icon_max_g.png"/></div>
+        </div>
+        <div id="shapecontents" class="padlr" style="display:none">
+          <div id="shapemenu" class="submenu">
+            <div class="divmenu" onclick="window.author.addShape()">Add</div>
+            <div class="divmenu" onclick="window.author.deleteShape()">Delete</div>
+          </div>
+          <div id="shapeholder"></div>
         </div>
       </div>
 
@@ -64,7 +81,7 @@
       </div>
     </div>
 
-        <div id='jsonbank' class="skinnybank" style="position:absolute;left:140px; top:80px;">
+        <div id='jsonbank' class="skinnybank" style="position:absolute;left:580px; top:80px;">
             <div class="titlebar" id="jsonmover">
                 <div class="wintitle">JSON</div>
                 <div class="sp_05 right"></div>
@@ -82,7 +99,7 @@
             </div>
         </div>
 
-        <div id='settingbank' class="skinnybank" style="position:absolute;left:245px; top:80px;">
+        <div id='settingbank' class="skinnybank" style="position:absolute;left:268px; top:80px;">
             <div class="titlebar" id="settingmover">
                 <div class="wintitle">Settings</div>
                 <div class="sp_05 right"></div>
@@ -97,7 +114,7 @@
             </div>
         </div>
 
-        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:390px; top:80px;">
+        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:411px; top:80px;">
             <div class="titlebar" id="propertiesmover">
                 <div class="wintitle">Properties</div>
                 <div class="sp_05 right"></div>
