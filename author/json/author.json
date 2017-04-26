@@ -10,7 +10,7 @@
     "image":{
       "widgets":[
         {"field":"id",        "type":"text"},
-        {"field":"layer",     "type":"number"},
+        {"field":"order",     "type":"number"},
         {"field":"group",     "type":"arraystrings"},
         {"field":"parent.id", "type":"objlist"},
         {"field":"show",      "type":"bool"},
@@ -29,11 +29,12 @@
     "shape":{
       "widgets":[
         {"field":"id",        "type":"text"},
-        {"field":"layer",     "type":"number"},
+        {"field":"order",     "type":"number"},
         {"field":"group",     "type":"arraystrings"},
         {"field":"show",      "type":"bool"},
         {"field":"shape",     "type":"shapedata"},
-        {"field":"position",  "type":"posxy" }
+        {"field":"position",  "type":"posxy" },
+        {"field":"scale",     "type":"scale"}
       ]
     }
   },

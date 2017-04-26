@@ -30,12 +30,12 @@ function authorcanvasser(dataFile, dataForm){
 
   var authorData = {
 "objects":[
-{"id":"bk",    "type":"shape", "layer":2, "show":true, "group":[], "shape":"sq",  "scale":{"current":1}, "origin":"center","position":{"current":{"x":0,"y":0}}, "color":["rgba(100,100,100,1)"], "defaultcolor":["rgba(102,102,102,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]},
-{"id":"bkimg", "type":"image", "layer":1, "show":true,"group":["images"],"image":"backgr","scale":{"current":1},"position":{"current":{"x":360,"y":350}},"origin":"center","testp":true,"clicklist":[]},
-{"id":"drag_button", "type":"image", "layer":1, "show":true,"group":["buttons"],"image":"drag1","scale":{"current":1,"rate":0},"position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[{"type":"slideobject","id":"drag_button"}],"clicklist":[]},
-{"id":"click_button_on","type":"image", "layer":1,"show":true,"group":["buttons"],"image":"click1","scale":{"current":1},"position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]},
-{"id":"click_button_off","type":"image", "layer":1,"show":true,"group":["buttons"],"image":"click2","scale":{"current":1},"position":{"current":{"x":20,"y":75}},"testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":true}]},
-{"id":"txt", "type":"shape", "layer":1, "show":true, "group":[], "shape":"t1", "scale":{"current":1}, "origin":"center","position":{"current":{"x":40,"y":30}}, "color":["rgba(255,0,0,1)"], "defaultcolor":["rgba(255,0,0,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]}
+{"id":"bk",               "type":"shape", "order":2, "show":true, "group":[],         "shape":"sq",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":0,"y":0}}, "color":["rgba(100,100,100,1)"], "defaultcolor":["rgba(102,102,102,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]},
+{"id":"bkimg",            "type":"image", "order":1, "show":true, "group":["images"], "image":"backgr", "scale":{"current":1},"position":{"current":{"x":360,"y":350}},"origin":"center","testp":true,"clicklist":[]},
+{"id":"drag_button",      "type":"image", "order":1, "show":true, "group":["buttons"],"image":"drag1",  "scale":{"current":1,"rate":0},"position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[{"type":"slideobject","id":"drag_button"}],"clicklist":[]},
+{"id":"click_button_on",  "type":"image", "order":1, "show":true, "group":["buttons"],"image":"click1", "scale":{"current":1},"position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]},
+{"id":"click_button_off", "type":"image", "order":1, "show":true, "group":["buttons"],"image":"click2", "scale":{"current":1},"position":{"current":{"x":20,"y":75}},"testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":true}]},
+{"id":"txt",              "type":"shape", "order":1, "show":true, "group":[],         "shape":"t1",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":40,"y":30}}, "color":["rgba(255,0,0,1)"], "defaultcolor":["rgba(255,0,0,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]}
 ],
 "images":[
     {"id":"backgr",  "url":"./sample/image/sample/background_400px.png"},
