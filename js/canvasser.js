@@ -206,7 +206,8 @@ function canvasser(vari, interactiveData, dataForm){
 
             if (obj.type === "shape" && obj.show){
               var objParent = obj.parent != undefined ? obj.parent.object : undefined;
-              var posCheck = drawShapes(act, objParent, obj.position.current, act.data.shapes[obj.shape], obj.color, obj.testp, act.position, obj.scale.current);
+              var currentShape = act.data.shapes.filter(function(shape){return shape.id === obj.shape})[0];
+              var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current);
               if (!obj.testp) return;
               if (posCheck) act.applyAction.push(obj);
             }
@@ -304,7 +305,7 @@ function canvasser(vari, interactiveData, dataForm){
     }
     var sizer = scale * par.scale;
     ctx.beginPath();
-    shapeData.forEach(function(shape){
+    shapeData.drawcode.forEach(function(shape){
       if (shape.type === "move")      ctx.moveTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
       if (shape.type === "rect")      ctx.rect(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.width*sizer,shape.height*sizer);
       if (shape.type === "arc")       ctx.arc(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.radius*sizer, shape.startangle, shape.endangle, shape.counterclockwise);

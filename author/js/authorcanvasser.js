@@ -30,11 +30,12 @@ function authorcanvasser(dataFile, dataForm){
 
   var authorData = {
 "objects":[
-{"id":"bk", "type":"shape", "show":true, "group":[], "shape":"sq",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":0,"y":0}}, "color":["rgba(100,100,100,1)"], "defaultcolor":["rgba(102,102,102,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]},
-{"id":"bkimg","type":"image","show":true,"group":["images"],"image":"backgr","scale":{"current":1},"position":{"current":{"x":360,"y":350}},"origin":"center","testp":true,"clicklist":[]},
-{"id":"drag_button", "type":"image","show":true,"group":["buttons"],"image":"drag1","scale":{"current":1,"rate":0},"position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[{"type":"slideobject","id":"drag_button"}],"clicklist":[]},
-{"id":"click_button_on","type":"image","show":true,"group":["buttons"],"image":"click1","scale":{"current":1},"position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]},
-{"id":"click_button_off","type":"image","show":true,"group":["buttons"],"image":"click2","scale":{"current":1},"position":{"current":{"x":20,"y":75}},"testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":true}]}
+{"id":"bk",    "type":"shape", "layer":2, "show":true, "group":[], "shape":"sq",  "scale":{"current":1}, "origin":"center","position":{"current":{"x":0,"y":0}}, "color":["rgba(100,100,100,1)"], "defaultcolor":["rgba(102,102,102,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]},
+{"id":"bkimg", "type":"image", "layer":1, "show":true,"group":["images"],"image":"backgr","scale":{"current":1},"position":{"current":{"x":360,"y":350}},"origin":"center","testp":true,"clicklist":[]},
+{"id":"drag_button", "type":"image", "layer":1, "show":true,"group":["buttons"],"image":"drag1","scale":{"current":1,"rate":0},"position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[{"type":"slideobject","id":"drag_button"}],"clicklist":[]},
+{"id":"click_button_on","type":"image", "layer":1,"show":true,"group":["buttons"],"image":"click1","scale":{"current":1},"position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]},
+{"id":"click_button_off","type":"image", "layer":1,"show":true,"group":["buttons"],"image":"click2","scale":{"current":1},"position":{"current":{"x":20,"y":75}},"testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":true}]},
+{"id":"txt", "type":"shape", "layer":1, "show":true, "group":[], "shape":"t1", "scale":{"current":1}, "origin":"center","position":{"current":{"x":40,"y":30}}, "color":["rgba(255,0,0,1)"], "defaultcolor":["rgba(255,0,0,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]}
 ],
 "images":[
     {"id":"backgr",  "url":"./sample/image/sample/background_400px.png"},
@@ -45,17 +46,18 @@ function authorcanvasser(dataFile, dataForm){
 "paths":[
     {"id":"use",   "url":"./image/sample"}
 ],
-"shapes": {
-  "sq":[
+"shapes":[
+  {"id":"sq",
+  "drawcode":[
       {"type":"rect","offset":{"x":0,"y": 0},"width":600,"height":600},
-      {"type":"fillStyle", "color":"blue"},
       {"type":"fill"}
-  ],
-  "t1":[
+  ]},
+  {"id":"t1",
+  "drawcode":[
     {"type":"font", "size":20, "font":"arial"},
-    {"type":"filltext", "text":"Load Into 1", "offset":{"x":0,"y": 10}}
-  ]
-},
+    {"type":"filltext", "text":"Load Into 1", "offset":{"x":0,"y": 10}},
+  ]}
+],
 "settings":{
     "canvaswidth":"600",
     "canvasheight":"600",
@@ -217,9 +219,9 @@ function authorcanvasser(dataFile, dataForm){
   function updateShapes(){
     var imageHolder = document.getElementById("shapeholder");
     var images = "<table>";
-    Object.keys(authorData.shapes).forEach(function(shape){
-      images += '<tr class="clicktr" id="'+shape+'" onclick="window.author.getShape(\''+ shape + '\')">'
-      images +='<td class="shapeid"><div class="imagetext">' + shape + '</div></td>';
+    authorData.shapes.forEach(function(shape){
+      images += '<tr class="clicktr" id="'+shape.id+'" onclick="window.author.getShape(\''+ shape.id + '\')">'
+      images +='<td class="shapeid"><div class="imagetext">' + shape.id + '</div></td>';
       images += '</tr>';
     });
     images +='</table>';
@@ -254,14 +256,26 @@ function authorcanvasser(dataFile, dataForm){
 
   this.getShape = getShape;
   function getShape(id){
-    console.log(authorData)
-    thisProp = authorData.shapes[id];
+    thisProp = authorData.shapes.filter(function(shape){return shape.id === id;})[0];
     if (thisProp === undefined) return;
-    document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + (type === 'objects' ? 'Object: ' + id + ' : ' + thisProp.type : 'Image: ' + id) + '</div>';
+    console.log(thisProp)
+    document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Shape: ' + id + '</div>';
     var propUI = document.getElementById("properties");
     var prop = '<div class="propbody">' ;
-    if (type === 'objects') prop = buildPropUIObject(prop, thisProp);
-    else prop = buildPropUIimage(prop, thisProp);
+    thisProp.drawcode.forEach(function(widget, idx, source){
+      prop += '<div class="entrylabel c_entrytitle_text w50">'+idx+'</div>';
+      prop += '<div class="entrylabel c_entrytitle_text w50">'+widget.type+'</div><br>';
+      window.rules.drawcode[widget.type].widgets.forEach(function(subWidget){
+      var widgetPath =  'drawcode' + '.' +  idx + '.' +  subWidget.field ;
+
+      if (subWidget.type === "bool")   prop += handleBoolean(thisProp,  'shape', subWidget, widgetPath);
+      if (subWidget.type === 'number') prop += handleNumber(thisProp,   'shape', subWidget, widgetPath);
+      if (subWidget.type === 'posxy')  prop += handlePosition(thisProp, 'shape', subWidget, widgetPath);
+      if (subWidget.type === "select") prop += handleSelect(thisProp,   'shape', subWidget, widgetPath);
+      if (subWidget.type === "text")   prop += handleText(thisProp,     'shape', subWidget, widgetPath);
+      });
+    });
+    updateShapes();
     propUI.innerHTML = prop + '</div>';
   }
 
@@ -288,31 +302,31 @@ function authorcanvasser(dataFile, dataForm){
     return output;
   }
 
-  function handleBoolean(object, widget, path){
+  function handleBoolean(object, type, widget, path){
     var str = '';
     var defaultId = getSubProp(object, path);
     str += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
-    str += buildFnString('window.author.updateItem', [object.id, path], true) + '><br>';
+    str += buildFnString('window.author.updateItem', [object.id, type, path], true) + '><br>';
     return str;
   }
-  function handleNumber(object, widget, path){
+  function handleNumber(object, type, widget, path){
     var str = '';
     var num = getSubProp(object, path);
     str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += '<input class="auth_xy" type="number" value="'+ num + '" ';
-    str += buildFnString('window.author.updateItem', [object.id, path], true);
+    str += buildFnString('window.author.updateItem', [object.id, type, path], true);
     str +=   '>'  + "<br>";
     return str;
   }
-  function handleObjectList(object, widget, path){
+  function handleObjectList(object, type, widget, path){
     var str = '';
     var objectList = ObjPartToArr(authorData.objects, "id");
     var defaultId = getSubProp(object, path);
     str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += buildSelect('window.author.updateItem',  object.id, objectList, defaultId, path) + '<br>';
+    str += buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
     return str;
   }
-  function handlePosition(object, widget, path){
+  function handlePosition(object, type, widget, path){
     var str = '';
     var pos = {x:getSubProp(object, path+'.x'), y:getSubProp(object, path+'.y')};
 
@@ -320,28 +334,28 @@ function authorcanvasser(dataFile, dataForm){
     str += '<span>';
     str += '<span class="entrytitle c_entrylabel_pos">X</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.x + '" ';
-    str += buildFnString('window.author.updateItem', [object.id, path+'.x'], true);
+    str += buildFnString('window.author.updateItem', [object.id, type, path+'.x'], true);
     str +=   '>';
     str += '<span class="entrytitle c_entrylabel_pos">Y</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.y + '" ';
-    str += buildFnString('window.author.updateItem', [object.id, path+'.y'], true);
+    str += buildFnString('window.author.updateItem', [object.id, type, path+'.y'], true);
     str +=   '>'  + "</span><br>";
     return str;
   }
-  function handleSelect(object, widget, path){
+  function handleSelect(object, type, widget, path){
     var str = '';
     var selOp =  window.rules.select[widget.id].list;
     var defaultId = getSubProp(object, path);
     str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += buildSelect('window.author.updateItem',  object.id, selOp,  defaultId, path) + '<br>';
+    str += buildSelect('window.author.updateItem',  object.id, type, selOp,  defaultId, path) + '<br>';
     return str;
   }
-  function handleText(object, widget, path){
+  function handleText(object, type, widget, path){
     var str = '';
     var defaultId = getSubProp(object, path);
     str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += '<input class="auth_text" type="text" value="'+ defaultId + '" ';
-    str += buildFnString('window.author.updateItem', [object.id, path], true);
+    str += buildFnString('window.author.updateItem', [object.id, type, path], true);
     str +=   '>'  + "<br>";
     return str;
   }
@@ -349,16 +363,17 @@ function authorcanvasser(dataFile, dataForm){
   function buildPropUIObject(output, object){
     var win = 'window.author.updateActivity';
     window.rules.object[object.type].widgets.forEach(function(widget, idx, source){
-      if (widget.type === "text")         output += handleText(object, widget, widget.field);
-      if (widget.type === "select")       output += handleSelect(object, widget, widget.field);
+      if (widget.type === "text")         output += handleText(object, 'object', widget, widget.field);
+      if (widget.type === "number")       output += handleNumber(object, 'object', widget, widget.field);
+      if (widget.type === "select")       output += handleSelect(object, 'object', widget, widget.field);
       if (widget.type === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="auth_text" type="text" value="'+ object[widget.field]+'"><br>';
-      if (widget.type === "bool")         output += handleBoolean(object, widget, widget.field);
+      if (widget.type === "bool")         output += handleBoolean(object, 'object', widget, widget.field);
       if (widget.type === "imagedata"){
         var imageList = ObjPartToArr(authorData.images, "id");
         output += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-        output += buildSelect('window.author.updateItem',  object.id, imageList, object[widget.field], widget.field) + '<br>';
+        output += buildSelect('window.author.updateItem',  object.id, 'object', imageList, object[widget.field], widget.field) + '<br>';
       }
-      if (widget.type === "objlist")   output += handleObjectList(object, widget, widget.field);
+      if (widget.type === "objlist")   output += handleObjectList(object, 'object', widget, widget.field);
 
       if (widget.type === "posxy"){
         output += '<div style="display:flex"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
@@ -378,7 +393,7 @@ function authorcanvasser(dataFile, dataForm){
           if (posObj === "rate"){
             var tempPos =  (object[widget.field][posObj] !== undefined ? tempPos = object[widget.field][posObj] : 0);
             output += '<div class="entrylabel c_entrylabel_pos w50">' + posObj + '</div><input class="auth_xy"';
-            output += buildFnString('window.author.updateItem', [object.id, 'position.'+posObj], true);
+            output += buildFnString('window.author.updateItem', [object.id, 'object', 'position.'+posObj], true);
             output += 'type="number" value=' + object.position.rate + ' />' + '<br>';
           }else{
             var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)};
@@ -392,10 +407,10 @@ function authorcanvasser(dataFile, dataForm){
             if (posObj === "current" && object.parent !== undefined) {hasXY = false; enable=false;}
             output += '<div class="entrylabel c_entrylabel_pos w100">' + posObj + '</div><span ' +  (hasXY ? "" : 'style="display:none"') + '>';
             output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy" ';
-            output += buildFnString('window.author.updateItem', [object.id, 'position.'+posObj+'.x'], true);
+            output += buildFnString('window.author.updateItem', [object.id, 'object', 'position.'+posObj+'.x'], true);
             output += 'type="number" value=' + tempPos.x + ' />';
             output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy" ';
-            output += buildFnString('window.author.updateItem', [object.id, 'position.'+posObj+'.y'], true);
+            output += buildFnString('window.author.updateItem', [object.id, 'object', 'position.'+posObj+'.y'], true);
             output += 'type="number" value=' + tempPos.y + ' />';
             if (posObj !== 'current' && posObj !== 'offset') output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
             output += '</span>'
@@ -424,7 +439,7 @@ function authorcanvasser(dataFile, dataForm){
           if (scaleObj === "rate"){
             var tempScale =  (object[widget.field][scaleObj] !== undefined ? tempScale = object[widget.field][scaleObj] : 0);
             output += '<div class="entrylabel c_entrylabel_pos w50">' + scaleObj + '</div><input class="auth_xy"';
-            output += buildFnString('window.author.updateItem', [object.id, 'scale.'+scaleObj], true);
+            output += buildFnString('window.author.updateItem', [object.id, 'object', 'scale.'+scaleObj], true);
             output += 'type="number" value=' + object.scale.rate + ' />' + '<br>';
           }else{
             var tempScale = 1;
@@ -435,7 +450,7 @@ function authorcanvasser(dataFile, dataForm){
             }
             output += '<div class="entrylabel c_entrylabel_pos w100">' + scaleObj + '</div><span ' +  (hasScale ? "" : 'style="display:none"') + '>';
             output += ' <input class="auth_xy" ';
-            output += buildFnString('window.author.updateItem', [object.id, 'scale.'+scaleObj], true);
+            output += buildFnString('window.author.updateItem', [object.id, 'object', 'scale.'+scaleObj], true);
             output += 'type="number" value=' +tempScale + ' />';
             if (scaleObj !== 'current')  output += buildDiv('divbutton', 'Disable', 'window.author.reload', []);
             output += '</span>'
@@ -455,16 +470,16 @@ function authorcanvasser(dataFile, dataForm){
               if (actionWidgets.length === 0) return;
               actionWidgets = actionWidgets[0].widgets;
               output += '<div class="actionspacer"></div><div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-              output += buildSelect('window.author.updateActionList',  object.id, actionsList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
+              output += buildSelect('window.author.updateActionList',  object.id, "object", actionsList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
 
               actionWidgets.forEach(function(subWidget, idxPart){
                 var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
-                if (subWidget.type === 'bool')    output += handleBoolean(object, subWidget, widgetPath);
-                if (subWidget.type === 'number')  output += handleNumber(object, subWidget, widgetPath);
-                if (subWidget.type === 'objlist') output += handleObjectList(object, subWidget, widgetPath);
-                if (subWidget.type === 'posxy')   output += handlePosition(object, subWidget, widgetPath);
-                if (subWidget.type === 'select')  output += handleSelect(object, subWidget, widgetPath);
-                if (subWidget.type === "text")    output += handleText(object, subWidget, widgetPath);
+                if (subWidget.type === 'bool')    output += handleBoolean(object,    'object', subWidget, widgetPath);
+                if (subWidget.type === 'number')  output += handleNumber(object,     'object', subWidget, widgetPath);
+                if (subWidget.type === 'objlist') output += handleObjectList(object, 'object', subWidget, widgetPath);
+                if (subWidget.type === 'posxy')   output += handlePosition(object,   'object', subWidget, widgetPath);
+                if (subWidget.type === 'select')  output += handleSelect(object,     'object', subWidget, widgetPath);
+                if (subWidget.type === "text")    output += handleText(object,       'object', subWidget, widgetPath);
               });
 
             });
@@ -512,7 +527,7 @@ function authorcanvasser(dataFile, dataForm){
     return '<div class="' + classes + '"' + click + '>' + content + '</div>';
   }
 
-  function buildSelect(fn, object, list, defaultId, path){
+  function buildSelect(fn, object, type, list, defaultId, path){
     var out = '<select class="sellist"';
     out += buildFnString(fn, [object, path], true) + '>';
     var newList = list.slice();
@@ -543,11 +558,12 @@ function authorcanvasser(dataFile, dataForm){
     initCanvasser("sample", JSON.stringify(authorData), "string");
   };
 
-  this.updateItem = function(domElement, objectId, paramPath){
+  this.updateItem = function(domElement, objectId, type, paramPath){
     var newVal = domElement.value.toString();
     if (domElement.type === 'checkbox') newVal = domElement.checked;
     if (newVal === '---NONE---') newVal = undefined;
     var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
+    if (type === 'shape') objGet = authorData.shapes.filter(function(finder){return (finder.id === objectId);})[0];
     setSubProp(objGet, paramPath, newVal);
     getProps("objects",objGet.id);
     updateObjects();
@@ -578,7 +594,7 @@ function authorcanvasser(dataFile, dataForm){
   this.updateActionList = function(domElement, objectId, paramPath){
     var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
     var prop = getSubProp(objGet, paramPath);
-    this.updateItem(domElement, objectId, paramPath)
+    this.updateItem(domElement, objectId, 'object', paramPath);
     var newRule = window.rules.actions.filter(function(ruleName){console.log(ruleName.elementType, domElement.value); return ruleName.elementType === domElement.value})[0];
 
     updateObjects();

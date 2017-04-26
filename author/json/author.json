@@ -10,6 +10,7 @@
     "image":{
       "widgets":[
         {"field":"id",        "type":"text"},
+        {"field":"layer",     "type":"number"},
         {"field":"group",     "type":"arraystrings"},
         {"field":"parent.id", "type":"objlist"},
         {"field":"show",      "type":"bool"},
@@ -28,6 +29,7 @@
     "shape":{
       "widgets":[
         {"field":"id",        "type":"text"},
+        {"field":"layer",     "type":"number"},
         {"field":"group",     "type":"arraystrings"},
         {"field":"show",      "type":"bool"},
         {"field":"shape",     "type":"shapedata"},
@@ -43,21 +45,32 @@
       ]
     }
   },
-  "shape":[
-    {"type":"shapedata", "widgets":{"id":"text", "color":"color", "defaultcolor":"color", "selectcolor":"color"},"widgetbank":["drawcode"]}
-  ],
-  "drawcode":[
-    {"type":"line",        "widgets":{"offset":"xy"}},
-    {"type":"arc",         "widgets":{"offset":"xy", "radius":"int","startangle":"int", "endangle":"int", "counterclockwise":"bool"}},
-    {"type":"bcurve",      "widgets":{"offseta":"xy", "offsetb":"xy", "offsetc":"xy"}},
-    {"type":"linewidth",   "widgets":{"width":"int"}},
-    {"type":"fillStyle",   "widgets":{"color":"color"}},
-    {"type":"strokestyle", "widgets":{"color":"color"}},
-    {"type":"ptest"},
-    {"type":"begin"},
-    {"type":"close"},
-    {"type":"fill"}
-  ],
+  "shape":{
+    "shapedata":{
+      "widgets":[
+        {"field":"color",        "type":"color"},
+        {"field":"defaultcolor", "type":"color"},
+        {"field":"selectcolor",  "type":"color"},
+        {"field":"widgetbank",   "type":"drawcode"}
+      ]
+    }
+  },
+  "drawcode":{
+    "arc":         {"widgets":[{"field":"offset",  "type":"xy"}, {"field":"radius",  "type":"int"}, {"field":"startangle", "type":"int"},
+                               {"field":"endangle", "type":"int"}, {"field":"counterclockwise", "type":"bool"}]},
+    "bcurve":      {"widgets":[{"field":"offseta", "type":"xy"}, {"field":"offsetb", "type":"xy"},  {"field":"offsetc",    "type":"xy"}]},
+    "begin":       {"widgets":[]},
+    "close":       {"widgets":[]},
+    "fill":        {"widgets":[]},
+    "fillstyle":   {"widgets":[{"field":"color",   "type":"color"}]},
+    "filltext":    {"widgets":[{"field":"xy",      "type":"offset"},{"field":"text", "type":"text"}]},
+    "font":        {"widgets":[{"field":"font",    "type":"text"},{"field":"size", "type":"number"}]},
+    "line":        {"widgets":[{"field":"offset",  "type":"xy"}]},
+    "linewidth":   {"widgets":[{"field":"width",   "type":"int"}]},
+    "ptest":       {"widgets":[]},
+    "rect":        {"widgets":[{"field":"offset",  "type":"xy"}, {"field":"width", "type":"number"},{"field":"height", "type":"number"}]},
+    "strokestyle": {"widgets":[{"field":"color",   "type":"color"}]}
+  },
   "actions":[
     {"type":"cleardown",    "widgets":[]},
     {"type":"console",      "widgets":[{"field":"text",   "type":"text"}]},
