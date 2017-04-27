@@ -292,6 +292,7 @@ function canvasser(vari, interactiveData, dataForm){
   }
 
   function drawShapes(act, parent, pos, shapeData, color, doTest, testP, scale){
+    if (shapeData === undefined) return;
     var ctx = act.context;
     var test = false;
     var colorIndex = 0;
@@ -305,6 +306,7 @@ function canvasser(vari, interactiveData, dataForm){
     }
     var sizer = scale * par.scale;
     ctx.beginPath();
+
     shapeData.drawcode.forEach(function(shape){
       if (shape.type === "move")      ctx.moveTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
       if (shape.type === "rect")      ctx.rect(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.width*sizer,shape.height*sizer);

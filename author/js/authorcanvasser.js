@@ -38,19 +38,19 @@ function authorcanvasser(dataFile, dataForm){
 {"id":"txt",              "type":"shape", "order":1, "show":true, "group":[],         "shape":"t1",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":40,"y":30}}, "color":["rgba(255,0,0,1)"], "defaultcolor":["rgba(255,0,0,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]}
 ],
 "images":[
-    {"id":"backgr",  "url":"./sample/image/sample/background_400px.png"},
-    {"id":"click1",  "url":"./sample/image/sample/sample_click_1.png"},
-    {"id":"click2",  "url":"./sample/image/sample/sample_click_2.png"},
-    {"id":"drag1",   "url":"./sample/image/sample/sample_drag_1.png"}
+  {"id":"backgr",  "url":"./sample/image/sample/background_400px.png"},
+  {"id":"click1",  "url":"./sample/image/sample/sample_click_1.png"},
+  {"id":"click2",  "url":"./sample/image/sample/sample_click_2.png"},
+  {"id":"drag1",   "url":"./sample/image/sample/sample_drag_1.png"}
 ],
 "paths":[
-    {"id":"use",   "url":"./image/sample"}
+  {"id":"use",   "url":"./image/sample"}
 ],
 "shapes":[
   {"id":"sq",
   "drawcode":[
-      {"type":"rect","offset":{"x":0,"y": 0},"width":600,"height":600},
-      {"type":"fill"}
+    {"type":"rect","offset":{"x":0,"y": 0},"width":600,"height":600},
+    {"type":"fill"}
   ]},
   {"id":"t1",
   "drawcode":[
@@ -207,7 +207,7 @@ function authorcanvasser(dataFile, dataForm){
     var imageHolder = document.getElementById("imageholder");
     var images = "<table>";
     authorData.images.forEach(function(image){
-      images += '<tr class="clicktr" id="'+image.id+'" onclick="window.author.getProps(\'images\',\''+ image.id + '\')">'
+      images += '<tr class="clicktr" id="'+image.id+'" onclick="window.author.getProps(\'images\',\''+ image.id + '\')">';
       images +='<td class="imageid"><div class="imagetext">' + image.id + '</div></td>';
       images +='<td width="50%"><img src="' + image.url + '" alt="' + image.id + '"></td>';
       images += '</tr>';
@@ -220,7 +220,7 @@ function authorcanvasser(dataFile, dataForm){
     var imageHolder = document.getElementById("shapeholder");
     var images = "<table>";
     authorData.shapes.forEach(function(shape){
-      images += '<tr class="clicktr" id="'+shape.id+'" onclick="window.author.getShape(\''+ shape.id + '\')">'
+      images += '<tr class="clicktr" id="'+shape.id+'"onclick="window.author.getProps(\'shapes\',\''+ shape.id + '\')">';
       images +='<td class="shapeid"><div class="imagetext">' + shape.id + '</div></td>';
       images += '</tr>';
     });
@@ -235,7 +235,7 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   this.addObject = function(){
-    authorData.objects.push({id:"wee", type:"image",  show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
+    authorData.objects.push({id:"wee", type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
     updateObjects();
     initCanvasser("sample", JSON.stringify(authorData), "string");
   }
@@ -254,44 +254,21 @@ function authorcanvasser(dataFile, dataForm){
     propUI.innerHTML = prop + '</div>';
   }
 
-  this.getShape = getShape;
-  function getShape(id){
-    thisProp = authorData.shapes.filter(function(shape){return shape.id === id;})[0];
-    if (thisProp === undefined) return;
-    console.log(thisProp)
-    document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Shape: ' + id + '</div>';
-    var propUI = document.getElementById("properties");
-    var prop = '<div class="propbody">' ;
-    thisProp.drawcode.forEach(function(widget, idx, source){
-      prop += '<div class="entrylabel c_entrytitle_text w50">'+idx+'</div>';
-      prop += '<div class="entrylabel c_entrytitle_text w50">'+widget.type+'</div><br>';
-      window.rules.drawcode[widget.type].widgets.forEach(function(subWidget){
-      var widgetPath =  'drawcode' + '.' +  idx + '.' +  subWidget.field ;
-
-      if (subWidget.type === "bool")   prop += handleBoolean(thisProp,  'shape', subWidget, widgetPath);
-      if (subWidget.type === 'number') prop += handleNumber(thisProp,   'shape', subWidget, widgetPath);
-      if (subWidget.type === 'posxy')  prop += handlePosition(thisProp, 'shape', subWidget, widgetPath);
-      if (subWidget.type === "select") prop += handleSelect(thisProp,   'shape', subWidget, widgetPath);
-      if (subWidget.type === "text")   prop += handleText(thisProp,     'shape', subWidget, widgetPath);
-      });
-    });
-    updateShapes();
-    propUI.innerHTML = prop + '</div>';
-  }
-
   this.getProps = getProps;
   function getProps(type, id){
     thisProp = authorData[type].filter(function(selected){return selected.id === id;})[0];
     if (thisProp === undefined) return;
     document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">' + (type === 'objects' ? 'Object: ' + id + ' : ' + thisProp.type : 'Image: ' + id) + '</div>';
     var propUI = document.getElementById("properties");
-    var prop = '<div class="propbody">' ;
-    if (type === 'objects') prop = buildPropUIObject(prop, thisProp);
-    else prop = buildPropUIimage(prop, thisProp);
-    propUI.innerHTML = prop + '</div>';
+
+    if (type === 'objects') prop = buildPropUIObject(thisProp);
+    if (type === 'images')  prop = buildPropUIimage(thisProp);
+    if (type === 'shapes')  prop = buildPropUIshape(thisProp);
+    propUI.innerHTML = prop;
   }
 
-  function buildPropUIimage(output, image){
+  function buildPropUIimage(image){
+    var output = '<div class="propbody">' ;
     window.rules.image.imagedata.widgets.forEach(function(widget, idx, source){
       output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
       output += '<input class="auth_text w400" type="text" value="'+ image[widget.field] + '" ';
@@ -299,7 +276,37 @@ function authorcanvasser(dataFile, dataForm){
       output += '><br>';
     });
     updateImages();
-    return output;
+    return output + '</div>';
+  }
+
+  function buildPropUIshape(shape){
+    var drawList = [];
+    window.rules.drawcode.forEach(function(template){drawList.push(template.type)});
+    thisProp = authorData.shapes.filter(function(check){return check.id === shape.id;})[0];
+    if (thisProp === undefined) return;
+
+    document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Shape: ' + shape.id + '</div>';
+    var prop = '<div class="propbody">' ;
+    thisProp.drawcode.forEach(function(widget, idx, source){
+      prop += '<div class="propbox">'
+      prop += '<div class="entrylabel c_entrytitle_text w25">'+idx+'</div>';
+      var tmpObj = {id:widget.type, field:'type'}
+      prop += handleSelect(thisProp, 'shape', tmpObj, 'drawcode.' + idx + '.type', drawList);
+      var currentDraw = window.rules.drawcode.filter(function(draw){return draw.type === widget.type})[0];
+      currentDraw.widgets.forEach(function(subWidget){
+      var widgetPath =  'drawcode' + '.' +  idx + '.' +  subWidget.field ;
+      prop += '<div class="propitem">'
+      if (subWidget.type === "bool")      prop += handleBoolean(thisProp,  'shape', subWidget, widgetPath);
+      if (subWidget.type === 'number')    prop += handleNumber(thisProp,   'shape', subWidget, widgetPath);
+      if (subWidget.type === 'posxy')     prop += handlePosition(thisProp, 'shape', subWidget, widgetPath);
+      if (subWidget.type === "select")    prop += handleSelect(thisProp,   'shape', subWidget, widgetPath);
+      if (subWidget.type === "text")      prop += handleText(thisProp,     'shape', subWidget, widgetPath);
+      prop += '</div>';
+      });
+      prop += '</div>';
+    });
+    updateShapes();
+    return prop + '</div>';
   }
 
   function handleBoolean(object, type, widget, path){
@@ -318,6 +325,15 @@ function authorcanvasser(dataFile, dataForm){
     str +=   '>'  + "<br>";
     return str;
   }
+  function handleShapeList(object, type, widget, path){
+    var str = '';
+    var objectList = ObjPartToArr(authorData.shapes, "id");
+    var defaultId = getSubProp(object, path);
+    str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    str += buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
+    return str;
+  }
+
   function handleObjectList(object, type, widget, path){
     var str = '';
     var objectList = ObjPartToArr(authorData.objects, "id");
@@ -342,12 +358,12 @@ function authorcanvasser(dataFile, dataForm){
     str +=   '>'  + "</span><br>";
     return str;
   }
-  function handleSelect(object, type, widget, path){
+  function handleSelect(object, type, widget, path, list){
     var str = '';
-    var selOp =  window.rules.select[widget.id].list;
+    var selOp = (list === undefined ? window.rules.select[widget.id].list : list);
     var defaultId = getSubProp(object, path);
     str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += buildSelect('window.author.updateItem',  object.id, type, selOp,  defaultId, path) + '<br>';
+    str += buildSelect('window.author.updateItem',  object.id, type, selOp, defaultId, path) + '<br>';
     return str;
   }
   function handleText(object, type, widget, path){
@@ -360,7 +376,8 @@ function authorcanvasser(dataFile, dataForm){
     return str;
   }
 
-  function buildPropUIObject(output, object){
+  function buildPropUIObject(object){
+    var output = '<div class="propbody">' ;
     var win = 'window.author.updateActivity';
     window.rules.object[object.type].widgets.forEach(function(widget, idx, source){
       if (widget.type === "text")         output += handleText(object, 'object', widget, widget.field);
@@ -373,6 +390,7 @@ function authorcanvasser(dataFile, dataForm){
         output += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
         output += buildSelect('window.author.updateItem',  object.id, 'object', imageList, object[widget.field], widget.field) + '<br>';
       }
+      if (widget.type === "shapelist") output += handleShapeList(object,'object', widget, widget.field);
       if (widget.type === "objlist")   output += handleObjectList(object, 'object', widget, widget.field);
 
       if (widget.type === "posxy"){
@@ -490,7 +508,7 @@ function authorcanvasser(dataFile, dataForm){
       }
     });
     output += " " + object;
-    return output;
+    return output + '</div>';
   }
 
   function buildFnString(fn, params, change){
@@ -529,7 +547,7 @@ function authorcanvasser(dataFile, dataForm){
 
   function buildSelect(fn, object, type, list, defaultId, path){
     var out = '<select class="sellist"';
-    out += buildFnString(fn, [object, path], true) + '>';
+    out += buildFnString(fn, [object, type, path], true) + '>';
     var newList = list.slice();
     newList.unshift("---NONE---");
     newList.forEach(function(listObject){
@@ -563,10 +581,13 @@ function authorcanvasser(dataFile, dataForm){
     if (domElement.type === 'checkbox') newVal = domElement.checked;
     if (newVal === '---NONE---') newVal = undefined;
     var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
-    if (type === 'shape') objGet = authorData.shapes.filter(function(finder){return (finder.id === objectId);})[0];
+    if (type === 'shape') objGet = authorData.shapes.filter(function(finder){console.log(finder.id, objectId);return (finder.id === objectId);})[0];
     setSubProp(objGet, paramPath, newVal);
-    getProps("objects",objGet.id);
-    updateObjects();
+
+    getProps(type+'s', objGet.id);
+    if (type === 'object') updateObjects();
+    if (type === 'shape') updateShapes();
+
     initCanvasser("sample", JSON.stringify(authorData), "string");
   };
 

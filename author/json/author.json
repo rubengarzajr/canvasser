@@ -10,6 +10,7 @@
     "image":{
       "widgets":[
         {"field":"id",        "type":"text"},
+        {"field":"type",      "type":"select", "id":"objecttype"},
         {"field":"order",     "type":"number"},
         {"field":"group",     "type":"arraystrings"},
         {"field":"parent.id", "type":"objlist"},
@@ -32,7 +33,7 @@
         {"field":"order",     "type":"number"},
         {"field":"group",     "type":"arraystrings"},
         {"field":"show",      "type":"bool"},
-        {"field":"shape",     "type":"shapedata"},
+        {"field":"shape",     "type":"shapelist"},
         {"field":"position",  "type":"posxy" },
         {"field":"scale",     "type":"scale"}
       ]
@@ -56,22 +57,21 @@
       ]
     }
   },
-  "drawcode":{
-    "arc":         {"widgets":[{"field":"offset",  "type":"xy"}, {"field":"radius",  "type":"int"}, {"field":"startangle", "type":"int"},
-                               {"field":"endangle", "type":"int"}, {"field":"counterclockwise", "type":"bool"}]},
-    "bcurve":      {"widgets":[{"field":"offseta", "type":"xy"}, {"field":"offsetb", "type":"xy"},  {"field":"offsetc",    "type":"xy"}]},
-    "begin":       {"widgets":[]},
-    "close":       {"widgets":[]},
-    "fill":        {"widgets":[]},
-    "fillstyle":   {"widgets":[{"field":"color",   "type":"color"}]},
-    "filltext":    {"widgets":[{"field":"xy",      "type":"offset"},{"field":"text", "type":"text"}]},
-    "font":        {"widgets":[{"field":"font",    "type":"text"},{"field":"size", "type":"number"}]},
-    "line":        {"widgets":[{"field":"offset",  "type":"xy"}]},
-    "linewidth":   {"widgets":[{"field":"width",   "type":"int"}]},
-    "ptest":       {"widgets":[]},
-    "rect":        {"widgets":[{"field":"offset",  "type":"xy"}, {"field":"width", "type":"number"},{"field":"height", "type":"number"}]},
-    "strokestyle": {"widgets":[{"field":"color",   "type":"color"}]}
-  },
+  "drawcode":[
+    {"type":"arc",          "widgets":[{"field":"offset",  "type":"xy"}, {"field":"radius",  "type":"int"}, {"field":"startangle", "type":"int"}, {"field":"endangle", "type":"int"}, {"field":"counterclockwise", "type":"bool"}]},
+    {"type":"bcurve",       "widgets":[{"field":"offseta", "type":"xy"}, {"field":"offsetb", "type":"xy"},  {"field":"offsetc",    "type":"xy"}]},
+    {"type":"begin",        "widgets":[]},
+    {"type":"close",        "widgets":[]},
+    {"type":"fill",         "widgets":[]},
+    {"type":"fillstyle",    "widgets":[{"field":"color",   "type":"color"}]},
+    {"type":"filltext",     "widgets":[{"field":"xy",      "type":"offset"},{"field":"text", "type":"text"}]},
+    {"type":"font",         "widgets":[{"field":"font",    "type":"text"},{"field":"size", "type":"number"}]},
+    {"type":"line",         "widgets":[{"field":"offset",  "type":"xy"}]},
+    {"type":"linewidth",    "widgets":[{"field":"width",   "type":"int"}]},
+    {"type":"ptest",        "widgets":[]},
+    {"type":"rect",         "widgets":[{"field":"offset",  "type":"xy"}, {"field":"width", "type":"number"},{"field":"height", "type":"number"}]},
+    {"type":"strokestyle",  "widgets":[{"field":"color",   "type":"color"}]}
+  ],
   "actions":[
     {"type":"cleardown",    "widgets":[]},
     {"type":"console",      "widgets":[{"field":"text",   "type":"text"}]},
@@ -81,8 +81,8 @@
     {"type":"groupcolor",   "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
     {"type":"loadpage",     "widgets":[{"field":"url",    "type":"text"}]},
     {"type":"objectcolor",  "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
-    {"type":"scaledest",    "widgets":[{"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"destination",    "type":"number"},  {"field":"showbefore",  "type":"bool"},   {"field":"hideafter",  "type":"bool"}, {"field":"rate",  "type":"number"}]},
-    {"type":"set",          "widgets":[{"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
+    {"type":"scaledest",    "widgets":[{"field":"filter", "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"destination",    "type":"number"},  {"field":"showbefore",  "type":"bool"},   {"field":"hideafter",  "type":"bool"}, {"field":"rate",  "type":"number"}]},
+    {"type":"set",          "widgets":[{"field":"filter", "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
     {"type":"slideobject",  "widgets":[{"field":"id",     "type":"objlist"}, {"field":"constrainx",     "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
     {"type":"url",          "widgets":[{"field":"url",    "type":"filename"}, {"field":"target",  "type":"text"}]},
     {"type":"vis",          "widgets":[{"field":"id",     "type":"text"},     {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
@@ -97,9 +97,10 @@
     "xy":{"x":"int","y":"int"}
   },
   "select":{
-    "objectorigin":{"list":["upper_left", "center"]},
+    "conditionaltype":{"list":["position"]},
     "filtertype":{"list":["object", "group"]},
-    "conditionaltype":{"list":["position"]}
+    "objectorigin":{"list":["upper_left", "center"]},
+    "objecttype":{"list":["image", "shape"]}
   },
   "authorsettings":{
   }

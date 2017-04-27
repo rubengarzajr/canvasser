@@ -337,6 +337,9 @@ a{
     background-color: rgb(212, 226, 226);
     border: 1px rgb(191, 212, 211) solid;
 }
+.w25{
+    width: 25px;
+}
 .w50{
     width: 50px;
 }
@@ -363,6 +366,17 @@ a{
     border-bottom: 1px black solid;
     padding: 2px 0px;
     text-indent: 4px;
+}
+
+.propbox{
+  border: rgb(235,235,235) solid;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  background-color: rgb(240,240,240);
+}
+
+.propitem{
+  margin-left: 38px;
 }
 
 .sellist{
