@@ -316,33 +316,36 @@ function canvasser(vari, interactiveData, dataForm){
       if (shape.type === "linewidth") ctx.lineWidth = shape.width*sizer;
       if (shape.type === "fillStyle") {
           if (color === null) ctx.fillStyle = shape.color;
-          else ctx.fillStyle = color[colorIndex];
+          else ctx.fillStyle = color.current[colorIndex];
       }
-      if (shape.type === "fill") ctx.fill();
+      if (shape.type === "fill") {
+        ctx.fillStyle = color.current[colorIndex];
+        ctx.fill();
+      }
       if (shape.type === "filltext") {
-        ctx.fillStyle = color[colorIndex];
+        ctx.fillStyle = color.current[colorIndex];
         ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
       }
       if (shape.type === "stroketext") {
         ctx.lineWidth = shape.stroke;
-        ctx.strokeStyle = color[colorIndex];
+        ctx.strokeStyle = color.current[colorIndex];
         ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
       }
       if (shape.type === "outlinetext") {
         ctx.lineWidth   = shape.stroke;
-        ctx.strokeStyle = color[colorIndex];
+        ctx.strokeStyle = color.current[colorIndex];
         ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
         colorIndex ++
-        ctx.fillStyle = color[colorIndex];
+        ctx.fillStyle = color.current[colorIndex];
         ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
       }
       if (shape.type === "font") ctx.font = shape.size*sizer + "px " + shape.font;
       if (shape.type === "strokestyle"){
         if (color === null) ctx.strokeStyle = shape.color;
-        else ctx.strokeStyle = color[colorIndex];
+        else ctx.strokeStyle = color.current[colorIndex];
       }
       if (shape.type === "stroke") ctx.stroke();
-      if (shape.type === "ptest" && doTest){
+      if (shape.type === "ptest" && doTest) {
         if (ctx.isPointInPath(testP.x, testP.y)) test = true;
       }
       if (shape.type === "close") ctx.closePath();

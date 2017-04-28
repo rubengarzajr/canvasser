@@ -43,7 +43,7 @@
         <div id="imagecontents" class="padlr" style="display:none">
           <div id="imagemenu" class="submenu">
             <div class="divmenu" onclick="window.author.addImage()">Add</div>
-            <div class="divmenu" onclick="window.author.deleteImage()">Delete</div>
+            <div class="divmenu" onclick="window.author.delete('images')">Delete</div>
           </div>
           <div id="imageholder"></div>
         </div>
@@ -59,7 +59,7 @@
         <div id="shapecontents" class="padlr" style="display:none">
           <div id="shapemenu" class="submenu">
             <div class="divmenu" onclick="window.author.addShape()">Add</div>
-            <div class="divmenu" onclick="window.author.deleteShape()">Delete</div>
+            <div class="divmenu" onclick="window.author.delete('shapes')">Delete</div>
           </div>
           <div id="shapeholder"></div>
         </div>
@@ -74,7 +74,7 @@
         <div id="objectcontents" class="padlr" style="display:block">
           <div id="objectmenu" class="submenu">
             <div class="divmenu" onclick="window.author.addObject()">Add</div>
-            <div class="divmenu" onclick="window.author.deleteObject()">Delete</div>
+            <div class="divmenu" onclick="window.author.delete('objects')">Delete</div>
           </div>
           <div id="objectholder"></div>
         </div>

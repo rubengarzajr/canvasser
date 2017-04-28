@@ -28,14 +28,14 @@ function authorcanvasser(dataFile, dataForm){
     zidx: 25
   };
 
-  var authorData = {
+  authorData = {
 "objects":[
-{"id":"bk",               "type":"shape", "order":2, "show":true, "group":[],         "shape":"sq",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":0,"y":0}}, "color":["rgba(100,100,100,1)"], "defaultcolor":["rgba(102,102,102,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]},
+{"id":"bk",               "type":"shape", "order":2, "show":true, "group":[],         "shape":"sq",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":0,"y":0}}, "color":{"current":["rgba(100,100,100,1)"], "default":["rgba(102,102,102,1)"], "select":["rgba(243,243,243,1)"]}, "testp":false, "clicklist":[]},
 {"id":"bkimg",            "type":"image", "order":1, "show":true, "group":["images"], "image":"backgr", "scale":{"current":1},"position":{"current":{"x":360,"y":350}},"origin":"center","testp":true,"clicklist":[]},
 {"id":"drag_button",      "type":"image", "order":1, "show":true, "group":["buttons"],"image":"drag1",  "scale":{"current":1,"rate":0},"position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[{"type":"slideobject","id":"drag_button"}],"clicklist":[]},
 {"id":"click_button_on",  "type":"image", "order":1, "show":true, "group":["buttons"],"image":"click1", "scale":{"current":1},"position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]},
 {"id":"click_button_off", "type":"image", "order":1, "show":true, "group":["buttons"],"image":"click2", "scale":{"current":1},"position":{"current":{"x":20,"y":75}},"testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":true}]},
-{"id":"txt",              "type":"shape", "order":1, "show":true, "group":[],         "shape":"t1",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":40,"y":30}}, "color":["rgba(255,0,0,1)"], "defaultcolor":["rgba(255,0,0,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]}
+{"id":"txt",              "type":"shape", "order":1, "show":true, "group":[],         "shape":"t1",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":200,"y":30}}, "color":{"current":["rgba(255,255,255,1)"], "default":["rgba(255,0,0,1)"], "select":["rgba(243,243,243,1)"]}, "testp":false, "clicklist":[]}
 ],
 "images":[
   {"id":"backgr",  "url":"./sample/image/sample/background_400px.png"},
@@ -55,7 +55,7 @@ function authorcanvasser(dataFile, dataForm){
   {"id":"t1",
   "drawcode":[
     {"type":"font", "size":20, "font":"arial"},
-    {"type":"filltext", "text":"Load Into 1", "offset":{"x":0,"y": 10}},
+    {"type":"filltext", "text":"Canvasser Sample", "offset":{"x":0,"y": 10}}
   ]}
 ],
 "settings":{
@@ -119,6 +119,7 @@ function authorcanvasser(dataFile, dataForm){
 
   this.reload = function(){
     initCanvasser("sample", JSON.stringify(authorData), "string");
+    window.author.view()
   }
   this.load_click = function(){
     document.getElementById("uploader").click();
@@ -178,7 +179,7 @@ function authorcanvasser(dataFile, dataForm){
 
   function updateSettings(){
     var settingHolder = document.getElementById("settingholder");
-    var settings = '<table class="objtable" width="100%">';
+    var settings = '<table class="objtable" id="settingstable" width="100%">';
 
     Object.keys(authorData.settings).forEach(function(setting){
       settings += '<tr class="clicktr" id="'+setting+'" onclick="window.author.getSetting(\''+ setting + '\')">';
@@ -192,7 +193,7 @@ function authorcanvasser(dataFile, dataForm){
 
   function updateObjects(){
     var objectHolder = document.getElementById("objectholder");
-    var objects = '<table class="objtable" width="100%">';
+    var objects = '<table class="objtable"id="objectstable" width="100%">';
     authorData.objects.forEach(function(object){
       objects += '<tr class="clicktr" id="'+object.id+'" onclick="window.author.getProps(\'objects\',\''+ object.id + '\')">';
       objects +='<td width="50%">' + object.id + '</td>';
@@ -205,7 +206,7 @@ function authorcanvasser(dataFile, dataForm){
 
   function updateImages(){
     var imageHolder = document.getElementById("imageholder");
-    var images = "<table>";
+    var images = '<table id="imagestable">';
     authorData.images.forEach(function(image){
       images += '<tr class="clicktr" id="'+image.id+'" onclick="window.author.getProps(\'images\',\''+ image.id + '\')">';
       images +='<td class="imageid"><div class="imagetext">' + image.id + '</div></td>';
@@ -218,7 +219,7 @@ function authorcanvasser(dataFile, dataForm){
 
   function updateShapes(){
     var imageHolder = document.getElementById("shapeholder");
-    var images = "<table>";
+    var images = '<table id="shapestable">';
     authorData.shapes.forEach(function(shape){
       images += '<tr class="clicktr" id="'+shape.id+'"onclick="window.author.getProps(\'shapes\',\''+ shape.id + '\')">';
       images +='<td class="shapeid"><div class="imagetext">' + shape.id + '</div></td>';
@@ -232,12 +233,14 @@ function authorcanvasser(dataFile, dataForm){
     authorData.images.push({id:"newImage",  url:"./image/no_image.png"});
     updateImages();
     initCanvasser("sample", JSON.stringify(authorData), "string");
+    window.author.view()
   }
 
   this.addObject = function(){
     authorData.objects.push({id:"wee", type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
     updateObjects();
     initCanvasser("sample", JSON.stringify(authorData), "string");
+    window.author.view()
   }
 
   this.getSetting = getSetting;
@@ -264,8 +267,33 @@ function authorcanvasser(dataFile, dataForm){
     if (type === 'objects') prop = buildPropUIObject(thisProp);
     if (type === 'images')  prop = buildPropUIimage(thisProp);
     if (type === 'shapes')  prop = buildPropUIshape(thisProp);
+    updateSelectionWindow(type,id);
     propUI.innerHTML = prop;
   }
+
+function updateSelectionWindow(type,id){
+  var table = document.getElementById(type + "table");
+  for (var i = 0, row; row = table.rows[i]; i++) {row.removeAttribute("style")};
+  var rowIndex = document.getElementById(id).rowIndex;
+  table.rows[rowIndex].style = "background-color:rgb(97, 255, 55);";
+}
+
+this.delete = function(type){
+  console.log(type)
+  var table = document.getElementById(type + "table");
+  var delRow = undefined;
+  for (var i = 0, row; row = table.rows[i]; i++) {
+    if (row.style[0] === "background-color") delRow = row.id;
+  };
+  console.log(authorData[type])
+  authorData[type].forEach(function(test, idx){
+    if (test.id === delRow){
+      console.log('found!',test)
+      authorData[type].splice(idx,1);
+    }
+  console.log(authorData[type])
+  });
+}
 
   function buildPropUIimage(image){
     var output = '<div class="propbody">' ;
@@ -300,7 +328,7 @@ function authorcanvasser(dataFile, dataForm){
       if (subWidget.type === 'number')    prop += handleNumber(thisProp,   'shape', subWidget, widgetPath);
       if (subWidget.type === 'posxy')     prop += handlePosition(thisProp, 'shape', subWidget, widgetPath);
       if (subWidget.type === "select")    prop += handleSelect(thisProp,   'shape', subWidget, widgetPath);
-      if (subWidget.type === "text")      prop += handleText(thisProp,     'shape', subWidget, widgetPath);
+      if (subWidget.type === "text")      prop += handleText(thisProp,     'shape', subWidget, widgetPath, 'w100');
       prop += '</div>';
       });
       prop += '</div>';
@@ -358,6 +386,22 @@ function authorcanvasser(dataFile, dataForm){
     str +=   '>'  + "</span><br>";
     return str;
   }
+  function handleColor(object, type, widget, path){
+    var str = '';
+    var pos = {x:getSubProp(object, path+'.x'), y:getSubProp(object, path+'.y')};
+
+    str += buildDiv('entrylabel c_entrylabel_pos w100', widget.field );
+    str += '<span>';
+    str += '<span class="entrytitle c_entrylabel_pos">X</span>'
+    str += '<input class="auth_xy" type="number" value="'+ pos.x + '" ';
+    str += buildFnString('window.author.updateItem', [object.id, type, path+'.x'], true);
+    str +=   '>';
+    str += '<span class="entrytitle c_entrylabel_pos">Y</span>'
+    str += '<input class="auth_xy" type="number" value="'+ pos.y + '" ';
+    str += buildFnString('window.author.updateItem', [object.id, type, path+'.y'], true);
+    str +=   '>'  + "</span><br>";
+    return str;
+  }
   function handleSelect(object, type, widget, path, list){
     var str = '';
     var selOp = (list === undefined ? window.rules.select[widget.id].list : list);
@@ -366,10 +410,10 @@ function authorcanvasser(dataFile, dataForm){
     str += buildSelect('window.author.updateItem',  object.id, type, selOp, defaultId, path) + '<br>';
     return str;
   }
-  function handleText(object, type, widget, path){
+  function handleText(object, type, widget, path, widthClass){
     var str = '';
     var defaultId = getSubProp(object, path);
-    str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    str += buildDiv('entrylabel c_entrytitle_text ' + widthClass, widget.field );
     str += '<input class="auth_text" type="text" value="'+ defaultId + '" ';
     str += buildFnString('window.author.updateItem', [object.id, type, path], true);
     str +=   '>'  + "<br>";
@@ -380,7 +424,7 @@ function authorcanvasser(dataFile, dataForm){
     var output = '<div class="propbody">' ;
     var win = 'window.author.updateActivity';
     window.rules.object[object.type].widgets.forEach(function(widget, idx, source){
-      if (widget.type === "text")         output += handleText(object, 'object', widget, widget.field);
+      if (widget.type === "text")         output += handleText(object, 'object', widget, widget.field, 'w100');
       if (widget.type === "number")       output += handleNumber(object, 'object', widget, widget.field);
       if (widget.type === "select")       output += handleSelect(object, 'object', widget, widget.field);
       if (widget.type === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="auth_text" type="text" value="'+ object[widget.field]+'"><br>';
@@ -438,6 +482,16 @@ function authorcanvasser(dataFile, dataForm){
         }
         output += '<div class ="divbutton" onclick="window.author.reload()">Add position</div>'
         output += '</div>';
+      }
+      if (widget.type === "color"){
+        output += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
+        Object.keys(object[widget.field]).forEach(function(colorList){
+            output += '<div class="entrylabel c_entrylabel_pos w100">' + colorList + '</div>';
+            object.color[colorList].forEach(function(color,idx){
+            output += handleText(object, 'object', {field:idx}, widget.field+'.'+colorList+'.'+idx, 'w20');
+          })
+        });
+        output += '</div><br>';
       }
       if (widget.type === "scale"){
         output += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
@@ -497,7 +551,7 @@ function authorcanvasser(dataFile, dataForm){
                 if (subWidget.type === 'objlist') output += handleObjectList(object, 'object', subWidget, widgetPath);
                 if (subWidget.type === 'posxy')   output += handlePosition(object,   'object', subWidget, widgetPath);
                 if (subWidget.type === 'select')  output += handleSelect(object,     'object', subWidget, widgetPath);
-                if (subWidget.type === "text")    output += handleText(object,       'object', subWidget, widgetPath);
+                if (subWidget.type === "text")    output += handleText(object,       'object', subWidget, widgetPath, 'w100');
               });
 
             });

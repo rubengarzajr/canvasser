@@ -33,7 +33,9 @@
         {"field":"order",     "type":"number"},
         {"field":"group",     "type":"arraystrings"},
         {"field":"show",      "type":"bool"},
+        {"field":"color",     "type":"color"},
         {"field":"shape",     "type":"shapelist"},
+        {"field":"origin",    "type":"select", "id":"objectorigin"},
         {"field":"position",  "type":"posxy" },
         {"field":"scale",     "type":"scale"}
       ]
