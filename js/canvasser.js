@@ -1,4 +1,7 @@
-// Canvasser v0.45 rubengarzajr@gmail.com
+// Canvasser v0.5 rubengarzajr@gmail.com
+// TODO:
+// Set action: allow for multiple actions (array)
+// Responsive Scaling: Fix - currently borked
 
 function initCanvasser(vari, datafile, dataForm){
   window[vari] = new canvasser(vari, datafile, dataForm);
@@ -308,11 +311,13 @@ function canvasser(vari, interactiveData, dataForm){
     ctx.beginPath();
 
     shapeData.drawcode.forEach(function(shape){
-      if (shape.type === "move")      ctx.moveTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
-      if (shape.type === "rect")      ctx.rect(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.width*sizer,shape.height*sizer);
-      if (shape.type === "arc")       ctx.arc(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer, shape.radius*sizer, shape.startangle, shape.endangle, shape.counterclockwise);
-      if (shape.type === "bcurve")    ctx.bezierCurveTo(origin.x+shape.offseta.x*sizer, origin.y+shape.offseta.y*sizer, origin.x+shape.offsetb.x*sizer, origin.y+shape.offsetb.y*sizer, origin.x+shape.offsetc.x*sizer, origin.y+shape.offsetc.y*sizer);
-      if (shape.type === "line")      ctx.lineTo(origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+      var offset = {x:0, y:0};
+      if (shape.offset!== undefined) offset = {x:shape.offset.x, y:shape.offset.y};
+      if (shape.type === "move")      ctx.moveTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
+      if (shape.type === "rect")      ctx.rect(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.width*sizer,shape.height*sizer);
+      if (shape.type === "arc")       ctx.arc(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.radius*sizer, shape.startangle, shape.endangle, shape.counterclockwise);
+      if (shape.type === "bcurve")    ctx.bezierCurveTo(origin.x+offseta.x*sizer, origin.y+offseta.y*sizer, origin.x+offsetb.x*sizer, origin.y+offsetb.y*sizer, origin.x+offsetc.x*sizer, origin.y+offsetc.y*sizer);
+      if (shape.type === "line")      ctx.lineTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       if (shape.type === "linewidth") ctx.lineWidth = shape.width*sizer;
       if (shape.type === "fillStyle") {
           if (color === null) ctx.fillStyle = shape.color;
@@ -324,7 +329,9 @@ function canvasser(vari, interactiveData, dataForm){
       }
       if (shape.type === "filltext") {
         ctx.fillStyle = color.current[colorIndex];
-        ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+        var offset = {x:0, y:0};
+        if (shape.offset != undefined) offset= {x:shape.offset.x, y:shape.offset.y};
+        ctx.fillText(shape.text, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       }
       if (shape.type === "stroketext") {
         ctx.lineWidth = shape.stroke;
@@ -574,9 +581,8 @@ function canvasser(vari, interactiveData, dataForm){
                 }
                 if (action.type === 'set'){
                     act.data.objects.forEach(function(obj){
-                        if (!checkAction(action, obj)) return;
-                        console.log(obj, action.prop, action.newvalue)
-                        setSubProp(obj, action.prop, action.newvalue.toString());
+                      if (!checkAction(action, obj)) return;
+                      setSubProp(obj, action.prop, action.newvalue.toString());
                     });
                 }
                 if (action.type === 'shapecolor'){
@@ -629,6 +635,7 @@ function canvasser(vari, interactiveData, dataForm){
   function checkAction(action, obj){
     if (action.filter === undefined) return false;
     if (action.filter === "group"){
+      if (obj.group === undefined) return false;
       if (obj.group.indexOf(action.id) < 0) return false;
     }
     if (action.filter === "object"){
@@ -670,7 +677,8 @@ function canvasser(vari, interactiveData, dataForm){
       if (obj[arr[0]] === undefined) obj[arr[0]] = {};
       obj = obj[arr.shift()];
     }
-    obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
+    //obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
+    obj[arr[0]] = val;
   }
 
   function lerpTo(inCurrent, inDestination, rate){

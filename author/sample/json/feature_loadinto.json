@@ -1,8 +1,8 @@
 {
   "objects":[
-    {"id":"bk", "type":"shape", "show":true, "group":[], "shape":"sq",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":0,"y":0}}, "color":["rgba(100,100,100,1)"], "defaultcolor":["rgba(102,102,102,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]},
-    {"id":"c1", "type":"image", "show":true, "group":[], "image":"click1", "scale":{"current":1}, "position":{"current":{"x":  0,"y": 50}}, "testp":true, "clicklist":[{"type":"cleardown"},{"type":"loadinto","vari":"activity","url":"../json/feature_loadinto2.json"}]},
-    {"id":"t1", "type":"shape", "show":true, "group":[], "shape":"t1",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":100,"y":10}}, "color":["rgba(255,255,255,1)"], "defaultcolor":["rgba(102,102,102,1)"], "selectcolor":["rgba(243,243,243,1)"], "testp":false, "clicklist":[]}
+    {"id":"bk",  "type":"shape", "order":2, "show":true, "group":[], "shape":"sq",     "scale":{"current":1}, "origin":"default","position":{"current":{"x":0,"y":0}},     "testp":false, "color":{"current":["rgba(100,100,100,1)"], "default":["rgba(102,102,102,1)"], "select":["rgba(243,243,243,1)"]}, "clicklist":[]},
+    {"id":"c1",  "type":"image", "order":1, "show":true, "group":[], "image":"click1", "scale":{"current":1}, "origin":"default","position":{"current":{"x":  0,"y": 50}}, "testp":true,  "clicklist":[{"type":"cleardown"},{"type":"loadinto","vari":"activity","url":"../json/feature_loadinto2.json"}]},
+    {"id":"txt", "type":"shape", "order":1, "show":true, "group":[], "shape":"t1",     "scale":{"current":1}, "origin":"default","position":{"current":{"x":10,"y":20}},  "testp":false, "color":{"current":["rgba(255,255,255,1)"], "default":["rgba(255,0,0,1)"], "select":["rgba(243,243,243,1)"]}, "clicklist":[]}
 ],
   "paths":[
     {"id":"use",   "url":"../image/sample"}
@@ -11,17 +11,18 @@
     {"id":"click1",  "path":"use", "url":"sample_click_1.png"},
     {"id":"click2",  "path":"use", "url":"sample_click_2.png"}
   ],
-  "shapes": {
-    "sq":[
-        {"type":"rect","offset":{"x":0,"y": 0},"width":400,"height":200},
-        {"type":"fillStyle", "color":"blue"},
-        {"type":"fill"}
-    ],
-    "t1":[
+  "shapes":[
+    {"id":"sq",
+    "drawcode":[
+      {"type":"rect","offset":{"x":0,"y": 0},"width":600,"height":600},
+      {"type":"fill"}
+    ]},
+    {"id":"t1",
+    "drawcode":[
       {"type":"font", "size":20, "font":"arial"},
-      {"type":"filltext", "text":"Load Into 1", "offset":{"x":0,"y": 10}}
-    ]
-  },
+      {"type":"filltext", "text":"Canvasser Load Page 1", "offset":{"x":0,"y": 10}}
+    ]}
+  ],
   "settings": {
     "canvaswidth": "400",
     "canvasheight": "200",

@@ -104,7 +104,7 @@ a{
 }
 
 .titlebar{
-  background-color: rgb(118, 150, 218);
+  background-color: rgb(127, 164, 220);
   cursor: move;
 }
 
@@ -118,10 +118,17 @@ a{
   color: crimson;
 }
 
+.rightfloater{
+  float:right;
+  width: 20px;
+  height: 90px;
+}
+
 .skinnybank{
   background-color: rgb(106, 127, 144);
   border: 1px rgb(106, 127, 144) solid;
   border-radius: 4px;
+  min-width:130px;
 }
 
 .font-larger{
@@ -287,6 +294,7 @@ a{
   display: inline-block;
   padding: 2px;
   margin: 2px;
+  font-size: .85em;
 }
 
 .divmenu:hover{
@@ -296,14 +304,17 @@ a{
 .wintitle{
   font-family: button;
   color: white;
-  font-size: 1.25em;
+  font-size: 1em;
   display: inline-block;
   padding: 4px;
   margin: 2px;
 }
 
 .submenu{
+}
 
+#settingholder{
+  margin-bottom:5px;
 }
 .entrytitle{
   display: table-cell;
@@ -374,6 +385,12 @@ a{
   margin-bottom: 10px;
   margin-top: 10px;
   background-color: rgb(240,240,240);
+  min-height: 90px;
+}
+
+.deleter{
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .propitem{
@@ -402,6 +419,7 @@ a{
 
 .objtable{
     border-collapse: collapse;
+    font-size:.75em;
 }
 
 
@@ -428,8 +446,6 @@ a{
 #paste{
     border-radius: 4px;
 }
-
-
 
 
 #menu{

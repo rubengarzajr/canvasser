@@ -35,7 +35,7 @@ function authorcanvasser(dataFile, dataForm){
 {"id":"drag_button",      "type":"image", "order":1, "show":true, "group":["buttons"],"image":"drag1",  "scale":{"current":1,"rate":0},"position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[{"type":"slideobject","id":"drag_button"}],"clicklist":[]},
 {"id":"click_button_on",  "type":"image", "order":1, "show":true, "group":["buttons"],"image":"click1", "scale":{"current":1},"position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]},
 {"id":"click_button_off", "type":"image", "order":1, "show":true, "group":["buttons"],"image":"click2", "scale":{"current":1},"position":{"current":{"x":20,"y":75}},"testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":true}]},
-{"id":"txt",              "type":"shape", "order":1, "show":true, "group":[],         "shape":"t1",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":200,"y":30}}, "color":{"current":["rgba(255,255,255,1)"], "default":["rgba(255,0,0,1)"], "select":["rgba(243,243,243,1)"]}, "testp":false, "clicklist":[]}
+{"id":"txt",              "type":"shape", "order":1, "show":true, "group":[],         "shape":"t1",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":20,"y":10}}, "color":{"current":["rgba(255,255,255,1)"], "default":["rgba(255,0,0,1)"], "select":["rgba(243,243,243,1)"]}, "testp":false, "clicklist":[]}
 ],
 "images":[
   {"id":"backgr",  "url":"./sample/image/sample/background_400px.png"},
@@ -143,8 +143,9 @@ function authorcanvasser(dataFile, dataForm){
   this.paste = function(){
     var pasteData = document.getElementById("paste").value;
     authorData = JSON.parse(pasteData);
-    updateImages();
     updateObjects();
+    updateImages();
+    updateShapes();
     initCanvasser("sample", pasteData, "string");
   }
   this.format = function(){
@@ -237,7 +238,7 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   this.addObject = function(){
-    authorData.objects.push({id:"wee", type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
+    authorData.objects.push({id:"new_object", type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
     updateObjects();
     initCanvasser("sample", JSON.stringify(authorData), "string");
     window.author.view()
@@ -279,20 +280,21 @@ function updateSelectionWindow(type,id){
 }
 
 this.delete = function(type){
-  console.log(type)
   var table = document.getElementById(type + "table");
   var delRow = undefined;
   for (var i = 0, row; row = table.rows[i]; i++) {
     if (row.style[0] === "background-color") delRow = row.id;
   };
-  console.log(authorData[type])
+
   authorData[type].forEach(function(test, idx){
     if (test.id === delRow){
-      console.log('found!',test)
       authorData[type].splice(idx,1);
     }
-  console.log(authorData[type])
+  if (type === 'shapes') updateShapes();
+  if (type === 'objects') updateObjects();
+  if (type === 'images') updateImages();
   });
+  initCanvasser("sample", JSON.stringify(authorData), "string");
 }
 
   function buildPropUIimage(image){
@@ -317,6 +319,18 @@ this.delete = function(type){
     var prop = '<div class="propbody">' ;
     thisProp.drawcode.forEach(function(widget, idx, source){
       prop += '<div class="propbox">'
+      prop += '<div class="rightfloater">';
+      prop += '<div class="deleter" onclick="window.author.deleteprop(\'shapes\', \''+thisProp.id+'\', \'drawcode.'+idx+'\')">';
+      prop += '<img id="removeshape" src="image/icon_x.png"/></div>';
+      if (idx > 0){
+        prop += '<div onclick="window.author.moveprop(\'shapes\', \''+thisProp.id+'\', \'drawcode.'+idx+'\',\''+(idx-1)+'\')">';
+        prop += '<img id="removeshape" src="image/icon_move_up.png"/></div>';
+      }
+      if (idx < thisProp.drawcode.length-1){
+        prop += '<div onclick="window.author.moveprop(\'shapes\', \''+thisProp.id+'\',\'drawcode.'+idx+'\',\''+(idx+1)+'\')">';
+        prop += '<img id="removeshape" src="image/icon_move_down.png"/></div>';
+      }
+      prop += '</div>';
       prop += '<div class="entrylabel c_entrytitle_text w25">'+idx+'</div>';
       var tmpObj = {id:widget.type, field:'type'}
       prop += handleSelect(thisProp, 'shape', tmpObj, 'drawcode.' + idx + '.type', drawList);
@@ -334,7 +348,39 @@ this.delete = function(type){
       prop += '</div>';
     });
     updateShapes();
+    prop += buildDiv('divbutton', 'Add drawcode', 'window.author.adddrawcode', [shape.id]);
     return prop + '</div>';
+  }
+
+  this.adddrawcode = function(id){
+    var shape = authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
+    shape.drawcode.push({type:'fill'});
+    getProps('shapes', id);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+  this.moveprop = function(type,id,path,moveto){
+    var obj = authorData[type].filter(function(test){return test.id === id})[0];
+    var arr = path.split(".");
+    while(arr.length > 1){
+      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
+      obj = obj[arr.shift()];
+    }
+    obj.splice(moveto, 0, obj.splice(arr[0], 1)[0]);
+    getProps(type, id);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+  this.deleteprop = function(type,id,path){
+    var obj = authorData[type].filter(function(test){return test.id === id})[0];
+    var arr = path.split(".");
+    while(arr.length > 1){
+      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
+      obj = obj[arr.shift()];
+    }
+    obj.splice(arr[0],1);
+    getProps(type, id);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
   }
 
   function handleBoolean(object, type, widget, path){
@@ -666,7 +712,7 @@ this.delete = function(type){
     initCanvasser("sample", JSON.stringify(authorData), "string");
   }
 
-  this.updateActionList = function(domElement, objectId, paramPath){
+  this.updateActionList = function(domElement, objectId, type, paramPath){
     var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
     var prop = getSubProp(objGet, paramPath);
     this.updateItem(domElement, objectId, 'object', paramPath);

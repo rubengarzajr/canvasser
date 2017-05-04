@@ -60,18 +60,18 @@
     }
   },
   "drawcode":[
-    {"type":"arc",          "widgets":[{"field":"offset",  "type":"xy"}, {"field":"radius",  "type":"int"}, {"field":"startangle", "type":"int"}, {"field":"endangle", "type":"int"}, {"field":"counterclockwise", "type":"bool"}]},
-    {"type":"bcurve",       "widgets":[{"field":"offseta", "type":"xy"}, {"field":"offsetb", "type":"xy"},  {"field":"offsetc",    "type":"xy"}]},
+    {"type":"arc",          "widgets":[{"field":"offset",  "type":"posxy"}, {"field":"radius",  "type":"int"}, {"field":"startangle", "type":"int"}, {"field":"endangle", "type":"int"}, {"field":"counterclockwise", "type":"bool"}]},
+    {"type":"bcurve",       "widgets":[{"field":"offseta", "type":"posxy"}, {"field":"offsetb", "type":"posxy"},  {"field":"offsetc",    "type":"posxy"}]},
     {"type":"begin",        "widgets":[]},
     {"type":"close",        "widgets":[]},
     {"type":"fill",         "widgets":[]},
     {"type":"fillstyle",    "widgets":[{"field":"color",   "type":"color"}]},
-    {"type":"filltext",     "widgets":[{"field":"xy",      "type":"offset"},{"field":"text", "type":"text"}]},
+    {"type":"filltext",     "widgets":[{"field":"offset",  "type":"posxy"},{"field":"text", "type":"text"}]},
     {"type":"font",         "widgets":[{"field":"font",    "type":"text"},{"field":"size", "type":"number"}]},
-    {"type":"line",         "widgets":[{"field":"offset",  "type":"xy"}]},
+    {"type":"line",         "widgets":[{"field":"offset",  "type":"posxy"}]},
     {"type":"linewidth",    "widgets":[{"field":"width",   "type":"int"}]},
     {"type":"ptest",        "widgets":[]},
-    {"type":"rect",         "widgets":[{"field":"offset",  "type":"xy"}, {"field":"width", "type":"number"},{"field":"height", "type":"number"}]},
+    {"type":"rect",         "widgets":[{"field":"offset",  "type":"posxy"}, {"field":"width", "type":"number"},{"field":"height", "type":"number"}]},
     {"type":"strokestyle",  "widgets":[{"field":"color",   "type":"color"}]}
   ],
   "actions":[
