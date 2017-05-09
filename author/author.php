@@ -50,7 +50,7 @@
       </div>
 
 
-      <div id='shapebank' class="skinnybank" style="position:absolute;left:139px; top:80px;">
+      <div id='shapebank' class="skinnybank" style="position:absolute;left:144px; top:80px;">
         <div class="titlebar" id="shapemover">
           <div class="wintitle">Shapes</div>
           <div class="sp_05 right"></div>
@@ -81,7 +81,7 @@
       </div>
     </div>
 
-        <div id='jsonbank' class="skinnybank" style="position:absolute;left:580px; top:80px;">
+        <div id='jsonbank' class="skinnybank" style="position:absolute;left:547px; top:80px;">
             <div class="titlebar" id="jsonmover">
                 <div class="wintitle">JSON</div>
                 <div class="sp_05 right"></div>
@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        <div id='settingbank' class="skinnybank" style="position:absolute;left:268px; top:80px;">
+        <div id='settingbank' class="skinnybank" style="position:absolute;left:278px; top:80px;">
             <div class="titlebar" id="settingmover">
                 <div class="wintitle">Settings</div>
                 <div class="sp_05 right"></div>
@@ -114,13 +114,28 @@
             </div>
         </div>
 
-        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:411px; top:80px;">
+        <div id='pathbank' class="skinnybank" style="position:absolute;left:412px; top:80px;">
+            <div class="titlebar" id="pathmover">
+                <div class="wintitle">Paths</div>
+                <div class="sp_05 right"></div>
+                <div class ="right" onclick="window.author.toggleminmax('pathcontents', 'togglepath', 664)" style="margin-top: 2px;"><img id="togglepath" src="image/icon_max_g.png"/></div>
+            </div>
+            <div id="pathcontents" class="padlr" style="display:none">
+                <div id="pathmenu" class="submenu">
+                    <div class="divmenu" onclick="window.author.addObject()">Add</div>
+                    <div class="divmenu" onclick="window.author.deleteObject()">Delete</div>
+                </div>
+                <div id="pathholder"></div>
+            </div>
+        </div>
+
+        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:781px; top:80px;">
             <div class="titlebar" id="propertiesmover">
                 <div class="wintitle">Properties</div>
                 <div class="sp_05 right"></div>
                 <div class ="right" onclick="window.author.toggleminmax('propertiescontents', 'toggleproperties', 664)" style="margin-top: 2px;"><img id="toggleproperties" src="image/icon_max_g.png"/></div>
             </div>
-            <div id="propertiescontents" class="padlr" style="display:none">
+            <div id="propertiescontents" class="padlr" style="display:block">
                 <div id="propertiesmenu" class="submenu">
                     <div class="divmenu" onclick="window.author.addObject()">Add</div>
                     <div class="divmenu" onclick="window.author.deleteObject()">Delete</div>

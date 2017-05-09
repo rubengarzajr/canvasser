@@ -72,12 +72,14 @@ function authorcanvasser(dataFile, dataForm){
   document.getElementById("jsonmover").addEventListener("mousedown",       function(){moveObjD("jsonbank")},       false);
   document.getElementById("settingmover").addEventListener("mousedown",    function(){moveObjD("settingbank")},    false);
   document.getElementById("propertiesmover").addEventListener("mousedown", function(){moveObjD("propertiesbank")}, false);
+  document.getElementById("pathmover").addEventListener("mousedown", function(){moveObjD("pathbank")}, false);
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);
   initCanvasser("sample", JSON.stringify(authorData), "string");
   updateSettings();
   updateObjects();
   updateImages();
+  updatePaths();
   updateShapes();
   loop();
 
@@ -192,6 +194,21 @@ function authorcanvasser(dataFile, dataForm){
     settingHolder.innerHTML = settings;
   }
 
+  function updatePaths(){
+    var pathsHolder = document.getElementById("pathholder");
+    var paths = '<table class="objtable" id="pathstable" width="100%">';
+
+    authorData.paths.forEach(function(path){
+      console.log(path)
+      paths += '<tr class="clicktr" id="'+path.id+'" onclick="window.author.getPath(\''+ path.id + '\')">';
+      paths +='<td width="50%">' + path.id + '</td>';
+      paths +='<td width="50%">' +path.url + '</td>';
+      paths += '</tr>';
+    });
+    paths +='</table>';
+    pathsHolder.innerHTML = paths;
+  }
+
   function updateObjects(){
     var objectHolder = document.getElementById("objectholder");
     var objects = '<table class="objtable"id="objectstable" width="100%">';
@@ -258,6 +275,25 @@ function authorcanvasser(dataFile, dataForm){
     propUI.innerHTML = prop + '</div>';
   }
 
+  this.getPath = getPath;
+  function getPath(id){
+    thisProp = authorData.paths.filter(function(selected){return selected.id === id;})[0];
+    document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Path:' + id + '</div>';
+    var propUI = document.getElementById("properties");
+    var prop = '<div class="propbody">' ;
+    prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
+    prop += '<input class="auth_text w200" type="text" ';
+    prop += 'value="'+ thisProp.id + '" ';
+    prop += buildFnString('window.author.updateItem', [id,'path','id'], true);
+    prop += '><br>';
+    prop += '<div class="entrylabel c_entrytitle_text w50">url</div>';
+    prop += '<input class="auth_text w200" type="text" ';
+    prop += 'value="'+ thisProp.url + '" ';
+    prop += buildFnString('window.author.updateItem', [id,'path','url'], true);
+    prop += '><br>';
+    propUI.innerHTML = prop + '</div>';
+  }
+
   this.getProps = getProps;
   function getProps(type, id){
     thisProp = authorData[type].filter(function(selected){return selected.id === id;})[0];
@@ -273,6 +309,7 @@ function authorcanvasser(dataFile, dataForm){
   }
 
 function updateSelectionWindow(type,id){
+  console.log(type, id)
   var table = document.getElementById(type + "table");
   for (var i = 0, row; row = table.rows[i]; i++) {row.removeAttribute("style")};
   var rowIndex = document.getElementById(id).rowIndex;
@@ -677,17 +714,18 @@ this.delete = function(type){
   };
 
   this.updateItem = function(domElement, objectId, type, paramPath){
+    console.log(objectId, type, paramPath)
     var newVal = domElement.value.toString();
     if (domElement.type === 'checkbox') newVal = domElement.checked;
     if (newVal === '---NONE---') newVal = undefined;
     var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
     if (type === 'shape') objGet = authorData.shapes.filter(function(finder){console.log(finder.id, objectId);return (finder.id === objectId);})[0];
-    setSubProp(objGet, paramPath, newVal);
+    if (type === 'path') objGet = authorData.paths.filter(function(finder){console.log(finder.id, objectId);return (finder.id === objectId);})[0];
 
+    setSubProp(objGet, paramPath, newVal);
     getProps(type+'s', objGet.id);
     if (type === 'object') updateObjects();
     if (type === 'shape') updateShapes();
-
     initCanvasser("sample", JSON.stringify(authorData), "string");
   };
 
