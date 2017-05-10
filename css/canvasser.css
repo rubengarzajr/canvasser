@@ -316,6 +316,10 @@ a{
 #settingholder{
   margin-bottom:5px;
 }
+#pathholder{
+  margin-bottom:5px;
+}
+
 .entrytitle{
   display: table-cell;
   padding: 4px;

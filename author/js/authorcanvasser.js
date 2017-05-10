@@ -38,13 +38,13 @@ function authorcanvasser(dataFile, dataForm){
 {"id":"txt",              "type":"shape", "order":1, "show":true, "group":[],         "shape":"t1",     "scale":{"current":1}, "origin":"center","position":{"current":{"x":20,"y":10}}, "color":{"current":["rgba(255,255,255,1)"], "default":["rgba(255,0,0,1)"], "select":["rgba(243,243,243,1)"]}, "testp":false, "clicklist":[]}
 ],
 "images":[
-  {"id":"backgr",  "url":"./sample/image/sample/background_400px.png"},
-  {"id":"click1",  "url":"./sample/image/sample/sample_click_1.png"},
-  {"id":"click2",  "url":"./sample/image/sample/sample_click_2.png"},
-  {"id":"drag1",   "url":"./sample/image/sample/sample_drag_1.png"}
+  {"id":"backgr", "path":"author", "url":"background_400px.png"},
+  {"id":"click1", "path":"author", "url":"sample_click_1.png"},
+  {"id":"click2", "path":"author", "url":"sample_click_2.png"},
+  {"id":"drag1",  "path":"author", "url":"sample_drag_1.png"}
 ],
 "paths":[
-  {"id":"use",   "url":"./image/sample"}
+  {"id":"author",   "url":"./sample/image/sample"}
 ],
 "shapes":[
   {"id":"sq",
@@ -194,12 +194,17 @@ function authorcanvasser(dataFile, dataForm){
     settingHolder.innerHTML = settings;
   }
 
+  this.addPath = function(){
+    authorData.paths.push({id:"newpath",url:"./"});
+    updatePaths();
+    getPath('newpath');
+  }
+
   function updatePaths(){
     var pathsHolder = document.getElementById("pathholder");
     var paths = '<table class="objtable" id="pathstable" width="100%">';
 
     authorData.paths.forEach(function(path){
-      console.log(path)
       paths += '<tr class="clicktr" id="'+path.id+'" onclick="window.author.getPath(\''+ path.id + '\')">';
       paths +='<td width="50%">' + path.id + '</td>';
       paths +='<td width="50%">' +path.url + '</td>';
@@ -226,9 +231,14 @@ function authorcanvasser(dataFile, dataForm){
     var imageHolder = document.getElementById("imageholder");
     var images = '<table id="imagestable">';
     authorData.images.forEach(function(image){
+      var url = image.url;
+      if (image.path != undefined){
+        preUrl  = authorData.paths.filter(function(selected){return selected.id === image.path;})[0].url;
+        url = preUrl + '/' + image.url;
+      }
       images += '<tr class="clicktr" id="'+image.id+'" onclick="window.author.getProps(\'images\',\''+ image.id + '\')">';
       images +='<td class="imageid"><div class="imagetext">' + image.id + '</div></td>';
-      images +='<td width="50%"><img src="' + image.url + '" alt="' + image.id + '"></td>';
+      images +='<td width="50%"><img src="' + url + '" alt="' + image.id + '"></td>';
       images += '</tr>';
     });
     images +='</table>';
@@ -248,7 +258,7 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   this.addImage = function(){
-    authorData.images.push({id:"newImage",  url:"./image/no_image.png"});
+    authorData.images.push({id:"newImage",path:"",  url:"./image/no_image.png"});
     updateImages();
     initCanvasser("sample", JSON.stringify(authorData), "string");
     window.author.view()
@@ -278,18 +288,19 @@ function authorcanvasser(dataFile, dataForm){
   this.getPath = getPath;
   function getPath(id){
     thisProp = authorData.paths.filter(function(selected){return selected.id === id;})[0];
+    updateSelectionWindow('paths',id);
     document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Path:' + id + '</div>';
     var propUI = document.getElementById("properties");
     var prop = '<div class="propbody">' ;
     prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
     prop += '<input class="auth_text w200" type="text" ';
     prop += 'value="'+ thisProp.id + '" ';
-    prop += buildFnString('window.author.updateItem', [id,'path','id'], true);
+    prop += buildFnString('window.author.updatePath', [id,'id'], true);
     prop += '><br>';
     prop += '<div class="entrylabel c_entrytitle_text w50">url</div>';
     prop += '<input class="auth_text w200" type="text" ';
     prop += 'value="'+ thisProp.url + '" ';
-    prop += buildFnString('window.author.updateItem', [id,'path','url'], true);
+    prop += buildFnString('window.author.updatePath', [id,'url'], true);
     prop += '><br>';
     propUI.innerHTML = prop + '</div>';
   }
@@ -309,7 +320,6 @@ function authorcanvasser(dataFile, dataForm){
   }
 
 function updateSelectionWindow(type,id){
-  console.log(type, id)
   var table = document.getElementById(type + "table");
   for (var i = 0, row; row = table.rows[i]; i++) {row.removeAttribute("style")};
   var rowIndex = document.getElementById(id).rowIndex;
@@ -330,6 +340,7 @@ this.delete = function(type){
   if (type === 'shapes') updateShapes();
   if (type === 'objects') updateObjects();
   if (type === 'images') updateImages();
+  if (type === 'paths') updatePaths();
   });
   initCanvasser("sample", JSON.stringify(authorData), "string");
 }
@@ -720,7 +731,6 @@ this.delete = function(type){
     if (newVal === '---NONE---') newVal = undefined;
     var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
     if (type === 'shape') objGet = authorData.shapes.filter(function(finder){console.log(finder.id, objectId);return (finder.id === objectId);})[0];
-    if (type === 'path') objGet = authorData.paths.filter(function(finder){console.log(finder.id, objectId);return (finder.id === objectId);})[0];
 
     setSubProp(objGet, paramPath, newVal);
     getProps(type+'s', objGet.id);
@@ -766,6 +776,15 @@ this.delete = function(type){
     updateSettings();
     initCanvasser("sample", JSON.stringify(authorData), "string");
   }
+
+  this.updatePath = function(domElement, id, param){
+    var pathGet = authorData.paths.filter(function(finder){return (finder.id === id);})[0];
+    pathGet[param] = domElement.value;
+    updatePaths();
+    getPath(pathGet.id);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
 
   this.updateActivity = function(domElement, type, elementType, id, prop, listIndex){
     var objGet = authorData[type].filter(function(finder){return (finder.id === id);})[0];

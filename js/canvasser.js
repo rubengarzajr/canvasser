@@ -51,15 +51,13 @@ function canvasser(vari, interactiveData, dataForm){
       var imageObj = new Image();
       imageObj.onload = function(){
         act.imageList[image.id] = {};
-        act.imageList[image.id].imageData = this;
-        act.imageList[image.id].canvas = document.createElement('canvas');
-        act.imageList[image.id].canvas.width = this.width;
+        act.imageList[image.id].imageData     = this;
+        act.imageList[image.id].canvas        = document.createElement('canvas');
+        act.imageList[image.id].canvas.width  = this.width;
         act.imageList[image.id].canvas.height = this.height;
-      //  if (this.height === 0) console.log("og no "  )
-        act.imageList[image.id].context = act.imageList[image.id].canvas.getContext('2d');
+        act.imageList[image.id].context       = act.imageList[image.id].canvas.getContext('2d');
         act.imageList[image.id].context.drawImage(this, 0, 0, this.width, this.height);
       };
-
       if (image.path != undefined) image.url = act.pathList[image.path] + '/' + image.url;
       imageObj.src = image.url + '?' + new Date().getTime();
       imageObj.setAttribute('crossOrigin', 'anonymous');

@@ -122,8 +122,8 @@
             </div>
             <div id="pathcontents" class="padlr" style="display:none">
                 <div id="pathmenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.addObject()">Add</div>
-                    <div class="divmenu" onclick="window.author.deleteObject()">Delete</div>
+                    <div class="divmenu" onclick="window.author.addPath()">Add</div>
+                    <div class="divmenu" onclick="window.author.delete('paths')">Delete</div>
                 </div>
                 <div id="pathholder"></div>
             </div>
