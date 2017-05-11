@@ -45,7 +45,8 @@
     "imagedata":{
       "widgets":[
         {"field":"id",        "type":"text"},
-        {"field":"url",       "type":"filename"}
+        {"field":"path",      "type":"select", "id":"pathdata"},
+        {"field":"url",       "type":"text"}
       ]
     }
   },

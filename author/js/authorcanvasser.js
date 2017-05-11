@@ -233,8 +233,10 @@ function authorcanvasser(dataFile, dataForm){
     authorData.images.forEach(function(image){
       var url = image.url;
       if (image.path != undefined){
-        preUrl  = authorData.paths.filter(function(selected){return selected.id === image.path;})[0].url;
-        url = preUrl + '/' + image.url;
+        preUrl  = authorData.paths.filter(function(selected){return selected.id === image.path;})[0];
+        if (preUrl !== undefined) {
+          url = preUrl.url + '/' + image.url;
+        }
       }
       images += '<tr class="clicktr" id="'+image.id+'" onclick="window.author.getProps(\'images\',\''+ image.id + '\')">';
       images +='<td class="imageid"><div class="imagetext">' + image.id + '</div></td>';
@@ -346,12 +348,21 @@ this.delete = function(type){
 }
 
   function buildPropUIimage(image){
-    var output = '<div class="propbody">' ;
+    var output = '<div class="propbody">';
+    var pathList = ObjPartToArr(authorData.paths, "id");
+    var defaultId = getSubProp(image, 'path');
+    console.log(pathList)
     window.rules.image.imagedata.widgets.forEach(function(widget, idx, source){
-      output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-      output += '<input class="auth_text w400" type="text" value="'+ image[widget.field] + '" ';
-      output += buildFnString('window.author.updateActivity', ['images', 'text', image.id, widget.field, 'none'], true);
-      output += '><br>';
+      if (widget.type === "text"){
+        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        output += '<input class="auth_text w400" type="text" value="'+ image[widget.field] + '" ';
+        output += buildFnString('window.author.updateActivity', ['images', 'text', image.id, widget.field, 'none'], true);
+        output += '><br>';
+      }
+      if (widget.type === "select"){
+        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        output += buildSelect('window.author.updateItem',  image.id, 'image', pathList, defaultId, 'path') + '<br>';
+      }
     });
     updateImages();
     return output + '</div>';
@@ -729,8 +740,10 @@ this.delete = function(type){
     var newVal = domElement.value.toString();
     if (domElement.type === 'checkbox') newVal = domElement.checked;
     if (newVal === '---NONE---') newVal = undefined;
-    var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
+    var objGet = authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
     if (type === 'shape') objGet = authorData.shapes.filter(function(finder){console.log(finder.id, objectId);return (finder.id === objectId);})[0];
+    if (type === 'image') objGet = authorData.images.filter(function(finder){console.log(finder.id, objectId);return (finder.id === objectId);})[0];
+    if (type === 'path') objGet = authorData.paths.filter(function(finder){console.log(finder.id, objectId);return (finder.id === objectId);})[0];
 
     setSubProp(objGet, paramPath, newVal);
     getProps(type+'s', objGet.id);
@@ -863,9 +876,6 @@ this.delete = function(type){
     if(thing===null)return "[object Null]"; // special case
     return Object.prototype.toString.call(thing);
   }
-
-
-
 
   function init(data){
     act.canvas        = document.createElement('canvas');
