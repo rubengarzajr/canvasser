@@ -144,7 +144,6 @@ a{
 }
  #objectholder{
   width: 130px;
-  height: 500px;
   border: 2px rgb(165, 165, 165) solid;
   border-radius: 4px;
   overflow-y: scroll;
@@ -162,7 +161,6 @@ a{
 
 #imageholder {
   width: 130px;
-  height: 500px;
   background-image: url("../author/sample/image/checker.png");
   border: 2px rgb(165, 165, 165) solid;
   border-radius: 4px;
@@ -211,7 +209,8 @@ a{
   background-color: white;
   overflow: auto;
   resize: both;
-  height: 200px;
+  height: 300px;
+  width: 300px;
   margin-bottom: 5px;
 }
 
@@ -317,7 +316,9 @@ a{
 #pathholder{
   margin-bottom:5px;
 }
-
+#animholder{
+  margin-bottom:5px;
+}
 .entrytitle{
   display: table-cell;
   padding: 4px;
@@ -387,7 +388,8 @@ a{
   margin-bottom: 10px;
   margin-top: 10px;
   background-color: rgb(240,240,240);
-  min-height: 90px;
+  min-height: 120px;
+  min-width: 120px;
 }
 
 .deleter{

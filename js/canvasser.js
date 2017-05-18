@@ -1,4 +1,4 @@
-// Canvasser v0.5 rubengarzajr@gmail.com
+// Canvasser rubengarzajr@gmail.com
 // TODO:
 // Set action: allow for multiple actions (array)
 // Responsive Scaling: Fix - currently borked
@@ -69,7 +69,13 @@ function canvasser(vari, interactiveData, dataForm){
        act.vars[v.id] = v.value;
       });
     }
-
+    act.player = [];
+    if (act.data.anims !== undefined){
+      act.data.anims.forEach(function(anim){
+        if (!anim.autostart) return;
+        act.player.push(copyObj(anim, {}));
+      });
+    }
     var externals = Array.from(document.querySelectorAll('[data-canvasser="'+vari+'"]'));
     if (externals.length > 0){
       externals.forEach(function(element){
@@ -77,7 +83,6 @@ function canvasser(vari, interactiveData, dataForm){
       });
     }
     if (window.location.hash !== "") window[vari].external([{"command":"selectonly", "item":window.location.hash.substring(1)}]);
-
     loop();
   }
 
@@ -107,9 +112,7 @@ function canvasser(vari, interactiveData, dataForm){
       pSystemList.push(newPSystem);
     }
 
-    function pSystem(){
-      this.pList = [];
-    }
+    function pSystem(){this.pList = [];}
 
     this.update = function(){
       pSystemList.forEach(function(pSystem, index, particleList){
@@ -177,103 +180,159 @@ function canvasser(vari, interactiveData, dataForm){
     actions();
   }
 
-    function loop(){
-        act.canvas.scale = act.canvas.scrollWidth / act.canvas.width;
-        if (act.mode === "true") act.mode = "none";
-        if (act.mouseDown){
-            act.mouseDownCnt ++;
-            if (act.position.x !== act.prevPosition.x && act.position.y !== act.prevPosition.y && act.mouseDownCnt > 2) {
-                act.mode = "drag";
-                act.canvas.style.cursor = "move";
-            }
-            actions();
+  function loop(){
+    act.canvas.scale = act.canvas.scrollWidth / act.canvas.width;
+
+    act.player.forEach(function(play){
+      if (play.playing   === undefined) play.playing   = [];
+      if (play.prevStamp === undefined) play.prevStamp = Date.now();
+      if (play.time      === undefined) play.time      = 1;
+      if (play.prevTime  === undefined) play.prevTime  = 0;
+
+      play.nowStamp = Date.now();
+      play.time    += play.nowStamp - play.prevStamp;
+      if (play.time > play.length) play.delete = true;
+
+      play.timelist.forEach(function(anim){
+        if (anim.starttime >= play.prevTime && anim.starttime <= play.time) {
+          var animCopy = copyObj(anim, {})
+          play.playing.push(animCopy);
         }
-        else{
-            act.canvas.style.cursor = "default";
+      });
+
+      play.playing.forEach(function(anim){
+        if (anim.type === "play"){
+          var animToPlay = act.data.anims.filter(function(obj){return obj.id === anim.id})[0];
+          act.player.push(copyObj(animToPlay, {}));
+          anim.delete = true;
         }
-        act.context.clearRect(0,0,act.canvas.width,act.canvas.height);
-        if (!act.external) act.applyAction = [];
+        if (anim.endtime === undefined) return;
+        if (anim.endtime < play.time){
+          var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+          if (anim.type === "lerppos" | anim.type === "moveto") {
+            animOb.position.current = {x:anim.endpos.x,y:anim.endpos.y};
+          }
+          anim.delete = true;
+        }
+      });
+      play.playing = play.playing.filter(function(anim){return !anim.delete});
 
-        act.data.objects.forEach(function(obj){
+      play.playing.forEach(function(anim){
+        var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+        if ( anim.type === "moveto") {
+          if (anim.startpos === undefined || anim.fromcurrent) anim.startpos = animOb.position.current;
+          var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
+          var posDiff = {x:(anim.endpos.x - anim.startpos.x) * percent + anim.startpos.x, y:(anim.endpos.y - anim.startpos.y) * percent + anim.startpos.y, }
+          animOb.position.current = {x:posDiff.x,y:posDiff.y}
+        }
 
-            if (obj.parent !== undefined){
-                if (obj.parent.object === undefined){
-                    act.data.objects.forEach(function(parent){
-                        if (parent.id !== obj.parent.id) return;
-                        obj.parent.object = parent;
-                    });
-                }
-            }
+      });
+      play.prevTime = play.time;
+      play.prevStamp = play.nowStamp;
+    });
+    act.player = act.player.filter(function(play){return !play.delete});
 
-            if (obj.type === "shape" && obj.show){
-              var objParent = obj.parent != undefined ? obj.parent.object : undefined;
-              var currentShape = act.data.shapes.filter(function(shape){return shape.id === obj.shape})[0];
-              var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current);
-              if (!obj.testp) return;
-              if (posCheck) act.applyAction.push(obj);
-            }
-
-            if (obj.type === "image"){
-                if (act.imageList[obj.image] === undefined) return;
-
-                if (obj.parent !== undefined){
-                    var parentPos = {current:{x:0,y:0}};
-                    var parentScl = {current:1};
-                    if (obj.parent.object !== undefined){
-                        parentPos = obj.parent.object.position;
-                        parentScl = obj.parent.object.scale;
-                    }
-
-                    if (obj.position.offset === undefined){
-                        obj.position.offset = {x:obj.position.current.x-parentPos.current.x, y:obj.position.current.y-parentPos.current.y};
-                    }
-                    if (obj.scale.offset === undefined){
-                        obj.scale.offset = obj.scale.current-parentScl.current;
-                    }
-
-                    if (obj.position.destination !== undefined){
-                        var dest = {
-                            "x":parentPos.current.x + Math.floor(obj.position.destination.x * parentScl.current),
-                            "y":parentPos.current.y + Math.floor(obj.position.destination.y * parentScl.current)
-                        };
-                        var newVals              = lerpTo(obj.position.offset, obj.position.destination, obj.position.rate);
-                        obj.position.offset      = newVals.newCurrent;
-                        obj.position.destination = (newVals.newDestination===undefined? undefined : obj.position.destination);
-                    }
-
-                    obj.position.current = {
-                        "x":parentPos.current.x +  Math.floor(obj.position.offset.x * parentScl.current),
-                        "y":parentPos.current.y +  Math.floor(obj.position.offset.y * parentScl.current)
-                    };
-
-                    obj.scale.current = parentScl.current;
-                }
-                var newVals              = lerpTo(obj.position.current, obj.position.destination, obj.position.rate);
-                obj.position.current     = newVals.newCurrent;
-                obj.position.destination = newVals.newDestination;
-
-                lerpOne(obj, "scale");
-                lerpOne(obj, "opacity");
-
-                var pos = {"x":obj.position.current.x, "y":obj.position.current.y};
-                if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
-                    obj.scale.current = 0.01;
-                }
-                if (obj.origin === "center") pos={"x":Math.floor(pos.x-act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":Math.floor(pos.y-act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
-                if (obj.show){
-                    act.context.globalAlpha = obj.opacity.current !== undefined ? obj.opacity.current : 1;
-                    act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
-                    act.context.globalAlpha = 1;
-                    if (!obj.testp) return;
-                    var pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
-                    if (pixelData_img[3] != 0) act.applyAction.push(obj);
-                }
-            }
-        });
-        pManager.update();
-        act.prevPosition = {x:act.position.x, y:act.position.y};
-        window.requestAnimationFrame(loop);
+    if (act.mode === "true") act.mode = "none";
+    if (act.mouseDown){
+      act.mouseDownCnt ++;
+      if (act.position.x !== act.prevPosition.x && act.position.y !== act.prevPosition.y && act.mouseDownCnt > 2) {
+        act.mode = "drag";
+        act.canvas.style.cursor = "move";
+      }
+      actions();
     }
+    else{
+      act.canvas.style.cursor = "default";
+    }
+    act.context.clearRect(0,0,act.canvas.width,act.canvas.height);
+    if (!act.external) act.applyAction = [];
+
+    act.data.objects.forEach(function(obj){
+      if (obj.parent !== undefined){
+        if (obj.parent.object === undefined){
+          var parentObj = act.data.objects.filter(function(parent){return parent.id === obj.parent.id})[0];
+          if (parentObj !== undefined) obj.parent.object = parentObj;
+        }
+      }
+
+      if (obj.type === "shape" && obj.show){
+        var objParent = obj.parent != undefined ? obj.parent.object : undefined;
+        var currentShape = act.data.shapes.filter(function(shape){return shape.id === obj.shape})[0];
+        var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current);
+        if (!obj.testp) return;
+        if (posCheck) act.applyAction.push(obj);
+      }
+
+      if (obj.type === "image"){
+        if (act.imageList[obj.image] === undefined) return;
+
+        if (obj.parent !== undefined){
+          var parentPos = {current:{x:0,y:0}};
+          var parentScl = {current:1};
+          if (obj.parent.object !== undefined){
+            parentPos = obj.parent.object.position;
+            parentScl = obj.parent.object.scale;
+          }
+
+          if (obj.position.offset === undefined){
+            obj.position.offset = {x:obj.position.current.x-parentPos.current.x, y:obj.position.current.y-parentPos.current.y};
+          }
+          if (obj.scale.offset === undefined){
+            obj.scale.offset = obj.scale.current-parentScl.current;
+          }
+
+          if (obj.position.destination !== undefined){
+            var dest = {
+                "x":parentPos.current.x + Math.floor(obj.position.destination.x * parentScl.current),
+                "y":parentPos.current.y + Math.floor(obj.position.destination.y * parentScl.current)
+            };
+            var newVals              = lerpTo(obj.position.offset, obj.position.destination, obj.position.rate);
+            obj.position.offset      = newVals.newCurrent;
+            obj.position.destination = (newVals.newDestination===undefined? undefined : obj.position.destination);
+          }
+
+          obj.position.current = {
+            "x":parentPos.current.x +  Math.floor(obj.position.offset.x * parentScl.current),
+            "y":parentPos.current.y +  Math.floor(obj.position.offset.y * parentScl.current)
+          };
+
+          obj.scale.current = parentScl.current;
+        }
+        var newVals              = lerpTo(obj.position.current, obj.position.destination, obj.position.rate);
+        obj.position.current     = newVals.newCurrent;
+        obj.position.destination = newVals.newDestination;
+
+        lerpOne(obj, "scale");
+        lerpOne(obj, "opacity");
+
+        var pos = {"x":obj.position.current.x, "y":obj.position.current.y};
+        if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
+          obj.scale.current = 0.01;
+        }
+        if (obj.origin === "center") pos={"x":Math.floor(pos.x-act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":Math.floor(pos.y-act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
+        if (isNaN(pos.x)){console.log("x NaN"); pos.x = 0;}
+        if (isNaN(pos.y)){console.log("y NaN"); pos.y = 0;}
+        if (obj.show){
+          act.context.globalAlpha = obj.opacity.current !== undefined ? obj.opacity.current : 1;
+          act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
+          act.context.globalAlpha = 1;
+          if (!obj.testp) return;
+          //TODO: Eventually errors out here when animating pos shows NaN
+          // var pixelData_img = [0,0,0,0];
+          // try {
+          //   pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
+          // } catch(error){
+          //   console.log(act.position, pos, obj.scale)
+          // }
+          var pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
+          if (pixelData_img[3] != 0) act.applyAction.push(obj);
+        }
+    }
+  });
+    pManager.update();
+    act.prevPosition = {x:act.position.x, y:act.position.y};
+    window.requestAnimationFrame(loop);
+  }
 
   function lerpOne(obj, item){
     if (obj[item] === undefined) obj[item] = {current:1, rate:0};
@@ -677,6 +736,32 @@ function canvasser(vari, interactiveData, dataForm){
     }
     //obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
     obj[arr[0]] = val;
+  }
+
+  function copyObj(object, newObj){
+    for (var key in object) {
+      if (object.hasOwnProperty(key)) {
+        if (typeof(object[key]) === 'object') {
+          if (Array.isArray(object[key])){
+            newObj[key] = appendToArray(object[key])
+          } else newObj[key] = copyObj(object[key], {});
+        } else newObj[key] = object[key] ;
+      }
+    }
+    return newObj
+  }
+
+  function appendToArray(inArray){
+    var newArr = []
+    inArray.forEach(function(element){
+      if (typeof(element) === 'object') {
+          if (Array.isArray(element)){
+            newArr.push(appendToArray(element))
+          } else newArr.push(copyObj(element, {}));
+        } else newArr.push(element)
+
+    });
+    return newArr;
   }
 
   function lerpTo(inCurrent, inDestination, rate){

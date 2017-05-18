@@ -9,6 +9,10 @@
     <link rel="shortcut icon" href="../favicon.ico" />
     <script src="../js/canvasser.js" type="text/javascript"></script>
     <script src="js/authorcanvasser.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
+    <script src="js/authorcanvasser_buildprops.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
+    <script src="js/authorcanvasser_utils.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
+    <script src="js/authorcanvasser_menus.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
+
     <link href="../css/normalize.css" rel="stylesheet" type="text/css"/>
     <link href="../css/canvasser.css" rel="stylesheet" type="text/css"/>
   </head>
@@ -34,13 +38,13 @@
         </div>
       </div>
 
-      <div id='imagebank' class="skinnybank" style="position:absolute;left:10px; top:80px;">
+      <div id='imagebank' class="skinnybank" style="position:absolute;left:10px; top:285px;">
         <div class="titlebar" id="imagemover">
           <div class="wintitle">Images</div>
           <div class="sp_05 right"></div>
           <div class ="right" onclick="window.author.toggleminmax('imagecontents', 'toggleimages', 664)" style="margin-top: 2px;"><img id="toggleimages" src="image/icon_max_g.png"/></div>
         </div>
-        <div id="imagecontents" class="padlr" style="display:none">
+        <div id="imagecontents" class="padlr" style="display:block">
           <div id="imagemenu" class="submenu">
             <div class="divmenu" onclick="window.author.addImage()">Add</div>
             <div class="divmenu" onclick="window.author.delete('images')">Delete</div>
@@ -99,7 +103,7 @@
             </div>
         </div>
 
-        <div id='settingbank' class="skinnybank" style="position:absolute;left:278px; top:80px;">
+        <div id='settingbank' class="skinnybank" style="position:absolute;left:10px; top:80px;">
             <div class="titlebar" id="settingmover">
                 <div class="wintitle">Settings</div>
                 <div class="sp_05 right"></div>
@@ -129,7 +133,22 @@
             </div>
         </div>
 
-        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:781px; top:80px;">
+        <div id='animbank' class="skinnybank" style="position:absolute;left:10px; top:505px;">
+            <div class="titlebar" id="animmover">
+                <div class="wintitle">Animations</div>
+                <div class="sp_05 right"></div>
+                <div class ="right" onclick="window.author.toggleminmax('animcontents', 'toggleanim', 664)" style="margin-top: 2px;"><img id="toggleanim" src="image/icon_max_g.png"/></div>
+            </div>
+            <div id="animcontents" class="padlr" style="display:block">
+                <div id="animmenu" class="submenu">
+                    <div class="divmenu" onclick="window.author.addAnim()">Add</div>
+                    <div class="divmenu" onclick="window.author.delete('anims')">Delete</div>
+                </div>
+                <div id="animholder"></div>
+            </div>
+        </div>
+
+        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:776px; top:120px;">
             <div class="titlebar" id="propertiesmover">
                 <div class="wintitle">Properties</div>
                 <div class="sp_05 right"></div>

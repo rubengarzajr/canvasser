@@ -41,15 +41,24 @@
       ]
     }
   },
-  "image":{
-    "imagedata":{
+  "anim":{
+    "animdata":{
       "widgets":[
-        {"field":"id",        "type":"text"},
-        {"field":"path",      "type":"select", "id":"pathdata"},
-        {"field":"url",       "type":"text"}
+        {"field":"id",        "type":"text", "css":"w200"},
+        {"field":"autostart", "type":"bool"},
+        {"field":"timelist",  "type":"timelist", "display":"Timeline"}
       ]
     }
   },
+  "image":{
+      "imagedata":{
+        "widgets":[
+          {"field":"id",        "type":"text"},
+          {"field":"path",      "type":"select", "id":"pathdata"},
+          {"field":"url",       "type":"text"}
+        ]
+      }
+    },
   "shape":{
     "shapedata":{
       "widgets":[
@@ -89,6 +98,12 @@
     {"type":"slideobject",  "widgets":[{"field":"id",     "type":"objlist"}, {"field":"constrainx",     "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
     {"type":"url",          "widgets":[{"field":"url",    "type":"filename"}, {"field":"target",  "type":"text"}]},
     {"type":"vis",          "widgets":[{"field":"id",     "type":"text"},     {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
+  ],
+  "anims":[
+    {"type":"console",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"text",   "type":"text"}]},
+    {"type":"lerppos",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"endtime",   "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startpos",  "type":"posxy"}, {"field":"endpos",  "type":"posxy"}]},
+    {"type":"moveto",       "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"destination",  "type":"posxy"}, {"field":"duration",   "type":"number"}]},
+    {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",     "type":"animlist"}]}
   ],
   "widgets":{
     "bool":"boolean",
