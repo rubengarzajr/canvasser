@@ -100,10 +100,10 @@
     {"type":"vis",          "widgets":[{"field":"id",     "type":"text"},     {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
   ],
   "anims":[
-    {"type":"console",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"text",   "type":"text"}]},
-    {"type":"lerppos",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"endtime",   "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startpos",  "type":"posxy"}, {"field":"endpos",  "type":"posxy"}]},
-    {"type":"moveto",       "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"destination",  "type":"posxy"}, {"field":"duration",   "type":"number"}]},
-    {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",     "type":"animlist"}]}
+    {"type":"console",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"text",    "type":"text"}]},
+    {"type":"move",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startpos",  "type":"posxy"}, {"field":"endpos",  "type":"posxy"}]},
+    {"type":"turn",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]},
+    {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",      "type":"animlist"}]}
   ],
   "widgets":{
     "bool":"boolean",

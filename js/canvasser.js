@@ -209,8 +209,11 @@ function canvasser(vari, interactiveData, dataForm){
         if (anim.endtime === undefined) return;
         if (anim.endtime < play.time){
           var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
-          if (anim.type === "lerppos" | anim.type === "moveto") {
+          if (anim.type === "move") {
             animOb.position.current = {x:anim.endpos.x,y:anim.endpos.y};
+          }
+          if (anim.type === "turn") {
+            animOb.rotation = radians(anim.endrot);
           }
           anim.delete = true;
         }
@@ -219,11 +222,20 @@ function canvasser(vari, interactiveData, dataForm){
 
       play.playing.forEach(function(anim){
         var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
-        if ( anim.type === "moveto") {
+        if ( anim.type === "move") {
           if (anim.startpos === undefined || anim.fromcurrent) anim.startpos = animOb.position.current;
           var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
           var posDiff = {x:(anim.endpos.x - anim.startpos.x) * percent + anim.startpos.x, y:(anim.endpos.y - anim.startpos.y) * percent + anim.startpos.y, }
-          animOb.position.current = {x:posDiff.x,y:posDiff.y}
+          animOb.position.current = {x:posDiff.x,y:posDiff.y};
+        }
+        if ( anim.type === "turn") {
+          var startrot = 0;
+          var endrot   = radians(anim.endrot);
+          if (anim.startrot === undefined || anim.fromcurrent) startrot = animOb.rotation;
+          else startrot = radians(anim.startrot);
+          var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
+          var rotDiff =(endrot - startrot) * percent + startrot;
+          animOb.rotation = rotDiff;
         }
 
       });
@@ -266,64 +278,51 @@ function canvasser(vari, interactiveData, dataForm){
       if (obj.type === "image"){
         if (act.imageList[obj.image] === undefined) return;
 
+        obj.parentTransform = {position:{x:0,y:0}, scale:1, rotation:0};
         if (obj.parent !== undefined){
           var parentPos = {current:{x:0,y:0}};
           var parentScl = {current:1};
           if (obj.parent.object !== undefined){
-            parentPos = obj.parent.object.position;
-            parentScl = obj.parent.object.scale;
-          }
-
-          if (obj.position.offset === undefined){
-            obj.position.offset = {x:obj.position.current.x-parentPos.current.x, y:obj.position.current.y-parentPos.current.y};
-          }
-          if (obj.scale.offset === undefined){
-            obj.scale.offset = obj.scale.current-parentScl.current;
-          }
-
-          if (obj.position.destination !== undefined){
-            var dest = {
-                "x":parentPos.current.x + Math.floor(obj.position.destination.x * parentScl.current),
-                "y":parentPos.current.y + Math.floor(obj.position.destination.y * parentScl.current)
+            obj.parentTransform = {
+              position:{x: obj.parent.object.position.current.x, y: obj.parent.object.position.current.y},
+              scale:obj.parent.object.scale,
+              rotation:obj.parent.object.rotation
             };
-            var newVals              = lerpTo(obj.position.offset, obj.position.destination, obj.position.rate);
-            obj.position.offset      = newVals.newCurrent;
-            obj.position.destination = (newVals.newDestination===undefined? undefined : obj.position.destination);
           }
 
-          obj.position.current = {
-            "x":parentPos.current.x +  Math.floor(obj.position.offset.x * parentScl.current),
-            "y":parentPos.current.y +  Math.floor(obj.position.offset.y * parentScl.current)
-          };
+          // obj.position.current = {
+          //   "x":parentPos.current.x +  Math.floor(obj.position.current.x * parentScl.current),
+          //   "y":parentPos.current.y +  Math.floor(obj.position.current.y * parentScl.current)
+          // };
 
           obj.scale.current = parentScl.current;
         }
-        var newVals              = lerpTo(obj.position.current, obj.position.destination, obj.position.rate);
-        obj.position.current     = newVals.newCurrent;
-        obj.position.destination = newVals.newDestination;
+        // var newVals              = lerpTo(obj.position.current, obj.position.destination, obj.position.rate);
+        // obj.position.current     = newVals.newCurrent;
+        // obj.position.destination = newVals.newDestination;
 
         lerpOne(obj, "scale");
         lerpOne(obj, "opacity");
 
-        var pos = {"x":obj.position.current.x, "y":obj.position.current.y};
+        var pos = {x:obj.position.current.x + obj.parentTransform.position.x, y:obj.position.current.y + obj.parentTransform.position.y};
+        var offset = {x:0, y:0};
         if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
           obj.scale.current = 0.01;
         }
-        if (obj.origin === "center") pos={"x":Math.floor(pos.x-act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":Math.floor(pos.y-act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
+        if (obj.origin === "center") offset={"x":Math.floor(act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":Math.floor(act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
         if (isNaN(pos.x)){console.log("x NaN"); pos.x = 0;}
         if (isNaN(pos.y)){console.log("y NaN"); pos.y = 0;}
         if (obj.show){
           act.context.globalAlpha = obj.opacity.current !== undefined ? obj.opacity.current : 1;
-          act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
+          act.context.save();
+          act.context.translate(pos.x, pos.y);
+          act.context.rotate(obj.rotation);
+          act.context.translate(-offset.x, -offset.y);
+          //act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
+          act.context.drawImage(act.imageList[obj.image].imageData, 0, 0, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
+          act.context.restore();
           act.context.globalAlpha = 1;
           if (!obj.testp) return;
-          //TODO: Eventually errors out here when animating pos shows NaN
-          // var pixelData_img = [0,0,0,0];
-          // try {
-          //   pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
-          // } catch(error){
-          //   console.log(act.position, pos, obj.scale)
-          // }
           var pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
           if (pixelData_img[3] != 0) act.applyAction.push(obj);
         }
@@ -333,6 +332,10 @@ function canvasser(vari, interactiveData, dataForm){
     act.prevPosition = {x:act.position.x, y:act.position.y};
     window.requestAnimationFrame(loop);
   }
+
+  function radians(degrees) {
+    return degrees * 0.01745329251994;
+  };
 
   function lerpOne(obj, item){
     if (obj[item] === undefined) obj[item] = {current:1, rate:0};
