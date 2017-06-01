@@ -13,7 +13,8 @@ function Menus(){
     animsHolder.innerHTML = anims;
   }
 
-  this.updateImages = function(){
+  this.updateImages = updateImages
+  function updateImages(){
     var imageHolder = document.getElementById("imageholder");
     var images = '<table id="imagestable">';
     authorData.images.forEach(function(image){

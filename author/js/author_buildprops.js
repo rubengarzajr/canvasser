@@ -14,7 +14,8 @@ function BuildProp(){
         output += utils.buildFnString('window.author.updateActivity', ['anims', 'text', animation.id, widget.field, 'none'], true);
         output += '><br>';
       }
-      if (widget.type === "bool")     output += handleBoolean(animation, 'anim', widget, widget.field);
+      if (widget.type === "number")   output += utils.handleNumber(animation, 'anim', widget, widget.field);
+      if (widget.type === "bool")     output += utils.handleBoolean(animation, 'anim', widget, widget.field);
       if (widget.type === "timelist"){
         var timeList = [];
         window.rules.anims.forEach(function(template){timeList.push(template.type)});
@@ -30,7 +31,7 @@ function BuildProp(){
 
             actionWidgets.forEach(function(subWidget, idxPart){
               var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
-              if (subWidget.type === 'bool')    output += handleBoolean(animation,        'anim', subWidget, widgetPath);
+              if (subWidget.type === 'bool')    output += utils.handleBoolean(animation,        'anim', subWidget, widgetPath);
               if (subWidget.type === 'number')  {
                 console.log(animation,   'anim', subWidget, widgetPath)
                 output += utils.handleNumber(animation,   'anim', subWidget, widgetPath);
@@ -44,7 +45,7 @@ function BuildProp(){
           });
           output += '<br>';
         }
-        output += utils.buildDiv('divbutton', 'Add Anim', 'window.author.addanim', [animation.id, widget.field]);
+        output += utils.buildDiv('divbutton', 'Add Command', 'window.author.addAnimCommand', [animation.id, widget.field]);
         output += '</div>';
       }
     });
@@ -80,7 +81,7 @@ function BuildProp(){
       if (widget.type === "number")       output += utils.handleNumber(object, 'object', widget, widget.field);
       if (widget.type === "select")       output += utils.handleSelect(object, 'object', widget, widget.field);
       if (widget.type === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="auth_text" type="text" value="'+ object[widget.field]+'"><br>';
-      if (widget.type === "bool")         output += handleBoolean(object, 'object', widget, widget.field);
+      if (widget.type === "bool")         output += utils.handleBoolean(object, 'object', widget, widget.field);
       if (widget.type === "imagedata"){
         var imageList = utils.objPartToArr(authorData.images, "id");
         output += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
@@ -204,7 +205,7 @@ function BuildProp(){
 
               actionWidgets.forEach(function(subWidget, idxPart){
                 var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
-                if (subWidget.type === 'bool')    output += handleBoolean(object,    'object', subWidget, widgetPath);
+                if (subWidget.type === 'bool')    output += utils.handleBoolean(object,    'object', subWidget, widgetPath);
                 if (subWidget.type === 'number')  output += utils.handleNumber(object,     'object', subWidget, widgetPath);
                 if (subWidget.type === 'objlist') output += handleObjectList(object, 'object', subWidget, widgetPath);
                 if (subWidget.type === 'posxy')   output += utils.handlePosition(object,   'object', subWidget, widgetPath);
@@ -252,7 +253,7 @@ function BuildProp(){
       currentDraw.widgets.forEach(function(subWidget){
       var widgetPath =  'drawcode' + '.' +  idx + '.' +  subWidget.field ;
       prop += '<div class="propitem">'
-      if (subWidget.type === "bool")      prop += handleBoolean(thisProp,  'shape', subWidget, widgetPath);
+      if (subWidget.type === "bool")      prop += utils.handleBoolean(thisProp,  'shape', subWidget, widgetPath);
       if (subWidget.type === 'number')    prop += utils.handleNumber(thisProp,   'shape', subWidget, widgetPath);
       if (subWidget.type === 'posxy')     prop += utils.handlePosition(thisProp, 'shape', subWidget, widgetPath);
       if (subWidget.type === "select")    prop += utils.handleSelect(thisProp,   'shape', subWidget, widgetPath);
@@ -266,13 +267,7 @@ function BuildProp(){
     return prop + '</div>';
   }
 
-  function handleBoolean(object, type, widget, path){
-    var str = '';
-    var defaultId = utils.getSubProp(object, path);
-    str += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
-    str += utils.buildFnString('window.author.updateItem', [object.id, type, path], true) + '><br>';
-    return str;
-  }
+
 
   function handleShapeList(object, type, widget, path){
     var str = '';

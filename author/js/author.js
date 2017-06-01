@@ -18,6 +18,7 @@ function authorcanvasser(dataFile, dataForm){
   var utils     = new CanvasserUtils();
   var menus     = new Menus();
   this.addObject = menus.addObject;
+  this.addImage  = menus.addImage;
 
   var UIdata = {
     mousedown: false,
@@ -151,6 +152,12 @@ function authorcanvasser(dataFile, dataForm){
     authorData.paths.push({id:"newpath",url:"./"});
     updatePaths();
     getPath('newpath');
+  }
+
+  this.addAnim = function(){
+    authorData.anims.push({id:"newanim",autostart:false, length:60, timelist:[]});
+    menus.updateAnims();
+    getProps('anims', 'newanim');
   }
 
   function updatePaths(){

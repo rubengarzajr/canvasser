@@ -46,6 +46,7 @@
       "widgets":[
         {"field":"id",        "type":"text", "css":"w200"},
         {"field":"autostart", "type":"bool"},
+        {"field":"length",    "type":"number"},
         {"field":"timelist",  "type":"timelist", "display":"Timeline"}
       ]
     }

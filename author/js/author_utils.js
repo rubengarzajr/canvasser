@@ -45,6 +45,14 @@ function CanvasserUtils(){
     return out;
   }
 
+  this.handleBoolean = function(object, type, widget, path){
+    var str = '';
+    var defaultId = this.getSubProp(object, path);
+    str += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
+    str += this.buildFnString('window.author.updateItem', [object.id, type, path], true) + '><br>';
+    return str;
+  }
+
   this.handleNumber = function(object, type, widget, path){
     var str = '';
     var num = this.getSubProp(object, path);

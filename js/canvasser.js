@@ -180,6 +180,10 @@ function canvasser(vari, interactiveData, dataForm){
     actions();
   }
 
+  this.report = function(wat){
+    console.log(act[wat]);
+  }
+
   function loop(){
     act.canvas.scale = act.canvas.scrollWidth / act.canvas.width;
 
@@ -191,11 +195,11 @@ function canvasser(vari, interactiveData, dataForm){
 
       play.nowStamp = Date.now();
       play.time    += play.nowStamp - play.prevStamp;
-      if (play.time > play.length) play.delete = true;
+      if (play.time >= play.length) play.delete = true;
 
-      play.timelist.forEach(function(anim){
-        if (anim.starttime >= play.prevTime && anim.starttime <= play.time) {
-          var animCopy = copyObj(anim, {})
+      play.timelist.forEach(function(animList){
+        if (animList.starttime >= play.prevTime && animList.starttime <= play.time) {
+          var animCopy = copyObj(animList, {})
           play.playing.push(animCopy);
         }
       });
@@ -204,7 +208,6 @@ function canvasser(vari, interactiveData, dataForm){
         if (anim.type === "play"){
           var animToPlay = act.data.anims.filter(function(obj){return obj.id === anim.id})[0];
           act.player.push(copyObj(animToPlay, {}));
-          anim.delete = true;
         }
         if (anim.endtime === undefined) return;
         if (anim.endtime < play.time){

@@ -8,10 +8,10 @@
     <title>Author</title>
     <link rel="shortcut icon" href="../favicon.ico" />
     <script src="../js/canvasser.js" type="text/javascript"></script>
-    <script src="js/authorcanvasser.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
-    <script src="js/authorcanvasser_buildprops.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
-    <script src="js/authorcanvasser_utils.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
-    <script src="js/authorcanvasser_menus.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
+    <script src="js/author.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
+    <script src="js/author_buildprops.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
+    <script src="js/author_utils.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
+    <script src="js/author_menus.js?time=<?php echo date("h:i:sa")?>"  type="text/javascript"></script>
 
     <link href="../css/normalize.css" rel="stylesheet" type="text/css"/>
     <link href="../css/canvasser.css" rel="stylesheet" type="text/css"/>
