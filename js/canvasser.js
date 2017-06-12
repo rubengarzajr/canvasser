@@ -49,6 +49,7 @@ function canvasser(vari, interactiveData, dataForm){
     }
     act.data.images.forEach(function(image){
       var imageObj = new Image();
+      imageObj.crossOrigin = "Anonymous";
       imageObj.onload = function(){
         act.imageList[image.id] = {};
         act.imageList[image.id].imageData     = this;
