@@ -121,7 +121,7 @@
   },
   "select":{
     "conditionaltype":{"list":["position"]},
-    "easetype":{"list":["linear","inQuad", "outQuad", "inOutQuad"]},
+    "easetype":{"list":["linear","inExp","outExp","inOutExp","inQuad", "outQuad", "inOutQuad"]},
     "filtertype":{"list":["object", "group"]},
     "objectorigin":{"list":["upper_left", "center"]},
     "objecttype":{"list":["image", "shape"]}

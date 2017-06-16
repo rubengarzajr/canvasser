@@ -83,6 +83,7 @@ function CanvasserUtils(){
   this.handleNumber = function(object, type, widget, path){
     var str = '';
     var num = this.getSubProp(object, path);
+    if (num === undefined) num = 0;
     str += this.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += '<input class="auth_xy" type="number" value="'+ num + '" ';
     str += this.buildFnString('window.author.updateItem', [object.id, type, path], true);
@@ -118,6 +119,8 @@ function CanvasserUtils(){
   this.handlePosition = function(object, type, widget, path){
     var str = '';
     var pos = {x:this.getSubProp(object, path+'.x'), y:this.getSubProp(object, path+'.y')};
+    if (pos.x === undefined) pos.x = 0;
+    if (pos.y === undefined) pos.y = 0;
     str += this.buildDiv('entrylabel c_entrylabel_pos w100', widget.field );
     str += '<span>';
     str += '<span class="entrytitle c_entrylabel_pos">X</span>'

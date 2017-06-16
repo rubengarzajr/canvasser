@@ -4,6 +4,7 @@ function Menus(){
     var animsHolder = document.getElementById("animholder");
     var anims = '<table class="objtable" id="animstable" width="100%">';
 
+    if (authorData.anims === undefined) authorData.anims = [];
     authorData.anims.forEach(function(anim){
       anims += '<tr class="clicktr" id="'+anim.id+'" onclick="window.author.getProps(\'anims\',\''+ anim.id + '\')">';
       anims +='<td width="100%">' + anim.id + '</td>';

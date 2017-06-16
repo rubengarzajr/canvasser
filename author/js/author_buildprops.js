@@ -7,7 +7,6 @@ function BuildProp(){
     var animList = utils.objPartToArr(authorData.anims, "id");
 
     window.rules.anim.animdata.widgets.forEach(function(widget, idx, source){
-      console.log(widget.type)
       if (widget.type === "text"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += '<input class="auth_text '+widget.css+'" type="text" value="'+ animation[widget.field] + '" ';
@@ -34,7 +33,6 @@ function BuildProp(){
               var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
               if (subWidget.type === 'bool')    output += utils.handleBoolean(animation,        'anim', subWidget, widgetPath);
               if (subWidget.type === 'number')  {
-                console.log(animation,   'anim', subWidget, widgetPath)
                 output += utils.handleNumber(animation,   'anim', subWidget, widgetPath);
               }
               if (subWidget.type === 'objlist') output += handleObjectList(animation,     'anim', subWidget, widgetPath);
@@ -281,7 +279,6 @@ function BuildProp(){
   }
 
   function handleTimeList(animation, type, widget, path){
-    console.log("wee")
     var str = '';
     var animList = utils.objPartToArr(authorData.anims, "id");
     var defaultId = utils.getSubProp(animation, path);

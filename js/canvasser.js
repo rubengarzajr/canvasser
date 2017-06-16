@@ -248,13 +248,15 @@ function canvasser(vari, interactiveData, dataForm){
         if (animOb === undefined) return;
         if (anim.type === "fade") {
           if (animOb.opacity === undefined) animOb.opacity = {current:1};
-          if (anim.startalpha === undefined || anim.fromcurrent) anim.startalpha = animOb.opacity.current;
+          if (anim.startalpha === undefined || anim.startalpha === null || anim.fromcurrent){
+            anim.startalpha = animOb.opacity.current;
+          }
           var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
           var alphaDiff = (anim.endalpha - anim.startalpha) * percent + anim.startalpha;
           animOb.opacity.current = alphaDiff;
         }
         if ( anim.type === "move") {
-          if (anim.startpos === undefined || anim.fromcurrent){
+          if (anim.startpos === undefined || anim.startpos === null || anim.fromcurrent){
             anim.startpos = {x:animOb.position.current.x,y:animOb.position.current.y};
           }
           var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
@@ -413,6 +415,18 @@ function canvasser(vari, interactiveData, dataForm){
     this.linear = function(t, b, c, d){
      return c*t/d + b;
     };
+    this.inExp = function(t, b, c, d){
+      return c * Math.pow( 2, 10 * (t/d - 1) ) + b;
+    }
+    this.outExp = function(t, b, c, d){
+      return c * ( -Math.pow( 2, -10 * t/d ) + 1 ) + b;
+    }
+    this.inOutExp = function(t, b, c, d){
+      t /= d/2;
+      if (t < 1) return c/2 * Math.pow( 2, 10 * (t - 1) ) + b;
+      t--;
+      return c/2 * ( -Math.pow( 2, -10 * t) + 2 ) + b;
+    }
     this.inQuad = function(t, b, c, d){
       t /= d;
       return c*t*t + b;
