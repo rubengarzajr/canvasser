@@ -270,7 +270,8 @@ function canvasser(vari, interactiveData, dataForm){
             y:ease[anim.ease](t, anim.startpos.y, anim.endpos.y-anim.startpos.y, d)
           };
 
-
+          if (isNaN(posDiff.x)){console.log("posDiff x NaN");}
+          if (isNaN(posDiff.y)){console.log("posDiff y NaN");}
 
           //posDiff = {x:(anim.endpos.x - anim.startpos.x) * percent + anim.startpos.x, y:(anim.endpos.y - anim.startpos.y) * percent + anim.startpos.y, }
           animOb.position.current = {x:posDiff.x,y:posDiff.y};
@@ -343,11 +344,6 @@ function canvasser(vari, interactiveData, dataForm){
               rotation:obj.parent.object.rotation
             };
           }
-
-          // obj.position.current = {
-          //   "x":parentPos.current.x +  Math.floor(obj.position.current.x * parentScl.current),
-          //   "y":parentPos.current.y +  Math.floor(obj.position.current.y * parentScl.current)
-          // };
 
           obj.scale.current = parentScl.current;
         }
