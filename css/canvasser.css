@@ -288,7 +288,7 @@ a{
   color: rgb(220,220,220);
   cursor: pointer;
   font-family: button;
-  display: inline-block;
+  display: table-cell;
   padding: 2px;
   margin: 2px;
   font-size: .85em;
@@ -458,6 +458,23 @@ a{
     text-align: center;
 }
 
+.actionblock{
+  background-color: #7695af;
+  margin: 5px 0px;
+  border: #5a6b79 solid;
+  border-width: 2px 0px;
+}
+
+.rightx{
+  float: right;
+  color: #ffb566;
+  margin: 2px 5px 0px 0px;
+  font-size: 1.2em;
+  background-color: #960000;
+  padding: 1px 5px;
+  border: #b1b1b1 2px solid;
+  cursor: pointer;
+}
 
 .sp_05{
     padding: 5px;

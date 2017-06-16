@@ -116,6 +116,7 @@ function authorcanvasser(dataFile, dataForm){
     menus.updateObjects();
     menus.updateImages();
     menus.updateShapes();
+    menus.updateAnims();
     initCanvasser("sample", pasteData, "string");
   }
   this.format = function(){
@@ -213,14 +214,13 @@ function authorcanvasser(dataFile, dataForm){
     thisProp = authorData[type].filter(function(selected){return selected.id === id;})[0];
     if (thisProp === undefined) return;
     var titleText = '<div class="proptitle">';
-    if (type === "objects") titleText =  'Object: ' + id + ' : ' + thisProp.type;
-    if (type === "images") titleText = 'Image: ' + id;
-    if (type === "anims") titleText = 'Animation: ' + id;
+    if (type === "objects") titleText = 'Object: '    + id + ' : ' + thisProp.type;
+    if (type === "images")  titleText = 'Image: '     + id;
+    if (type === "anims")   titleText = 'Animation: ' + id;
 
     document.getElementById("propertiestitle").innerHTML = titleText + '</div>';
 
     var propUI = document.getElementById("properties");
-
     if (type === 'anims')   prop = buildProp.anim(thisProp);
     if (type === 'objects') prop = buildProp.object(thisProp);
     if (type === 'images')  prop = buildProp.image(thisProp);
@@ -238,22 +238,61 @@ function authorcanvasser(dataFile, dataForm){
     table.rows[rowIndex].style = "background-color:rgb(97, 255, 55);";
   }
 
+  this.reorder = function(type, direction){
+    var table   = document.getElementById(type + "table");
+    var swapRow = undefined;
+    var swapId  = undefined;
+    for (var i = 0, row; row = table.rows[i]; i++) {
+      if (row.style[0] === "background-color") {
+        swapRow = i;
+        swapId  = row.id;
+      }
+    };
+
+    if (direction === "up" && swapRow > 0){
+      var b = utils.copyObj(authorData[type][swapRow], {});
+      authorData[type][swapRow] = authorData[type][swapRow-1];
+      authorData[type][swapRow-1] = b;
+    }
+    if (direction === "down" && swapRow < authorData[type].length-1){
+      var b = utils.copyObj(authorData[type][swapRow], {});
+      authorData[type][swapRow] = authorData[type][swapRow+1];
+      authorData[type][swapRow+1] = b;
+    }
+
+    updateType(type);
+    getProps(type, swapId);
+    for (var i = 0, row; row = table.rows[i]; i++) {
+      if (row.style[0] === "background-color") {
+        swapRow = i;
+      }
+    };
+
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
   this.delete = function(type){
     var table = document.getElementById(type + "table");
     var delRow = undefined;
     for (var i = 0, row; row = table.rows[i]; i++) {
       if (row.style[0] === "background-color") delRow = row.id;
-  };
+    };
 
-  authorData[type].forEach(function(test, idx){
-    if (test.id === delRow){ authorData[type].splice(idx,1); }
-    if (type === 'shapes') menus.updateShapes();
+    authorData[type].forEach(function(test, idx){
+      if (test.id === delRow){ authorData[type].splice(idx,1); }
+    });
+    updateType(type);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+  function updateType(type){
+    if (type === 'shapes')  menus.updateShapes();
     if (type === 'objects') menus.updateObjects();
-    if (type === 'images') menus.updateImages();
-    if (type === 'paths') updatePaths();
-  });
-  initCanvasser("sample", JSON.stringify(authorData), "string");
-}
+    if (type === 'images')  menus.updateImages();
+    if (type === 'anims')   menus.updateAnims();
+    if (type === 'paths')   updatePaths();
+  }
+
 
   this.adddrawcode = function(id){
     var shape = authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
@@ -341,6 +380,7 @@ function authorcanvasser(dataFile, dataForm){
     getProps(type+'s', objGet.id);
     if (type === 'object') menus.updateObjects();
     if (type === 'shape') menus.updateShapes();
+    if (type === 'anim') menus.updateAnims();
     initCanvasser("sample", JSON.stringify(authorData), "string");
   };
 
@@ -363,6 +403,7 @@ function authorcanvasser(dataFile, dataForm){
     }
     if (type === 'objects') menus.updateObjects();
     if (type === 'images') menus.updateImages();
+    if (type === 'anims') menus.updateAnims();
     getProps(type, id);
     initCanvasser("sample", JSON.stringify(authorData), "string");
   }
@@ -371,6 +412,19 @@ function authorcanvasser(dataFile, dataForm){
     var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
     var prop = utils.getSubProp(objGet, paramPath);
     this.updateItem(domElement, objectId, 'object', paramPath);
+    var newRule = window.rules.actions.filter(function(ruleName){
+      return ruleName.elementType === domElement.value}
+    )[0];
+
+    menus.updateObjects();
+    getProps('objects', objectId);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+  this.updateTimeline = function(domElement, objectId, type, paramPath){
+    var objGet = authorData.anims.filter(function(finder){return (finder.id === objectId);})[0];
+    var prop = utils.getSubProp(objGet, paramPath);
+    this.updateItem(domElement, objectId, 'anim', paramPath);
     var newRule = window.rules.actions.filter(function(ruleName){
       return ruleName.elementType === domElement.value}
     )[0];
@@ -414,7 +468,7 @@ function authorcanvasser(dataFile, dataForm){
     if (type === 'objects') menus.updateObjects();
     if (type === 'images') menus.updateImages();
     if (type === 'anims') menus.updateAnims();
-    getProps(type, id);
+    getProps(type, objGet.id);
     initCanvasser("sample", JSON.stringify(authorData), "string");
   }
 
@@ -424,9 +478,33 @@ function authorcanvasser(dataFile, dataForm){
     if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
     objGet[0][listType].push({"type":"cleardown"});
     getProps("objects",objGet[0].id);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
   }
 
+  this.deleteaction = function(objName, listType, index){
+    var objGet = authorData.objects.filter(function(finder){return (finder.id === objName);});
+    if (objGet.length === 0) return;
+    objGet[0][listType].splice(index,1);
+    getProps("objects",objGet[0].id);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
 
+  this.deletetimeline = function(animName, index){
+    console.log(animName)
+    var animGet = authorData.anims.filter(function(finder){return (finder.id === animName);});
+    if (animGet.length === 0) return;
+    console.log(animGet)
+    animGet[0].timelist.splice(index,1);
+    getProps("anims",animName);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+  this.addAnimCommand = function(animName, timelist){
+    var animGet = authorData.anims.filter(function(finder){return (finder.id === animName);});
+    if (animGet.length === 0) return;
+    animGet[0][timelist].push({"type":"console"});
+    getProps("anims",animName);
+  }
 
   function printRecusiveObj(output, element, indent){
     var indnt = "<br>";

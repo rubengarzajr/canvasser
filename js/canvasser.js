@@ -10,7 +10,7 @@ function initCanvasser(vari, datafile, dataForm){
 function canvasser(vari, interactiveData, dataForm){
   var act      = new interaction();
   var pManager = new particleManager();
-
+  var ease     = new Ease();
   if (dataForm == "file") requestJSON(interactiveData, init);
   else if (dataForm == "string") init(JSON.parse(interactiveData));
   else init(interactiveData);
@@ -196,8 +196,13 @@ function canvasser(vari, interactiveData, dataForm){
 
       play.nowStamp = Date.now();
       play.time    += play.nowStamp - play.prevStamp;
-      if (play.time >= play.length) play.delete = true;
-
+      if (play.time >= play.length) {
+        play.delete = true;
+        if (play.loop){
+          var animToPlay = act.data.anims.filter(function(anim){return anim.id === play.id})[0];
+          act.player.push(copyObj(animToPlay, {}));
+        }
+      }
       play.timelist.forEach(function(animList){
         if (animList.starttime >= play.prevTime && animList.starttime <= play.time) {
           var animCopy = copyObj(animList, {})
@@ -210,11 +215,25 @@ function canvasser(vari, interactiveData, dataForm){
           var animToPlay = act.data.anims.filter(function(obj){return obj.id === anim.id})[0];
           act.player.push(copyObj(animToPlay, {}));
         }
+        // if (anim.type === "console") {
+        //   console.log(anim.text);
+        //   anim.endtime = play.time-1;
+        //   anim.delete = true;
+        // }
         if (anim.endtime === undefined) return;
         if (anim.endtime < play.time){
           var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+          if (animOb === undefined) return;
+
           if (anim.type === "move") {
             animOb.position.current = {x:anim.endpos.x,y:anim.endpos.y};
+          }
+          if (anim.type === "fade") {
+            if (animOb.opacity === undefined) animOb.opacity = {};
+            animOb.opacity.current = anim.endalpha;
+          //  animOb.opacity.showbefore = action.showbefore !== undefined ? action.showbefore : true;
+          //  animOb.opacity.hideafter = action.hideafter !== undefined ? action.hideafter : false;
+
           }
           if (anim.type === "turn") {
             animOb.rotation = radians(anim.endrot);
@@ -226,11 +245,39 @@ function canvasser(vari, interactiveData, dataForm){
 
       play.playing.forEach(function(anim){
         var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
-        if ( anim.type === "move") {
-          if (anim.startpos === undefined || anim.fromcurrent) anim.startpos = animOb.position.current;
+        if (animOb === undefined) return;
+        if (anim.type === "fade") {
+          if (animOb.opacity === undefined) animOb.opacity = {current:1};
+          if (anim.startalpha === undefined || anim.fromcurrent) anim.startalpha = animOb.opacity.current;
           var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
-          var posDiff = {x:(anim.endpos.x - anim.startpos.x) * percent + anim.startpos.x, y:(anim.endpos.y - anim.startpos.y) * percent + anim.startpos.y, }
+          var alphaDiff = (anim.endalpha - anim.startalpha) * percent + anim.startalpha;
+          animOb.opacity.current = alphaDiff;
+        }
+        if ( anim.type === "move") {
+          if (anim.startpos === undefined || anim.fromcurrent){
+            anim.startpos = {x:animOb.position.current.x,y:animOb.position.current.y};
+          }
+          var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
+
+          var t = play.time - anim.starttime;
+          var d = anim.endtime - anim.starttime;
+
+          if (anim.ease === undefined) anim.ease = 'linear';
+          var posDiff = {
+            x:ease[anim.ease](t, anim.startpos.x, anim.endpos.x-anim.startpos.x, d),
+            y:ease[anim.ease](t, anim.startpos.y, anim.endpos.y-anim.startpos.y, d)
+          };
+
+
+
+          //posDiff = {x:(anim.endpos.x - anim.startpos.x) * percent + anim.startpos.x, y:(anim.endpos.y - anim.startpos.y) * percent + anim.startpos.y, }
           animOb.position.current = {x:posDiff.x,y:posDiff.y};
+        }
+        if (anim.type === "scale") {
+          if (anim.startscale === undefined || anim.fromcurrent) anim.startscale = animOb.scale.current;
+          var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
+          var scaleDiff = (anim.endscale - anim.startscale) * percent + anim.startscale;
+          animOb.scale.current = scaleDiff;
         }
         if ( anim.type === "turn") {
           var startrot = 0;
@@ -246,7 +293,8 @@ function canvasser(vari, interactiveData, dataForm){
       play.prevTime = play.time;
       play.prevStamp = play.nowStamp;
     });
-    act.player = act.player.filter(function(play){return !play.delete});
+    act.player = act.player.filter(function(play){return !play.delete
+    });
 
     if (act.mode === "true") act.mode = "none";
     if (act.mouseDown){
@@ -327,7 +375,10 @@ function canvasser(vari, interactiveData, dataForm){
           act.context.restore();
           act.context.globalAlpha = 1;
           if (!obj.testp) return;
-          var pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
+          var pixelData_img = [0,0,0,0];
+          if (obj.scale.current>.001){
+            pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
+          }
           if (pixelData_img[3] != 0) act.applyAction.push(obj);
         }
     }
@@ -356,6 +407,26 @@ function canvasser(vari, interactiveData, dataForm){
         obj[item].hideafter = false;
       }
     }
+  }
+
+  function Ease(t, b, c, d){
+    this.linear = function(t, b, c, d){
+     return c*t/d + b;
+    };
+    this.inQuad = function(t, b, c, d){
+      t /= d;
+      return c*t*t + b;
+    };
+    this.outQuad = function(t, b, c, d) {
+      t /= d;
+      return -c * t*(t-2) + b;
+    };
+    this.inOutQuad = function(t, b, c, d) {
+      t /= d/2;
+      if (t < 1) return c/2*t*t + b;
+      t--;
+      return -c/2 * (t*(t-2) - 1) + b;
+    };
   }
 
   function drawShapes(act, parent, pos, shapeData, color, doTest, testP, scale){
@@ -589,6 +660,16 @@ function canvasser(vari, interactiveData, dataForm){
                         obj.opacity.hideafter = action.hideafter !== undefined ? action.hideafter : false;
                     });
                 }
+                if (action.type === 'increment'){
+                    act.data.objects.forEach(function(obj){
+                      if (!checkAction(action, obj)) return;
+                      var amt = Number(getSubProp(obj, action.prop)) + Number(action.newvalue);
+
+                      if (action.rangemin) {if (amt < Number(action.rangemin)) return;}
+                      if (action.rangemax) {if (amt > Number(action.rangemax)) return;}
+                      setSubProp(obj, action.prop, amt.toString());
+                    });
+                }
                 if (action.type === 'loadinto'){
                     initCanvasser(action.vari, action.url, 'file');
                 }
@@ -735,6 +816,18 @@ function canvasser(vari, interactiveData, dataForm){
     return Math.floor(Math.random()*(max-min+1)+min);
   }
 
+  function getSubProp(obj, desc){
+    var arr = desc.split(".");
+    while(arr.length > 1){
+      var isnum = /^\d+$/.test(arr[0]);
+      if (isnum) arr[0] = parseInt(arr[0]);
+      obj = obj[arr[0]];
+      if (obj === undefined) return undefined;
+      arr.shift();
+    }
+    return obj[arr[0]];
+  }
+
   function setSubProp(obj, desc, val){
     var arr = desc.split(".");
     while(arr.length > 1){
@@ -766,7 +859,6 @@ function canvasser(vari, interactiveData, dataForm){
             newArr.push(appendToArray(element))
           } else newArr.push(copyObj(element, {}));
         } else newArr.push(element)
-
     });
     return newArr;
   }

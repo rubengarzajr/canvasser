@@ -20,6 +20,33 @@ function CanvasserUtils(){
     return obj[arr[0]];
   }
 
+  this.copyObj = copyObj;
+  function copyObj(object, newObj){
+    for (var key in object) {
+      if (object.hasOwnProperty(key)) {
+        if (typeof(object[key]) === 'object') {
+          if (Array.isArray(object[key])){
+            newObj[key] = appendToArray(object[key])
+          } else newObj[key] = copyObj(object[key], {});
+        } else newObj[key] = object[key] ;
+      }
+    }
+    return newObj
+  }
+
+  this.appendToArray = appendToArray;
+  function appendToArray(inArray){
+    var newArr = []
+    inArray.forEach(function(element){
+      if (typeof(element) === 'object') {
+          if (Array.isArray(element)){
+            newArr.push(appendToArray(element))
+          } else newArr.push(copyObj(element, {}));
+        } else newArr.push(element)
+    });
+    return newArr;
+  }
+
   this.buildDiv = function(classes, content, clicker, params){
     var click = ''
     if (clicker !== undefined) {

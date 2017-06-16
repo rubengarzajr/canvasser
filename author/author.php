@@ -79,6 +79,8 @@
           <div id="objectmenu" class="submenu">
             <div class="divmenu" onclick="window.author.addObject()">Add</div>
             <div class="divmenu" onclick="window.author.delete('objects')">Delete</div>
+            <div class="divmenu" onclick="window.author.reorder('objects','up')"> &#9650;</div>
+            <div class="divmenu" onclick="window.author.reorder('objects','down')"> &#9660;</div>
           </div>
           <div id="objectholder"></div>
         </div>

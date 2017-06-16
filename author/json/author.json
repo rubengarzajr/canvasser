@@ -46,6 +46,7 @@
       "widgets":[
         {"field":"id",        "type":"text", "css":"w200"},
         {"field":"autostart", "type":"bool"},
+        {"field":"loop",      "type":"bool"},
         {"field":"length",    "type":"number"},
         {"field":"timelist",  "type":"timelist", "display":"Timeline"}
       ]
@@ -89,9 +90,10 @@
     {"type":"cleardown",    "widgets":[]},
     {"type":"console",      "widgets":[{"field":"text",   "type":"text"}]},
     {"type":"conditional",  "widgets":[{"field":"check",  "type":"select", "id":"conditionaltype"},{"field":"itemtocheck",   "type":"objlist"}, {"field":"position",   "type":"objlist"}]},
-    {"type":"loadinto",     "widgets":[{"field":"url",    "type":"text"},     {"field":"vari",    "type":"text"}]},
     {"type":"destposition", "widgets":[{"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"destination",  "type":"posxy"}, {"field":"rate",   "type":"number"}]},
     {"type":"groupcolor",   "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
+    {"type":"increment",    "widgets":[{"field":"filter", "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}, {"field":"rangemin",   "type":"number"}, {"field":"rangemax",   "type":"number"}]},
+    {"type":"loadinto",     "widgets":[{"field":"url",    "type":"text"},     {"field":"vari",    "type":"text"}]},
     {"type":"loadpage",     "widgets":[{"field":"url",    "type":"text"}]},
     {"type":"objectcolor",  "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
     {"type":"scaledest",    "widgets":[{"field":"filter", "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"destination",    "type":"number"},  {"field":"showbefore",  "type":"bool"},   {"field":"hideafter",  "type":"bool"}, {"field":"rate",  "type":"number"}]},
@@ -102,9 +104,11 @@
   ],
   "anims":[
     {"type":"console",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"text",    "type":"text"}]},
-    {"type":"move",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startpos",  "type":"posxy"}, {"field":"endpos",  "type":"posxy"}]},
-    {"type":"turn",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]},
-    {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",      "type":"animlist"}]}
+    {"type":"fade",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startalpha",  "type":"number"}, {"field":"endalpha",  "type":"number"}]},
+    {"type":"move",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startpos",  "type":"posxy"}, {"field":"endpos",  "type":"posxy"}, {"field":"ease",  "type":"select", "id":"easetype"}]},
+    {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",      "type":"animlist"}]},
+    {"type":"scale",        "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startscale",  "type":"number"}, {"field":"endscale",  "type":"number"}]},
+    {"type":"turn",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]}
   ],
   "widgets":{
     "bool":"boolean",
@@ -117,6 +121,7 @@
   },
   "select":{
     "conditionaltype":{"list":["position"]},
+    "easetype":{"list":["linear","inQuad", "outQuad", "inOutQuad"]},
     "filtertype":{"list":["object", "group"]},
     "objectorigin":{"list":["upper_left", "center"]},
     "objecttype":{"list":["image", "shape"]}

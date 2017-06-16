@@ -22,12 +22,13 @@ function BuildProp(){
         output += '<div><div class="pos_holder mw400"><div class="pos_title">' + widget.display + '</div>';
         if (animation[widget.field] !== undefined){
           animation[widget.field].forEach(function(actobject, idx){
-            console.log(actobject)
             var actionWidgets = window.rules.anims.filter(function(type){ return type.type === actobject.type});
             if (actionWidgets.length === 0) return;
             actionWidgets = actionWidgets[0].widgets;
-            output += '<div class="actionspacer"></div><div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-            output += utils.buildSelect('window.author.updateActionList',  animation.id, "anim", timeList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
+            output += '<div class="actionblock">';
+            output += '<div class="rightx" onclick="window.author.deletetimeline('+"'"+animation.id+"'"+','+idx+')">X</div>' + '<br>';
+            output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
+            output += utils.buildSelect('window.author.updateTimeline',  animation.id, "anim", timeList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
 
             actionWidgets.forEach(function(subWidget, idxPart){
               var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
@@ -41,7 +42,7 @@ function BuildProp(){
               if (subWidget.type === 'select')  output += utils.handleSelect(animation,   'anim', subWidget, widgetPath);
               if (subWidget.type === "text")    output += handleText(animation,           'anim', subWidget, widgetPath, 'w100');
             });
-
+            output += '</div>';
           });
           output += '<br>';
         }
@@ -200,9 +201,10 @@ function BuildProp(){
               var actionWidgets = window.rules.actions.filter(function(type){ return type.type === actobject.type});
               if (actionWidgets.length === 0) return;
               actionWidgets = actionWidgets[0].widgets;
-              output += '<div class="actionspacer"></div><div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-              output += utils.buildSelect('window.author.updateActionList',  object.id, "object", actionsList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
-
+              output += '<div class="actionblock">';
+              output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
+              output += utils.buildSelect('window.author.updateActionList',  object.id, "object", actionsList, actobject.type, widget.field+'.'+idx+'.type');
+              output += '<div class="rightx" onclick="window.author.deleteaction('+"'"+object.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
               actionWidgets.forEach(function(subWidget, idxPart){
                 var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
                 if (subWidget.type === 'bool')    output += utils.handleBoolean(object,    'object', subWidget, widgetPath);
@@ -212,7 +214,7 @@ function BuildProp(){
                 if (subWidget.type === 'select')  output += utils.handleSelect(object,     'object', subWidget, widgetPath);
                 if (subWidget.type === "text")    output += handleText(object,       'object', subWidget, widgetPath, 'w100');
               });
-
+              output += '</div>';
             });
             output += '<br>';
           }

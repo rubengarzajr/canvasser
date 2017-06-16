@@ -14,8 +14,9 @@
 {"id":"drag1",  "path":"author", "url":"sample_drag_1.png"}
 ],
 "anims":[
-{ "id":"test",
+{ "id":"mover",
   "autostart":true,
+  "loop":true,
   "length":4001,
   "timelist":[
     {"starttime": 1,    "endtime":1000, "type":"move", "id":"click_button_off", "filter":"object", "fromcurrent":true, "endpos":{"x":-100,"y":100}},
@@ -23,8 +24,16 @@
     {"starttime": 2000, "endtime":3000, "type":"move", "id":"click_button_off", "filter":"object", "fromcurrent":true, "endpos":{"x":100,"y":200}},
     {"starttime": 3000, "endtime":4000, "type":"move", "id":"click_button_off", "filter":"object", "fromcurrent":true, "endpos":{"x":100,"y":100}},
     {"starttime": 1,    "endtime":2000, "type":"turn", "id":"click_button_off", "filter":"object", "fromcurrent":true,"startrot":0, "endrot":90},
-    {"starttime": 2000, "endtime":4000, "type":"turn", "id":"click_button_off", "filter":"object", "fromcurrent":true,"startrot":0, "endrot":0},
-    {"starttime": 4001, "type":"play", "id":"test"}
+    {"starttime": 2000, "endtime":4000, "type":"turn", "id":"click_button_off", "filter":"object", "fromcurrent":true,"startrot":0, "endrot":0}
+  ]
+},
+{ "id":"fader",
+  "autostart":true,
+  "loop":true,
+  "length":2001,
+  "timelist":[
+    {"starttime": 1,    "endtime":1000, "type":"fade", "id":"bkimg", "filter":"object", "fromcurrent":true, "endalpha":0},
+    {"starttime": 1000, "endtime":2000, "type":"fade", "id":"bkimg", "filter":"object", "fromcurrent":true, "endalpha":1}
   ]
 }
 ],
