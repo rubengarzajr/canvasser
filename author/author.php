@@ -145,6 +145,7 @@
                 <div id="animmenu" class="submenu">
                     <div class="divmenu" onclick="window.author.addAnim()">Add</div>
                     <div class="divmenu" onclick="window.author.delete('anims')">Delete</div>
+                    <div class="divmenu" onclick="window.author.copy('anims')">Copy</div>
                 </div>
                 <div id="animholder"></div>
             </div>
