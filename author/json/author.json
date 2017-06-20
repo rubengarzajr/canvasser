@@ -18,6 +18,7 @@
         {"field":"image",     "type":"imagedata"},
         {"field":"origin",    "type":"select", "id":"objectorigin"},
         {"field":"position",  "type":"posxy"},
+        {"field":"atlascell", "type":"cellxy"},
         {"field":"scale",     "type":"scale"},
         {"field":"testp",     "type":"bool"},
         {"field":"clicklist", "type":"actions", "display":"Click/Touch Event"},
@@ -55,9 +56,12 @@
   "image":{
       "imagedata":{
         "widgets":[
-          {"field":"id",        "type":"text"},
-          {"field":"path",      "type":"select", "id":"pathdata"},
-          {"field":"url",       "type":"text"}
+          {"field":"id",         "type":"text"},
+          {"field":"path",       "type":"select", "id":"pathdata"},
+          {"field":"url",        "type":"text"},
+          {"field":"atlas",      "type":"bool"},
+          {"field":"cellwidth",  "type":"number"},
+          {"field":"cellheight", "type":"number"}
         ]
       }
     },

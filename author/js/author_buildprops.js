@@ -67,6 +67,8 @@ function BuildProp(){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += utils.buildSelect('window.author.updateItem',  image.id, 'image', pathList, defaultId, 'path') + '<br>';
       }
+      if (widget.type === "number")       output += utils.handleNumber(image, 'image', widget, widget.field);
+      if (widget.type === "bool")         output += utils.handleBoolean(image, 'image', widget, widget.field);
     });
     menus.updateImages();
     return output + '</div>';
@@ -85,6 +87,11 @@ function BuildProp(){
         var imageList = utils.objPartToArr(authorData.images, "id");
         output += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
         output += utils.buildSelect('window.author.updateItem',  object.id, 'object', imageList, object[widget.field], widget.field) + '<br>';
+        var flipTest = authorData.images.filter(function(img){ return img.id === object.image})[0];
+        if(flipTest.atlas){
+          output += utils.handleNumber(object, 'object', {field:'atlascell.x'}, 'atlascell.x');
+          output += utils.handleNumber(object, 'object', {field:'atlascell.y'}, 'atlascell.y');
+        }
       }
       if (widget.type === "shapelist") output += handleShapeList(object,'object', widget, widget.field);
       if (widget.type === "objlist")   output += handleObjectList(object, 'object', widget, widget.field);
@@ -94,22 +101,27 @@ function BuildProp(){
         var hasDestination = false;
         var hasRate        = false;
         var hasOffset      = false;
+        if ( object[widget.field] === undefined){
+          object[widget.field] = {current:{x:0,y:0}};
+        }
         for(var posObj in object[widget.field]){
           if (posObj === "destination") hasDestination = true;
           if (posObj === "offset")      hasOffset      = true;
           if (posObj === "rate")        hasRate        = true;
         }
+
         if (object.parent !== undefined && !hasOffset) object[widget.field].offset = object[widget.field].current;
         if (!hasDestination) object[widget.field].destination = undefined;
         if (!hasRate) object[widget.field].rate = 0;
 
         for(var posObj in object[widget.field]){
-          if (posObj === "rate"){
-            var tempPos =  (object[widget.field][posObj] !== undefined ? tempPos = object[widget.field][posObj] : 0);
-            output += '<div class="entrylabel c_entrylabel_pos w50">' + posObj + '</div><input class="auth_xy"';
-            output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.'+posObj], true);
-            output += 'type="number" value=' + object.position.rate + ' />' + '<br>';
-          }else{
+          // if (posObj === "rate"){
+          //   var tempPos =  (object[widget.field][posObj] !== undefined ? tempPos = object[widget.field][posObj] : 0);
+          //   output += '<div class="entrylabel c_entrylabel_pos w50">' + posObj + '</div><input class="auth_xy"';
+          //   output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.'+posObj], true);
+          //   output += 'type="number" value=' + object.position.rate + ' />' + '<br>';
+          // }else{
+          if (posObj === 'current'){
             var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)};
             var hasXY = false;
             var enable = true;
@@ -125,20 +137,20 @@ function BuildProp(){
 
             if (posObj === "current" && !goPos) {hasXY = false; enable=false;}
             if (posObj === "offset" && goPos) {hasXY = false; enable=false;}
-            output += '<div class="entrylabel c_entrylabel_pos w100">' + posObj + '</div><span ' +  (hasXY ? "" : 'style="display:none"') + '>';
+            output += '<div class="entrylabel c_entrylabel_pos w100">' + posObj + '</div><br><span ' +  (hasXY ? "" : 'style="display:none"') + '>';
             output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy" ';
             output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.'+posObj+'.x'], true);
             output += 'type="number" value=' + tempPos.x + ' />';
             output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy" ';
             output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.'+posObj+'.y'], true);
             output += 'type="number" value=' + tempPos.y + ' />';
-            if (posObj !== 'current' && posObj !== 'offset') output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
+            //if (posObj !== 'current' && posObj !== 'offset') output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
             output += '</span>'
-            if (enable) output += '<div class ="divbutton" onclick="window.author.createPosXY(\''+object.id+'\',\'destination\')">Enable</div>'
-            output += '<br>';
+            // if (enable) output += '<div class ="divbutton" onclick="window.author.createPosXY(\''+object.id+'\',\'destination\')">Enable</div>'
+            // output += '<br>';
           }
         }
-        output += '<div class ="divbutton" onclick="window.author.reload()">Add position</div>'
+      //  output += '<div class ="divbutton" onclick="window.author.reload()">Add position</div>'
         output += '</div>';
       }
       if (widget.type === "color"){

@@ -14,6 +14,7 @@ function initAuthorCanvasser(vari, datafile, dataForm){
 }
 
 function authorcanvasser(dataFile, dataForm){
+
   var buildProp = new BuildProp();
   var utils     = new CanvasserUtils();
   var menus     = new Menus();
@@ -49,6 +50,22 @@ function authorcanvasser(dataFile, dataForm){
   updatePaths();
   menus.updateShapes();
   menus.updateAnims();
+
+  function getMousePos(canvas, evt) {
+          var rect = canvas.getBoundingClientRect();
+          return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+          };
+        }
+
+  var canvas = document.getElementById('activity');
+  var context = canvas.getContext('2d');
+  canvas.addEventListener('mousemove', function(evt) {
+  var mousePos = getMousePos(canvas, evt);
+  var message =  mousePos.x + ',' + mousePos.y;
+  document.getElementById('outputtitle').innerHTML = message;
+  }, false);
   loop();
 
   function loop(){

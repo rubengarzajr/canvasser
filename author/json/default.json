@@ -5,13 +5,15 @@
 {"id":"drag_button",      "type":"image", "order":1, "show":true, "group":["buttons"],"image":"drag1",  "scale":{"current":1}, "rotation":0, "position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[{"type":"slideobject","id":"drag_button"}],"clicklist":[]},
 {"id":"click_button_on",  "type":"image", "order":1, "show":true, "group":["buttons"],"image":"click1", "scale":{"current":1}, "rotation":0, "position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]},
 {"id":"click_button_off", "type":"image", "order":1, "show":true, "group":["buttons"],"image":"click2", "scale":{"current":1}, "rotation":0, "origin":"center", "parent":{"id":"drag_button"},"position":{"current":{"x":90,"y":75}},"testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":true}]},
-{"id":"txt",              "type":"shape", "order":1, "show":true, "group":[],         "shape":"t1",     "scale":{"current":1}, "rotation":0, "origin":"center","position":{"current":{"x":20,"y":10}}, "color":{"current":["rgba(255,255,255,1)"], "default":["rgba(255,0,0,1)"], "select":["rgba(243,243,243,1)"]}, "testp":false, "clicklist":[]}
+{"id":"txt",              "type":"shape", "order":1, "show":true, "group":[],         "shape":"t1",     "scale":{"current":1}, "rotation":0, "origin":"center","position":{"current":{"x":20,"y":10}}, "color":{"current":["rgba(255,255,255,1)"], "default":["rgba(255,0,0,1)"], "select":["rgba(243,243,243,1)"]}, "testp":false, "clicklist":[]},
+{"id":"cube",             "type":"image", "order":1, "show":true, "group":["buttons"],"image":"cube",  "scale":{"current":1}, "rotation":0, "position":{"current":{"x":20,"y":350}}, "atlascell":{"x":0,"y":0}, "testp":false,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]}
 ],
 "images":[
 {"id":"backgr", "path":"author", "url":"background_400px.png"},
 {"id":"click1", "path":"author", "url":"sample_click_1.png"},
 {"id":"click2", "path":"author", "url":"sample_click_2.png"},
-{"id":"drag1",  "path":"author", "url":"sample_drag_1.png"}
+{"id":"drag1",  "path":"author", "url":"sample_drag_1.png"},
+{"id":"cube",  "path":"author", "url":"cube_spinner.png",  "atlas": true, "cellwidth": 100, "cellheight": 100}
 ],
 "anims":[
 { "id":"mover",

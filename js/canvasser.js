@@ -30,6 +30,7 @@ function canvasser(vari, interactiveData, dataForm){
 
   function init(data){
     act.canvas  = document.createElement('canvas');
+    act.canvas.id = data.settings.canvasdomname;
     act.context = act.canvas.getContext('2d');
     act.canvas.width  = data.settings.canvaswidth;
     act.canvas.height = data.settings.canvasheight;
@@ -58,9 +59,17 @@ function canvasser(vari, interactiveData, dataForm){
         act.imageList[image.id].canvas.height = this.height;
         act.imageList[image.id].context       = act.imageList[image.id].canvas.getContext('2d');
         act.imageList[image.id].context.drawImage(this, 0, 0, this.width, this.height);
+        if (image.atlas){
+          act.imageList[image.id].atlas = {};
+          act.imageList[image.id].atlas.cellwidth = image.cellwidth;
+          act.imageList[image.id].atlas.cellheight = image.cellheight;
+          act.imageList[image.id].atlas.numX = Math.floor(this.width / image.cellwidth);
+          act.imageList[image.id].atlas.numY = Math.floor(this.height / image.cellheight);
+        }
       };
       if (image.path != undefined) image.url = act.pathList[image.path] + '/' + image.url;
       imageObj.src = image.url + '?' + new Date().getTime();
+
       imageObj.setAttribute('crossOrigin', 'anonymous');
     });
 
@@ -369,7 +378,23 @@ function canvasser(vari, interactiveData, dataForm){
           act.context.rotate(obj.rotation);
           act.context.translate(-offset.x, -offset.y);
           //act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
-          act.context.drawImage(act.imageList[obj.image].imageData, 0, 0, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
+
+          if (act.imageList[obj.image].atlas){
+            var atlas = act.imageList[obj.image].atlas;
+            act.context.drawImage(act.imageList[obj.image].imageData,
+
+             atlas.cellwidth*obj.atlascell.x, atlas.cellheight*obj.atlascell.y,
+              atlas.cellwidth, atlas.cellheight,
+            0,0,
+              atlas.cellwidth*obj.scale.current, atlas.cellheight*obj.scale.current,
+              atlas.cellwidth, atlas.cellheight
+//             atlas.cellwidth*obj.atlascell.x+atlas.cellwidth, atlas.cellheight*obj.atlascell.y+atlas.cellheight
+
+            );
+          } else {
+            act.context.drawImage(act.imageList[obj.image].imageData, 0, 0, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
+          }
+          // console.log(act.data.images)
           act.context.restore();
           act.context.globalAlpha = 1;
           if (!obj.testp) return;
