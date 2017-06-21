@@ -45,7 +45,7 @@
   "anim":{
     "animdata":{
       "widgets":[
-        {"field":"id",        "type":"text", "css":"w200"},
+        {"field":"id",        "type":"text", "css":"w100"},
         {"field":"autostart", "type":"bool"},
         {"field":"loop",      "type":"bool"},
         {"field":"length",    "type":"number"},
@@ -56,7 +56,7 @@
   "image":{
       "imagedata":{
         "widgets":[
-          {"field":"id",         "type":"text"},
+          {"field":"id",         "type":"text",   "css":"w100"},
           {"field":"path",       "type":"select", "id":"pathdata"},
           {"field":"url",        "type":"text"},
           {"field":"atlas",      "type":"bool"},
@@ -98,7 +98,7 @@
     {"type":"groupcolor",   "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
     {"type":"increment",    "widgets":[{"field":"filter", "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}, {"field":"rangemin",   "type":"number"}, {"field":"rangemax",   "type":"number"}]},
     {"type":"loadinto",     "widgets":[{"field":"url",    "type":"text"},     {"field":"vari",    "type":"text"}]},
-    {"type":"loadpage",     "widgets":[{"field":"url",    "type":"text"}]},
+    {"type":"loadpage",     "widgets":[{"field":"url",    "type":"text"},  {"field":"newpage",     "type":"bool"}]},
     {"type":"objectcolor",  "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
     {"type":"scaledest",    "widgets":[{"field":"filter", "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"destination",    "type":"number"},  {"field":"showbefore",  "type":"bool"},   {"field":"hideafter",  "type":"bool"}, {"field":"rate",  "type":"number"}]},
     {"type":"set",          "widgets":[{"field":"filter", "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
@@ -109,6 +109,7 @@
   "anims":[
     {"type":"console",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"text",    "type":"text"}]},
     {"type":"fade",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startalpha",  "type":"number"}, {"field":"endalpha",  "type":"number"}]},
+    {"type":"flipbook",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"atlascell.x",  "type":"number"}, {"field":"atlascell.y",  "type":"number"}]},
     {"type":"move",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startpos",  "type":"posxy"}, {"field":"endpos",  "type":"posxy"}, {"field":"ease",  "type":"select", "id":"easetype"}]},
     {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",      "type":"animlist"}]},
     {"type":"scale",        "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startscale",  "type":"number"}, {"field":"endscale",  "type":"number"}]},

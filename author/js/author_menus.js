@@ -14,6 +14,7 @@ function Menus(){
     animsHolder.innerHTML = anims;
   }
 
+
   this.updateImages = updateImages
   function updateImages(){
     var imageHolder = document.getElementById("imageholder");

@@ -224,6 +224,10 @@ function canvasser(vari, interactiveData, dataForm){
           var animToPlay = act.data.anims.filter(function(obj){return obj.id === anim.id})[0];
           act.player.push(copyObj(animToPlay, {}));
         }
+        if (anim.type === "flipbook"){
+          var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+          animOb.atlascell = {x:anim.atlascell.x, y:anim.atlascell.y};
+        }
         // if (anim.type === "console") {
         //   console.log(anim.text);
         //   anim.endtime = play.time-1;
@@ -268,8 +272,9 @@ function canvasser(vari, interactiveData, dataForm){
           if (anim.startpos === undefined || anim.startpos === null || anim.fromcurrent){
             anim.startpos = {x:animOb.position.current.x,y:animOb.position.current.y};
           }
+          if(isNaN(anim.startpos.x)) anim.startpos.x = 0;
+          if(isNaN(anim.startpos.y)) anim.startpos.y = 0;
           var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
-
           var t = play.time - anim.starttime;
           var d = anim.endtime - anim.starttime;
 
@@ -709,7 +714,8 @@ function canvasser(vari, interactiveData, dataForm){
                     initCanvasser(action.vari, action.url, 'file');
                 }
                 if (action.type === 'loadpage'){
-                    window.location.href = action.url;
+                  if (action.newpage) {window.open(action.url);}
+                  else {window.location.href = action.url;}
                 }
                 if (action.type === 'modvar'){
                     if (action.operation === "add") act.vars[action.id] += action.amount;

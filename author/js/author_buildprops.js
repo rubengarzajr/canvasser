@@ -59,7 +59,7 @@ function BuildProp(){
     window.rules.image.imagedata.widgets.forEach(function(widget, idx, source){
       if (widget.type === "text"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += '<input class="auth_text w400" type="text" value="'+ image[widget.field] + '" ';
+        output += '<input class="auth_text w200" type="text" value="'+ image[widget.field] + '" ';
         output += utils.buildFnString('window.author.updateActivity', ['images', 'text', image.id, widget.field, 'none'], true);
         output += '><br>';
       }
@@ -88,9 +88,11 @@ function BuildProp(){
         output += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
         output += utils.buildSelect('window.author.updateItem',  object.id, 'object', imageList, object[widget.field], widget.field) + '<br>';
         var flipTest = authorData.images.filter(function(img){ return img.id === object.image})[0];
-        if(flipTest.atlas){
-          output += utils.handleNumber(object, 'object', {field:'atlascell.x'}, 'atlascell.x');
-          output += utils.handleNumber(object, 'object', {field:'atlascell.y'}, 'atlascell.y');
+        if (flipTest){
+          if(flipTest.atlas){
+            output += utils.handleNumber(object, 'object', {field:'atlascell.x'}, 'atlascell.x');
+            output += utils.handleNumber(object, 'object', {field:'atlascell.y'}, 'atlascell.y');
+          }
         }
       }
       if (widget.type === "shapelist") output += handleShapeList(object,'object', widget, widget.field);

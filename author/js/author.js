@@ -31,15 +31,24 @@ function authorcanvasser(dataFile, dataForm){
 
   authorData = dataFile;
 
+  document.getElementById("animcontents").addEventListener("mousedown",       function(){focusObjD("animbank")},       false);
+  document.getElementById("imagecontents").addEventListener("mousedown",      function(){focusObjD("imagebank")},      false);
+  document.getElementById("jsoncontents").addEventListener("mousedown",       function(){focusObjD("jsonbank")},       false);
+  document.getElementById("objectcontents").addEventListener("mousedown",     function(){focusObjD("objectbank")},     false);
+  document.getElementById("pathcontents").addEventListener("mousedown",       function(){focusObjD("pathbank")}, false);
+  document.getElementById("propertiescontents").addEventListener("mousedown", function(){focusObjD("propertiesbank")}, false);
+  document.getElementById("settingcontents").addEventListener("mousedown",    function(){focusObjD("settingbank")},    false);
+  document.getElementById("shapecontents").addEventListener("mousedown",      function(){focusObjD("shapebank")},      false);
+
+  document.getElementById("animmover").addEventListener("mousedown",       function(){moveObjD("animbank")},       false);
   document.getElementById("canvasmover").addEventListener("mousedown",     function(){moveObjD("canvasbank")},     false);
-  document.getElementById("shapemover").addEventListener("mousedown",      function(){moveObjD("shapebank")},      false);
-  document.getElementById("objectmover").addEventListener("mousedown",     function(){moveObjD("objectbank")},     false);
   document.getElementById("imagemover").addEventListener("mousedown",      function(){moveObjD("imagebank")},      false);
   document.getElementById("jsonmover").addEventListener("mousedown",       function(){moveObjD("jsonbank")},       false);
-  document.getElementById("settingmover").addEventListener("mousedown",    function(){moveObjD("settingbank")},    false);
-  document.getElementById("propertiesmover").addEventListener("mousedown", function(){moveObjD("propertiesbank")}, false);
+  document.getElementById("objectmover").addEventListener("mousedown",     function(){moveObjD("objectbank")},     false);
   document.getElementById("pathmover").addEventListener("mousedown",       function(){moveObjD("pathbank")},       false);
-  document.getElementById("animmover").addEventListener("mousedown",       function(){moveObjD("animbank")},       false);
+  document.getElementById("propertiesmover").addEventListener("mousedown", function(){moveObjD("propertiesbank")}, false);
+  document.getElementById("settingmover").addEventListener("mousedown",    function(){moveObjD("settingbank")},    false);
+  document.getElementById("shapemover").addEventListener("mousedown",      function(){moveObjD("shapebank")},      false);
 
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);
@@ -69,7 +78,7 @@ function authorcanvasser(dataFile, dataForm){
   loop();
 
   function loop(){
-    if (UIdata.moveElement !== null){
+    if (UIdata.moveElement !== null && UIdata.move){
       UIdata.moveElement.style.left = UIdata.mousePos.x  - UIdata.offset.x + "px";
       UIdata.moveElement.style.top  = UIdata.mousePos.y  - UIdata.offset.y + "px";
     }
@@ -89,6 +98,7 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   function moveObjD(element){
+    UIdata.move = true;
     UIdata.mousedown   = true;
     UIdata.moveElement = document.getElementById(element);
     UIdata.zidx ++;
@@ -97,6 +107,13 @@ function authorcanvasser(dataFile, dataForm){
     if (UIdata.moveElement.style.left !== "") off.x = UIdata.mousePos.x - parseInt(UIdata.moveElement.style.left.slice(0,-2));
     if (UIdata.moveElement.style.top  !== "") off.y = UIdata.mousePos.y - parseInt(UIdata.moveElement.style.top.slice(0,-2));
     UIdata.offset      = {x:off.x, y:off.y};
+  }
+
+  function focusObjD(element){
+    UIdata.move = false;
+    UIdata.moveElement = document.getElementById(element);
+    UIdata.zidx ++;
+    UIdata.moveElement.style.zIndex = UIdata.zidx;
   }
 
   function moveObjU(ev){
@@ -297,6 +314,25 @@ function authorcanvasser(dataFile, dataForm){
 
     authorData[type].forEach(function(test, idx){
       if (test.id === delRow){ authorData[type].splice(idx,1); }
+    });
+    updateType(type);
+    initCanvasser("sample", JSON.stringify(authorData), "string");
+  }
+
+  this.copy = function(type){
+    var table = document.getElementById(type + "table");
+    var copyRow = undefined;
+    for (var i = 0, row; row = table.rows[i]; i++) {
+      if (row.style[0] === "background-color") copyRow = row.id;
+    };
+
+    authorData[type].forEach(function(test, idx){
+
+      if (test.id === copyRow){
+        var newObj = utils.copyObj(test, {});
+        newObj.id +="_copy";
+        authorData[type].push(newObj);
+      }
     });
     updateType(type);
     initCanvasser("sample", JSON.stringify(authorData), "string");

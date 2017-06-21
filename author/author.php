@@ -27,7 +27,6 @@
       <div id='canvasbank' class="skinnybank" style="position:absolute; left:160px; top:120px;">
         <div class="titlebar" id="canvasmover">
           <div class="wintitle">Output</div>
-
           <div class="sp_05 right"></div>
           <div class ="right" onclick="window.author.toggleminmax('canvascontents', 'togglecanvas', 500)" style="margin-top: 2px;"><img id="togglecanvas" src="image/icon_min_g.png"/></div>
           <div class="wintitle right" id="outputtitle">X, Y</div>
