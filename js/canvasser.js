@@ -668,19 +668,6 @@ function canvasser(vari, interactiveData, dataForm){
                         window.location.hash = over.id;
                     }
                 }
-                if (action.type === 'destposition'){
-                    act.data.objects.forEach(function(obj){
-                        if (!checkAction(action, obj)) return;
-                        if (typeof action.destination === "string"){
-                            obj.position.destination = {x:obj.position[action.destination].x, y:obj.position[action.destination].y};
-                        }
-                        else{
-                            obj.position.destination = {x:action.destination.x, y:action.destination.y};
-                        }
-                        if (action.rate !== undefined)     obj.position.rate     = action.rate;
-                        if (action.duration !== undefined) obj.position.duration = action.duration;
-                    });
-                }
                 if (action.type === 'execute'){
                     window[action.function](action.params);
                 }
@@ -716,6 +703,10 @@ function canvasser(vari, interactiveData, dataForm){
                 if (action.type === 'loadpage'){
                   if (action.newpage) {window.open(action.url);}
                   else {window.location.href = action.url;}
+                }
+                if (action.type === 'playanim'){
+                    var animToPlay = act.data.anims.filter(function(obj){return obj.id === action.animation})[0];
+                    act.player.push(copyObj(animToPlay, {}));
                 }
                 if (action.type === 'modvar'){
                     if (action.operation === "add") act.vars[action.id] += action.amount;
@@ -754,15 +745,6 @@ function canvasser(vari, interactiveData, dataForm){
                             obj.scale.current = obj.scale.current * action.amount;
                         }
                         if (action.frame === "absolute")  obj.scale.current =  action.amount;
-                    });
-                }
-                if (action.type === 'scaledest'){
-                    act.data.objects.forEach(function(obj){
-                        if (!checkAction(action, obj)) return;
-                        obj.scale.destination = action.destination;
-                        obj.scale.rate        = action.rate;
-                        obj.scale.showbefore  = action.showbefore !== undefined ? action.showbefore : true;
-                        obj.scale.hideafter   = action.hideafter  !== undefined ? action.hideafter : false;
                     });
                 }
                 if (action.type === 'set'){

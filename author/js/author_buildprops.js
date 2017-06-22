@@ -97,62 +97,25 @@ function BuildProp(){
       }
       if (widget.type === "shapelist") output += handleShapeList(object,'object', widget, widget.field);
       if (widget.type === "objlist")   output += handleObjectList(object, 'object', widget, widget.field);
-
       if (widget.type === "posxy"){
         output += '<div style="display:flex"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
-        var hasDestination = false;
-        var hasRate        = false;
-        var hasOffset      = false;
         if ( object[widget.field] === undefined){
           object[widget.field] = {current:{x:0,y:0}};
         }
-        for(var posObj in object[widget.field]){
-          if (posObj === "destination") hasDestination = true;
-          if (posObj === "offset")      hasOffset      = true;
-          if (posObj === "rate")        hasRate        = true;
+        var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)};
+
+        if (object[widget.field].current !== undefined){
+          tempPos = object[widget.field].current;
         }
 
-        if (object.parent !== undefined && !hasOffset) object[widget.field].offset = object[widget.field].current;
-        if (!hasDestination) object[widget.field].destination = undefined;
-        if (!hasRate) object[widget.field].rate = 0;
-
-        for(var posObj in object[widget.field]){
-          // if (posObj === "rate"){
-          //   var tempPos =  (object[widget.field][posObj] !== undefined ? tempPos = object[widget.field][posObj] : 0);
-          //   output += '<div class="entrylabel c_entrylabel_pos w50">' + posObj + '</div><input class="auth_xy"';
-          //   output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.'+posObj], true);
-          //   output += 'type="number" value=' + object.position.rate + ' />' + '<br>';
-          // }else{
-          if (posObj === 'current'){
-            var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)};
-            var hasXY = false;
-            var enable = true;
-            if (object[widget.field][posObj] !== undefined){
-              tempPos = object[widget.field][posObj];
-              hasXY = true;
-              enable = false;
-            }
-            var goPos = false;
-            if (object.parent === undefined || object.parent === {id: undefined}) {
-               goPos = true;
-            }
-
-            if (posObj === "current" && !goPos) {hasXY = false; enable=false;}
-            if (posObj === "offset" && goPos) {hasXY = false; enable=false;}
-            output += '<div class="entrylabel c_entrylabel_pos w100">' + posObj + '</div><br><span ' +  (hasXY ? "" : 'style="display:none"') + '>';
-            output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy" ';
-            output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.'+posObj+'.x'], true);
-            output += 'type="number" value=' + tempPos.x + ' />';
-            output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy" ';
-            output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.'+posObj+'.y'], true);
-            output += 'type="number" value=' + tempPos.y + ' />';
-            //if (posObj !== 'current' && posObj !== 'offset') output += '<div class ="divbutton" onclick="window.author.reload()">Disable</div>'
-            output += '</span>'
-            // if (enable) output += '<div class ="divbutton" onclick="window.author.createPosXY(\''+object.id+'\',\'destination\')">Enable</div>'
-            // output += '<br>';
-          }
-        }
-      //  output += '<div class ="divbutton" onclick="window.author.reload()">Add position</div>'
+        output += '<span>';
+        output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy" ';
+        output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.current.x'], true);
+        output += 'type="number" value=' + tempPos.x + ' />';
+        output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy" ';
+        output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.current.y'], true);
+        output += 'type="number" value=' + tempPos.y + ' />';
+        output += '</span>'
         output += '</div>';
       }
       if (widget.type === "color"){
