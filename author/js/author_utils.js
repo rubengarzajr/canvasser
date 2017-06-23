@@ -23,7 +23,6 @@ function CanvasserUtils(){
   this.copyObj = copyObj;
   function copyObj(object, newObj){
     for (var key in object) {
-      console.log(key)
       if (object.hasOwnProperty(key)) {
         if (typeof(object[key]) === 'object') {
           if (Array.isArray(object[key])){
