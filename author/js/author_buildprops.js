@@ -99,9 +99,7 @@ function BuildProp(){
       if (widget.type === "objlist")   output += handleObjectList(object, 'object', widget, widget.field);
       if (widget.type === "posxy"){
         output += '<div style="display:flex"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
-        if ( object[widget.field] === undefined){
-          object[widget.field] = {current:{x:0,y:0}};
-        }
+        if (object[widget.field] === undefined) object[widget.field] = {current:{x:0,y:0}};
         var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)};
 
         if (object[widget.field].current !== undefined){
@@ -130,41 +128,13 @@ function BuildProp(){
       }
       if (widget.type === "scale"){
         output += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
-        var hasDestination = false;
-        var hasRate        = false;
-        var hasOffset      = false;
-        for(var scaleObj in object[widget.field]){
-          if (scaleObj === "destination") hasDestination = true;
-          if (scaleObj === "rate")        hasRate        = true;
-          if (scaleObj === "offset")      hasOffset      = true;
-        }
-        if (object.parent !== undefined && !hasOffset) object[widget.field].offset = object[widget.field].current;
-        if (!hasDestination) object[widget.field].destination = undefined;
-        if (!hasRate) object[widget.field].rate = 0;
-
-        for (var scaleObj in object[widget.field]){
-          if (scaleObj === "rate"){
-            var tempScale =  (object[widget.field][scaleObj] !== undefined ? tempScale = object[widget.field][scaleObj] : 0);
-            output += '<div class="entrylabel c_entrylabel_pos w50">' + scaleObj + '</div><input class="auth_xy"';
-            output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'scale.'+scaleObj], true);
-            output += 'type="number" value=' + object.scale.rate + ' />' + '<br>';
-          }else{
-            var tempScale = 1;
-            var hasScale = false;
-            if (object[widget.field][scaleObj] !== undefined){
-              tempScale = object[widget.field][scaleObj];
-              hasScale = true;
-            }
-            output += '<div class="entrylabel c_entrylabel_pos w100">' + scaleObj + '</div><span ' +  (hasScale ? "" : 'style="display:none"') + '>';
-            output += ' <input class="auth_xy" ';
-            output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'scale.'+scaleObj], true);
-            output += 'type="number" value=' +tempScale + ' />';
-            if (scaleObj !== 'current')  output += utils.buildDiv('divbutton', 'Disable', 'window.author.reload', []);
-            output += '</span>'
-            if (!hasScale) output += utils.buildDiv('divbutton', 'Enable', 'window.author.createScale', [object.id, 'destination']);
-            output += '<br>';
-          }
-        }
+        if (object[widget.field] === undefined) object[widget.field] = {current:1};
+        scaleObj = object[widget.field].current;
+        output += '<span><input class="auth_xy" ';
+        output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'scale.current'], true);
+        output += 'type="number" value=' +scaleObj + ' />';
+        output += '</span>'
+        //output += '<br>';
         output += '</div></div>';
       }
       if (widget.type === "actions"){

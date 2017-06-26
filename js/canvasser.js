@@ -228,6 +228,9 @@ function canvasser(vari, interactiveData, dataForm){
           var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
           animOb.atlascell = {x:anim.atlascell.x, y:anim.atlascell.y};
         }
+        if (anim.type === 'loadinto'){
+            initCanvasser(anim.vari, anim.url, 'file');
+        }
         // if (anim.type === "console") {
         //   console.log(anim.text);
         //   anim.endtime = play.time-1;
@@ -370,10 +373,18 @@ function canvasser(vari, interactiveData, dataForm){
 
         var pos = {x:obj.position.current.x + obj.parentTransform.position.x, y:obj.position.current.y + obj.parentTransform.position.y};
         var offset = {x:0, y:0};
+        var atlas = act.imageList[obj.image].atlas;
+
         if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
           obj.scale.current = 0.01;
         }
-        if (obj.origin === "center") offset={"x":Math.floor(act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":Math.floor(act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
+        if (obj.origin === "center") {
+          if (atlas){
+              offset={"x":atlas.cellwidth/2*obj.scale.current, "y":atlas.cellheight/2*obj.scale.current}
+          } else {
+            offset={"x":Math.floor(act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":Math.floor(act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
+          }
+        }
         if (isNaN(pos.x)){console.log("x NaN"); pos.x = 0;}
         if (isNaN(pos.y)){console.log("y NaN"); pos.y = 0;}
         if (obj.show){
@@ -382,24 +393,16 @@ function canvasser(vari, interactiveData, dataForm){
           act.context.translate(pos.x, pos.y);
           act.context.rotate(obj.rotation);
           act.context.translate(-offset.x, -offset.y);
-          //act.context.drawImage(act.imageList[obj.image].imageData, pos.x, pos.y, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
-
-          if (act.imageList[obj.image].atlas){
-            var atlas = act.imageList[obj.image].atlas;
+          if (atlas){
             act.context.drawImage(act.imageList[obj.image].imageData,
-
-             atlas.cellwidth*obj.atlascell.x, atlas.cellheight*obj.atlascell.y,
-              atlas.cellwidth, atlas.cellheight,
-            0,0,
+              atlas.cellwidth*obj.atlascell.x, atlas.cellheight*obj.atlascell.y,
+              atlas.cellwidth, atlas.cellheight, 0,0,
               atlas.cellwidth*obj.scale.current, atlas.cellheight*obj.scale.current,
               atlas.cellwidth, atlas.cellheight
-//             atlas.cellwidth*obj.atlascell.x+atlas.cellwidth, atlas.cellheight*obj.atlascell.y+atlas.cellheight
-
             );
           } else {
             act.context.drawImage(act.imageList[obj.image].imageData, 0, 0, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
           }
-          // console.log(act.data.images)
           act.context.restore();
           act.context.globalAlpha = 1;
           if (!obj.testp) return;
@@ -624,8 +627,8 @@ function canvasser(vari, interactiveData, dataForm){
             over[act.mode+"list"].forEach(function(action){
                 if (action.type === 'cleardown'){
                     act.mode         = "none";
-                    act.mouseDown    = false;
-                    act.mouseDownCnt = 0;
+                    //act.mouseDown    = false;
+                    //act.mouseDownCnt = 0;
                 }
                 if (action.type === 'console'){
                     console.log(action.text);
@@ -768,11 +771,10 @@ function canvasser(vari, interactiveData, dataForm){
                         if (act.dragging !== null && obj.id !== act.dragging.id) return;
                         if (obj.id === action.id) {
                             if (obj.parent !== undefined){
-                              if (obj.position.offset === undefined) obj.position[mover] = {x:0,y:0};
-                              if (!action.constrainx) obj.position.offset.x += (act.position.x - act.prevPosition.x) / obj.scale.current;
-                              if (!action.constrainy) obj.position.offset.y += (act.position.y - act.prevPosition.y) / obj.scale.current;
-                            }
-                            else{
+                              if (obj.position.offset === undefined) obj.position.offset = {x:obj.position.current.x,y:obj.position.current.y};
+                              if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
+                              if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
+                            } else{
                               if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
                               if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
                             }

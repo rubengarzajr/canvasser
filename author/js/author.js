@@ -1,7 +1,6 @@
 function initAuthorCanvasser(vari, datafile, dataForm){
   var utils     = new CanvasserUtils();
 
-
   utils.requestJSON("./json/author.json", setRules);
   function setRules(data){
     window.rules  = data;
@@ -13,8 +12,17 @@ function initAuthorCanvasser(vari, datafile, dataForm){
   }
 }
 
+//initCanvasser("sample", JSON.stringify(authorData), "string");
 function restartCanvasser(name, data, type){
-  initCanvasser(name, JSON.stringify(data),type);
+  authorData = data;
+  initCanvasser(name, JSON.stringify(data), type);
+  var menus     = new Menus();
+  menus.updateSettings();
+  menus.updateObjects();
+  menus.updateImages();
+  //updatePaths();
+  menus.updateShapes();
+  menus.updateAnims();
   function getMousePos(canvas, evt) {
           var rect = canvas.getBoundingClientRect();
           return {
@@ -30,8 +38,6 @@ function restartCanvasser(name, data, type){
   var message =  mousePos.x + ',' + mousePos.y;
   document.getElementById('outputtitle').innerHTML = message;
   }, false);
-
-  //restartCanvasser("sample", data, "string");
 }
 
 function authorcanvasser(dataFile, dataForm){
@@ -161,7 +167,7 @@ function authorcanvasser(dataFile, dataForm){
     menus.updateShapes();
     menus.updateAnims();
     //initCanvasser("sample", pasteData, "string");
-    restartCanvasser("sample", pasteData, "string");
+    restartCanvasser("sample", JSON.parse(pasteData), "string");
   }
   this.format = function(){
     var pasteData = document.getElementById("paste").value;
@@ -318,12 +324,10 @@ function authorcanvasser(dataFile, dataForm){
     for (var i = 0, row; row = table.rows[i]; i++) {
       if (row.style[0] === "background-color") delRow = row.id;
     };
-
     authorData[type].forEach(function(test, idx){
-      if (test.id === delRow){ authorData[type].splice(idx,1); }
+      if (type + '_' + test.id === delRow){ authorData[type].splice(idx,1); }
     });
     updateType(type);
-    //initCanvasser("sample", JSON.stringify(authorData), "string");
     restartCanvasser("sample", authorData, "string");
   }
 
