@@ -128,7 +128,7 @@ a{
   background-color: rgb(106, 127, 144);
   border: 1px rgb(106, 127, 144) solid;
   border-radius: 4px;
-  min-width:130px;
+  min-width:160px;
 }
 
 .font-larger{
@@ -143,7 +143,6 @@ a{
   min-width:400px;
 }
  #objectholder{
-  width: 130px;
   border: 2px rgb(165, 165, 165) solid;
   border-radius: 4px;
   overflow-y: scroll;
@@ -159,9 +158,9 @@ a{
   padding-right: 5px;
 }
 
-#imageholder {
-  width: 130px;
-  background-image: url("../author/sample/image/checker.png");
+#imageholder{
+  width: 150px;
+  background-image: url("../sample/image/checker.png");
   border: 2px rgb(165, 165, 165) solid;
   border-radius: 4px;
   overflow-y: scroll;
@@ -181,6 +180,7 @@ a{
   font-size: 1.6em;
   padding-top: 5px;
   padding-bottom: 5px;
+  color: rgb(146, 146, 146);
 }
 
 .imageid{
@@ -251,7 +251,7 @@ a{
 }
 
 .authorbk{
-  background-image: url("../author/image/grid.png");
+  background-image: url("../image/grid.png");
 }
 
 .auth_text{
@@ -352,6 +352,10 @@ a{
     background-color: rgb(212, 226, 226);
     border: 1px rgb(191, 212, 211) solid;
 }
+.w100p{
+  width: 100%;
+}
+
 .w25{
     width: 25px;
 }

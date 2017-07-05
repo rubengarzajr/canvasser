@@ -92,18 +92,20 @@
   ],
   "actions":[
     {"type":"cleardown",    "widgets":[]},
-    {"type":"console",      "widgets":[{"field":"text",   "type":"text"}]},
-    {"type":"conditional",  "widgets":[{"field":"check",  "type":"select", "id":"conditionaltype"},{"field":"itemtocheck",   "type":"objlist"}, {"field":"position",   "type":"objlist"}]},
-    {"type":"groupcolor",   "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
-    {"type":"increment",    "widgets":[{"field":"filter", "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}, {"field":"rangemin",   "type":"number"}, {"field":"rangemax",   "type":"number"}]},
-    {"type":"loadinto",     "widgets":[{"field":"url",    "type":"text"},     {"field":"vari",    "type":"text"}]},
-    {"type":"loadpage",     "widgets":[{"field":"url",    "type":"text"},  {"field":"newpage",     "type":"bool"},  {"field":"intodiv",     "type":"bool"}]},
-    {"type":"objectcolor",  "widgets":[{"field":"id",     "type":"text"},     {"field":"source",  "type":"text"}]},
-    {"type":"playanim",     "widgets":[{"field":"animation",  "type":"text"}]},
-    {"type":"set",          "widgets":[{"field":"filter", "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
-    {"type":"slideobject",  "widgets":[{"field":"id",     "type":"objlist"}, {"field":"constrainx",     "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
-    {"type":"url",          "widgets":[{"field":"url",    "type":"filename"}, {"field":"target",  "type":"text"}]},
-    {"type":"vis",          "widgets":[{"field":"id",     "type":"objlist"},     {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
+    {"type":"console",      "widgets":[{"field":"text",       "type":"text"}]},
+    {"type":"conditional",  "widgets":[{"field":"check",      "type":"select", "id":"conditionaltype"},{"field":"itemtocheck",   "type":"objlist"}, {"field":"position",   "type":"objlist"}]},
+    {"type":"function",     "widgets":[{"field":"id",         "type":"objlist"},  {"field":"function",  "type":"text"}]},
+    {"type":"groupcolor",   "widgets":[{"field":"id",         "type":"text"},     {"field":"source",  "type":"text"}]},
+    {"type":"increment",    "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}, {"field":"rangemin",   "type":"number"}, {"field":"rangemax",   "type":"number"}]},
+    {"type":"loadinto",     "widgets":[{"field":"url",        "type":"text"},     {"field":"vari",    "type":"text"}]},
+    {"type":"loadpage",     "widgets":[{"field":"url",        "type":"text"},  {"field":"newpage",     "type":"bool"},  {"field":"intodiv",     "type":"bool"}]},
+    {"type":"objectcolor",  "widgets":[{"field":"id",         "type":"text"},     {"field":"source",  "type":"text"}]},
+    {"type":"playanim",     "widgets":[{"field":"animation",  "type":"anmlist"}]},
+    {"type":"set",          "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
+    {"type":"slideobject",  "widgets":[{"field":"id",         "type":"objlist"}, {"field":"constrainx",     "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
+    {"type":"sound",        "widgets":[{"field":"id",         "type":"sndlist"}]},
+    {"type":"url",          "widgets":[{"field":"url",        "type":"filename"}, {"field":"target",  "type":"text"}]},
+    {"type":"vis",          "widgets":[{"field":"id",         "type":"objlist"},     {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
   ],
   "anims":[
     {"type":"console",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"text",    "type":"text"}]},
@@ -113,7 +115,16 @@
     {"type":"move",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startpos",  "type":"posxy"}, {"field":"endpos",  "type":"posxy"}, {"field":"ease",  "type":"select", "id":"easetype"}]},
     {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",      "type":"animlist"}]},
     {"type":"scale",        "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startscale",  "type":"number"}, {"field":"endscale",  "type":"number"}]},
-    {"type":"turn",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]}
+    {"type":"sound",        "widgets":[{"field":"starttime",  "type":"number"},  {"field":"id",      "type":"sndlist"}]},
+    {"type":"turn",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime",   "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]},
+    {"type":"vis",          "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"show", "type":"bool"}]}
+  ],
+  "samples":[
+    {"id":"Animation: Atlas",         "url":"anim_atlas.json"},
+    {"id":"Animation: Motion Easing", "url":"anim_motionease.json"},
+    {"id":"Image: Fade",              "url":"image_fade.json"},
+    {"id":"Particle Sample 1",        "url":"particles_sample1.json"},
+    {"id":"lotsostuff",               "url":"multi.json"}
   ],
   "widgets":{
     "bool":"boolean",

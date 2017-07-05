@@ -36,6 +36,8 @@ function BuildProp(){
                 output += utils.handleNumber(animation,   'anim', subWidget, widgetPath);
               }
               if (subWidget.type === 'objlist') output += handleObjectList(animation,     'anim', subWidget, widgetPath);
+              if (subWidget.type === 'anmlist') output += handleAnimList(animation,       'anim', subWidget, widgetPath);
+              if (subWidget.type === 'sndlist') output += handleSoundList(animation,      'anim', subWidget, widgetPath);
               if (subWidget.type === 'posxy')   output += utils.handlePosition(animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'select')  output += utils.handleSelect(animation,   'anim', subWidget, widgetPath);
               if (subWidget.type === "text")    output += handleText(animation,           'anim', subWidget, widgetPath, 'w100');
@@ -95,7 +97,7 @@ function BuildProp(){
           }
         }
       }
-      if (widget.type === "shapelist") output += handleShapeList(object,'object', widget, widget.field);
+      if (widget.type === "shapelist") output += handleShapeList(object,  'object', widget, widget.field);
       if (widget.type === "objlist")   output += handleObjectList(object, 'object', widget, widget.field);
       if (widget.type === "posxy"){
         output += '<div style="display:flex"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
@@ -152,12 +154,14 @@ function BuildProp(){
               output += '<div class="rightx" onclick="window.author.deleteaction('+"'"+object.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
               actionWidgets.forEach(function(subWidget, idxPart){
                 var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
-                if (subWidget.type === 'bool')    output += utils.handleBoolean(object,    'object', subWidget, widgetPath);
-                if (subWidget.type === 'number')  output += utils.handleNumber(object,     'object', subWidget, widgetPath);
-                if (subWidget.type === 'objlist') output += handleObjectList(object, 'object', subWidget, widgetPath);
-                if (subWidget.type === 'posxy')   output += utils.handlePosition(object,   'object', subWidget, widgetPath);
-                if (subWidget.type === 'select')  output += utils.handleSelect(object,     'object', subWidget, widgetPath);
-                if (subWidget.type === "text")    output += handleText(object,       'object', subWidget, widgetPath, 'w100');
+                if (subWidget.type === 'bool')    output += utils.handleBoolean(object,  'object', subWidget, widgetPath);
+                if (subWidget.type === 'number')  output += utils.handleNumber(object,   'object', subWidget, widgetPath);
+                if (subWidget.type === 'objlist') output += handleObjectList(object,     'object', subWidget, widgetPath);
+                if (subWidget.type === 'anmlist') output += handleAnimList(object,       'object', subWidget, widgetPath);
+                if (subWidget.type === 'sndlist') output += handleSoundList(object,      'object', subWidget, widgetPath);
+                if (subWidget.type === 'posxy')   output += utils.handlePosition(object, 'object', subWidget, widgetPath);
+                if (subWidget.type === 'select')  output += utils.handleSelect(object,   'object', subWidget, widgetPath);
+                if (subWidget.type === "text")    output += handleText(object,           'object', subWidget, widgetPath, 'w100');
               });
               output += '</div>';
             });
@@ -233,10 +237,27 @@ function BuildProp(){
     str += utils.buildSelect('window.author.updateItem',  animation.id, type, animList, defaultId, path) + '<br>';
     return str;
   }
-
+  function handleAnimList(object, type, widget, path){
+    var str = '';
+    var objectList = utils.objPartToArr(authorData.anims, "id");
+    var defaultId = utils.getSubProp(object, path);
+    str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
+    return str;
+  }
   function handleObjectList(object, type, widget, path){
     var str = '';
     var objectList = utils.objPartToArr(authorData.objects, "id");
+    var defaultId = utils.getSubProp(object, path);
+    str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
+    return str;
+  }
+  function handleSoundList(object, type, widget, path){
+    console.log("wee")
+    var str = '';
+    var objectList = utils.objPartToArr(authorData.sounds, "id");
+    console.log(objectList)
     var defaultId = utils.getSubProp(object, path);
     str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';

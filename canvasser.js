@@ -48,6 +48,13 @@ function canvasser(vari, interactiveData, dataForm){
     if (act.data.paths !== undefined){
       act.data.paths.forEach(function(path){act.pathList[path.id] = path.url;});
     }
+    act.soundList = {};
+    if (act.data.sounds){
+      act.data.sounds.forEach(function(sound){
+        if (sound.path != undefined) sound.url = act.pathList[sound.path] + '/' + sound.url;
+        act.soundList[sound.id] = new Audio(sound.url);
+      });
+    }
     act.data.images.forEach(function(image){
       var imageObj = new Image();
       imageObj.crossOrigin = "Anonymous";
@@ -61,15 +68,14 @@ function canvasser(vari, interactiveData, dataForm){
         act.imageList[image.id].context.drawImage(this, 0, 0, this.width, this.height);
         if (image.atlas){
           act.imageList[image.id].atlas = {};
-          act.imageList[image.id].atlas.cellwidth = image.cellwidth;
+          act.imageList[image.id].atlas.cellwidth  = image.cellwidth;
           act.imageList[image.id].atlas.cellheight = image.cellheight;
-          act.imageList[image.id].atlas.numX = Math.floor(this.width / image.cellwidth);
-          act.imageList[image.id].atlas.numY = Math.floor(this.height / image.cellheight);
+          act.imageList[image.id].atlas.numX       = Math.floor(this.width / image.cellwidth);
+          act.imageList[image.id].atlas.numY       = Math.floor(this.height / image.cellheight);
         }
       };
       if (image.path != undefined) image.url = act.pathList[image.path] + '/' + image.url;
       imageObj.src = image.url + '?' + new Date().getTime();
-
       imageObj.setAttribute('crossOrigin', 'anonymous');
     });
 
@@ -183,7 +189,7 @@ function canvasser(vari, interactiveData, dataForm){
         act.applyAction = [];
         act.mode = "click";
         act.data.objects.forEach(function(obj){
-          if (obj.id === cmd.item) act.applyAction.push(obj);
+          if (obj.id === cmd.item) act.applyAction.unshift(obj);
         });
       }
     });
@@ -192,6 +198,10 @@ function canvasser(vari, interactiveData, dataForm){
 
   this.report = function(wat){
     console.log(act[wat]);
+  }
+
+  this.export = function(){
+    return act.data;
   }
 
   function loop(){
@@ -220,40 +230,44 @@ function canvasser(vari, interactiveData, dataForm){
       });
 
       play.playing.forEach(function(anim){
-        if (anim.type === "play"){
-          var animToPlay = act.data.anims.filter(function(obj){return obj.id === anim.id})[0];
-          act.player.push(copyObj(animToPlay, {}));
-        }
         if (anim.type === "flipbook"){
           var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
-          animOb.atlascell = {x:anim.atlascell.x, y:anim.atlascell.y};
+          if (animOb) animOb.atlascell = {x:anim.atlascell.x, y:anim.atlascell.y};
+          anim.delete = true;
         }
         if (anim.type === 'loadinto'){
             initCanvasser(anim.vari, anim.url, 'file');
         }
-        // if (anim.type === "console") {
-        //   console.log(anim.text);
-        //   anim.endtime = play.time-1;
-        //   anim.delete = true;
-        // }
+        if (anim.type === "play"){
+          var animToPlay = act.data.anims.filter(function(obj){return obj.id === anim.id})[0];
+          act.player.push(copyObj(animToPlay, {}));
+          anim.delete = true;
+        }
+        if (anim.type === "sound"){
+            act.soundList[anim.id].play();
+            anim.delete = true;
+        }
+        if (anim.type === "vis"){
+            var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+            animOb.show = anim.show;
+        }
+
         if (anim.endtime === undefined) return;
         if (anim.endtime < play.time){
           var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
           if (animOb === undefined) return;
 
-          if (anim.type === "move") {
-            animOb.position.current = {x:anim.endpos.x,y:anim.endpos.y};
-          }
           if (anim.type === "fade") {
             if (animOb.opacity === undefined) animOb.opacity = {};
             animOb.opacity.current = anim.endalpha;
-          //  animOb.opacity.showbefore = action.showbefore !== undefined ? action.showbefore : true;
-          //  animOb.opacity.hideafter = action.hideafter !== undefined ? action.hideafter : false;
-
+          }
+          if (anim.type === "move") {
+            animOb.position.current = {x:anim.endpos.x,y:anim.endpos.y};
           }
           if (anim.type === "turn") {
             animOb.rotation = radians(anim.endrot);
           }
+
           anim.delete = true;
         }
       });
@@ -299,7 +313,7 @@ function canvasser(vari, interactiveData, dataForm){
           var scaleDiff = (anim.endscale - anim.startscale) * percent + anim.startscale;
           animOb.scale.current = scaleDiff;
         }
-        if ( anim.type === "turn") {
+        if (anim.type === "turn") {
           var startrot = 0;
           var endrot   = radians(anim.endrot);
           if (anim.startrot === undefined || anim.fromcurrent) startrot = animOb.rotation;
@@ -344,7 +358,7 @@ function canvasser(vari, interactiveData, dataForm){
         var currentShape = act.data.shapes.filter(function(shape){return shape.id === obj.shape})[0];
         var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current);
         if (!obj.testp) return;
-        if (posCheck) act.applyAction.push(obj);
+        if (posCheck) act.applyAction.unshift(obj);
       }
 
       if (obj.type === "image"){
@@ -361,7 +375,6 @@ function canvasser(vari, interactiveData, dataForm){
               rotation:obj.parent.object.rotation
             };
           }
-
           obj.scale.current = parentScl.current;
         }
         // var newVals              = lerpTo(obj.position.current, obj.position.destination, obj.position.rate);
@@ -387,6 +400,7 @@ function canvasser(vari, interactiveData, dataForm){
         }
         if (isNaN(pos.x)){console.log("x NaN"); pos.x = 0;}
         if (isNaN(pos.y)){console.log("y NaN"); pos.y = 0;}
+
         if (obj.show){
           act.context.globalAlpha = obj.opacity.current !== undefined ? obj.opacity.current : 1;
           act.context.save();
@@ -410,10 +424,15 @@ function canvasser(vari, interactiveData, dataForm){
           if (obj.scale.current>.001){
             pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
           }
-          if (pixelData_img[3] != 0) act.applyAction.push(obj);
+          if (pixelData_img[3] != 0) act.applyAction.unshift(obj);
         }
     }
   });
+
+  // -------------------------------------------
+  //TODO: STORE ALL HITS AND THEN FIND THE LAST ONE IN THE LIST DUHHHHHHH
+// -------------------------------------------
+
     pManager.update();
     act.prevPosition = {x:act.position.x, y:act.position.y};
     window.requestAnimationFrame(loop);
@@ -626,9 +645,7 @@ function canvasser(vari, interactiveData, dataForm){
             if (over[act.mode+"list"] === undefined) return;
             over[act.mode+"list"].forEach(function(action){
                 if (action.type === 'cleardown'){
-                    act.mode         = "none";
-                    //act.mouseDown    = false;
-                    //act.mouseDownCnt = 0;
+                    act.mode    = "none";
                 }
                 if (action.type === 'console'){
                     console.log(action.text);
@@ -689,6 +706,9 @@ function canvasser(vari, interactiveData, dataForm){
                         obj.opacity.showbefore = action.showbefore !== undefined ? action.showbefore : true;
                         obj.opacity.hideafter = action.hideafter !== undefined ? action.hideafter : false;
                     });
+                }
+                if (action.type === 'function'){
+                    window[action.function]({id:action.id});
                 }
                 if (action.type === 'increment'){
                     act.data.objects.forEach(function(obj){
@@ -784,6 +804,9 @@ function canvasser(vari, interactiveData, dataForm){
                 }
                 if (action.type === "slideover"){
                     console.log("slideOver");
+                }
+                if (action.type === "sound"){
+                    act.soundList[action.id].play();
                 }
                 if (action.type === 'url'){
                     var target = document.getElementById(action.target);

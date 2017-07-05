@@ -1,3 +1,7 @@
+function testFunction(obj){
+  console.log(obj)
+}
+
 function initAuthorCanvasser(vari, datafile, dataForm){
   var utils     = new CanvasserUtils();
 
@@ -20,7 +24,8 @@ function restartCanvasser(name, data, type){
   menus.updateSettings();
   menus.updateObjects();
   menus.updateImages();
-  //updatePaths();
+  menus.updateSamples();
+  menus.updatePaths();
   menus.updateShapes();
   menus.updateAnims();
   function getMousePos(canvas, evt) {
@@ -58,21 +63,27 @@ function authorcanvasser(dataFile, dataForm){
   authorData = dataFile;
 
   document.getElementById("animcontents").addEventListener("mousedown",       function(){focusObjD("animbank")},       false);
+  document.getElementById("groupcontents").addEventListener("mousedown",      function(){focusObjD("groupbank")},      false);
   document.getElementById("imagecontents").addEventListener("mousedown",      function(){focusObjD("imagebank")},      false);
   document.getElementById("jsoncontents").addEventListener("mousedown",       function(){focusObjD("jsonbank")},       false);
   document.getElementById("objectcontents").addEventListener("mousedown",     function(){focusObjD("objectbank")},     false);
-  document.getElementById("pathcontents").addEventListener("mousedown",       function(){focusObjD("pathbank")}, false);
+  document.getElementById("particlecontents").addEventListener("mousedown",   function(){focusObjD("particlebank")},   false);
+  document.getElementById("pathcontents").addEventListener("mousedown",       function(){focusObjD("pathbank")},       false);
   document.getElementById("propertiescontents").addEventListener("mousedown", function(){focusObjD("propertiesbank")}, false);
+  document.getElementById("samplecontents").addEventListener("mousedown",     function(){focusObjD("samplebank")},     false);
   document.getElementById("settingcontents").addEventListener("mousedown",    function(){focusObjD("settingbank")},    false);
   document.getElementById("shapecontents").addEventListener("mousedown",      function(){focusObjD("shapebank")},      false);
 
   document.getElementById("animmover").addEventListener("mousedown",       function(){moveObjD("animbank")},       false);
   document.getElementById("canvasmover").addEventListener("mousedown",     function(){moveObjD("canvasbank")},     false);
+  document.getElementById("groupmover").addEventListener("mousedown",      function(){moveObjD("groupbank")},      false);
   document.getElementById("imagemover").addEventListener("mousedown",      function(){moveObjD("imagebank")},      false);
   document.getElementById("jsonmover").addEventListener("mousedown",       function(){moveObjD("jsonbank")},       false);
   document.getElementById("objectmover").addEventListener("mousedown",     function(){moveObjD("objectbank")},     false);
+  document.getElementById("particlemover").addEventListener("mousedown",   function(){moveObjD("particlebank")},   false);
   document.getElementById("pathmover").addEventListener("mousedown",       function(){moveObjD("pathbank")},       false);
   document.getElementById("propertiesmover").addEventListener("mousedown", function(){moveObjD("propertiesbank")}, false);
+  document.getElementById("samplemover").addEventListener("mousedown",     function(){moveObjD("samplebank")},     false);
   document.getElementById("settingmover").addEventListener("mousedown",    function(){moveObjD("settingbank")},    false);
   document.getElementById("shapemover").addEventListener("mousedown",      function(){moveObjD("shapebank")},      false);
 
@@ -83,15 +94,13 @@ function authorcanvasser(dataFile, dataForm){
   menus.updateSettings();
   menus.updateObjects();
   menus.updateImages();
-  updatePaths();
+  menus.updatePaths();
   menus.updateShapes();
   menus.updateAnims();
 
   loop();
 
   function loop(){
-
-
     if (UIdata.moveElement !== null && UIdata.move){
       UIdata.moveElement.style.left = UIdata.mousePos.x  - UIdata.offset.x + "px";
       UIdata.moveElement.style.top  = UIdata.mousePos.y  - UIdata.offset.y + "px";
@@ -124,15 +133,16 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   function focusObjD(element){
-    UIdata.move = false;
-    UIdata.moveElement = document.getElementById(element);
     UIdata.zidx ++;
-    UIdata.moveElement.style.zIndex = UIdata.zidx;
+    document.getElementById(element).style.zIndex = UIdata.zidx;
   }
 
   function moveObjU(ev){
     UIdata.mousedown = false;
     UIdata.moveElement = null;
+  }
+  this.loadSample = function(url){
+    utils.requestJSON('./sample/json/' + url, function(data){restartCanvasser("sample", data, 'string');});
   }
 
   this.reload = function(){
@@ -201,7 +211,7 @@ function authorcanvasser(dataFile, dataForm){
 
   this.addPath = function(){
     authorData.paths.push({id:"newpath",url:"./"});
-    updatePaths();
+    menus.updatePaths();
     getPath('newpath');
   }
 
@@ -211,19 +221,7 @@ function authorcanvasser(dataFile, dataForm){
     getProps('anims', 'newanim');
   }
 
-  function updatePaths(){
-    var pathsHolder = document.getElementById("pathholder");
-    var paths = '<table class="objtable" id="pathstable" width="100%">';
 
-    authorData.paths.forEach(function(path){
-      paths += '<tr class="clicktr" id="'+path.id+'" onclick="window.author.getPath(\''+ path.id + '\')">';
-      paths +='<td width="50%">' + path.id + '</td>';
-      paths +='<td width="50%">' +path.url + '</td>';
-      paths += '</tr>';
-    });
-    paths +='</table>';
-    pathsHolder.innerHTML = paths;
-  }
 
   this.getSetting = getSetting;
   function getSetting(setting){
@@ -337,17 +335,14 @@ function authorcanvasser(dataFile, dataForm){
     for (var i = 0, row; row = table.rows[i]; i++) {
       if (row.style[0] === "background-color") copyRow = row.id;
     };
-
     authorData[type].forEach(function(test, idx){
-
-      if (test.id === copyRow){
+      if (type+'_'+test.id === copyRow){
         var newObj = utils.copyObj(test, {});
         newObj.id +="_copy";
         authorData[type].push(newObj);
       }
     });
     updateType(type);
-    //initCanvasser("sample", JSON.stringify(authorData), "string");
     restartCanvasser("sample", authorData, "string");
   }
 
@@ -356,7 +351,7 @@ function authorcanvasser(dataFile, dataForm){
     if (type === 'objects') menus.updateObjects();
     if (type === 'images')  menus.updateImages();
     if (type === 'anims')   menus.updateAnims();
-    if (type === 'paths')   updatePaths();
+    if (type === 'paths')   menus.updatePaths();
   }
 
 
@@ -518,7 +513,7 @@ function authorcanvasser(dataFile, dataForm){
   this.updatePath = function(domElement, id, param){
     var pathGet = authorData.paths.filter(function(finder){return (finder.id === id);})[0];
     pathGet[param] = domElement.value;
-    updatePaths();
+    menus.updatePaths();
     getPath(pathGet.id);
     //initCanvasser("sample", JSON.stringify(authorData), "string");
     restartCanvasser("sample", authorData, "string");

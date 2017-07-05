@@ -41,12 +41,25 @@ function Menus(){
     var objects = '<table class="objtable"id="objectstable" width="100%">';
     authorData.objects.forEach(function(object){
       objects += '<tr class="clicktr" id="objects_'+object.id+'" onclick="window.author.getProps(\'objects\',\''+ object.id + '\')">';
-      objects +='<td width="50%">' + object.id + '</td>';
-      objects +='<td width="50%">' + object.type + '</td>';
+      objects +='<td width="75%" style="font-size:1.3em;">' + object.id + '</td>';
+      objects +='<td width="25%">' + object.type + '</td>';
       objects += '</tr>';
     });
     objects +='</table>';
     objectHolder.innerHTML = objects;
+  }
+  this.updatePaths = function(){
+    var pathsHolder = document.getElementById("pathholder");
+    var paths = '<table class="objtable" id="pathstable" width="100%">';
+
+    authorData.paths.forEach(function(path){
+      paths += '<tr class="clicktr" id="'+path.id+'" onclick="window.author.getPath(\''+ path.id + '\')">';
+      paths +='<td width="50%">' + path.id + '</td>';
+      paths +='<td width="50%">' +path.url + '</td>';
+      paths += '</tr>';
+    });
+    paths +='</table>';
+    pathsHolder.innerHTML = paths;
   }
   this.updateSettings = function(){
     var settingHolder = document.getElementById("settingholder");
@@ -61,12 +74,23 @@ function Menus(){
     settings +='</table>';
     settingHolder.innerHTML = settings;
   }
+  this.updateSamples = function(){
+    var imageHolder = document.getElementById("sampleholder");
+    var images = '<table id="samplestable" class="objtable w100p">';
+    window.rules.samples.forEach(function(sampy){
+      images += '<tr class="clicktr" id="shapes_'+sampy.id+'"onclick="window.author.loadSample(\''+ sampy.url + '\')">';
+      images +='<td class="shapeid"><div>' + sampy.id + '</div></td>';
+      images += '</tr>';
+    });
+    images +='</table>';
+    imageHolder.innerHTML = images;
+  }
   this.updateShapes = function(){
     var imageHolder = document.getElementById("shapeholder");
-    var images = '<table id="shapestable">';
+    var images = '<table id="shapestable" class="objtable w100p">';
     authorData.shapes.forEach(function(shape){
       images += '<tr class="clicktr" id="shapes_'+shape.id+'"onclick="window.author.getProps(\'shapes\',\''+ shape.id + '\')">';
-      images +='<td class="shapeid"><div class="imagetext">' + shape.id + '</div></td>';
+      images +='<td class="shapeid"><div>' + shape.id + '</div></td>';
       images += '</tr>';
     });
     images +='</table>';

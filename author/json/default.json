@@ -1,74 +1,15 @@
 {
 "objects":[
-{"id":"bk",               "type":"shape", "order":1, "show":true, "group":[],         "shape":"sq",     "scale":{"current":1}, "rotation":0, "origin":"center","position":{"current":{"x":0,"y":0}}, "color":{"current":["rgba(120,150,200,1)"], "default":["rgba(102,102,102,1)"], "select":["rgba(243,243,243,1)"]}, "testp":false, "clicklist":[]},
-{"id":"bkimg",            "type":"image", "order":1, "show":true, "group":["images"], "image":"backgr", "scale":{"current":1}, "rotation":0, "position":{"current":{"x":360,"y":250}},"origin":"center","testp":true,"clicklist":[]},
-{"id":"drag_button",      "type":"image", "order":1, "show":true, "group":["buttons"],"image":"drag1",  "scale":{"current":1}, "rotation":0, "position":{"current":{"x":155,"y":30},"rate":0},"testp":true,"draglist":[{"type":"slideobject","id":"drag_button"}],"clicklist":[]},
-{"id":"click_button_on",  "type":"image", "order":1, "show":true, "group":["buttons"],"image":"click1", "scale":{"current":1}, "rotation":0, "position":{"current":{"x":20,"y":20}}, "testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":false}]},
-{"id":"click_button_off", "type":"image", "order":1, "show":true, "group":["buttons"],"image":"click2", "scale":{"current":1}, "rotation":0, "origin":"center", "parent":{"id":"drag_button"},"position":{"current":{"x":90,"y":75}},"testp":true,"draglist":[],"clicklist":[{"type":"cleardown"},{"type":"vis","filter":"group","id":"images","show":true}]},
-{"id":"txt",              "type":"shape", "order":1, "show":true, "group":[],         "shape":"t1",     "scale":{"current":1}, "rotation":0, "origin":"center","position":{"current":{"x":20,"y":10}}, "color":{"current":["rgba(255,255,255,1)"], "default":["rgba(255,0,0,1)"], "select":["rgba(243,243,243,1)"]}, "testp":false, "clicklist":[]},
-{"id":"cube",             "type":"image", "order":1, "show":true, "group":["buttons"],"image":"cube",   "scale":{"current":1}, "rotation":0, "position":{"current":{"x":20,"y":350}}, "atlascell":{"x":0,"y":0}, "testp":false,"draglist":[],"clicklist":[]}
 ],
 "images":[
-{"id":"backgr", "path":"author", "url":"background_400px.png"},
-{"id":"click1", "path":"author", "url":"sample_click_1.png"},
-{"id":"click2", "path":"author", "url":"sample_click_2.png"},
-{"id":"drag1",  "path":"author", "url":"sample_drag_1.png"},
-{"id":"cube",  "path":"author", "url":"cube_spinner.png",  "atlas": true, "cellwidth": 100, "cellheight": 100}
+],
+"sounds":[
 ],
 "anims":[
-{ "id":"mover",
-  "autostart":true,
-  "loop":true,
-  "length":4001,
-  "timelist":[
-    {"starttime": 1,    "endtime":1000, "type":"move", "id":"click_button_off", "filter":"object", "fromcurrent":true, "endpos":{"x":-100,"y":100}},
-    {"starttime": 1000, "endtime":2000, "type":"move", "id":"click_button_off", "filter":"object", "fromcurrent":true, "endpos":{"x":-100,"y":200}},
-    {"starttime": 2000, "endtime":3000, "type":"move", "id":"click_button_off", "filter":"object", "fromcurrent":true, "endpos":{"x":100,"y":200}},
-    {"starttime": 3000, "endtime":4000, "type":"move", "id":"click_button_off", "filter":"object", "fromcurrent":true, "endpos":{"x":100,"y":100}},
-    {"starttime": 1,    "endtime":2000, "type":"turn", "id":"click_button_off", "filter":"object", "fromcurrent":true,"startrot":0, "endrot":90},
-    {"starttime": 2000, "endtime":4000, "type":"turn", "id":"click_button_off", "filter":"object", "fromcurrent":true,"startrot":0, "endrot":0}
-  ]
-},
-{ "id":"fader",
-  "autostart":true,
-  "loop":true,
-  "length":2001,
-  "timelist":[
-    {"starttime": 1,    "endtime":1000, "type":"fade", "id":"bkimg", "filter":"object", "fromcurrent":true, "endalpha":0},
-    {"starttime": 1000, "endtime":2000, "type":"fade", "id":"bkimg", "filter":"object", "fromcurrent":true, "endalpha":1}
-  ]
-},
-{ "id": "flipbook",
-  "autostart": true,
-  "loop":true,
-  "length": 400,
-  "timelist": [
-    {"starttime": 1,   "type": "flipbook", "id": "cube",  "filter": "object", "atlascell": {"x": 0, "y": 0}},
-    {"starttime": 50, "type": "flipbook", "id": "cube",  "filter": "object", "atlascell": {"x": 1, "y": 0}},
-    {"starttime": 100, "type": "flipbook", "id": "cube",  "filter": "object", "atlascell": {"x": 2, "y": 0}},
-    {"starttime": 150, "type": "flipbook", "id": "cube",  "filter": "object", "atlascell": {"x": 3, "y": 0}},
-    {"starttime": 200, "type": "flipbook", "id": "cube",  "filter": "object", "atlascell": {"x": 4, "y": 0}},
-    {"starttime": 250, "type": "flipbook", "id": "cube",  "filter": "object", "atlascell": {"x": 5, "y": 0}},
-    {"starttime": 300, "type": "flipbook", "id": "cube",  "filter": "object", "atlascell": {"x": 6, "y": 0}},
-    {"starttime": 350, "type": "flipbook", "id": "cube",  "filter": "object", "atlascell": {"x": 7, "y": 0}},
-    {"starttime": 400, "type": "flipbook", "id": "cube",  "filter": "object", "atlascell": {"x": 8, "y": 0}}
-  ]
-}
 ],
 "paths":[
-{"id":"author",   "url":"./sample/image/sample"}
 ],
 "shapes":[
-{"id":"sq",
-"drawcode":[
-  {"type":"rect","offset":{"x":0,"y": 0},"width":600,"height":500},
-  {"type":"fill"}
-]},
-{"id":"t1",
-"drawcode":[
-  {"type":"font", "size":20, "font":"arial"},
-  {"type":"filltext", "text":"Canvasser Sample", "offset":{"x":0,"y": 10}}
-]}
 ],
 "settings":{
   "canvaswidth":"600",

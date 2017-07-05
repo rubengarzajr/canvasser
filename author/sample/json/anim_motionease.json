@@ -1,0 +1,192 @@
+{
+    "objects": [
+        {
+            "id": "linear",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "image": "sphere"
+        },
+        {
+            "id": "quadratic",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 0,
+                    "y": 150
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "image": "sphere"
+        },
+        {
+            "id": "exponential",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 0,
+                    "y": 300
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "image": "sphere"
+        }
+    ],
+    "paths": [
+        {
+            "id": "use",
+            "url": "./sample/image/sample"
+        }
+    ],
+    "images": [
+        {
+            "id": "sphere",
+            "path": "use",
+            "url": "sphere.png"
+        }
+    ],
+    "shapes": [],
+    "settings": {
+        "canvaswidth": "400",
+        "canvasheight": "400",
+        "canvasdomname": "activity",
+        "canvasparent": "canvasholder"
+    },
+    "anims": [
+        {
+            "id": "linear",
+            "autostart": true,
+            "length": 2000,
+            "timelist": [
+                {
+                    "type": "move",
+                    "starttime": 1,
+                    "endtime": 1000,
+                    "id": "linear",
+                    "filter": "object",
+                    "endpos": {
+                        "x": 300,
+                        "y": 0
+                    },
+                    "startpos": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                {
+                    "type": "move",
+                    "startpos": {
+                        "x": 300,
+                        "y": 0
+                    },
+                    "endpos": {
+                        "y": 0,
+                        "x": 0
+                    },
+                    "starttime": 1001,
+                    "endtime": 2000,
+                    "id": "linear",
+                    "filter": "object"
+                }
+            ],
+            "loop": true
+        },
+        {
+            "id": "quadratic",
+            "autostart": true,
+            "length": 2000,
+            "timelist": [
+                {
+                    "type": "move",
+                    "starttime": 1,
+                    "endtime": 1000,
+                    "id": "quadratic",
+                    "filter": "object",
+                    "endpos": {
+                        "x": 300,
+                        "y": 150
+                    },
+                    "startpos": {
+                        "x": 0,
+                        "y": 150
+                    },
+                    "ease": "inOutQuad"
+                },
+                {
+                    "type": "move",
+                    "startpos": {
+                        "x": 300,
+                        "y": 150
+                    },
+                    "endpos": {
+                        "y": 150,
+                        "x": 0
+                    },
+                    "starttime": 1001,
+                    "endtime": 2000,
+                    "id": "quadratic",
+                    "filter": "object",
+                    "ease": "inOutQuad"
+                }
+            ],
+            "loop": true
+        },
+        {
+            "id": "exponential",
+            "autostart": true,
+            "length": 2000,
+            "timelist": [
+                {
+                    "type": "move",
+                    "starttime": 1,
+                    "endtime": 1000,
+                    "id": "exponential",
+                    "filter": "object",
+                    "endpos": {
+                        "x": 300,
+                        "y": 300
+                    },
+                    "startpos": {
+                        "x": 0,
+                        "y": 300
+                    },
+                    "ease": "inOutExp"
+                },
+                {
+                    "type": "move",
+                    "startpos": {
+                        "x": 300,
+                        "y": 300
+                    },
+                    "endpos": {
+                        "y": 300,
+                        "x": 0
+                    },
+                    "starttime": 1001,
+                    "endtime": 2000,
+                    "id": "exponential",
+                    "filter": "object",
+                    "ease": "inOutExp"
+                }
+            ],
+            "loop": true
+        }
+    ]
+}
