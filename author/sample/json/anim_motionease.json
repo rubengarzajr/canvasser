@@ -51,14 +51,14 @@
     ],
     "paths": [
         {
-            "id": "use",
-            "url": "./sample/image/sample"
+            "id": "sample",
+            "url": "./sample/image"
         }
     ],
     "images": [
         {
             "id": "sphere",
-            "path": "use",
+            "path": "sample",
             "url": "sphere.png"
         }
     ],

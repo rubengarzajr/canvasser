@@ -1,23 +1,21 @@
 {
   "objects":[
-    {"id":"image", "type":"image", "show":true,  "group":[], "image":"image1",   "scale":{"current":4}, "position":{"current":{"x":  200,"y":  50}}, "origin":"default", "testp":false, "clicklist":[]},
-    {"id":"c1",    "type":"image", "show":true, "group":[], "image":"click1", "scale":{"current":1}, "position":{"current":{"x":0,"y":50}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"fade","filter":"object","id":"image","destination":1,"rate":0.1}]},
-    {"id":"c2",    "type":"image", "show":true, "group":[], "image":"click2", "scale":{"current":1}, "position":{"current":{"x":0,"y":110}}, "origin":"default", "testp":true, "clicklist":[{"type":"cleardown"},{"type":"fade","filter":"object","id":"image","destination":0,"rate":0.1}]}
-
+    {"id":"image","type":"image","show":true,"group":[],"image":"image1","scale":{"current":4},"position":{"current":{"x":200,"y":50}},"origin":"default","testp":false,"clicklist":[]},
+    {"id":"c1","type":"image","show":true,"group":[],"image":"click1","scale":{"current":1},"position":{"current":{"x":0,"y":50}},"origin":"default","testp":true,"clicklist":[{"type":"cleardown"},{"type":"playanim","animation":"fadeout"}],"originxy":{"current":{"x":0,"y":0}}},
+    {"id":"c2","type":"image","show":true,"group":[],"image":"click2","scale":{"current":1},"position":{"current":{"x":0,"y":110}},"origin":"default","testp":true,"clicklist":[{"type":"cleardown"},{"type":"playanim","animation":"fadein"}],"originxy":{"current":{"x":0,"y":0}}}
   ],
   "paths":[
-    {"id":"use",   "url":"./sample/image/sample"}
+    {"id":"sample","url":"./sample/image"}
   ],
   "images":[
-    {"id":"click1",  "path":"use", "url":"sample_click_1.png"},
-    {"id":"click2",  "path":"use", "url":"sample_click_2.png"},
-    {"id":"image1",  "path":"use", "url":"sample_graphic_1.png"}
+    {"id":"click1","path":"sample","url":"sample_click_1.png"},
+    {"id":"click2","path":"sample","url":"sample_click_2.png"},
+    {"id":"image1","path":"sample","url":"sample_graphic_1.png"}
   ],
   "shapes":[],
-  "settings": {
-    "canvaswidth": "400",
-    "canvasheight": "400",
-    "canvasdomname": "activity",
-    "canvasparent": "canvasholder"
-  }
+  "settings":{"canvaswidth":"400","canvasheight":"400","canvasdomname":"activity","canvasparent":"canvasholder"},
+  "anims":[
+    {"id":"fadeout","autostart":false,"length":100,"timelist":[{"type":"fade","starttime":1,"endtime":100,"id":"image","filter":"object","startalpha":1,"endalpha":0}],"loop":false},
+    {"id":"fadein","autostart":false,"length":100,"timelist":[{"type":"fade","starttime":1,"endtime":100,"id":"image","filter":"object","startalpha":0,"endalpha":1}],"loop":false}
+  ]
 }

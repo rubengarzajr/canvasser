@@ -100,7 +100,7 @@ a{
   padding-bottom: 10px;
   border-bottom: 2px #dadada solid;
   box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  height: 45px;
+  height: 35px;
 }
 
 .titlebar{
@@ -310,13 +310,7 @@ a{
 .submenu{
 }
 
-#settingholder{
-  margin-bottom:5px;
-}
-#pathholder{
-  margin-bottom:5px;
-}
-#animholder{
+.padholder{
   margin-bottom:5px;
 }
 .entrytitle{

@@ -17,6 +17,7 @@
         {"field":"show",      "type":"bool"},
         {"field":"image",     "type":"imagedata"},
         {"field":"origin",    "type":"select", "id":"objectorigin"},
+        {"field":"originxy",  "type":"posxy"},
         {"field":"position",  "type":"posxy"},
         {"field":"atlascell", "type":"cellxy"},
         {"field":"scale",     "type":"scale"},
@@ -41,6 +42,25 @@
         {"field":"scale",     "type":"scale"}
       ]
     }
+  },
+  "particle":{
+    "widgets":[
+      {"field":"id",                "type":"text"},
+      {"field":"order",             "type":"number"},
+      {"field":"parent.id",         "type":"objlist"},
+      {"field":"on",                "type":"bool"},
+      {"field":"image",             "type":"imagedata"},
+      {"field":"position",          "type":"posxy"},
+      {"field":"emitCounter",       "type":"number"},
+      {"field":"emitRate",          "type":"number"},
+      {"field":"genType",           "type":"select", "id":"particletype"},
+      {"field":"pParams.life.min",  "type":"number", "display":"Life Min"},
+      {"field":"pParams.life.max",  "type":"number", "display":"Life Max"},
+      {"field":"pParams.fade.in",   "type":"number", "display":"Fade In"},
+      {"field":"pParams.fade.out",  "type":"number", "display":"Fade Out"},
+      {"field":"pParams.scale.min", "type":"number", "display":"Scale Min"},
+      {"field":"pParams.scale.max", "type":"number", "display":"Scale Max"}
+    ]
   },
   "anim":{
     "animdata":{
@@ -138,9 +158,10 @@
   "select":{
     "conditionaltype":{"list":["position"]},
     "easetype":{"list":["linear","inExp","outExp","inOutExp","inQuad", "outQuad", "inOutQuad"]},
-    "filtertype":{"list":["object", "group"]},
+    "filtertype":{"list":["object", "group","particle"]},
     "objectorigin":{"list":["upper_left", "center"]},
-    "objecttype":{"list":["image", "shape"]}
+    "objecttype":{"list":["image", "shape"]},
+    "particletype":{"list":["burst"]}
   },
   "authorsettings":{
   }

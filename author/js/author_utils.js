@@ -84,7 +84,7 @@ function CanvasserUtils(){
     var str = '';
     var num = this.getSubProp(object, path);
     if (num === undefined) num = 0;
-    str += this.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    str += this.buildDiv('entrylabel c_entrytitle_text w100', (widget.display ? widget.display : widget.field) );
     str += '<input class="auth_xy" type="number" value="'+ num + '" ';
     str += this.buildFnString('window.author.updateItem', [object.id, type, path], true);
     str +=   '>'  + "<br>";

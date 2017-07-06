@@ -111,27 +111,27 @@
     "images": [
         {
             "id": "backgr",
-            "path": "author",
+            "path": "sample",
             "url": "background_400px.png"
         },
         {
             "id": "click1",
-            "path": "author",
+            "path": "sample",
             "url": "sample_click_1.png"
         },
         {
             "id": "click2",
-            "path": "author",
+            "path": "sample",
             "url": "sample_click_2.png"
         },
         {
             "id": "drag1",
-            "path": "author",
+            "path": "sample",
             "url": "sample_drag_1.png"
         },
         {
             "id": "cube",
-            "path": "author",
+            "path": "sample",
             "url": "cube_spinner.png",
             "atlas": true,
             "cellwidth": 100,
@@ -139,7 +139,7 @@
         },
         {
             "id": "cube_full",
-            "path": "author",
+            "path": "sample",
             "url": "cube_spinner.png"
         }
     ],
@@ -347,8 +347,8 @@
     ],
     "paths": [
         {
-            "id": "author",
-            "url": "./sample/image/sample"
+            "id": "sample",
+            "url": "./sample/image"
         }
     ],
     "shapes": [

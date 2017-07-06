@@ -161,8 +161,8 @@ function canvasser(vari, interactiveData, dataForm){
             var pcent   = lifeCnt / p.life.max;
 
             var alpha = 1;
-            if (pcent*100 < pSystem.info.pParams.fadePercent.in)  alpha = lifeCnt / (p.life.max*(pSystem.info.pParams.fadePercent.in*0.01));
-            if (pcent*100 > pSystem.info.pParams.fadePercent.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.info.pParams.fadePercent.out*0.01));
+            if (pcent*100 < pSystem.info.pParams.fade.in)  alpha = lifeCnt / (p.life.max*(pSystem.info.pParams.fade.in*0.01));
+            if (pcent*100 > pSystem.info.pParams.fade.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.info.pParams.fade.out*0.01));
 
             var pos     = {"x":parseInt(p.position.x+imgDim.x), "y":parseInt(p.position.y+imgDim.y)};
             p.rotation += p.speed.rotation;
@@ -258,7 +258,7 @@ function canvasser(vari, interactiveData, dataForm){
           if (animOb === undefined) return;
 
           if (anim.type === "fade") {
-            if (animOb.opacity === undefined) animOb.opacity = {};
+            if (animOb.opacity === undefined) animOb.opacity = {current:1};
             animOb.opacity.current = anim.endalpha;
           }
           if (anim.type === "move") {
@@ -300,11 +300,8 @@ function canvasser(vari, interactiveData, dataForm){
             x:ease[anim.ease](t, anim.startpos.x, anim.endpos.x-anim.startpos.x, d),
             y:ease[anim.ease](t, anim.startpos.y, anim.endpos.y-anim.startpos.y, d)
           };
-
           if (isNaN(posDiff.x)){console.log("posDiff x NaN");}
           if (isNaN(posDiff.y)){console.log("posDiff y NaN");}
-
-          //posDiff = {x:(anim.endpos.x - anim.startpos.x) * percent + anim.startpos.x, y:(anim.endpos.y - anim.startpos.y) * percent + anim.startpos.y, }
           animOb.position.current = {x:posDiff.x,y:posDiff.y};
         }
         if (anim.type === "scale") {
@@ -377,36 +374,31 @@ function canvasser(vari, interactiveData, dataForm){
           }
           obj.scale.current = parentScl.current;
         }
-        // var newVals              = lerpTo(obj.position.current, obj.position.destination, obj.position.rate);
-        // obj.position.current     = newVals.newCurrent;
-        // obj.position.destination = newVals.newDestination;
-
-        lerpOne(obj, "scale");
-        lerpOne(obj, "opacity");
 
         var pos = {x:obj.position.current.x + obj.parentTransform.position.x, y:obj.position.current.y + obj.parentTransform.position.y};
-        var offset = {x:0, y:0};
         var atlas = act.imageList[obj.image].atlas;
 
         if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
           obj.scale.current = 0.01;
         }
+        if (obj.originxy === undefined) obj.originxy = {current:{x:0, y:0}};
         if (obj.origin === "center") {
           if (atlas){
-              offset={"x":atlas.cellwidth/2*obj.scale.current, "y":atlas.cellheight/2*obj.scale.current}
+              obj.originxy.current ={"x":-(atlas.cellwidth/2*obj.scale.current), "y":-(atlas.cellheight/2*obj.scale.current)};
           } else {
-            offset={"x":Math.floor(act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current), "y":Math.floor(act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current)};
+            obj.originxy.current ={"x":-(Math.floor(act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current)), "y":-(Math.floor(act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current))};
           }
         }
         if (isNaN(pos.x)){console.log("x NaN"); pos.x = 0;}
         if (isNaN(pos.y)){console.log("y NaN"); pos.y = 0;}
 
         if (obj.show){
-          act.context.globalAlpha = obj.opacity.current !== undefined ? obj.opacity.current : 1;
+          if (obj.opacity === undefined) obj.opacity = {current:1};
+          act.context.globalAlpha = obj.opacity.current;
           act.context.save();
           act.context.translate(pos.x, pos.y);
           act.context.rotate(obj.rotation);
-          act.context.translate(-offset.x, -offset.y);
+          act.context.translate(obj.originxy.current.x, obj.originxy.current.y);
           if (atlas){
             act.context.drawImage(act.imageList[obj.image].imageData,
               atlas.cellwidth*obj.atlascell.x, atlas.cellheight*obj.atlascell.y,
@@ -422,16 +414,15 @@ function canvasser(vari, interactiveData, dataForm){
           if (!obj.testp) return;
           var pixelData_img = [0,0,0,0];
           if (obj.scale.current>.001){
-            pixelData_img = act.imageList[obj.image].context.getImageData(Math.floor((act.position.x-pos.x)/obj.scale.current), Math.floor((act.position.y-pos.y)/obj.scale.current), 1, 1).data;
+            pixelData_img = act.imageList[obj.image].context.getImageData(
+              Math.floor((act.position.x-pos.x-obj.originxy.current.x)/obj.scale.current),
+              Math.floor((act.position.y-pos.y-obj.originxy.current.y)/obj.scale.current), 1, 1
+            ).data;
           }
           if (pixelData_img[3] != 0) act.applyAction.unshift(obj);
         }
     }
   });
-
-  // -------------------------------------------
-  //TODO: STORE ALL HITS AND THEN FIND THE LAST ONE IN THE LIST DUHHHHHHH
-// -------------------------------------------
 
     pManager.update();
     act.prevPosition = {x:act.position.x, y:act.position.y};
@@ -690,22 +681,6 @@ function canvasser(vari, interactiveData, dataForm){
                 }
                 if (action.type === 'execute'){
                     window[action.function](action.params);
-                }
-                if (action.type === 'fade'){
-                    act.data.objects.forEach(function(obj){
-                        if (!checkAction(action, obj)) return;
-                        if (obj.opacity === undefined) obj.opacity = {};
-                        if (typeof action.destination === "string"){
-                            obj.opacity.destination = obj.opacity[action.destination];
-                        }
-                        else{
-                            obj.opacity.destination = action.destination;
-                        }
-                        if (action.rate !== undefined)     obj.opacity.rate     = action.rate;
-                        if (action.duration !== undefined) obj.opacity.duration = action.duration;
-                        obj.opacity.showbefore = action.showbefore !== undefined ? action.showbefore : true;
-                        obj.opacity.hideafter = action.hideafter !== undefined ? action.hideafter : false;
-                    });
                 }
                 if (action.type === 'function'){
                     window[action.function]({id:action.id});

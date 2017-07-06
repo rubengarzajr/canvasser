@@ -19,13 +19,12 @@
   </head>
   <body onload="initAuthorCanvasser()" class="authorbk">
     <div class="header">
-      <a href="../index.html"><div class="titlecenter">CANVASSER</div>
-      <div class ="divbutton" >Home</div></a>
+    <div class="titlecenter">CANVASSER</div>
     </div>
     <div id="menu">
     </div>
     <div id="graphical">
-      <div id='canvasbank' class="skinnybank" style="position:absolute; left:180px; top:120px;">
+      <div id='canvasbank' class="skinnybank" style="position:absolute; left:180px; top:158px;">
         <div class="titlebar" id="canvasmover">
           <div class="wintitle">Output</div>
           <div class="sp_05 right"></div>
@@ -44,34 +43,33 @@
         <div class="titlebar" id="imagemover">
           <div class="wintitle">Images</div>
           <div class="sp_05 right"></div>
-          <div class ="right" onclick="window.author.toggleminmax('imagecontents', 'toggleimages', 664)" style="margin-top: 2px;"><img id="toggleimages" src="image/icon_max_g.png"/></div>
+          <div class ="right" onclick="window.author.toggleminmax('imagecontents', 'toggleimages', 664)" style="margin-top: 2px;"><img id="toggleimages" src="image/icon_min_g.png"/></div>
         </div>
         <div id="imagecontents" class="padlr" style="display:block">
           <div id="imagemenu" class="submenu">
             <div class="divmenu" onclick="window.author.addImage()">Add</div>
             <div class="divmenu" onclick="window.author.delete('images')">Delete</div>
           </div>
-          <div id="imageholder"></div>
+          <div id="imageholder" class="padholder"></div>
         </div>
       </div>
 
-      <div id='shapebank' class="skinnybank" style="position:absolute;left:174px; top:80px;">
+      <div id='shapebank' class="skinnybank" style="position:absolute;left:174px; top:70px;">
         <div class="titlebar" id="shapemover">
           <div class="wintitle">Shapes</div>
           <div class="sp_05 right"></div>
           <div class ="right" onclick="window.author.toggleminmax('shapecontents', 'toggleshapes', 664)" style="margin-top: 2px;"><img id="toggleshapes" src="image/icon_max_g.png"/></div>
         </div>
-
         <div id="shapecontents" class="padlr" style="display:none">
           <div id="shapemenu" class="submenu">
             <div class="divmenu" onclick="window.author.addShape()">Add</div>
             <div class="divmenu" onclick="window.author.delete('shapes')">Delete</div>
           </div>
-          <div id="shapeholder"></div>
+          <div id="shapeholder" class="padholder"></div>
         </div>
       </div>
 
-      <div id='samplebank' class="skinnybank" style="position:absolute; left:338px; top:80px;">
+      <div id='samplebank' class="skinnybank" style="position:absolute; left:338px; top:70px;">
         <div class="titlebar" id="samplemover">
           <div class="wintitle">Samples</div>
           <div class="sp_05 right"></div>
@@ -81,11 +79,11 @@
           <div id="samplemenu" class="submenu">
             <div class="divmenu" onclick="window.author.loadSample()">Load</div>
           </div>
-          <div id="sampleholder"></div>
+          <div id="sampleholder" class="padholder"></div>
         </div>
       </div>
 
-      <div id='objectbank' class="skinnybank" style="position:absolute;left:10px; top:120px;">
+      <div id='objectbank' class="skinnybank" style="position:absolute;left:10px; top:110px;">
         <div class="titlebar" id="objectmover">
           <div class="wintitle">Objects</div>
           <div class="sp_05 right"></div>
@@ -99,12 +97,12 @@
             <div class="divmenu" onclick="window.author.reorder('objects','up')"> &#9650;</div>
             <div class="divmenu" onclick="window.author.reorder('objects','down')"> &#9660;</div>
           </div>
-          <div id="objectholder"></div>
+          <div id="objectholder" class="padholder"></div>
         </div>
       </div>
     </div>
 
-        <div id='jsonbank' class="skinnybank" style="position:absolute;left:667px; top:80px;">
+        <div id='jsonbank' class="skinnybank" style="position:absolute;left:667px; top:70px;">
             <div class="titlebar" id="jsonmover">
                 <div class="wintitle">JSON</div>
                 <div class="sp_05 right"></div>
@@ -122,7 +120,7 @@
             </div>
         </div>
 
-        <div id='settingbank' class="skinnybank" style="position:absolute;left:10px; top:80px;">
+        <div id='settingbank' class="skinnybank" style="position:absolute;left:10px; top:70px;">
             <div class="titlebar" id="settingmover">
                 <div class="wintitle">Settings</div>
                 <div class="sp_05 right"></div>
@@ -133,11 +131,11 @@
                     <div class="divmenu" onclick="window.author.addObject()">Add</div>
                     <div class="divmenu" onclick="window.author.deleteObject()">Delete</div>
                 </div>
-                <div id="settingholder"></div>
+                <div id="settingholder" class="padholder"></div>
             </div>
         </div>
 
-        <div id='pathbank' class="skinnybank" style="position:absolute;left:502px; top:80px;">
+        <div id='pathbank' class="skinnybank" style="position:absolute;left:502px; top:70px;">
             <div class="titlebar" id="pathmover">
                 <div class="wintitle">Paths</div>
                 <div class="sp_05 right"></div>
@@ -148,11 +146,11 @@
                     <div class="divmenu" onclick="window.author.addPath()">Add</div>
                     <div class="divmenu" onclick="window.author.delete('paths')">Delete</div>
                 </div>
-                <div id="pathholder"></div>
+                <div id="pathholder" class="padholder"></div>
             </div>
         </div>
 
-        <div id='groupbank' class="skinnybank" style="position:absolute;left:832px; top:80px;">
+        <div id='groupbank' class="skinnybank" style="position:absolute;left:832px; top:70px;">
             <div class="titlebar" id="groupmover">
                 <div class="wintitle">Groups</div>
                 <div class="sp_05 right"></div>
@@ -163,11 +161,11 @@
                     <div class="divmenu" onclick="window.author.addGroup()">Add</div>
                     <div class="divmenu" onclick="window.author.delete('groups')">Delete</div>
                 </div>
-                <div id="groupholder"></div>
+                <div id="groupholder" class="padholder"></div>
             </div>
         </div>
 
-        <div id='particlebank' class="skinnybank" style="position:absolute;left:997px; top:80px;">
+        <div id='particlebank' class="skinnybank" style="position:absolute;left:997px; top:70px;">
             <div class="titlebar" id="particlemover">
                 <div class="wintitle">Particles</div>
                 <div class="sp_05 right"></div>
@@ -178,31 +176,46 @@
                     <div class="divmenu" onclick="window.author.addparticle()">Add</div>
                     <div class="divmenu" onclick="window.author.delete('particles')">Delete</div>
                 </div>
-                <div id="particleholder"></div>
+                <div id="particleholder" class="padholder"></div>
             </div>
         </div>
 
-        <div id='animbank' class="skinnybank" style="position:absolute;left:10px; top:505px;">
+        <div id='animbank' class="skinnybank" style="position:absolute;left:339px; top:110px;">
             <div class="titlebar" id="animmover">
                 <div class="wintitle">Animations</div>
                 <div class="sp_05 right"></div>
                 <div class ="right" onclick="window.author.toggleminmax('animcontents', 'toggleanim', 664)" style="margin-top: 2px;"><img id="toggleanim" src="image/icon_max_g.png"/></div>
             </div>
-            <div id="animcontents" class="padlr" style="display:block">
+            <div id="animcontents" class="padlr" style="display:none">
                 <div id="animmenu" class="submenu">
                     <div class="divmenu" onclick="window.author.addAnim()">Add</div>
                     <div class="divmenu" onclick="window.author.delete('anims')">Delete</div>
                     <div class="divmenu" onclick="window.author.copy('anims')">Copy</div>
                 </div>
-                <div id="animholder"></div>
+                <div id="animholder" class="padholder"></div>
             </div>
         </div>
 
-        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:800px; top:120px;">
+        <div id='soundbank' class="skinnybank" style="position:absolute;left:175px; top:110px;">
+            <div class="titlebar" id="soundmover">
+                <div class="wintitle">Sounds</div>
+                <div class="sp_05 right"></div>
+                <div class ="right" onclick="window.author.toggleminmax('soundcontents', 'togglesound', 664)" style="margin-top: 2px;"><img id="togglesound" src="image/icon_max_g.png"/></div>
+            </div>
+            <div id="soundcontents" class="padlr" style="display:none">
+                <div id="soundmenu" class="submenu">
+                    <div class="divmenu" onclick="window.author.addSound()">Add</div>
+                    <div class="divmenu" onclick="window.author.delete('sounds')">Delete</div>
+                </div>
+                <div id="soundholder" class="padholder"></div>
+            </div>
+        </div>
+
+        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:800px; top:158px;">
             <div class="titlebar" id="propertiesmover">
                 <div class="wintitle">Properties</div>
                 <div class="sp_05 right"></div>
-                <div class ="right" onclick="window.author.toggleminmax('propertiescontents', 'toggleproperties', 664)" style="margin-top: 2px;"><img id="toggleproperties" src="image/icon_max_g.png"/></div>
+                <div class ="right" onclick="window.author.toggleminmax('propertiescontents', 'toggleproperties', 664)" style="margin-top: 2px;"><img id="toggleproperties" src="image/icon_min_g.png"/></div>
             </div>
             <div id="propertiescontents" class="padlr" style="display:block">
                 <div id="propertiesmenu" class="submenu">

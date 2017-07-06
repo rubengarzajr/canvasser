@@ -75,7 +75,6 @@ function BuildProp(){
     menus.updateImages();
     return output + '</div>';
   }
-
   this.object = function(object){
     var output = '<div class="propbody">' ;
     var win = 'window.author.updateActivity';
@@ -100,7 +99,7 @@ function BuildProp(){
       if (widget.type === "shapelist") output += handleShapeList(object,  'object', widget, widget.field);
       if (widget.type === "objlist")   output += handleObjectList(object, 'object', widget, widget.field);
       if (widget.type === "posxy"){
-        output += '<div style="display:flex"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
+        output += '<div style="display:block"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
         if (object[widget.field] === undefined) object[widget.field] = {current:{x:0,y:0}};
         var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)};
 
@@ -110,10 +109,10 @@ function BuildProp(){
 
         output += '<span>';
         output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy" ';
-        output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.current.x'], true);
+        output += utils.buildFnString('window.author.updateItem', [object.id, 'object', widget.field+'.current.x'], true);
         output += 'type="number" value=' + tempPos.x + ' />';
         output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy" ';
-        output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'position.current.y'], true);
+        output += utils.buildFnString('window.author.updateItem', [object.id, 'object', widget.field+'.current.y'], true);
         output += 'type="number" value=' + tempPos.y + ' />';
         output += '</span>'
         output += '</div>';
@@ -175,6 +174,75 @@ function BuildProp(){
     return output + '</div>';
   }
 
+  this.particle = function(particle){
+    var output = '<div class="propbody">' ;
+    var win = 'window.author.updateActivity';
+    window.rules.particle.widgets.forEach(function(widget, idx, source){
+      if (widget.type === "text")         output += handleText(particle, 'particle', widget, widget.field, 'w100');
+      if (widget.type === "number")       output += utils.handleNumber(particle, 'particle', widget, widget.field);
+      if (widget.type === "select")       output += utils.handleSelect(particle, 'particle', widget, widget.field);
+      if (widget.type === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="auth_text" type="text" value="'+ particle[widget.field]+'"><br>';
+      if (widget.type === "bool")         output += utils.handleBoolean(particle, 'particle', widget, widget.field);
+      if (widget.type === "imagedata"){
+        var imageList = utils.objPartToArr(authorData.images, "id");
+        output += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+        output += utils.buildSelect('window.author.updateItem',  particle.id, 'particle', imageList, particle[widget.field], widget.field) + '<br>';
+        var flipTest = authorData.images.filter(function(img){ return img.id === particle.image})[0];
+        if (flipTest){
+          if(flipTest.atlas){
+            output += utils.handleNumber(particle, 'particle', {field:'atlascell.x'}, 'atlascell.x');
+            output += utils.handleNumber(particle, 'particle', {field:'atlascell.y'}, 'atlascell.y');
+          }
+        }
+      }
+      if (widget.type === "shapelist") output += handleShapeList(particle,  'particle', widget, widget.field);
+      if (widget.type === "objlist")   output += handleObjectList(particle, 'particle', widget, widget.field);
+      if (widget.type === "posxy"){
+        output += '<div style="display:block"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
+        if (particle[widget.field] === undefined) particle[widget.field] = {current:{x:0,y:0}};
+        var tempPos = {x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)};
+
+        if (particle[widget.field].current !== undefined){
+          tempPos = particle[widget.field].current;
+        }
+
+        output += '<span>';
+        output += ' <span class="entrytitle c_entrylabel_pos">X</span> <input class="auth_xy" ';
+        output += utils.buildFnString('window.author.updateItem', [particle.id, 'particle', widget.field+'.current.x'], true);
+        output += 'type="number" value=' + tempPos.x + ' />';
+        output += ' <span class="entrytitle c_entrylabel_pos">Y</span> <input class="auth_xy" ';
+        output += utils.buildFnString('window.author.updateItem', [particle.id, 'particle', widget.field+'.current.y'], true);
+        output += 'type="number" value=' + tempPos.y + ' />';
+        output += '</span>'
+        output += '</div>';
+      }
+      if (widget.type === "color"){
+        output += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
+        particle.keys(particle[widget.field]).forEach(function(colorList){
+            output += '<div class="entrylabel c_entrylabel_pos w100">' + colorList + '</div>';
+            particle.color[colorList].forEach(function(color,idx){
+            output += handleText(particle, 'particle', {field:idx}, widget.field+'.'+colorList+'.'+idx, 'w20');
+          })
+        });
+        output += '</div><br>';
+      }
+      if (widget.type === "scale"){
+        output += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
+        if (particle[widget.field] === undefined) particle[widget.field] = {current:1};
+        scaleObj = particle[widget.field].current;
+        output += '<span><input class="auth_xy" ';
+        output += utils.buildFnString('window.author.updateItem', [particle.id, 'particle', 'scale.current'], true);
+        output += 'type="number" value=' +scaleObj + ' />';
+        output += '</span>'
+        //output += '<br>';
+        output += '</div></div>';
+      }
+
+    });
+    output += " " + particle;
+    return output + '</div>';
+  }
+
   this.shape = function(shape){
     var drawList = [];
     window.rules.drawcode.forEach(function(template){drawList.push(template.type)});
@@ -217,7 +285,6 @@ function BuildProp(){
     prop += utils.buildDiv('divbutton', 'Add drawcode', 'window.author.adddrawcode', [shape.id]);
     return prop + '</div>';
   }
-
 
 
   function handleShapeList(object, type, widget, path){

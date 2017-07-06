@@ -48,6 +48,19 @@ function Menus(){
     objects +='</table>';
     objectHolder.innerHTML = objects;
   }
+  this.updateParticles = function(){
+    if (authorData.particles === undefined) return;
+    var particlesHolder = document.getElementById("particleholder");
+    var particles = '<table class="objtable" id="particlestable" width="100%">';
+
+    authorData.particles.forEach(function(particle){
+      particles += '<tr class="clicktr" id="'+particle.id+'" onclick="window.author.getProps(\'particles\',\''+ particle.id + '\')">';
+      particles +='<td width="100%">' + particle.id + '</td>';
+      particles += '</tr>';
+    });
+    particles +='</table>';
+    particlesHolder.innerHTML = particles;
+  }
   this.updatePaths = function(){
     var pathsHolder = document.getElementById("pathholder");
     var paths = '<table class="objtable" id="pathstable" width="100%">';
