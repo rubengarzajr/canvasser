@@ -310,6 +310,33 @@ a{
 .submenu{
 }
 
+.learnholder{
+  width: 420px;
+  height: 500px;
+  margin-bottom:5px;
+}
+
+#learning{
+  font-family: button;
+  background-color: white;
+  height: 480px;
+  width: 400px;
+  padding: 10px;
+}
+
+.learnlink{
+  color: green;
+  cursor: pointer;
+}
+.textblock{
+  text-align: justify;
+}
+.textblock::first-letter {
+  font-size: 145%;
+  color: #000000;
+  margin-left: 10px;
+}
+
 .padholder{
   margin-bottom:5px;
 }

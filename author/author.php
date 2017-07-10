@@ -228,5 +228,26 @@
             </div>
         </div>
 
+        <div id='learnbank' class="skinnybank" style="position:absolute;left:505px; top:110px;">
+            <div class="titlebar" id="learnmover">
+                <div class="wintitle">Learning</div>
+                <div class="sp_05 right"></div>
+                <div class ="right" onclick="window.author.toggleminmax('learncontents', 'togglelearn', 664)" style="margin-top: 2px;"><img id="togglelearn" src="image/icon_min_g.png"/></div>
+            </div>
+            <div id="learncontents" class="padlr" style="display:block">
+                <div id="learnmenu" class="submenu">
+                  <div class="divmenu" onclick="window.learning('load','welcome')">Home</div>
+                  <div class="divmenu" onclick="window.learning('load','contents')">Contents</div>
+                  <div class="divmenu" onclick="window/learning('back')">&#9668;</div>
+                  <div class="divmenu" onclick="window.learning('forward')">&#9658;</div>
+                </div>
+                <div id="learnholder" class="learnholder">
+                  <div id="learning">
+                    Welcome!
+                  </div>
+                </div>
+            </div>
+        </div>
+
     </body>
 </html>

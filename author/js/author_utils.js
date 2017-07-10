@@ -145,5 +145,17 @@ function CanvasserUtils(){
       xhr.overrideMimeType('application/json');
       xhr.open('GET', fileNamePath, true);
     xhr.send(null);
-    }
+  }
+  this.requestFile = function(fileNamePath, returnFunction){
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          returnFunction(xhr.responseText);
+        }
+        if (xhr.status == 404) console.error("File Load Error: " + xhr.statusText + " " + xhr.readyState);
+      }
+      xhr.open('GET', fileNamePath, true);
+    xhr.send(null);
+  }
+
 }

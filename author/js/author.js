@@ -2,8 +2,41 @@ function testFunction(obj){
   console.log(obj)
 }
 
+function learning(action, page){
+  console.log(window.learningHistory)
+  var utils = new CanvasserUtils();
+  if (window.learningHistory === undefined) window.learningHistory = {idx:0, pages:[page]};
+
+  if (action === 'load'){
+    if (window.learningHistory.idx != window.learningHistory.pages.length-1){
+      window.learningHistory.pages = window.learningHistory.pages.slice(0, window.learningHistory.idx);
+    }
+    window.learningHistory.pages.push(page);
+    window.learningHistory.idx ++;
+    utils.requestFile("./learning/html/"+page+".html", popLearn);
+  }
+  if (action === 'back'){
+    console.log(window.learningHistory)
+    if (window.learningHistory.idx === 0) return;
+        console.log( window.learningHistory.idx)
+    window.learningHistory.idx --;
+    console.log( window.learningHistory.idx)
+    console.log(window.learningHistory.pages[ window.learningHistory.idx])
+    utils.requestFile("./learning/html/"+window.learningHistory.pages[ window.learningHistory.idx]+".html", popLearn);
+  }
+}
+function popLearn(contents){
+  document.getElementById("learning").innerHTML = contents;
+}
+function pickWin(win, toggle, size, bank){
+  document.getElementById(bank).style.zIndex = window.author.zPlus();
+  window.author.toggleminmax(win, toggle, size);
+}
+
 function initAuthorCanvasser(vari, datafile, dataForm){
   var utils     = new CanvasserUtils();
+
+  learning('load', 'welcome');
 
   utils.requestJSON("./json/author.json", setRules);
   function setRules(data){
@@ -53,6 +86,7 @@ function authorcanvasser(dataFile, dataForm){
   this.addObject = menus.addObject;
   this.addImage  = menus.addImage;
 
+  this.zPlus = function(){ UIdata.zidx ++; return  UIdata.zidx;}
   var UIdata = {
     mousedown: false,
     moveElement: null,
@@ -67,6 +101,7 @@ function authorcanvasser(dataFile, dataForm){
   document.getElementById("groupcontents").addEventListener("mousedown",      function(){focusObjD("groupbank")},      false);
   document.getElementById("imagecontents").addEventListener("mousedown",      function(){focusObjD("imagebank")},      false);
   document.getElementById("jsoncontents").addEventListener("mousedown",       function(){focusObjD("jsonbank")},       false);
+  document.getElementById("learncontents").addEventListener("mousedown",      function(){focusObjD("learnbank")},      false);
   document.getElementById("objectcontents").addEventListener("mousedown",     function(){focusObjD("objectbank")},     false);
   document.getElementById("particlecontents").addEventListener("mousedown",   function(){focusObjD("particlebank")},   false);
   document.getElementById("pathcontents").addEventListener("mousedown",       function(){focusObjD("pathbank")},       false);
@@ -81,6 +116,7 @@ function authorcanvasser(dataFile, dataForm){
   document.getElementById("groupmover").addEventListener("mousedown",      function(){moveObjD("groupbank")},      false);
   document.getElementById("imagemover").addEventListener("mousedown",      function(){moveObjD("imagebank")},      false);
   document.getElementById("jsonmover").addEventListener("mousedown",       function(){moveObjD("jsonbank")},       false);
+  document.getElementById("learnmover").addEventListener("mousedown",      function(){moveObjD("learnbank")},       false);
   document.getElementById("objectmover").addEventListener("mousedown",     function(){moveObjD("objectbank")},     false);
   document.getElementById("particlemover").addEventListener("mousedown",   function(){moveObjD("particlebank")},   false);
   document.getElementById("pathmover").addEventListener("mousedown",       function(){moveObjD("pathbank")},       false);
