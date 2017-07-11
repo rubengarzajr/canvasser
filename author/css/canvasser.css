@@ -42,6 +42,11 @@ and open the template in the editor.
   font-size: 1.25em;
 }
 
+.minititle{
+  text-align: center;
+  font-size: 0.9em;
+}
+
 .divspace{
   padding-bottom: 25px;
 }
@@ -322,6 +327,7 @@ a{
   height: 480px;
   width: 400px;
   padding: 10px;
+  overflow-y: auto;
 }
 
 .learnlink{

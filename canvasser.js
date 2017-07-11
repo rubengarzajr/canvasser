@@ -56,6 +56,8 @@ function canvasser(vari, interactiveData, dataForm){
       });
     }
     act.data.images.forEach(function(image){
+      if (image.path != undefined) image.url = act.pathList[image.path] + '/' + image.url;
+
       var imageObj = new Image();
       imageObj.crossOrigin = "Anonymous";
       imageObj.onload = function(){
@@ -74,7 +76,6 @@ function canvasser(vari, interactiveData, dataForm){
           act.imageList[image.id].atlas.numY       = Math.floor(this.height / image.cellheight);
         }
       };
-      if (image.path != undefined) image.url = act.pathList[image.path] + '/' + image.url;
       imageObj.src = image.url + '?' + new Date().getTime();
       imageObj.setAttribute('crossOrigin', 'anonymous');
     });
@@ -123,24 +124,33 @@ function canvasser(vari, interactiveData, dataForm){
     this.create = function(obj){
       var newPSystem   = new pSystem();
       newPSystem.info  = obj;
-      //if (newPSystem.info.position.home) newPSystem.info.position.current = {x:newPSystem.info.position.home.x, y:newPSystem.info.position.home.y};
       newPSystem.info.currentEmitCounter = obj.emitCounter;
       pSystemList.push(newPSystem);
     }
-
     function pSystem(){this.pList = [];}
 
     this.update = function(){
       pSystemList.forEach(function(pSystem, index, particleList){
         if (pSystem.info.currentEmitCounter > 0){
           pSystem.info.currentEmitCounter --;
-          for (cnt =0; cnt < pSystem.info.emitRate; cnt ++){
-            var rndDir  = {x:randInterval(-0.5,0.5),y:randInterval(-0.5,0.5)};
+
+            for (cnt =0; cnt < pSystem.info.emitRate; cnt ++){
+              var partPos = pSystem.info.position.current;
+              if (pSystem.info.emitterSize > 1){
+                t = 2*Math.PI*randInterval(0,1);
+                u = randInterval(0,1)+randInterval(0,1);
+                r = u>1 ? 2-u : u
+                r *= pSystem.info.emitterSize
+                partPos = {x:r*Math.cos(t) + pSystem.info.position.current.x, y:r*Math.sin(t)+pSystem.info.position.current.y};
+              }
+
+            var dir = radians(randInterval(pSystem.info.emitDirStart-90, pSystem.info.emitDirEnd-90));
+            var rndDir  = {x:Math.cos(dir),y:Math.sin(dir)};
             var scale   = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
             var rndLife = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
             var speed   = {position:randInterval(pSystem.info.pParams.speed.position.min,pSystem.info.pParams.speed.position.max),rotation:randInterval(pSystem.info.pParams.speed.rotation.min,pSystem.info.pParams.speed.rotation.max)}
             var unit    = getUnit(rndDir);
-            pSystem.pList.push({position:pSystem.info.position.current, rotation:0,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
+            pSystem.pList.push({position:partPos, rotation:0,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
           }
         }
 

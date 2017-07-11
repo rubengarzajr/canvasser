@@ -51,7 +51,10 @@
       {"field":"on",                "type":"bool"},
       {"field":"image",             "type":"imagedata"},
       {"field":"position",          "type":"posxy"},
+      {"field":"emitterSize",       "type":"number"},
       {"field":"emitCounter",       "type":"number"},
+      {"field":"emitDirStart",      "type":"number"},
+      {"field":"emitDirEnd",        "type":"number"},
       {"field":"emitRate",          "type":"number"},
       {"field":"genType",           "type":"select", "id":"particletype"},
       {"field":"pParams.life.min",  "type":"number", "display":"Life Min"},
@@ -144,6 +147,7 @@
     {"id":"Animation: Motion Easing", "url":"anim_motionease.json"},
     {"id":"Image: Fade",              "url":"image_fade.json"},
     {"id":"Particle Sample 1",        "url":"particles_sample1.json"},
+    {"id":"Particle Rain",            "url":"particles_rain.json"},
     {"id":"lotsostuff",               "url":"multi.json"}
   ],
   "widgets":{

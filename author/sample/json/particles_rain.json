@@ -1,0 +1,113 @@
+{
+    "objects": [
+        {
+            "id": "click",
+            "type": "image",
+            "show": true,
+            "group": [
+                "win"
+            ],
+            "image": "click1",
+            "scale": {
+                "current": 1
+            },
+            "position": {
+                "current": {
+                    "x": 300,
+                    "y": 550
+                }
+            },
+            "origin": "center",
+            "testp": true,
+            "clicklist": [
+                {
+                    "type": "cleardown"
+                },
+                {
+                    "type": "console",
+                    "text": "particle"
+                },
+                {
+                    "type": "pstart",
+                    "filter": "id",
+                    "id": "particlesample"
+                }
+            ]
+        }
+    ],
+    "images": [
+        {
+            "id": "click1",
+            "path": "sample",
+            "url": "sample_click_1.png"
+        },
+        {
+            "id": "p",
+            "path": "sample",
+            "url": "particle.png"
+        }
+    ],
+    "particles": [
+        {
+            "id": "particlesample",
+            "position": {
+                "current": {
+                    "x": 200,
+                    "y": -250
+                }
+            },
+            "on": true,
+            "image": "p",
+            "genType": "burst",
+            "emitCounter": 100,
+            "emitterSize": 150,
+            "emitDirStart": 180,
+            "emitDirEnd": 180,
+            "emitRate": 2,
+            "pParams": {
+                "life": {
+                    "min": 200,
+                    "max": 200
+                },
+                "fade": {
+                    "in": 25,
+                    "out": 95
+                },
+                "scale": {
+                    "min": 0.25,
+                    "max": 0.5
+                },
+                "speed": {
+                    "position": {
+                        "min": 1,
+                        "max": 3
+                    },
+                    "rotation": {
+                        "min": -0.1,
+                        "max": 0.1
+                    }
+                }
+            }
+        }
+    ],
+    "paths": [
+        {
+            "id": "sample",
+            "url": "./sample/image"
+        }
+    ],
+    "shapes": [],
+    "settings": {
+        "canvaswidth": "600",
+        "canvasheight": "600",
+        "canvasdomname": "activity",
+        "canvasparent": "canvasholder"
+    },
+    "vars": [
+        {
+            "name": "counter",
+            "value": 0
+        }
+    ],
+    "anims": []
+}

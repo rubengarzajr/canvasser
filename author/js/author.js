@@ -5,23 +5,20 @@ function testFunction(obj){
 function learning(action, page){
   console.log(window.learningHistory)
   var utils = new CanvasserUtils();
-  if (window.learningHistory === undefined) window.learningHistory = {idx:0, pages:[page]};
+  if (window.learningHistory === undefined) window.learningHistory = {idx:-1, pages:[]};
 
   if (action === 'load'){
     if (window.learningHistory.idx != window.learningHistory.pages.length-1){
-      window.learningHistory.pages = window.learningHistory.pages.slice(0, window.learningHistory.idx);
+      window.learningHistory.pages = window.learningHistory.pages.slice(0, window.learningHistory.idx+1);
     }
     window.learningHistory.pages.push(page);
     window.learningHistory.idx ++;
     utils.requestFile("./learning/html/"+page+".html", popLearn);
   }
   if (action === 'back'){
-    console.log(window.learningHistory)
-    if (window.learningHistory.idx === 0) return;
-        console.log( window.learningHistory.idx)
+    if (window.learningHistory.idx <= 0) return;
     window.learningHistory.idx --;
-    console.log( window.learningHistory.idx)
-    console.log(window.learningHistory.pages[ window.learningHistory.idx])
+    console.log(window.learningHistory)
     utils.requestFile("./learning/html/"+window.learningHistory.pages[ window.learningHistory.idx]+".html", popLearn);
   }
 }

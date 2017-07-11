@@ -111,7 +111,16 @@ function Menus(){
   }
 
   this.addImage = function(){
-    authorData.images.push({id:"newImage",path:"",  url:"./image/no_image.png"});
+    var imgName  = 'newImage';
+    var imgCnt   = 0;
+    var tryAgain = true;
+    while (tryAgain){
+      if (authorData.images.filter(function(img){return img.id === imgName}).length > 0){
+        imgCnt ++;
+        imgName ='newImage'+imgCnt;
+      } else tryAgain = false;
+    }
+    authorData.images.push({id:imgName,path:"author",  url:"no_image.png"});
     updateImages();
     initCanvasser("sample", JSON.stringify(authorData), "string");
     window.author.view();
