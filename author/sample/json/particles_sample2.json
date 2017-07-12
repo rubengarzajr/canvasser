@@ -1,0 +1,89 @@
+{
+    "objects": [],
+    "images": [
+        {
+            "id": "p",
+            "path": "sample",
+            "url": "icon_down.png"
+        }
+    ],
+    "particles": [
+        {
+            "id": "particlesample",
+            "position": {
+                "current": {
+                    "x": 300,
+                    "y": 300
+                }
+            },
+            "on": true,
+            "image": "p",
+            "genType": "burst",
+            "faceMotion": true,
+            "faceAngle": -90,
+            "emitCounter": 10,
+            "emitterSize": 1,
+            "emitDirStart": 0,
+            "emitDirEnd": 360,
+            "emitRate": 4,
+            "pParams": {
+                "life": {
+                    "min": 90,
+                    "max": 200
+                },
+                "fade": {
+                    "in": 25,
+                    "out": 90
+                },
+                "scale": {
+                    "min": 0.1,
+                    "max": 0.3
+                },
+                "speed": {
+                    "position": {
+                        "min": 1,
+                        "max": 1
+                    },
+                    "rotation": {
+                        "min": 0,
+                        "max": 0
+                    }
+                }
+            }
+        }
+    ],
+    "paths": [
+        {
+            "id": "sample",
+            "url": "./sample/image"
+        }
+    ],
+    "shapes": [],
+    "settings": {
+        "canvaswidth": "600",
+        "canvasheight": "600",
+        "canvasdomname": "activity",
+        "canvasparent": "canvasholder"
+    },
+    "vars": [
+        {
+            "name": "counter",
+            "value": 0
+        }
+    ],
+    "anims": [
+        {
+            "id": "newanim",
+            "autostart": true,
+            "length": 2000,
+            "timelist": [
+                {
+                    "type": "pstart",
+                    "starttime": 1,
+                    "id": "particlesample"
+                }
+            ],
+            "loop": true
+        }
+    ]
+}

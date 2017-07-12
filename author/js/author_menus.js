@@ -127,7 +127,16 @@ function Menus(){
   }
 
   this.addObject = function(){
-    authorData.objects.push({id:"new_object", type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
+    var objName  = 'object';
+    var objCnt   = 0;
+    var tryAgain = true;
+    while (tryAgain){
+      if (authorData.objects.filter(function(obj){return obj.id === objName}).length > 0){
+        objCnt ++;
+        objName ='object'+objCnt;
+      } else tryAgain = false;
+    }
+    authorData.objects.push({id:objName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
     updateObjects();
     initCanvasser("sample", JSON.stringify(authorData), "string");
     window.author.view();

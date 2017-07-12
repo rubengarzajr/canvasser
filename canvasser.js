@@ -133,24 +133,31 @@ function canvasser(vari, interactiveData, dataForm){
       pSystemList.forEach(function(pSystem, index, particleList){
         if (pSystem.info.currentEmitCounter > 0){
           pSystem.info.currentEmitCounter --;
+          for (cnt =0; cnt < pSystem.info.emitRate; cnt ++){
+            var partPos = pSystem.info.position.current;
+            if (pSystem.info.emitterSize > 1){
+              t = 2*Math.PI*randInterval(0,1);
+              u = randInterval(0,1)+randInterval(0,1);
+              r = u>1 ? 2-u : u
+              r *= pSystem.info.emitterSize;
+              partPos = {x:r*Math.cos(t) + pSystem.info.position.current.x, y:r*Math.sin(t)+pSystem.info.position.current.y};
+            }
+            var rot = 0;
+            var dirgrees = randInterval(pSystem.info.emitDirStart-90, pSystem.info.emitDirEnd-90);
+            var dir      = radians(dirgrees);
 
-            for (cnt =0; cnt < pSystem.info.emitRate; cnt ++){
-              var partPos = pSystem.info.position.current;
-              if (pSystem.info.emitterSize > 1){
-                t = 2*Math.PI*randInterval(0,1);
-                u = randInterval(0,1)+randInterval(0,1);
-                r = u>1 ? 2-u : u
-                r *= pSystem.info.emitterSize
-                partPos = {x:r*Math.cos(t) + pSystem.info.position.current.x, y:r*Math.sin(t)+pSystem.info.position.current.y};
-              }
+            if (pSystem.info.faceMotion){
+              rot = dir;
+              if (pSystem.info.faceAngle) rot += radians(pSystem.info.faceAngle);
+            }
 
-            var dir = radians(randInterval(pSystem.info.emitDirStart-90, pSystem.info.emitDirEnd-90));
-            var rndDir  = {x:Math.cos(dir),y:Math.sin(dir)};
-            var scale   = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
-            var rndLife = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
-            var speed   = {position:randInterval(pSystem.info.pParams.speed.position.min,pSystem.info.pParams.speed.position.max),rotation:randInterval(pSystem.info.pParams.speed.rotation.min,pSystem.info.pParams.speed.rotation.max)}
-            var unit    = getUnit(rndDir);
-            pSystem.pList.push({position:partPos, rotation:0,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
+
+            var rndDir   = {x:Math.cos(dir),y:Math.sin(dir)};
+            var scale    = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
+            var rndLife  = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
+            var speed    = {position:randInterval(pSystem.info.pParams.speed.position.min,pSystem.info.pParams.speed.position.max),rotation:randInterval(pSystem.info.pParams.speed.rotation.min,pSystem.info.pParams.speed.rotation.max)}
+            var unit     = getUnit(rndDir);
+            pSystem.pList.push({position:partPos, rotation:rot,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
           }
         }
 
@@ -161,6 +168,7 @@ function canvasser(vari, interactiveData, dataForm){
         if (act.imageList[pSystem.info.image] == undefined) return;
         var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
         var keepParticleSystem = false;
+        if (pSystem.info.blend) act.context.globalCompositeOperation = pSystem.info.blend;
         pSystem.pList.forEach(function(p){
           p.life.current --;
           if (p.life.current > 0){
@@ -174,21 +182,24 @@ function canvasser(vari, interactiveData, dataForm){
             if (pcent*100 < pSystem.info.pParams.fade.in)  alpha = lifeCnt / (p.life.max*(pSystem.info.pParams.fade.in*0.01));
             if (pcent*100 > pSystem.info.pParams.fade.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.info.pParams.fade.out*0.01));
 
-            var pos     = {"x":parseInt(p.position.x+imgDim.x), "y":parseInt(p.position.y+imgDim.y)};
+            var pos     = {"x":parseInt(p.position.x), "y":parseInt(p.position.y)};
             p.rotation += p.speed.rotation;
             act.context.save();
             act.context.translate(pos.x, pos.y);
-            act.context.globalCompositeOperation = 'source-over';   // overlay source-over destination-over source-in destination-in source-out destination-out source-atop destination-atop lighter xor copy
-            act.context.globalAlpha =  alpha;
+            //act.context.globalCompositeOperation = 'source-over';   // overlay source-over destination-over source-in destination-in source-out destination-out source-atop destination-atop lighter xor copy
+
+            act.context.globalAlpha = alpha;
             act.context.rotate(p.rotation);
             act.context.drawImage(act.imageList[pSystem.info.image].imageData, -imgDim.x*scale, -imgDim.y*scale, act.imageList[pSystem.info.image].imageData.naturalWidth*scale, act.imageList[pSystem.info.image].imageData.naturalHeight*scale);
             act.context.restore();
             act.context.globalAlpha = 1;
-            act.context.globalCompositeOperation = 'source-over';
+
           }
         });
+        act.context.globalCompositeOperation = 'source-over';
         if (!keepParticleSystem) particleList.splice(index, 1);
       });
+
     };
   }
 
@@ -232,12 +243,14 @@ function canvasser(vari, interactiveData, dataForm){
           act.player.push(copyObj(animToPlay, {}));
         }
       }
-      play.timelist.forEach(function(animList){
-        if (animList.starttime >= play.prevTime && animList.starttime <= play.time) {
-          var animCopy = copyObj(animList, {})
-          play.playing.push(animCopy);
-        }
-      });
+
+        play.timelist.forEach(function(animList){
+          if (animList.starttime < 1 || animList.starttime === undefined) animList.starttime = 1;
+          if (animList.starttime >= play.prevTime && animList.starttime <= play.time) {
+            var animCopy = copyObj(animList, {})
+            play.playing.push(animCopy);
+          }
+        });
 
       play.playing.forEach(function(anim){
         if (anim.type === "flipbook"){
@@ -253,9 +266,20 @@ function canvasser(vari, interactiveData, dataForm){
           act.player.push(copyObj(animToPlay, {}));
           anim.delete = true;
         }
+        if (anim.type === 'pstart'){
+          act.data.particles.forEach(function(obj){
+              if (obj.id === undefined) return;
+              if (obj.id === anim.id) pManager.create(obj);
+          });
+          anim.delete = true;
+        }
         if (anim.type === "sound"){
             act.soundList[anim.id].play();
             anim.delete = true;
+        }
+        if (anim.type === "testpset"){
+            var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+            animOb.testp = anim.testp
         }
         if (anim.type === "vis"){
             var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
@@ -713,8 +737,8 @@ function canvasser(vari, interactiveData, dataForm){
                   else {window.location.href = action.url;}
                 }
                 if (action.type === 'playanim'){
-                    var animToPlay = act.data.anims.filter(function(obj){return obj.id === action.animation})[0];
-                    act.player.push(copyObj(animToPlay, {}));
+                  var animToPlay = act.data.anims.filter(function(obj){return obj.id === action.animation})[0];
+                  act.player.push(copyObj(animToPlay, {}));
                 }
                 if (action.type === 'modvar'){
                     if (action.operation === "add") act.vars[action.id] += action.amount;
@@ -792,6 +816,10 @@ function canvasser(vari, interactiveData, dataForm){
                 }
                 if (action.type === "sound"){
                     act.soundList[action.id].play();
+                }
+                if (action.type === "testpset"){
+                    var actObj = act.data.objects.filter(function(obj){return obj.id === action.id})[0];
+                    actObj.testp = action.testp
                 }
                 if (action.type === 'url'){
                     var target = document.getElementById(action.target);

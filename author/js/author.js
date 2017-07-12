@@ -3,7 +3,6 @@ function testFunction(obj){
 }
 
 function learning(action, page){
-  console.log(window.learningHistory)
   var utils = new CanvasserUtils();
   if (window.learningHistory === undefined) window.learningHistory = {idx:-1, pages:[]};
 
@@ -18,7 +17,6 @@ function learning(action, page){
   if (action === 'back'){
     if (window.learningHistory.idx <= 0) return;
     window.learningHistory.idx --;
-    console.log(window.learningHistory)
     utils.requestFile("./learning/html/"+window.learningHistory.pages[ window.learningHistory.idx]+".html", popLearn);
   }
 }
@@ -594,10 +592,8 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   this.deletetimeline = function(animName, index){
-    console.log(animName)
     var animGet = authorData.anims.filter(function(finder){return (finder.id === animName);});
     if (animGet.length === 0) return;
-    console.log(animGet)
     animGet[0].timelist.splice(index,1);
     getProps("anims",animName);
     restartCanvasser("sample", authorData, "string");

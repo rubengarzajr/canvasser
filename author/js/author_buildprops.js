@@ -37,6 +37,7 @@ function BuildProp(){
               }
               if (subWidget.type === 'objlist') output += handleObjectList(animation,     'anim', subWidget, widgetPath);
               if (subWidget.type === 'anmlist') output += handleAnimList(animation,       'anim', subWidget, widgetPath);
+              if (subWidget.type === 'parlist') output += handleParticleList(animation,   'anim', subWidget, widgetPath);
               if (subWidget.type === 'sndlist') output += handleSoundList(animation,      'anim', subWidget, widgetPath);
               if (subWidget.type === 'posxy')   output += utils.handlePosition(animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'select')  output += utils.handleSelect(animation,   'anim', subWidget, widgetPath);
@@ -157,6 +158,7 @@ function BuildProp(){
                 if (subWidget.type === 'number')  output += utils.handleNumber(object,   'object', subWidget, widgetPath);
                 if (subWidget.type === 'objlist') output += handleObjectList(object,     'object', subWidget, widgetPath);
                 if (subWidget.type === 'anmlist') output += handleAnimList(object,       'object', subWidget, widgetPath);
+                if (subWidget.type === 'parlist') output += handleParticleList(object,   'object', subWidget, widgetPath);
                 if (subWidget.type === 'sndlist') output += handleSoundList(object,      'object', subWidget, widgetPath);
                 if (subWidget.type === 'posxy')   output += utils.handlePosition(object, 'object', subWidget, widgetPath);
                 if (subWidget.type === 'select')  output += utils.handleSelect(object,   'object', subWidget, widgetPath);
@@ -320,11 +322,17 @@ function BuildProp(){
     str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
     return str;
   }
+  function handleParticleList(object, type, widget, path){
+    var str = '';
+    var objectList = utils.objPartToArr(authorData.particles, "id");
+    var defaultId = utils.getSubProp(object, path);
+    str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
+    return str;
+  }
   function handleSoundList(object, type, widget, path){
-    console.log("wee")
     var str = '';
     var objectList = utils.objPartToArr(authorData.sounds, "id");
-    console.log(objectList)
     var defaultId = utils.getSubProp(object, path);
     str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
