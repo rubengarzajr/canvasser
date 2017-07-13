@@ -61,7 +61,7 @@ function CanvasserUtils(){
   }
 
    this.buildSelect = function(fn, object, type, list, defaultId, path){
-    var out = '<select class="sellist"';
+    var out = '<select id="prop_'+path+'" class="sellist"';
     out += this.buildFnString(fn, [object, type, path], true) + '>';
     var newList = list.slice();
     newList.unshift("---NONE---");
@@ -103,7 +103,8 @@ function CanvasserUtils(){
     var str = '';
     var selOp = (list === undefined ? window.rules.select[widget.id].list : list);
     var defaultId = this.getSubProp(object, path);
-    str += this.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    var display = widget.display ? widget.display : widget.field;
+    str += this.buildDiv('entrylabel c_entrytitle_text w100',  display);
     str += this.buildSelect('window.author.updateItem',  object.id, type, selOp, defaultId, path) + '<br>';
     return str;
   }
@@ -121,7 +122,8 @@ function CanvasserUtils(){
     var pos = {x:this.getSubProp(object, path+'.x'), y:this.getSubProp(object, path+'.y')};
     if (pos.x === undefined) pos.x = 0;
     if (pos.y === undefined) pos.y = 0;
-    str += this.buildDiv('entrylabel c_entrylabel_pos w100', widget.field );
+    var display = widget.display ? widget.display : widget.field;
+    str += this.buildDiv('entrylabel c_entrylabel_pos w100', display);
     str += '<span>';
     str += '<span class="entrytitle c_entrylabel_pos">X</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.x + '" ';

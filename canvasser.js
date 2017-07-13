@@ -1,6 +1,5 @@
 // Canvasser rubengarzajr@gmail.com
 // TODO:
-// Set action: allow for multiple actions (array)
 // Responsive Scaling: Fix - currently borked
 
 function initCanvasser(vari, datafile, dataForm){
@@ -29,12 +28,12 @@ function canvasser(vari, interactiveData, dataForm){
   }
 
   function init(data){
-    act.canvas  = document.createElement('canvas');
-    act.canvas.id = data.settings.canvasdomname;
-    act.context = act.canvas.getContext('2d');
+    act.canvas        = document.createElement('canvas');
+    act.canvas.id     = data.settings.canvasdomname;
+    act.context       = act.canvas.getContext('2d');
     act.canvas.width  = data.settings.canvaswidth;
     act.canvas.height = data.settings.canvasheight;
-    act.data = data;
+    act.data          = data;
     document.getElementById(data.settings.canvasparent).innerHTML = "";
     document.getElementById(data.settings.canvasparent).appendChild(act.canvas);
     act.canvas.addEventListener('mousemove',    getMousePos, false);
@@ -42,12 +41,15 @@ function canvasser(vari, interactiveData, dataForm){
     act.canvas.addEventListener('mouseup',      mouseUp,     false);
     act.canvas.addEventListener('mouseleave',   mouseLeave,  false);
     act.canvas.addEventListener('onmouseenter', mouseEnter,  false);
-    act.canvas.addEventListener("touchstart", touchDown, false);
-    act.canvas.addEventListener("touchmove",  touchMove, false);
-    act.canvas.addEventListener("touchend",   touchUp,   false);
-    if (act.data.paths !== undefined){
-      act.data.paths.forEach(function(path){act.pathList[path.id] = path.url;});
+    act.canvas.addEventListener("touchstart",   touchDown,   false);
+    act.canvas.addEventListener("touchmove",    touchMove,   false);
+    act.canvas.addEventListener("touchend",     touchUp,     false);
+
+    act.pathList = {};
+    if (act.data.paths){act.data.paths.forEach(function(path){
+      act.pathList[path.id] = path.url;});
     }
+
     act.soundList = {};
     if (act.data.sounds){
       act.data.sounds.forEach(function(sound){
@@ -55,9 +57,10 @@ function canvasser(vari, interactiveData, dataForm){
         act.soundList[sound.id] = new Audio(sound.url);
       });
     }
+
+    act.imageList = {};
     act.data.images.forEach(function(image){
       if (image.path != undefined) image.url = act.pathList[image.path] + '/' + image.url;
-
       var imageObj = new Image();
       imageObj.crossOrigin = "Anonymous";
       imageObj.onload = function(){
@@ -77,7 +80,6 @@ function canvasser(vari, interactiveData, dataForm){
         }
       };
       imageObj.src = image.url + '?' + new Date().getTime();
-      imageObj.setAttribute('crossOrigin', 'anonymous');
     });
 
     act.vars = {};
@@ -106,9 +108,6 @@ function canvasser(vari, interactiveData, dataForm){
   function interaction(){
     this.position     = {x:0, y:0};
     this.prevPosition = {x:0, y:0};
-    this.curveList    = [];
-    this.imageList    = [];
-    this.pathList     = [];
     this.applyAction  = [];
     this.mouseDown    = false;
     this.mouseDownCnt = 0;
@@ -127,6 +126,7 @@ function canvasser(vari, interactiveData, dataForm){
       newPSystem.info.currentEmitCounter = obj.emitCounter;
       pSystemList.push(newPSystem);
     }
+
     function pSystem(){this.pList = [];}
 
     this.update = function(){
@@ -151,7 +151,6 @@ function canvasser(vari, interactiveData, dataForm){
               if (pSystem.info.faceAngle) rot += radians(pSystem.info.faceAngle);
             }
 
-
             var rndDir   = {x:Math.cos(dir),y:Math.sin(dir)};
             var scale    = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
             var rndLife  = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
@@ -160,10 +159,6 @@ function canvasser(vari, interactiveData, dataForm){
             pSystem.pList.push({position:partPos, rotation:rot,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
           }
         }
-
-        var newVals                       = lerpTo(pSystem.info.position.current, pSystem.info.position.destination, pSystem.info.position.rate);
-        pSystem.info.position.current     = newVals.newCurrent;
-        pSystem.info.position.destination = newVals.newDestination;
 
         if (act.imageList[pSystem.info.image] == undefined) return;
         var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
@@ -186,8 +181,6 @@ function canvasser(vari, interactiveData, dataForm){
             p.rotation += p.speed.rotation;
             act.context.save();
             act.context.translate(pos.x, pos.y);
-            //act.context.globalCompositeOperation = 'source-over';   // overlay source-over destination-over source-in destination-in source-out destination-out source-atop destination-atop lighter xor copy
-
             act.context.globalAlpha = alpha;
             act.context.rotate(p.rotation);
             act.context.drawImage(act.imageList[pSystem.info.image].imageData, -imgDim.x*scale, -imgDim.y*scale, act.imageList[pSystem.info.image].imageData.naturalWidth*scale, act.imageList[pSystem.info.image].imageData.naturalHeight*scale);
@@ -280,10 +273,12 @@ function canvasser(vari, interactiveData, dataForm){
         if (anim.type === "testpset"){
             var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
             animOb.testp = anim.testp
+            anim.delete = true;
         }
         if (anim.type === "vis"){
             var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
             animOb.show = anim.show;
+            anim.delete = true;
         }
 
         if (anim.endtime === undefined) return;
@@ -308,7 +303,7 @@ function canvasser(vari, interactiveData, dataForm){
       play.playing = play.playing.filter(function(anim){return !anim.delete});
 
       play.playing.forEach(function(anim){
-        var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+        var animOb = act.data[anim.filter+'s'].filter(function(obj){return obj.id === anim.id})[0];
         if (animOb === undefined) return;
         if (anim.type === "fade") {
           if (animOb.opacity === undefined) animOb.opacity = {current:1};
@@ -466,23 +461,6 @@ function canvasser(vari, interactiveData, dataForm){
   function radians(degrees) {
     return degrees * 0.01745329251994;
   };
-
-  function lerpOne(obj, item){
-    if (obj[item] === undefined) obj[item] = {current:1, rate:0};
-    var rateMod = obj[item].rate*0.1;
-    if (obj[item].destination !== undefined){
-      if (obj[item].showbefore) {obj.show = true; obj[item].showbefore = false;}
-      if (obj[item].current < obj[item].destination) obj[item].current += rateMod;
-      if (obj[item].current > obj[item].destination) obj[item].current -= rateMod;
-
-      if (obj[item].current === obj[item].destination || obj[item].current + rateMod >= obj[item].destination && obj[item].current - rateMod <= obj[item].destination) {
-        obj[item].current = obj[item].destination;
-        if (obj[item].hideafter) obj.show = false;
-        obj[item].destination = undefined;
-        obj[item].hideafter = false;
-      }
-    }
-  }
 
   function Ease(t, b, c, d){
     this.linear = function(t, b, c, d){
@@ -895,7 +873,6 @@ function canvasser(vari, interactiveData, dataForm){
       if (obj[arr[0]] === undefined) obj[arr[0]] = {};
       obj = obj[arr.shift()];
     }
-    //obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
     obj[arr[0]] = val;
   }
 
@@ -924,32 +901,4 @@ function canvasser(vari, interactiveData, dataForm){
     return newArr;
   }
 
-  function lerpTo(inCurrent, inDestination, rate){
-    if (inDestination === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
-    if (inDestination.x === undefined || inDestination.y === undefined) return {newCurrent:inCurrent, newDestination:inDestination};
-    var current     = inCurrent;
-    var destination = inDestination;
-    var dist = Math.sqrt( (destination.x-current.x)*(destination.x-current.x) + (destination.y-current.y)*(destination.y-current.y) );
-    if (dist < rate+1) {
-      current = {x:destination.x, y:destination.y};
-      destination = undefined;
-    }
-    else{
-      //TODO: New lerp smoother but has negative issues when a child
-      //     var vec = {x:destination.x-current.x, y:destination.y-current.y};
-      //     var magnitude = getMagnitude(vec);
-      //     vec = {x:parseInt(vec.x/magnitude*rate), y:parseInt(vec.y/magnitude*rate)};
-      //     current = {x:current.x + vec.x, y:current.y + vec.y};
-      var x = current.x;
-      var y = current.y;
-      if (destination.x === current.x){
-        y = current.y + (current.y <= destination.y ? rate : -rate);
-      }else{
-        x = current.x + (current.x <= destination.x ? rate : -rate);
-        y = current.y + (x - current.x) * (destination.y - current.y) / ( destination.x - current.x);
-      }
-      current = {x:x, y:y};
-    }
-    return {newCurrent:current, newDestination:destination};
-  }
 }

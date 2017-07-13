@@ -44,19 +44,12 @@ function initAuthorCanvasser(vari, datafile, dataForm){
   }
 }
 
-//initCanvasser("sample", JSON.stringify(authorData), "string");
 function restartCanvasser(name, data, type){
   authorData = data;
   initCanvasser(name, JSON.stringify(data), type);
   var menus     = new Menus();
-  menus.updateSettings();
-  menus.updateObjects();
-  menus.updateImages();
-  menus.updateSamples();
-  menus.updatePaths();
-  menus.updateParticles();
-  menus.updateShapes();
-  menus.updateAnims();
+  menus.update();
+
   function getMousePos(canvas, evt) {
           var rect = canvas.getBoundingClientRect();
           return {
@@ -75,11 +68,10 @@ function restartCanvasser(name, data, type){
 }
 
 function authorcanvasser(dataFile, dataForm){
-  var buildProp = new BuildProp();
-  var utils     = new CanvasserUtils();
-  var menus     = new Menus();
-  this.addObject = menus.addObject;
-  this.addImage  = menus.addImage;
+  var buildProp     = new BuildProp();
+  var utils         = new CanvasserUtils();
+  var menus         = new Menus();
+  this.menus        = menus;
 
   this.zPlus = function(){ UIdata.zidx ++; return  UIdata.zidx;}
   var UIdata = {
@@ -124,14 +116,7 @@ function authorcanvasser(dataFile, dataForm){
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);
   restartCanvasser("sample", authorData, "string");
-  menus.updateAnims();
-  menus.updateImages();
-  menus.updateObjects();
-  menus.updateParticles();
-  menus.updatePaths();
-  menus.updateSettings();
-  menus.updateShapes();
-
+  menus.update();
   loop();
 
   function loop(){
@@ -205,10 +190,7 @@ function authorcanvasser(dataFile, dataForm){
   }
   this.paste = function(){
     var pasteData = document.getElementById("paste").value;
-    menus.updateObjects();
-    menus.updateImages();
-    menus.updateShapes();
-    menus.updateAnims();
+    menus.update();
     restartCanvasser("sample", JSON.parse(pasteData), "string");
   }
   this.format = function(){
@@ -243,13 +225,13 @@ function authorcanvasser(dataFile, dataForm){
 
   this.addPath = function(){
     authorData.paths.push({id:"newpath",url:"./"});
-    menus.updatePaths();
+    menus.update('paths');
     getPath('newpath');
   }
 
   this.addAnim = function(){
     authorData.anims.push({id:"newanim",autostart:false, length:60, timelist:[]});
-    menus.updateAnims();
+    menus.update('anims');
     getProps('anims', 'newanim');
   }
 
@@ -296,15 +278,12 @@ function authorcanvasser(dataFile, dataForm){
     if (type === "images")    titleText = 'Image: '     + id;
     if (type === "objects")   titleText = 'Object: '    + id + ' : ' + thisProp.type;
     if (type === "particles") titleText = 'Particle: '  + id;
+    if (type === "sounds")    titleText = 'Sound: '     + id;
 
     document.getElementById("propertiestitle").innerHTML = titleText + '</div>';
 
     var propUI = document.getElementById("properties");
-    if (type === 'anims')     prop = buildProp.anim(thisProp);
-    if (type === 'images')    prop = buildProp.image(thisProp);
-    if (type === 'objects')   prop = buildProp.object(thisProp);
-    if (type === 'particles') prop = buildProp.particle(thisProp);
-    if (type === 'shapes')    prop = buildProp.shape(thisProp);
+    prop = buildProp[type](thisProp);
     propUI.innerHTML = prop;
     updateSelectionWindow(type,id);
   }
@@ -342,7 +321,7 @@ function authorcanvasser(dataFile, dataForm){
       authorData[type][swapRow+1] = b;
     }
 
-    updateType(type);
+    menus.update(type);
     getProps(type, swapId.substring(swapId.indexOf("_") + 1));
     //initCanvasser("sample", JSON.stringify(authorData), "string");
     restartCanvasser("sample", authorData, "string");
@@ -357,7 +336,7 @@ function authorcanvasser(dataFile, dataForm){
     authorData[type].forEach(function(test, idx){
       if (type + '_' + test.id === delRow){ authorData[type].splice(idx,1); }
     });
-    updateType(type);
+    menus.update(type);
     restartCanvasser("sample", authorData, "string");
   }
 
@@ -374,18 +353,9 @@ function authorcanvasser(dataFile, dataForm){
         authorData[type].push(newObj);
       }
     });
-    updateType(type);
+    menus.update(type);
     restartCanvasser("sample", authorData, "string");
   }
-
-  function updateType(type){
-    if (type === 'shapes')  menus.updateShapes();
-    if (type === 'objects') menus.updateObjects();
-    if (type === 'images')  menus.updateImages();
-    if (type === 'anims')   menus.updateAnims();
-    if (type === 'paths')   menus.updatePaths();
-  }
-
 
   this.adddrawcode = function(id){
     var shape = authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
@@ -469,22 +439,15 @@ function authorcanvasser(dataFile, dataForm){
     if (newVal === '---NONE---') newVal = undefined;
 
     var objGet = authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
-    if (type === 'shape') objGet = authorData.shapes.filter(function(finder){return (finder.id === objectId);})[0];
-    if (type === 'image') objGet = authorData.images.filter(function(finder){return (finder.id === objectId);})[0];
-    if (type === 'path') objGet  = authorData.paths.filter(function(finder){return (finder.id === objectId);})[0];
 
     utils.setSubProp(objGet, paramPath, newVal);
     getProps(type+'s', objGet.id);
-    if (type === 'object') menus.updateObjects();
-    if (type === 'shape') menus.updateShapes();
-    if (type === 'anim') menus.updateAnims();
-    //initCanvasser("sample", JSON.stringify(authorData), "string");
+    menus.update(type);
     restartCanvasser("sample", authorData, "string");
   };
 
   this.updateSelect = function(domElement, objectId, positionId, axisId){
     var objGet = authorData[type].filter(function(finder){return (finder.id === id);})[0];
-
     var newRule = window.rules.actions.filter(function(ruleName){
       return ruleName.elementType === domElement.value}
     )[0];
@@ -499,11 +462,8 @@ function authorcanvasser(dataFile, dataForm){
         });
       });
     }
-    if (type === 'objects') menus.updateObjects();
-    if (type === 'images') menus.updateImages();
-    if (type === 'anims') menus.updateAnims();
+    menus.update(type);
     getProps(type, id);
-    //initCanvasser("sample", JSON.stringify(authorData), "string");
     restartCanvasser("sample", authorData, "string");
   }
 
@@ -515,9 +475,8 @@ function authorcanvasser(dataFile, dataForm){
       return ruleName.elementType === domElement.value}
     )[0];
 
-    menus.updateObjects();
+    menus.update('objects');
     getProps('objects', objectId);
-    //initCanvasser("sample", JSON.stringify(authorData), "string");
     restartCanvasser("sample", authorData, "string");
   }
 
@@ -529,23 +488,21 @@ function authorcanvasser(dataFile, dataForm){
       return ruleName.elementType === domElement.value}
     )[0];
 
-    menus.updateObjects();
+    menus.update('objects');
     getProps('objects', objectId);
-    //initCanvasser("sample", JSON.stringify(authorData), "string");
     restartCanvasser("sample", authorData, "string");
   }
 
   this.updateSetting = function(domElement, setting){
     authorData.settings[setting] = domElement.value;
-    menus.updateSettings();
-    //initCanvasser("sample", JSON.stringify(authorData), "string");
+    menus.update('settings');
     restartCanvasser("sample", authorData, "string");
   }
 
   this.updatePath = function(domElement, id, param){
     var pathGet = authorData.paths.filter(function(finder){return (finder.id === id);})[0];
     pathGet[param] = domElement.value;
-    menus.updatePaths();
+    menus.update('paths');
     getPath(pathGet.id);
     restartCanvasser("sample", authorData, "string");
   }
@@ -567,9 +524,7 @@ function authorcanvasser(dataFile, dataForm){
         });
       });
     }
-    if (type === 'objects') menus.updateObjects();
-    if (type === 'images') menus.updateImages();
-    if (type === 'anims') menus.updateAnims();
+    menus.update(type);
     getProps(type, objGet.id);
     restartCanvasser("sample", authorData, "string");
   }

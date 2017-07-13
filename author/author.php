@@ -47,7 +47,7 @@
         </div>
         <div id="imagecontents" class="padlr" style="display:block">
           <div id="imagemenu" class="submenu">
-            <div class="divmenu" onclick="window.author.addImage()">Add</div>
+            <div class="divmenu" onclick="window.author.menus.addImage()">Add</div>
             <div class="divmenu" onclick="window.author.delete('images')">Delete</div>
           </div>
           <div id="imageholder" class="padholder"></div>
@@ -91,7 +91,7 @@
         </div>
         <div id="objectcontents" class="padlr" style="display:block">
           <div id="objectmenu" class="submenu">
-            <div class="divmenu" onclick="window.author.addObject()">Add</div>
+            <div class="divmenu" onclick="window.author.menus.addObject()">Add</div>
             <div class="divmenu" onclick="window.author.delete('objects')">Delete</div>
             <div class="divmenu" onclick="window.author.copy('objects')">Copy</div>
             <div class="divmenu" onclick="window.author.reorder('objects','up')"> &#9650;</div>
@@ -128,8 +128,6 @@
             </div>
             <div id="settingcontents" class="padlr" style="display:none">
                 <div id="settingmenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.addObject()">Add</div>
-                    <div class="divmenu" onclick="window.author.deleteObject()">Delete</div>
                 </div>
                 <div id="settingholder" class="padholder"></div>
             </div>
@@ -158,7 +156,7 @@
             </div>
             <div id="groupcontents" class="padlr" style="display:none">
                 <div id="groupmenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.addGroup()">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.addGroup()">Add</div>
                     <div class="divmenu" onclick="window.author.delete('groups')">Delete</div>
                 </div>
                 <div id="groupholder" class="padholder"></div>
@@ -173,7 +171,7 @@
             </div>
             <div id="particlecontents" class="padlr" style="display:none">
                 <div id="particlemenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.addparticle()">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.addParticle()">Add</div>
                     <div class="divmenu" onclick="window.author.delete('particles')">Delete</div>
                 </div>
                 <div id="particleholder" class="padholder"></div>
@@ -204,7 +202,7 @@
             </div>
             <div id="soundcontents" class="padlr" style="display:none">
                 <div id="soundmenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.addSound()">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.addSound()">Add</div>
                     <div class="divmenu" onclick="window.author.delete('sounds')">Delete</div>
                 </div>
                 <div id="soundholder" class="padholder"></div>
@@ -219,8 +217,6 @@
             </div>
             <div id="propertiescontents" class="padlr" style="display:block">
                 <div id="propertiesmenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.addObject()">Add</div>
-                    <div class="divmenu" onclick="window.author.deleteObject()">Delete</div>
                 </div>
                 <div id="propertiestitle"></div>
                 <div id="properties"></div>

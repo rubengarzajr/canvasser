@@ -2,7 +2,7 @@ function BuildProp(){
   var utils = new CanvasserUtils();
   var menus = new Menus();
 
-  this.anim = function(animation){
+  this.anims = function(animation){
     var output = '<div class="propbody">';
     var animList = utils.objPartToArr(authorData.anims, "id");
 
@@ -38,6 +38,14 @@ function BuildProp(){
               if (subWidget.type === 'objlist') output += handleObjectList(animation,     'anim', subWidget, widgetPath);
               if (subWidget.type === 'anmlist') output += handleAnimList(animation,       'anim', subWidget, widgetPath);
               if (subWidget.type === 'parlist') output += handleParticleList(animation,   'anim', subWidget, widgetPath);
+              if (subWidget.type === "filterlink") {
+                var filterPath = widgetPath.substr(0, widgetPath.lastIndexOf(".")) + '.' + subWidget['link'] ;
+                var defaultId = utils.getSubProp(animation, filterPath);
+                if (defaultId === "object")   output += handleObjectList(animation,     'anim', subWidget, widgetPath);
+                if (defaultId === "group")    output +="group here"
+                if (defaultId === "particle") output += handleParticleList(animation,   'anim', subWidget, widgetPath);
+              }
+
               if (subWidget.type === 'sndlist') output += handleSoundList(animation,      'anim', subWidget, widgetPath);
               if (subWidget.type === 'posxy')   output += utils.handlePosition(animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'select')  output += utils.handleSelect(animation,   'anim', subWidget, widgetPath);
@@ -51,11 +59,11 @@ function BuildProp(){
         output += '</div>';
       }
     });
-    menus.updateAnims();
+    menus.update('anims');
     return output + '</div>';
   }
 
-  this.image = function(image){
+  this.images = function(image){
     var output = '<div class="propbody">';
     var pathList = utils.objPartToArr(authorData.paths, "id");
     var defaultId = utils.getSubProp(image, 'path');
@@ -73,10 +81,11 @@ function BuildProp(){
       if (widget.type === "number")       output += utils.handleNumber(image, 'image', widget, widget.field);
       if (widget.type === "bool")         output += utils.handleBoolean(image, 'image', widget, widget.field);
     });
-    menus.updateImages();
+    menus.update('images');
     return output + '</div>';
   }
-  this.object = function(object){
+
+  this.objects = function(object){
     var output = '<div class="propbody">' ;
     var win = 'window.author.updateActivity';
     window.rules.object[object.type].widgets.forEach(function(widget, idx, source){
@@ -176,7 +185,7 @@ function BuildProp(){
     return output + '</div>';
   }
 
-  this.particle = function(particle){
+  this.particles = function(particle){
     var output = '<div class="propbody">' ;
     var win = 'window.author.updateActivity';
     window.rules.particle.widgets.forEach(function(widget, idx, source){
@@ -197,8 +206,8 @@ function BuildProp(){
           }
         }
       }
-      if (widget.type === "shapelist") output += handleShapeList(particle,  'particle', widget, widget.field);
-      if (widget.type === "objlist")   output += handleObjectList(particle, 'particle', widget, widget.field);
+      if (widget.type === "shapelist")  output += handleShapeList(particle,  'particle', widget, widget.field);
+      if (widget.type === "objlist")    output += handleObjectList(particle, 'particle', widget, widget.field);
       if (widget.type === "posxy"){
         output += '<div style="display:block"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
         if (particle[widget.field] === undefined) particle[widget.field] = {current:{x:0,y:0}};
@@ -236,7 +245,6 @@ function BuildProp(){
         output += utils.buildFnString('window.author.updateItem', [particle.id, 'particle', 'scale.current'], true);
         output += 'type="number" value=' +scaleObj + ' />';
         output += '</span>'
-        //output += '<br>';
         output += '</div></div>';
       }
 
@@ -245,10 +253,30 @@ function BuildProp(){
     return output + '</div>';
   }
 
-  this.shape = function(shape){
+  this.sounds = function(sound){
+    var thisProp  = authorData.sounds.filter(function(selected){return selected.id === sound.id;})[0];
+    var pathList  = utils.objPartToArr(authorData.paths, "id");
+    var defaultId = utils.getSubProp(sound, 'path');
+    var prop = '<div class="propbody">' ;
+    prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
+    prop += '<input class="auth_text w200" type="text" ';
+    prop += 'value="'+ thisProp.id + '" ';
+    prop += utils.buildFnString('window.author.updateItem', [thisProp.id,'sound','id'], true);
+    prop += '><br>';
+    prop += '<div class="entrylabel c_entrytitle_text w50">'+thisProp.path+'</div>';
+    prop += utils.buildSelect('window.author.updateItem',  thisProp.path, 'sound', pathList, defaultId, 'path') + '<br>';
+    prop += '<div class="entrylabel c_entrytitle_text w50">url</div>';
+    prop += '<input class="auth_text w200" type="text" ';
+    prop += 'value="'+ thisProp.url + '" ';
+    prop += utils.buildFnString('window.author.updateItem', [thisProp.id,'sound','url'], true);
+    prop += '><br>';
+    return prop + '</div>';
+  }
+
+  this.shapes = function(shape){
     var drawList = [];
     window.rules.drawcode.forEach(function(template){drawList.push(template.type)});
-    thisProp = authorData.shapes.filter(function(check){return check.id === shape.id;})[0];
+    var thisProp = authorData.shapes.filter(function(check){return check.id === shape.id;})[0];
     if (thisProp === undefined) return;
 
     document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Shape: ' + shape.id + '</div>';
@@ -283,10 +311,11 @@ function BuildProp(){
       });
       prop += '</div>';
     });
-    menus.updateShapes();
+    menus.update('shapes');
     prop += utils.buildDiv('divbutton', 'Add drawcode', 'window.author.adddrawcode', [shape.id]);
     return prop + '</div>';
   }
+
 
 
   function handleShapeList(object, type, widget, path){

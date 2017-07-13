@@ -144,7 +144,7 @@
     {"type":"fade",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startalpha",  "type":"number"}, {"field":"endalpha",  "type":"number"}]},
     {"type":"flipbook",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"atlascell.x",  "type":"number"}, {"field":"atlascell.y",  "type":"number"}]},
     {"type":"loadinto",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"url",       "type":"text"},   {"field":"vari",    "type":"text"}]},
-    {"type":"move",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startpos",  "type":"posxy"}, {"field":"endpos",  "type":"posxy"}, {"field":"ease",  "type":"select", "id":"easetype"}]},
+    {"type":"move",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startpos",  "type":"posxy", "display":"Start Position"}, {"field":"endpos",  "type":"posxy",  "display":"End Position"}, {"field":"ease",  "type":"select", "id":"easetype", "display":"Ease"}]},
     {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"animlist"}]},
     {"type":"pstart",       "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"parlist"}]},
     {"type":"scale",        "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startscale",  "type":"number"}, {"field":"endscale",  "type":"number"}]},
@@ -154,13 +154,15 @@
     {"type":"vis",          "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"show", "type":"bool"}]}
   ],
   "samples":[
-    {"id":"Animation: Atlas",         "url":"anim_atlas.json"},
-    {"id":"Animation: Motion Easing", "url":"anim_motionease.json"},
-    {"id":"Image: Fade",              "url":"image_fade.json"},
-    {"id":"Particle Sample 1",        "url":"particles_sample1.json"},
-    {"id":"Particle Sample 2",        "url":"particles_sample2.json"},
-    {"id":"Particle Rain",            "url":"particles_rain.json"},
-    {"id":"lotsostuff",               "url":"multi.json"}
+    {"id":"Animation: Atlas",           "url":"anim_atlas.json"},
+    {"id":"Animation: Motion Easing",   "url":"anim_motionease.json"},
+    {"id":"Image: Fade",                "url":"image_fade.json"},
+    {"id":"Particle Sample 1",          "url":"particles_sample1.json"},
+    {"id":"Particle Sample 2",          "url":"particles_sample2.json"},
+    {"id":"Particle Facing Motion",     "url":"particles_sample3.json"},
+    {"id":"Particle Emitter Animation", "url":"particles_sample4.json"},
+    {"id":"Particle Rain",              "url":"particles_rain.json"},
+    {"id":"lotsostuff",                 "url":"multi.json"}
   ],
   "widgets":{
     "bool":"boolean",
