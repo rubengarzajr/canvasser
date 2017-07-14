@@ -145,7 +145,6 @@ function BuildProp(){
         output += utils.buildFnString('window.author.updateItem', [object.id, 'object', 'scale.current'], true);
         output += 'type="number" value=' +scaleObj + ' />';
         output += '</span>'
-        //output += '<br>';
         output += '</div></div>';
       }
       if (widget.type === "actions"){
@@ -254,23 +253,25 @@ function BuildProp(){
   }
 
   this.sounds = function(sound){
-    var thisProp  = authorData.sounds.filter(function(selected){return selected.id === sound.id;})[0];
-    var pathList  = utils.objPartToArr(authorData.paths, "id");
+    var output = '<div class="propbody">';
+    var pathList = utils.objPartToArr(authorData.paths, "id");
     var defaultId = utils.getSubProp(sound, 'path');
-    var prop = '<div class="propbody">' ;
-    prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
-    prop += '<input class="auth_text w200" type="text" ';
-    prop += 'value="'+ thisProp.id + '" ';
-    prop += utils.buildFnString('window.author.updateItem', [thisProp.id,'sound','id'], true);
-    prop += '><br>';
-    prop += '<div class="entrylabel c_entrytitle_text w50">'+thisProp.path+'</div>';
-    prop += utils.buildSelect('window.author.updateItem',  thisProp.path, 'sound', pathList, defaultId, 'path') + '<br>';
-    prop += '<div class="entrylabel c_entrytitle_text w50">url</div>';
-    prop += '<input class="auth_text w200" type="text" ';
-    prop += 'value="'+ thisProp.url + '" ';
-    prop += utils.buildFnString('window.author.updateItem', [thisProp.id,'sound','url'], true);
-    prop += '><br>';
-    return prop + '</div>';
+    window.rules.sound.widgets.forEach(function(widget, idx, source){
+      if (widget.type === "text"){
+        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        output += '<input class="auth_text w200" type="text" value="'+ sound[widget.field] + '" ';
+        output += utils.buildFnString('window.author.updateActivity', ['sounds', 'text', sound.id, widget.field, 'none'], true);
+        output += '><br>';
+      }
+      if (widget.type === "select"){
+        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        output += utils.buildSelect('window.author.updateItem',  sound.id, 'sound', pathList, defaultId, 'path') + '<br>';
+      }
+      if (widget.type === "number")       output += utils.handleNumber(sound, 'sound', widget, widget.field);
+      if (widget.type === "bool")         output += utils.handleBoolean(sound, 'sound', widget, widget.field);
+    });
+    menus.update('sounds');
+    return output + '</div>';
   }
 
   this.shapes = function(shape){

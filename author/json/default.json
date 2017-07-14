@@ -1,6 +1,8 @@
 {
 "objects":[
 ],
+"groups":[
+],
 "images":[
 ],
 "sounds":[
@@ -17,5 +19,7 @@
   "canvaswidth":"600",
   "canvasheight":"500",
   "canvasdomname":"activity",
-  "canvasparent":"canvasholder"}
+  "canvasparent":"canvasholder",
+  "usecache":false
+  }
 }

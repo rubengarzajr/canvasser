@@ -95,6 +95,13 @@
         ]
       }
     },
+  "sound":{
+      "widgets":[
+        {"field":"id",         "type":"text",   "css":"w100"},
+        {"field":"path",       "type":"select", "id":"pathdata"},
+        {"field":"url",        "type":"text"}
+      ]
+    },
   "shape":{
     "shapedata":{
       "widgets":[

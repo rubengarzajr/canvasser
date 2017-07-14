@@ -1,13 +1,15 @@
 // Canvasser rubengarzajr@gmail.com
-// TODO:
-// Responsive Scaling: Fix - currently borked
 
 function initCanvasser(vari, datafile, dataForm){
+  if (window[vari]) window[vari].act.loop = false;
+  var oldPos = window[vari] ? {x:window[vari].act.position.x, y:window[vari].act.position.y} : {x:0,y:0};
   window[vari] = new canvasser(vari, datafile, dataForm);
+  window[vari].act.position = {x:oldPos.x, y:oldPos.y};
 }
 
 function canvasser(vari, interactiveData, dataForm){
   var act      = new interaction();
+  this.act     = act;
   var pManager = new particleManager();
   var ease     = new Ease();
   if (dataForm == "file") requestJSON(interactiveData, init);
@@ -15,15 +17,15 @@ function canvasser(vari, interactiveData, dataForm){
   else init(interactiveData);
 
   function requestJSON(fileNamePath, returnFunction){
+    var fileToDl = fileNamePath;
+    if (act.data.settings.usecache === false) fileToDl += '?' + new Date().getTime();
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(){
-      if (xhr.readyState == 4){
-        returnFunction(JSON.parse(xhr.responseText));
-      }
-      if (xhr.status == 404) console.error("JSON File Load Error: " + xhr.statusText + " " + xhr.readyState);
+      if (xhr.readyState == 4) returnFunction(JSON.parse(xhr.responseText));
+      if (xhr.status == 404) console.error("JSON Load Error: " + xhr.statusText + " " + xhr.readyState);
     }
     xhr.overrideMimeType('application/json');
-    xhr.open('GET', fileNamePath, true);
+    xhr.open('GET', fileToDl, true);
     xhr.send(null);
   }
 
@@ -79,7 +81,8 @@ function canvasser(vari, interactiveData, dataForm){
           act.imageList[image.id].atlas.numY       = Math.floor(this.height / image.cellheight);
         }
       };
-      imageObj.src = image.url + '?' + new Date().getTime();
+      imageObj.src = image.url;
+      if (act.data.settings.usecache === false) imageObj.src += '?' + new Date().getTime();
     });
 
     act.vars = {};
@@ -106,6 +109,7 @@ function canvasser(vari, interactiveData, dataForm){
   }
 
   function interaction(){
+    this.loop         = true;
     this.position     = {x:0, y:0};
     this.prevPosition = {x:0, y:0};
     this.applyAction  = [];
@@ -252,7 +256,8 @@ function canvasser(vari, interactiveData, dataForm){
           anim.delete = true;
         }
         if (anim.type === 'loadinto'){
-            initCanvasser(anim.vari, anim.url, 'file');
+          act.loop = false;
+          initCanvasser(anim.vari, anim.url, 'file');
         }
         if (anim.type === "play"){
           var animToPlay = act.data.anims.filter(function(obj){return obj.id === anim.id})[0];
@@ -303,7 +308,8 @@ function canvasser(vari, interactiveData, dataForm){
       play.playing = play.playing.filter(function(anim){return !anim.delete});
 
       play.playing.forEach(function(anim){
-        var animOb = act.data[anim.filter+'s'].filter(function(obj){return obj.id === anim.id})[0];
+        if (anim.filter === undefined) anim.filter = 'object';
+        var animOb = act.data[anim.filter+'s'].filter(function(item){return item.id === anim.id})[0];
         if (animOb === undefined) return;
         if (anim.type === "fade") {
           if (animOb.opacity === undefined) animOb.opacity = {current:1};
@@ -455,7 +461,7 @@ function canvasser(vari, interactiveData, dataForm){
 
     pManager.update();
     act.prevPosition = {x:act.position.x, y:act.position.y};
-    window.requestAnimationFrame(loop);
+    if (act.loop) window.requestAnimationFrame(loop);
   }
 
   function radians(degrees) {
@@ -643,178 +649,179 @@ function canvasser(vari, interactiveData, dataForm){
     return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
   }
 
-    function actions(){
-        act.applyAction.forEach(function(over){
-            if (over[act.mode+"list"] === undefined) return;
-            over[act.mode+"list"].forEach(function(action){
-                if (action.type === 'cleardown'){
-                    act.mode    = "none";
-                }
-                if (action.type === 'console'){
-                    console.log(action.text);
-                }
-                if (action.type === 'conditional'){
-                    if (action.check === 'position'){
-                        var item  = act.data.objects.filter(function(obj){return obj.id === action.itemtocheck})[0];
-                        var testp = act.data.objects.filter(function(obj){return obj.id === action.position})[0];
-                        var pos = {"x":item.position.current.x, "y":item.position.current.y};
-                        if (item.origin === "center") {
-                          //TODO: Not working
-                          var oPos = item.position.current
-                            pos={"x":Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current), "y":Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
-                        }
+  function actions(){
+    act.applyAction.forEach(function(over){
+      if (over[act.mode+"list"] === undefined) return;
+      over[act.mode+"list"].forEach(function(action){
+        if (action.type === 'cleardown'){
+          act.mode    = "none";
+        }
+        if (action.type === 'console'){
+          console.log(action.text);
+        }
+        if (action.type === 'conditional'){
+          if (action.check === 'position'){
+            var item  = act.data.objects.filter(function(obj){return obj.id === action.itemtocheck})[0];
+            var testp = act.data.objects.filter(function(obj){return obj.id === action.position})[0];
+            var pos = {"x":item.position.current.x, "y":item.position.current.y};
+            if (item.origin === "center") {
+              //TODO: Not working
+              var oPos = item.position.current
+              pos={"x":Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current), "y":Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
+            }
 
-                        var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
-                        if (pixelData_img[3] != 0) {
-                            act.applyAction = [testp];
-                            act.mode = 'true';
-                            actions();
-                        } else {
-                          act.applyAction = [testp];
-                          act.mode = 'false';
-                          actions();
-                        }
-                    }
-                    if (action.check === "var"){
-                        if (act.vars[action.itemtocheck] === action.value){
-                            act.applyAction = [over];
-                            act.mode = 'true';
-                            actions();
-                        }
-                    }
-                }
-                if (action.type === 'copyelement'){
-                    var target = document.getElementById(action.target);
-                    var source = document.getElementById(action.source);
-                    if (target !== undefined && source !== undefined && target !== null && source !== null){
-                        target.innerHTML = source.innerHTML;
-                        window.location.hash = over.id;
-                    }
-                }
-                if (action.type === 'execute'){
-                    window[action.function](action.params);
-                }
-                if (action.type === 'function'){
-                    window[action.function]({id:action.id});
-                }
-                if (action.type === 'increment'){
-                    act.data.objects.forEach(function(obj){
-                      if (!checkAction(action, obj)) return;
-                      var amt = Number(getSubProp(obj, action.prop)) + Number(action.newvalue);
+            var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
+            if (pixelData_img[3] != 0) {
+              act.applyAction = [testp];
+              act.mode = 'true';
+              actions();
+            } else {
+              act.applyAction = [testp];
+              act.mode = 'false';
+              actions();
+            }
+          }
+          if (action.check === "var"){
+            if (act.vars[action.itemtocheck] === action.value){
+              act.applyAction = [over];
+              act.mode = 'true';
+              actions();
+            }
+          }
+        }
+        if (action.type === 'copyelement'){
+          var target = document.getElementById(action.target);
+          var source = document.getElementById(action.source);
+          if (target !== undefined && source !== undefined && target !== null && source !== null){
+            target.innerHTML = source.innerHTML;
+            window.location.hash = over.id;
+          }
+        }
+        if (action.type === 'execute'){
+          window[action.function](action.params);
+        }
+        if (action.type === 'function'){
+          window[action.function]({id:action.id});
+        }
+        if (action.type === 'increment'){
+          act.data.objects.forEach(function(obj){
+            if (!checkAction(action, obj)) return;
+            var amt = Number(getSubProp(obj, action.prop)) + Number(action.newvalue);
 
-                      if (action.rangemin) {if (amt < Number(action.rangemin)) return;}
-                      if (action.rangemax) {if (amt > Number(action.rangemax)) return;}
-                      setSubProp(obj, action.prop, amt.toString());
-                    });
-                }
-                if (action.type === 'loadinto'){
-                    initCanvasser(action.vari, action.url, 'file');
-                }
-                if (action.type === 'loadpage'){
-                  if (action.newpage) {window.open(action.url);}
-                  else {window.location.href = action.url;}
-                }
-                if (action.type === 'playanim'){
-                  var animToPlay = act.data.anims.filter(function(obj){return obj.id === action.animation})[0];
-                  act.player.push(copyObj(animToPlay, {}));
-                }
-                if (action.type === 'modvar'){
-                    if (action.operation === "add") act.vars[action.id] += action.amount;
-                }
-                if (action.type === 'swapimage'){
-                    act.data.objects.forEach(function(obj){
-                        if (obj.id  === undefined) return;
-                        if (obj.id !== action.id) return;
-                        obj.image = action.image;
-                    });
-                }
-                if (action.type === 'moveobject'){
-                    act.data.objects.forEach(function(obj){
-                        if (obj.id === undefined) return;
-                        if (obj.id !== action.id) return;
-                        if (action.frame === "absolute") {
-                            obj.position.current = {x:action.amount.x, y:action.amount.y};
-                        }
-                        if (action.frame === "relative"){
-                            obj.position.current.x += action.amount.x;
-                            obj.position.current.y += action.amount.y;
-                        }
-                    });
-                }
-                if (action.type === 'pstart'){
-                    act.data.particles.forEach(function(obj){
-                        if (obj.id === undefined) return;
-                        if (obj.id === action.id) pManager.create(obj);
-                    });
-                }
-                if (action.type === 'scale'){
-                    act.data.objects.forEach(function(obj){
-                        if (!checkAction(action, obj)) return;
-                        if (action.frame === "increment") obj.scale.current += action.amount;
-                        if (action.frame === "multiply"){
-                            obj.scale.current = obj.scale.current * action.amount;
-                        }
-                        if (action.frame === "absolute")  obj.scale.current =  action.amount;
-                    });
-                }
-                if (action.type === 'set'){
-                    act.data.objects.forEach(function(obj){
-                      if (!checkAction(action, obj)) return;
-                      setSubProp(obj, action.prop, action.newvalue.toString());
-                    });
-                }
-                if (action.type === 'shapecolor'){
-                    act.data.objects.forEach(function(obj){
-                        if (!checkAction(action, obj)) return;
-                        if (action.source === "default")     obj.color = obj.defaultcolor;
-                        if (action.source === "hover")       obj.color = obj.hovercolor;
-                        if (action.source === "selectcolor") obj.color = obj.selectcolor;
-                        if (action.source === "value")       obj.color = action.color;
-                    });
-                }
-                if (action.type === "slideobject"){
-                    act.data.objects.forEach(function(obj){
-                        if (obj.id === undefined) return;
-                        if (act.dragging !== null && obj.id !== act.dragging.id) return;
-                        if (obj.id === action.id) {
-                            if (obj.parent !== undefined){
-                              if (obj.position.offset === undefined) obj.position.offset = {x:obj.position.current.x,y:obj.position.current.y};
-                              if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
-                              if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
-                            } else{
-                              if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
-                              if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
-                            }
-                            act.dragging = obj;
-                        }
-                    });
-                }
-                if (action.type === "slideover"){
-                    console.log("slideOver");
-                }
-                if (action.type === "sound"){
-                    act.soundList[action.id].play();
-                }
-                if (action.type === "testpset"){
-                    var actObj = act.data.objects.filter(function(obj){return obj.id === action.id})[0];
-                    actObj.testp = action.testp
-                }
-                if (action.type === 'url'){
-                    var target = document.getElementById(action.target);
-                    if (target != undefined){
-                        loadInto(action.url, target);
-                    }
-                }
-                if (action.type === 'vis'){
-                    act.data.objects.forEach(function(obj){
-                        if (!checkAction(action, obj)) return;
-                        obj.show = action.show
-                    });
-                }
-            });
-        });
-        act.applyAction = [];
-    }
+            if (action.rangemin) {if (amt < Number(action.rangemin)) return;}
+            if (action.rangemax) {if (amt > Number(action.rangemax)) return;}
+            setSubProp(obj, action.prop, amt.toString());
+          });
+        }
+        if (action.type === 'loadinto'){
+          act.loop = false;
+          initCanvasser(action.vari, action.url, 'file');
+        }
+        if (action.type === 'loadpage'){
+          if (action.newpage) {window.open(action.url);}
+          else {window.location.href = action.url;}
+        }
+        if (action.type === 'playanim'){
+          var animToPlay = act.data.anims.filter(function(obj){return obj.id === action.animation})[0];
+          act.player.push(copyObj(animToPlay, {}));
+        }
+        if (action.type === 'modvar'){
+          if (action.operation === "add") act.vars[action.id] += action.amount;
+        }
+        if (action.type === 'swapimage'){
+          act.data.objects.forEach(function(obj){
+            if (obj.id  === undefined) return;
+            if (obj.id !== action.id) return;
+            obj.image = action.image;
+          });
+        }
+        if (action.type === 'moveobject'){
+          act.data.objects.forEach(function(obj){
+            if (obj.id === undefined) return;
+            if (obj.id !== action.id) return;
+            if (action.frame === "absolute") {
+              obj.position.current = {x:action.amount.x, y:action.amount.y};
+            }
+            if (action.frame === "relative"){
+              obj.position.current.x += action.amount.x;
+              obj.position.current.y += action.amount.y;
+            }
+          });
+        }
+        if (action.type === 'pstart'){
+          act.data.particles.forEach(function(obj){
+            if (obj.id === undefined) return;
+            if (obj.id === action.id) pManager.create(obj);
+          });
+        }
+        if (action.type === 'scale'){
+          act.data.objects.forEach(function(obj){
+            if (!checkAction(action, obj)) return;
+            if (action.frame === "increment") obj.scale.current += action.amount;
+            if (action.frame === "multiply"){
+              obj.scale.current = obj.scale.current * action.amount;
+            }
+            if (action.frame === "absolute")  obj.scale.current =  action.amount;
+          });
+        }
+        if (action.type === 'set'){
+          act.data.objects.forEach(function(obj){
+            if (!checkAction(action, obj)) return;
+            setSubProp(obj, action.prop, action.newvalue.toString());
+          });
+        }
+        if (action.type === 'shapecolor'){
+          act.data.objects.forEach(function(obj){
+            if (!checkAction(action, obj)) return;
+            if (action.source === "default")     obj.color = obj.defaultcolor;
+            if (action.source === "hover")       obj.color = obj.hovercolor;
+            if (action.source === "selectcolor") obj.color = obj.selectcolor;
+            if (action.source === "value")       obj.color = action.color;
+          });
+        }
+        if (action.type === "slideobject"){
+          act.data.objects.forEach(function(obj){
+            if (obj.id === undefined) return;
+            if (act.dragging !== null && obj.id !== act.dragging.id) return;
+            if (obj.id === action.id) {
+              if (obj.parent !== undefined){
+                if (obj.position.offset === undefined) obj.position.offset = {x:obj.position.current.x,y:obj.position.current.y};
+                if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
+                if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
+              } else{
+                if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
+                if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
+              }
+              act.dragging = obj;
+            }
+          });
+        }
+        if (action.type === "slideover"){
+          console.log("slideOver");
+        }
+        if (action.type === "sound"){
+          act.soundList[action.id].play();
+        }
+        if (action.type === "testpset"){
+          var actObj = act.data.objects.filter(function(obj){return obj.id === action.id})[0];
+          actObj.testp = action.testp
+        }
+        if (action.type === 'url'){
+          var target = document.getElementById(action.target);
+          if (target != undefined){
+            loadInPlace(action.url, target);
+          }
+        }
+        if (action.type === 'vis'){
+          act.data.objects.forEach(function(obj){
+            if (!checkAction(action, obj)) return;
+            obj.show = action.show
+          });
+        }
+      });
+    });
+    act.applyAction = [];
+  }
 
   function checkAction(action, obj){
     if (action.filter === undefined) return false;
@@ -828,13 +835,15 @@ function canvasser(vari, interactiveData, dataForm){
     return true;
   }
 
-  function loadInto(url, place){
+  function loadInPlace(url, place){
+    var fileToDl = url;
+    if (act.data.settings.usecache === false) fileToDl += '?' + new Date().getTime();
     function reqListener(){
       place.innerHTML = this.responseText;
     }
     var oReq = new XMLHttpRequest();
     oReq.addEventListener("load", reqListener);
-    oReq.open("GET", url);
+    oReq.open("GET", fileToDl);
     oReq.send();
   }
 

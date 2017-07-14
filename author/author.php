@@ -47,8 +47,8 @@
         </div>
         <div id="imagecontents" class="padlr" style="display:block">
           <div id="imagemenu" class="submenu">
-            <div class="divmenu" onclick="window.author.menus.addImage()">Add</div>
-            <div class="divmenu" onclick="window.author.delete('images')">Delete</div>
+            <div class="divmenu" onclick="window.author.menus.addItem('images')">Add</div>
+            <div class="divmenu" onclick="window.author.menus.deleteItem('images')">Delete</div>
           </div>
           <div id="imageholder" class="padholder"></div>
         </div>
@@ -62,8 +62,8 @@
         </div>
         <div id="shapecontents" class="padlr" style="display:none">
           <div id="shapemenu" class="submenu">
-            <div class="divmenu" onclick="window.author.addShape()">Add</div>
-            <div class="divmenu" onclick="window.author.delete('shapes')">Delete</div>
+            <div class="divmenu" onclick="window.author.menus.addItem('shapes')">Add</div>
+            <div class="divmenu" onclick="window.author.menus.deleteItem('shapes')">Delete</div>
           </div>
           <div id="shapeholder" class="padholder"></div>
         </div>
@@ -91,8 +91,8 @@
         </div>
         <div id="objectcontents" class="padlr" style="display:block">
           <div id="objectmenu" class="submenu">
-            <div class="divmenu" onclick="window.author.menus.addObject()">Add</div>
-            <div class="divmenu" onclick="window.author.delete('objects')">Delete</div>
+            <div class="divmenu" onclick="window.author.menus.addItem('objects')">Add</div>
+            <div class="divmenu" onclick="window.author.menus.deleteItem('objects')">Delete</div>
             <div class="divmenu" onclick="window.author.copy('objects')">Copy</div>
             <div class="divmenu" onclick="window.author.reorder('objects','up')"> &#9650;</div>
             <div class="divmenu" onclick="window.author.reorder('objects','down')"> &#9660;</div>
@@ -141,8 +141,8 @@
             </div>
             <div id="pathcontents" class="padlr" style="display:none">
                 <div id="pathmenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.addPath()">Add</div>
-                    <div class="divmenu" onclick="window.author.delete('paths')">Delete</div>
+                    <div class="divmenu" onclick="window.author.menus.addItem('paths')">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.deleteItem('paths')">Delete</div>
                 </div>
                 <div id="pathholder" class="padholder"></div>
             </div>
@@ -156,8 +156,8 @@
             </div>
             <div id="groupcontents" class="padlr" style="display:none">
                 <div id="groupmenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.menus.addGroup()">Add</div>
-                    <div class="divmenu" onclick="window.author.delete('groups')">Delete</div>
+                    <div class="divmenu" onclick="window.author.menus.addItem('groups')">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.deleteItem('groups')">Delete</div>
                 </div>
                 <div id="groupholder" class="padholder"></div>
             </div>
@@ -171,8 +171,8 @@
             </div>
             <div id="particlecontents" class="padlr" style="display:none">
                 <div id="particlemenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.menus.addParticle()">Add</div>
-                    <div class="divmenu" onclick="window.author.delete('particles')">Delete</div>
+                    <div class="divmenu" onclick="window.author.menus.addItem('particles')">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.deleteItem('particles')">Delete</div>
                 </div>
                 <div id="particleholder" class="padholder"></div>
             </div>
@@ -186,8 +186,8 @@
             </div>
             <div id="animcontents" class="padlr" style="display:none">
                 <div id="animmenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.addAnim()">Add</div>
-                    <div class="divmenu" onclick="window.author.delete('anims')">Delete</div>
+                    <div class="divmenu" onclick="window.author.menus.addItem('anims')">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.deleteItem('anims')">Delete</div>
                     <div class="divmenu" onclick="window.author.copy('anims')">Copy</div>
                 </div>
                 <div id="animholder" class="padholder"></div>
@@ -202,8 +202,8 @@
             </div>
             <div id="soundcontents" class="padlr" style="display:none">
                 <div id="soundmenu" class="submenu">
-                    <div class="divmenu" onclick="window.author.menus.addSound()">Add</div>
-                    <div class="divmenu" onclick="window.author.delete('sounds')">Delete</div>
+                    <div class="divmenu" onclick="window.author.menus.addItem('sounds')">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.deleteItem('sounds')">Delete</div>
                 </div>
                 <div id="soundholder" class="padholder"></div>
             </div>

@@ -1,4 +1,13 @@
 function CanvasserUtils(){
+
+  this.prePath = function(item){
+    var url = item.url;
+    if (!item.path) return url;
+    preUrl  = authorData.paths.filter(function(selected){return selected.id === item.path;})[0];
+    if (!preUrl) return url;
+    return preUrl.url + '/' + item.url;
+  }
+
   this.setSubProp = function(obj, desc, val){
     var arr = desc.split(".");
     while(arr.length > 1){

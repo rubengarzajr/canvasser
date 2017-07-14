@@ -1,90 +1,67 @@
 function Menus(){
-
-this.update = function(toUp){
-  if (!toUp || toUp === "anims")     updateAnims();
-  if (!toUp || toUp === "images")    updateImages();
-  if (!toUp || toUp === "objects")   updateObjects();
-  if (!toUp || toUp === "particles") updateParticles();
-  if (!toUp || toUp === "paths")     updatePaths();
-  if (!toUp || toUp === "samples")   updateSamples();
-  if (!toUp || toUp === "settings")  updateSettings();
-  if (!toUp || toUp === "shapes")    updateShapes();
-}
-
-  function updateAnims(){
-    var animsHolder = document.getElementById("animholder");
-    var anims = '<table class="objtable" id="animstable" width="100%">';
-
-    if (authorData.anims === undefined) authorData.anims = [];
-    authorData.anims.forEach(function(anim){
-      anims += '<tr class="clicktr" id="anims_'+anim.id+'" onclick="window.author.getProps(\'anims\',\''+ anim.id + '\')">';
-      anims +='<td width="100%">' + anim.id + '</td>';
-      anims += '</tr>';
-    });
-    anims +='</table>';
-    animsHolder.innerHTML = anims;
+  var utils = new CanvasserUtils();
+  this.update = function(toUp){
+    if (!toUp || toUp === 'anims')     updateMenu('anims');
+    if (!toUp || toUp === 'groups')    updateMenu('groups');
+    if (!toUp || toUp === 'images')    updateMenu('images');
+    if (!toUp || toUp === 'objects')   updateMenu('objects');
+    if (!toUp || toUp === 'particles') updateMenu('particles');
+    if (!toUp || toUp === 'paths')     updateMenu('paths');
+    if (!toUp || toUp === 'samples')   updateMenu('samples');
+    if (!toUp || toUp === 'settings')  updateSettings();
+    if (!toUp || toUp === 'sounds')    updateMenu('sounds');
+    if (!toUp || toUp === 'shapes')    updateMenu('shapes');
   }
 
-  function updateImages(){
-    var imageHolder = document.getElementById("imageholder");
-    var images = '<table id="imagestable">';
-    authorData.images.forEach(function(image){
-      var url = image.url;
-      if (image.path != undefined){
-        preUrl  = authorData.paths.filter(function(selected){return selected.id === image.path;})[0];
-        if (preUrl !== undefined) {
-          url = preUrl.url + '/' + image.url;
-        }
+  function updateMenu(type){
+    var menuHolder = document.getElementById(type.slice(0, -1) + "holder");
+    var menu = '<table class="objtable" id="'+type+'table" width="100%">';
+
+    if (authorData[type] === undefined) authorData[type] = [];
+    if (type === 'samples'){
+      authorData.samples = [];
+      window.rules.samples.forEach(function(sampy){authorData[type].push(sampy)});
+    }
+    authorData[type].forEach(function(menuItem){
+      if (type === 'anims' || type === 'groups' ||type === 'particles' || type === 'sounds'){
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
+        menu +='<td width="100%">' + menuItem.id + '</td>';
+        menu += '</tr>';
       }
-      images += '<tr class="clicktr" id="images_'+image.id+'" onclick="window.author.getProps(\'images\',\''+ image.id + '\')">';
-      images +='<td class="imageid"><div class="imagetext">' + image.id + '</div></td>';
-      images +='<td width="50%"><img src="' + url + '" alt="' + image.id + '"></td>';
-      images += '</tr>';
+      if (type === 'images'){
+        var url = utils.prePath(menuItem);
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
+        menu +='<td class="imageid"><div class="imagetext">' + menuItem.id + '</div></td>';
+        menu +='<td width="50%"><img src="' + url + '" alt="' + menuItem.id + '"></td>';
+        menu += '</tr>';
+      }
+      if (type === 'objects'){
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
+        menu +='<td width="75%" style="font-size:1.3em;">' + menuItem.id + '</td>';
+        menu +='<td width="25%">' + menuItem.type + '</td>';
+        menu += '</tr>';
+      }
+      if (type === 'paths'){
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getPath(\''+ menuItem.id + '\')">';
+        menu +='<td width="50%">' + menuItem.id + '</td>';
+        menu +='<td width="50%">' +menuItem.url + '</td>';
+        menu += '</tr>';
+      }
+      if (type === 'samples'){
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.loadSample(\''+ menuItem.url + '\')">';
+        menu +='<td class="shapeid"><div>' + menuItem.id + '</div></td>';
+        menu += '</tr>';
+      }
+      if (type === 'shapes'){
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\'shapes\',\''+ menuItem.id + '\')">';
+        menu +='<td class="shapeid"><div>' + menuItem.id + '</div></td>';
+        menu += '</tr>';
+      }
     });
-    images +='</table>';
-    imageHolder.innerHTML = images;
+    menu +='</table>';
+    menuHolder.innerHTML = menu;
   }
 
-  function updateObjects(){
-    var objectHolder = document.getElementById("objectholder");
-    var objects = '<table class="objtable"id="objectstable" width="100%">';
-    authorData.objects.forEach(function(object){
-      objects += '<tr class="clicktr" id="objects_'+object.id+'" onclick="window.author.getProps(\'objects\',\''+ object.id + '\')">';
-      objects +='<td width="75%" style="font-size:1.3em;">' + object.id + '</td>';
-      objects +='<td width="25%">' + object.type + '</td>';
-      objects += '</tr>';
-    });
-    objects +='</table>';
-    objectHolder.innerHTML = objects;
-  }
-
-  function updateParticles(){
-    if (authorData.particles === undefined) return;
-    var particlesHolder = document.getElementById("particleholder");
-    var particles = '<table class="objtable" id="particlestable" width="100%">';
-
-    authorData.particles.forEach(function(particle){
-      particles += '<tr class="clicktr" id="'+particle.id+'" onclick="window.author.getProps(\'particles\',\''+ particle.id + '\')">';
-      particles +='<td width="100%">' + particle.id + '</td>';
-      particles += '</tr>';
-    });
-    particles +='</table>';
-    particlesHolder.innerHTML = particles;
-  }
-
-  function updatePaths(){
-    var pathsHolder = document.getElementById("pathholder");
-    var paths = '<table class="objtable" id="pathstable" width="100%">';
-
-    authorData.paths.forEach(function(path){
-      paths += '<tr class="clicktr" id="'+path.id+'" onclick="window.author.getPath(\''+ path.id + '\')">';
-      paths +='<td width="50%">' + path.id + '</td>';
-      paths +='<td width="50%">' +path.url + '</td>';
-      paths += '</tr>';
-    });
-    paths +='</table>';
-    pathsHolder.innerHTML = paths;
-  }
   function updateSettings(){
     var settingHolder = document.getElementById("settingholder");
     var settings = '<table class="objtable" id="settingstable" width="100%">';
@@ -98,103 +75,43 @@ this.update = function(toUp){
     settings +='</table>';
     settingHolder.innerHTML = settings;
   }
-  this.updateSounds = updateSounds
-  function updateSounds(){
-    if (authorData.sounds === undefined) return;
-    var soundsHolder = document.getElementById("soundholder");
-    var sounds = '<table class="objtable" id="soundstable" width="100%">';
 
-    authorData.sounds.forEach(function(sound){
-      sounds += '<tr class="clicktr" id="'+sound.id+'" onclick="window.author.getProps(\'sounds\',\''+ sound.id + '\')">';
-      sounds +='<td width="100%">' + sound.id + '</td>';
-      sounds += '</tr>';
-    });
-    sounds +='</table>';
-    soundsHolder.innerHTML = sounds;
-  }
-  function updateSamples(){
-    var imageHolder = document.getElementById("sampleholder");
-    var images = '<table id="samplestable" class="objtable w100p">';
-    window.rules.samples.forEach(function(sampy){
-      images += '<tr class="clicktr" id="shapes_'+sampy.id+'"onclick="window.author.loadSample(\''+ sampy.url + '\')">';
-      images +='<td class="shapeid"><div>' + sampy.id + '</div></td>';
-      images += '</tr>';
-    });
-    images +='</table>';
-    imageHolder.innerHTML = images;
-  }
-  function updateShapes(){
-    var imageHolder = document.getElementById("shapeholder");
-    var images = '<table id="shapestable" class="objtable w100p">';
-    authorData.shapes.forEach(function(shape){
-      images += '<tr class="clicktr" id="shapes_'+shape.id+'"onclick="window.author.getProps(\'shapes\',\''+ shape.id + '\')">';
-      images +='<td class="shapeid"><div>' + shape.id + '</div></td>';
-      images += '</tr>';
-    });
-    images +='</table>';
-    imageHolder.innerHTML = images;
-  }
-
-  this.addImage = function(){
-    var imgName  = 'newImage';
-    var imgCnt   = 0;
-    var tryAgain = true;
+  this.addItem = function(type){
+    var itemName  = type.slice(0, -1);
+    var itemCnt   = 0;
+    var tryAgain  = true;
     while (tryAgain){
-      if (authorData.images.filter(function(img){return img.id === imgName}).length > 0){
-        imgCnt ++;
-        imgName ='newImage'+imgCnt;
+      if (authorData[type].filter(function(item){return item.id === itemName}).length > 0){
+        itemCnt ++;
+        itemName = type.slice(0, -1) + itemCnt;
       } else tryAgain = false;
     }
-    authorData.images.push({id:imgName,path:"author",  url:"no_image.png"});
-    updateImages();
+    if (type === 'anims')     authorData[type].push({id:itemName, autostart:false, length:1000, timelist:[]});
+    if (type === 'groups')    authorData[type].push({id:itemName});
+    if (type === 'images')    authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
+    if (type === 'objects')   authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
+    if (type === 'particles') authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}});
+    if (type === 'paths')     authorData[type].push({id:itemName, url:"./"});
+    if (type === 'shapes')    authorData[type].push({id:itemName});
+    if (type === 'sounds')    authorData[type].push({id:itemName, url:"./"});
+
+    updateMenu(type)
     initCanvasser("sample", JSON.stringify(authorData), "string");
     window.author.view();
   }
 
-  this.addObject = function(){
-    var objName  = 'object';
-    var objCnt   = 0;
-    var tryAgain = true;
-    while (tryAgain){
-      if (authorData.objects.filter(function(obj){return obj.id === objName}).length > 0){
-        objCnt ++;
-        objName ='object'+objCnt;
-      } else tryAgain = false;
-    }
-    authorData.objects.push({id:objName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
-    updateObjects();
-    initCanvasser("sample", JSON.stringify(authorData), "string");
-    window.author.view();
-  }
-  this.addParticle = function(){
-    if (!authorData.particles) authorData.particles=[];
-    var particleName  = 'particle';
-    var particleCnt   = 0;
-    var tryAgain = true;
-    while (tryAgain){
-      if (authorData.particles.filter(function(particle){return particle.id === particleName}).length > 0){
-        particleCnt ++;
-        particleName ='particle'+particleCnt;
-      } else tryAgain = false;
-    }
-    authorData.particles.push({id:particleName, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}});
-    updateParticles();
-    initCanvasser("sample", JSON.stringify(authorData), "string");
-    window.author.view();
-  }
-  this.addSound = function(){
-    var soundName  = 'sound';
-    var soundCnt   = 0;
-    var tryAgain = true;
-    while (tryAgain){
-      if (authorData.sounds.filter(function(sound){return sound.id === soundName}).length > 0){
-        soundCnt ++;
-        soundName ='sound'+soundCnt;
-      } else tryAgain = false;
-    }
-    authorData.sounds.push({id:soundName, url:"./"});
-    updateSounds();
-    initCanvasser("sample", JSON.stringify(authorData), "string");
-    window.author.view();
+  this.deleteItem = function(type){
+    var table = document.getElementById(type + "table");
+    var delRow = undefined;
+    for (var i = 0, row; row = table.rows[i]; i++) {
+      if (row.style[0] === "background-color") delRow = row.id;
+    };
+    authorData[type].forEach(function(test, idx){
+      if (type + '_' + test.id === delRow){ authorData[type].splice(idx,1); }
+    });
+    document.getElementById("propertiestitle").innerHTML = '';
+    document.getElementById("properties").innerHTML      = '';
+    updateMenu(type);
+    restartCanvasser("sample", authorData, "string");
   }
 }
