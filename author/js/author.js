@@ -30,7 +30,6 @@ function pickWin(win, toggle, size, bank){
 
 function initAuthorCanvasser(vari, datafile, dataForm){
   var utils     = new CanvasserUtils();
-
   learning('load', 'welcome');
 
   utils.requestJSON("./json/author.json", setRules);
@@ -61,9 +60,9 @@ function restartCanvasser(name, data, type){
   var canvas = document.getElementById('activity');
   var context = canvas.getContext('2d');
   canvas.addEventListener('mousemove', function(evt) {
-  var mousePos = getMousePos(canvas, evt);
-  var message =  mousePos.x + ',' + mousePos.y;
-  document.getElementById('outputtitle').innerHTML = message;
+    var mousePos = getMousePos(canvas, evt);
+    var message =  mousePos.x + ',' + mousePos.y;
+    document.getElementById('outputtitle').innerHTML = message;
   }, false);
 }
 
@@ -83,35 +82,11 @@ function authorcanvasser(dataFile, dataForm){
   };
 
   authorData = dataFile;
-
-  document.getElementById("animcontents").addEventListener("mousedown",       function(){focusObjD("animbank")},       false);
-  document.getElementById("groupcontents").addEventListener("mousedown",      function(){focusObjD("groupbank")},      false);
-  document.getElementById("imagecontents").addEventListener("mousedown",      function(){focusObjD("imagebank")},      false);
-  document.getElementById("jsoncontents").addEventListener("mousedown",       function(){focusObjD("jsonbank")},       false);
-  document.getElementById("learncontents").addEventListener("mousedown",      function(){focusObjD("learnbank")},      false);
-  document.getElementById("objectcontents").addEventListener("mousedown",     function(){focusObjD("objectbank")},     false);
-  document.getElementById("particlecontents").addEventListener("mousedown",   function(){focusObjD("particlebank")},   false);
-  document.getElementById("pathcontents").addEventListener("mousedown",       function(){focusObjD("pathbank")},       false);
-  document.getElementById("propertiescontents").addEventListener("mousedown", function(){focusObjD("propertiesbank")}, false);
-  document.getElementById("samplecontents").addEventListener("mousedown",     function(){focusObjD("samplebank")},     false);
-  document.getElementById("settingcontents").addEventListener("mousedown",    function(){focusObjD("settingbank")},    false);
-  document.getElementById("shapecontents").addEventListener("mousedown",      function(){focusObjD("shapebank")},      false);
-  document.getElementById("soundcontents").addEventListener("mousedown",      function(){focusObjD("soundbank")},      false);
-
-  document.getElementById("animmover").addEventListener("mousedown",       function(){moveObjD("animbank")},       false);
-  document.getElementById("canvasmover").addEventListener("mousedown",     function(){moveObjD("canvasbank")},     false);
-  document.getElementById("groupmover").addEventListener("mousedown",      function(){moveObjD("groupbank")},      false);
-  document.getElementById("imagemover").addEventListener("mousedown",      function(){moveObjD("imagebank")},      false);
-  document.getElementById("jsonmover").addEventListener("mousedown",       function(){moveObjD("jsonbank")},       false);
-  document.getElementById("learnmover").addEventListener("mousedown",      function(){moveObjD("learnbank")},       false);
-  document.getElementById("objectmover").addEventListener("mousedown",     function(){moveObjD("objectbank")},     false);
-  document.getElementById("particlemover").addEventListener("mousedown",   function(){moveObjD("particlebank")},   false);
-  document.getElementById("pathmover").addEventListener("mousedown",       function(){moveObjD("pathbank")},       false);
-  document.getElementById("propertiesmover").addEventListener("mousedown", function(){moveObjD("propertiesbank")}, false);
-  document.getElementById("samplemover").addEventListener("mousedown",     function(){moveObjD("samplebank")},     false);
-  document.getElementById("settingmover").addEventListener("mousedown",    function(){moveObjD("settingbank")},    false);
-  document.getElementById("shapemover").addEventListener("mousedown",      function(){moveObjD("shapebank")},      false);
-  document.getElementById("soundmover").addEventListener("mousedown",      function(){moveObjD("soundbank")},      false);
+  var wins = ['anim','canvas','group', 'image', 'json', 'learn', 'object', 'particle', 'path', 'properties', 'sample', 'setting', 'shape', 'sound', 'test', 'var'];
+  wins.forEach(function(idRoot){
+    document.getElementById(idRoot+"contents").addEventListener("mousedown",    function(){focusObjD(idRoot+"bank")},       false);
+    document.getElementById(idRoot+"mover").addEventListener("mousedown",       function(){moveObjD(idRoot+"bank")},       false);
+  });
 
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);
@@ -223,53 +198,16 @@ function authorcanvasser(dataFile, dataForm){
     }
   }
 
-  this.getSetting = getSetting;
-  function getSetting(setting){
-    document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Setting:' + setting  + '</div>';
-    var propUI = document.getElementById("properties");
-    var type = window.rules.settings[setting].type === "text" ? "text" : "number";
-    var prop = '<div class="propbody">' ;
-    prop += '<div class="entrylabel c_entrytitle_text w200">'+setting+'</div>';
-    prop += '<input class="auth_text w200" type="'+ type +'" ';
-    prop += 'value="'+ authorData.settings[setting] + '" ';
-    prop += utils.buildFnString('window.author.updateSetting', [setting], true);
-    prop += '><br>';
-    propUI.innerHTML = prop + '</div>';
-  }
-
-  this.getPath = getPath;
-  function getPath(id){
-    var thisProp = authorData.paths.filter(function(selected){return selected.id === id;})[0];
-    updateSelectionWindow('paths',id);
-    document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Path:' + id + '</div>';
-    var propUI = document.getElementById("properties");
-    var prop = '<div class="propbody">' ;
-    prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
-    prop += '<input class="auth_text w200" type="text" ';
-    prop += 'value="'+ thisProp.id + '" ';
-    prop += utils.buildFnString('window.author.updatePath', [id,'id'], true);
-    prop += '><br>';
-    prop += '<div class="entrylabel c_entrytitle_text w50">url</div>';
-    prop += '<input class="auth_text w200" type="text" ';
-    prop += 'value="'+ thisProp.url + '" ';
-    prop += utils.buildFnString('window.author.updatePath', [id,'url'], true);
-    prop += '><br>';
-    propUI.innerHTML = prop + '</div>';
-  }
-
   this.getProps = getProps;
   function getProps(type, id){
-    thisProp = authorData[type].filter(function(selected){return selected.id === id;})[0];
-    if (thisProp === undefined) return;
-    var titleText = '<div class="proptitle">';
-    if (type === "anims")     titleText = 'Animation: ' + id;
-    if (type === "images")    titleText = 'Image: '     + id;
-    if (type === "objects")   titleText = 'Object: '    + id + ' : ' + thisProp.type;
-    if (type === "particles") titleText = 'Particle: '  + id;
-    if (type === "sounds")    titleText = 'Sound: '     + id;
+    //var thisProp = id;
 
-    document.getElementById("propertiestitle").innerHTML = titleText + '</div>';
-    var propUI       = document.getElementById("properties");
+    var  thisProp = authorData[type].filter(function(selected){return selected.id === id;})[0];
+
+    if (thisProp === undefined) return;
+    var titleText = '<div class="proptitle">' + type.charAt(0).toUpperCase() + type.slice(1, -1);
+    document.getElementById("propertiestitle").innerHTML = titleText + ' : ' + id + '</div>';
+    var propUI = document.getElementById("properties");
     propUI.innerHTML = buildProp[type](thisProp);
     updateSelectionWindow(type,id);
   }
@@ -403,18 +341,7 @@ function authorcanvasser(dataFile, dataForm){
     restartCanvasser("sample", authorData, "string");
   };
 
-  this.updateItem = function(domElement, objectId, type, paramPath){
-    var newVal = domElement.value.toString();
-    if (domElement.type === 'checkbox') newVal = domElement.checked;
-    if (newVal === '---NONE---') newVal = undefined;
 
-    var objGet = authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
-
-    utils.setSubProp(objGet, paramPath, newVal);
-    getProps(type+'s', objGet.id);
-    menus.update(type);
-    restartCanvasser("sample", authorData, "string");
-  };
 
   this.updateSelect = function(domElement, objectId, positionId, axisId){
     var objGet = authorData[type].filter(function(finder){return (finder.id === id);})[0];
@@ -469,35 +396,20 @@ function authorcanvasser(dataFile, dataForm){
     restartCanvasser("sample", authorData, "string");
   }
 
-  this.updatePath = function(domElement, id, param){
-    var pathGet = authorData.paths.filter(function(finder){return (finder.id === id);})[0];
-    pathGet[param] = domElement.value;
-    menus.update('paths');
-    getPath(pathGet.id);
-    restartCanvasser("sample", authorData, "string");
-  }
+  this.updateItem = function(domElement, objectId, type, paramPath){
+    var newVal = domElement.value.toString();
+    if (domElement.type === 'checkbox') newVal = domElement.checked;
+    if (newVal === '---NONE---')        newVal = undefined;
 
-  this.updateActivity = function(domElement, type, elementType, id, prop, listIndex){
-    var objGet = authorData[type].filter(function(finder){return (finder.id === id);})[0];
-
-    var newRule = window.rules.actions.filter(function(ruleName){
-      return ruleName.elementType === domElement.value
-    })[0];
-    if (listIndex === "none"){
-      objGet[prop] = domElement.value;
-    } else {
-      objGet[prop][listIndex] = {type:domElement.value};
-      newRule.widgets.forEach(function(rule){
-        var keys = Object.keys(rule);
-        keys.forEach(function(key){
-          objGet[prop][listIndex][key] = rule[key];
-        });
-      });
-    }
+    //var objGet = objectId;
+    //if (authorData[type+'s'].isArray){
+    var   objGet = authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
+    //}
+    utils.setSubProp(objGet, paramPath, newVal);
+    getProps(type+'s', objGet.id);
     menus.update(type);
-    getProps(type, objGet.id);
     restartCanvasser("sample", authorData, "string");
-  }
+  };
 
   this.addaction = function(objName, listType){
     var objGet = authorData.objects.filter(function(finder){return (finder.id === objName);});

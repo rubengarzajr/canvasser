@@ -18,7 +18,7 @@ function canvasser(vari, interactiveData, dataForm){
 
   function requestJSON(fileNamePath, returnFunction){
     var fileToDl = fileNamePath;
-    if (act.data.settings.usecache === false) fileToDl += '?' + new Date().getTime();
+    fileToDl += '?' + new Date().getTime();
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(){
       if (xhr.readyState == 4) returnFunction(JSON.parse(xhr.responseText));
@@ -85,12 +85,6 @@ function canvasser(vari, interactiveData, dataForm){
       if (act.data.settings.usecache === false) imageObj.src += '?' + new Date().getTime();
     });
 
-    act.vars = {};
-    if (act.data.vars != undefined){
-      act.data.vars.forEach(function(v){
-       act.vars[v.id] = v.value;
-      });
-    }
     act.player = [];
     if (act.data.anims !== undefined){
       act.data.anims.forEach(function(anim){
@@ -252,6 +246,7 @@ function canvasser(vari, interactiveData, dataForm){
       play.playing.forEach(function(anim){
         if (anim.type === "flipbook"){
           var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+          if (anim.atlascell === undefined) anim.atlascell = {x:0, y:0};
           if (animOb) animOb.atlascell = {x:anim.atlascell.x, y:anim.atlascell.y};
           anim.delete = true;
         }
@@ -435,6 +430,7 @@ function canvasser(vari, interactiveData, dataForm){
           act.context.rotate(obj.rotation);
           act.context.translate(obj.originxy.current.x, obj.originxy.current.y);
           if (atlas){
+            if (obj.atlascell === undefined) obj.atlascell = {x:0,y:0};
             act.context.drawImage(act.imageList[obj.image].imageData,
               atlas.cellwidth*obj.atlascell.x, atlas.cellheight*obj.atlascell.y,
               atlas.cellwidth, atlas.cellheight, 0,0,
@@ -682,10 +678,27 @@ function canvasser(vari, interactiveData, dataForm){
             }
           }
           if (action.check === "var"){
-            if (act.vars[action.itemtocheck] === action.value){
-              act.applyAction = [over];
-              act.mode = 'true';
-              actions();
+            var thisVar = act.data.vars.filter(function(obj){return obj.id === action.itemtocheck})[0];
+            if (thisVar !== undefined){
+              var go = false;
+              if (action.comparetype === 'equal') {
+                if (thisVar.value === action.value) go = true;
+              }
+              if (action.comparetype === 'greater') {
+                if (thisVar.value > action.value) go = true;
+              }
+              if (action.comparetype === 'less') {
+                if (thisVar.value < action.value) go = true;
+              }
+              if (go){
+                act.applyAction = [over];
+                act.mode = 'true';
+                actions();
+              } else  {
+                act.applyAction = [over];
+                act.mode = 'false';
+                actions();
+              }
             }
           }
         }
@@ -726,7 +739,10 @@ function canvasser(vari, interactiveData, dataForm){
           act.player.push(copyObj(animToPlay, {}));
         }
         if (action.type === 'modvar'){
-          if (action.operation === "add") act.vars[action.id] += action.amount;
+          var varChange = act.data.vars.filter(function(obj){return obj.id === action.id})[0];
+          if (action.operation === "add") varChange.value = Number(varChange.value) + Number(action.amount);
+          if (action.operation === "sub") varChange.value = Number(varChange.value) - Number(action.amount);
+          if (action.operation === "set") varChange.value = Number(action.amount);
         }
         if (action.type === 'swapimage'){
           act.data.objects.forEach(function(obj){

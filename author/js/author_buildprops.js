@@ -2,6 +2,32 @@ function BuildProp(){
   var utils = new CanvasserUtils();
   var menus = new Menus();
 
+
+  // TODO: Maybe make all builders into this on build
+  function build(type, id){
+    var output   = '<div class="propbody">';
+    var pathList = utils.objPartToArr(authorData.paths, "id");
+    var defaultId = utils.getSubProp(group, 'path');
+    window.rules.groups.widgets.forEach(function(widget, idx, source){
+      if (widget.type === "text"){
+        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        output += '<input class="auth_text w200" type="text" value="'+ group[widget.field] + '" ';
+        output += utils.buildFnString('window.author.updateItem', [group.id, 'group', widget.field], true);
+        output += '><br>';
+      }
+      if (widget.type === "select"){
+        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        output += utils.buildSelect('window.author.updateItem',  group.id, 'group', pathList, defaultId, 'path') + '<br>';
+      }
+      if (widget.type === "number")       output += utils.handleNumber(group, 'group', widget, widget.field);
+      if (widget.type === "bool")         output += utils.handleBoolean(group, 'group', widget, widget.field);
+    });
+    menus.update('groups');
+    return output + '</div>';
+  }
+
+
+
   this.anims = function(animation){
     var output = '<div class="propbody">';
     var animList = utils.objPartToArr(authorData.anims, "id");
@@ -10,7 +36,7 @@ function BuildProp(){
       if (widget.type === "text"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += '<input class="auth_text '+widget.css+'" type="text" value="'+ animation[widget.field] + '" ';
-        output += utils.buildFnString('window.author.updateActivity', ['anims', 'text', animation.id, widget.field, 'none'], true);
+        output += utils.buildFnString('window.author.updateItem', [animation.id, 'anim',  widget.field], true);
         output += '><br>';
       }
       if (widget.type === "number")   output += utils.handleNumber(animation, 'anim', widget, widget.field);
@@ -35,18 +61,18 @@ function BuildProp(){
               if (subWidget.type === 'number')  {
                 output += utils.handleNumber(animation,   'anim', subWidget, widgetPath);
               }
-              if (subWidget.type === 'objlist') output += handleObjectList(animation,     'anim', subWidget, widgetPath);
-              if (subWidget.type === 'anmlist') output += handleAnimList(animation,       'anim', subWidget, widgetPath);
-              if (subWidget.type === 'parlist') output += handleParticleList(animation,   'anim', subWidget, widgetPath);
+              if (subWidget.type === 'objlist') output += handleTypeList('objects',   animation, 'anim', subWidget, widgetPath);
+              if (subWidget.type === 'anmlist') output += handleTypeList('anims',     animation, 'anim', subWidget, widgetPath);
+              if (subWidget.type === 'parlist') output += handleTypeList('particles', animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === "filterlink") {
                 var filterPath = widgetPath.substr(0, widgetPath.lastIndexOf(".")) + '.' + subWidget['link'] ;
                 var defaultId = utils.getSubProp(animation, filterPath);
-                if (defaultId === "object")   output += handleObjectList(animation,     'anim', subWidget, widgetPath);
+                if (defaultId === "object")   output +=  handleTypeList('objects', animation,  'anim', subWidget, widgetPath);
                 if (defaultId === "group")    output +="group here"
-                if (defaultId === "particle") output += handleParticleList(animation,   'anim', subWidget, widgetPath);
+                if (defaultId === "particle") output += handleTypeList('particles', animation,   'anim', subWidget, widgetPath);
               }
 
-              if (subWidget.type === 'sndlist') output += handleSoundList(animation,      'anim', subWidget, widgetPath);
+              if (subWidget.type === 'sndlist') output += handleTypeList('sounds', animation,      'anim', subWidget, widgetPath);
               if (subWidget.type === 'posxy')   output += utils.handlePosition(animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'select')  output += utils.handleSelect(animation,   'anim', subWidget, widgetPath);
               if (subWidget.type === "text")    output += handleText(animation,           'anim', subWidget, widgetPath, 'w100');
@@ -63,6 +89,28 @@ function BuildProp(){
     return output + '</div>';
   }
 
+  this.groups = function(group){
+    var output = '<div class="propbody">';
+    var pathList = utils.objPartToArr(authorData.paths, "id");
+    var defaultId = utils.getSubProp(group, 'path');
+    window.rules.groups.widgets.forEach(function(widget, idx, source){
+      if (widget.type === "text"){
+        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        output += '<input class="auth_text w200" type="text" value="'+ group[widget.field] + '" ';
+        output += utils.buildFnString('window.author.updateItem', [group.id, 'group', widget.field], true);
+        output += '><br>';
+      }
+      if (widget.type === "select"){
+        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        output += utils.buildSelect('window.author.updateItem',  group.id, 'group', pathList, defaultId, 'path') + '<br>';
+      }
+      if (widget.type === "number")       output += utils.handleNumber(group, 'group', widget, widget.field);
+      if (widget.type === "bool")         output += utils.handleBoolean(group, 'group', widget, widget.field);
+    });
+    menus.update('groups');
+    return output + '</div>';
+  }
+
   this.images = function(image){
     var output = '<div class="propbody">';
     var pathList = utils.objPartToArr(authorData.paths, "id");
@@ -71,7 +119,7 @@ function BuildProp(){
       if (widget.type === "text"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += '<input class="auth_text w200" type="text" value="'+ image[widget.field] + '" ';
-        output += utils.buildFnString('window.author.updateActivity', ['images', 'text', image.id, widget.field, 'none'], true);
+        output += utils.buildFnString('window.author.updateItem', [image.id, 'image', widget.field], true);
         output += '><br>';
       }
       if (widget.type === "select"){
@@ -87,7 +135,6 @@ function BuildProp(){
 
   this.objects = function(object){
     var output = '<div class="propbody">' ;
-    var win = 'window.author.updateActivity';
     window.rules.object[object.type].widgets.forEach(function(widget, idx, source){
       if (widget.type === "text")         output += handleText(object, 'object', widget, widget.field, 'w100');
       if (widget.type === "number")       output += utils.handleNumber(object, 'object', widget, widget.field);
@@ -106,8 +153,8 @@ function BuildProp(){
           }
         }
       }
-      if (widget.type === "shapelist") output += handleShapeList(object,  'object', widget, widget.field);
-      if (widget.type === "objlist")   output += handleObjectList(object, 'object', widget, widget.field);
+      if (widget.type === "shapelist") output += handleTypeList('shapes', object,  'object', widget, widget.field);
+      if (widget.type === "objlist")   output += handleTypeList('objects', object, 'object', widget, widget.field);
       if (widget.type === "posxy"){
         output += '<div style="display:block"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
         if (object[widget.field] === undefined) object[widget.field] = {current:{x:0,y:0}};
@@ -162,14 +209,30 @@ function BuildProp(){
               output += '<div class="rightx" onclick="window.author.deleteaction('+"'"+object.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
               actionWidgets.forEach(function(subWidget, idxPart){
                 var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
+                if (subWidget.type === 'anmlist') output += handleTypeList('anims', object,       'object', subWidget, widgetPath);
                 if (subWidget.type === 'bool')    output += utils.handleBoolean(object,  'object', subWidget, widgetPath);
+                if (subWidget.type === "linkedcontent") {
+                  var filterPath = widgetPath.substr(0, widgetPath.lastIndexOf(".")) + '.' + subWidget['link'] ;
+                  var defaultId = utils.getSubProp(object, filterPath);
+                  if (defaultId){
+                    window.rules[subWidget.sourcelist][defaultId].widgets.forEach(function(subsub, idxSub){
+                      var subWidgetPath =  widget.field + '.' +  idx + '.' + subsub.field;
+                      if (subsub.type === 'objlist') output += handleTypeList('objects', object, 'object', subsub, subWidgetPath);
+                      if (subsub.type === 'varlist') output += handleTypeList('vars',    object, 'object', subsub, subWidgetPath);
+                      if (subsub.type === 'number')  output += utils.handleNumber(object,   'object', subsub, subWidgetPath);
+                      if (subsub.type === 'select')  output += utils.handleSelect(object,   'object', subsub, subWidgetPath);
+
+                    });
+                  }
+
+                }
                 if (subWidget.type === 'number')  output += utils.handleNumber(object,   'object', subWidget, widgetPath);
-                if (subWidget.type === 'objlist') output += handleObjectList(object,     'object', subWidget, widgetPath);
-                if (subWidget.type === 'anmlist') output += handleAnimList(object,       'object', subWidget, widgetPath);
-                if (subWidget.type === 'parlist') output += handleParticleList(object,   'object', subWidget, widgetPath);
-                if (subWidget.type === 'sndlist') output += handleSoundList(object,      'object', subWidget, widgetPath);
+                if (subWidget.type === 'objlist') output += handleTypeList('objects',    object,   'object',  subWidget, widgetPath);
+                if (subWidget.type === 'varlist') output += handleTypeList('vars',    object,   'object',  subWidget, widgetPath);
+                if (subWidget.type === 'parlist') output += handleTypeList('particles',  object,   'object',  subWidget, widgetPath);
                 if (subWidget.type === 'posxy')   output += utils.handlePosition(object, 'object', subWidget, widgetPath);
                 if (subWidget.type === 'select')  output += utils.handleSelect(object,   'object', subWidget, widgetPath);
+                if (subWidget.type === 'sndlist') output += handleTypeList('sounds',     object,   'object',  subWidget, widgetPath);
                 if (subWidget.type === "text")    output += handleText(object,           'object', subWidget, widgetPath, 'w100');
               });
               output += '</div>';
@@ -180,13 +243,11 @@ function BuildProp(){
           output += '</div>';
       }
     });
-    output += " " + object;
     return output + '</div>';
   }
 
   this.particles = function(particle){
     var output = '<div class="propbody">' ;
-    var win = 'window.author.updateActivity';
     window.rules.particle.widgets.forEach(function(widget, idx, source){
       if (widget.type === "text")         output += handleText(particle, 'particle', widget, widget.field, 'w100');
       if (widget.type === "number")       output += utils.handleNumber(particle, 'particle', widget, widget.field);
@@ -205,8 +266,8 @@ function BuildProp(){
           }
         }
       }
-      if (widget.type === "shapelist")  output += handleShapeList(particle,  'particle', widget, widget.field);
-      if (widget.type === "objlist")    output += handleObjectList(particle, 'particle', widget, widget.field);
+      if (widget.type === "shapelist")  output += handleTypeList('shapes', particle,  'particle', widget, widget.field);
+      if (widget.type === "objlist")    output += handleTypeList('objects', particle, 'particle', widget, widget.field);
       if (widget.type === "posxy"){
         output += '<div style="display:block"><div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
         if (particle[widget.field] === undefined) particle[widget.field] = {current:{x:0,y:0}};
@@ -252,6 +313,51 @@ function BuildProp(){
     return output + '</div>';
   }
 
+  this.paths = function(path){
+    var prop = '<div class="propbody">' ;
+    prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
+    prop += '<input class="auth_text w200" type="text" ';
+    prop += 'value="'+ path.id + '" ';
+    prop += utils.buildFnString('window.author.updateItem', [path.id, 'path', 'id'], true);
+    prop += '><br>';
+    prop += '<div class="entrylabel c_entrytitle_text w50">url</div>';
+    prop += '<input class="auth_text w200" type="text" ';
+    prop += 'value="'+ path.url + '" ';
+    prop += utils.buildFnString('window.author.updateItem', [path.id, 'path', 'url'], true);
+    prop += '><br>';
+    return prop + '</div>';
+  }
+
+  this.vars = function(thisVar){
+    var prop = '<div class="propbody">' ;
+    prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
+    prop += '<input class="auth_text w200" type="text" ';
+    prop += 'value="'+ thisVar.id + '" ';
+    prop += utils.buildFnString('window.author.updateItem', [thisVar.id, 'var', 'id'], true);
+    prop += '><br>';
+    prop += '<div class="entrylabel c_entrytitle_text w50">value</div>';
+    prop += '<input class="auth_text w200" type="number" ';
+    prop += 'value="'+ thisVar.value + '" ';
+    prop += utils.buildFnString('window.author.updateItem', [thisVar.id, 'var', 'value'], true);
+    prop += '><br>';
+    return prop + '</div>';
+  }
+
+  this.settings = function(id){
+    var output = '<div class="propbody">' ;
+    var type   = window.rules.settings[id].type;
+    if (type === "bool") output += utils.handleBoolean(authorData.settings, 'setting', {field:"usecache"}, id);
+    else {
+      output += '<div class="entrylabel c_entrytitle_text w200">'+id+'</div>';
+      output += '<input class="auth_text w200" type="'+ type +'" ';
+      output += 'value="'+ authorData.settings[id] + '" ';
+      output += utils.buildFnString('window.author.updateSetting', [id], true);
+      output += '><br>';
+    }
+    return output + '</div>';
+  }
+
+
   this.sounds = function(sound){
     var output = '<div class="propbody">';
     var pathList = utils.objPartToArr(authorData.paths, "id");
@@ -260,7 +366,7 @@ function BuildProp(){
       if (widget.type === "text"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += '<input class="auth_text w200" type="text" value="'+ sound[widget.field] + '" ';
-        output += utils.buildFnString('window.author.updateActivity', ['sounds', 'text', sound.id, widget.field, 'none'], true);
+        output += utils.buildFnString('window.author.updateItem', [sound.id, 'sound', widget.field], true);
         output += '><br>';
       }
       if (widget.type === "select"){
@@ -317,57 +423,15 @@ function BuildProp(){
     return prop + '</div>';
   }
 
-
-
-  function handleShapeList(object, type, widget, path){
+  function handleTypeList(filter, object, type, widget, path){
     var str = '';
-    var objectList = utils.objPartToArr(authorData.shapes, "id");
+    var objectList = utils.objPartToArr(authorData[filter], "id");
     var defaultId = utils.getSubProp(object, path);
     str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
     return str;
   }
 
-  function handleTimeList(animation, type, widget, path){
-    var str = '';
-    var animList = utils.objPartToArr(authorData.anims, "id");
-    var defaultId = utils.getSubProp(animation, path);
-    str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += utils.buildSelect('window.author.updateItem',  animation.id, type, animList, defaultId, path) + '<br>';
-    return str;
-  }
-  function handleAnimList(object, type, widget, path){
-    var str = '';
-    var objectList = utils.objPartToArr(authorData.anims, "id");
-    var defaultId = utils.getSubProp(object, path);
-    str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
-    return str;
-  }
-  function handleObjectList(object, type, widget, path){
-    var str = '';
-    var objectList = utils.objPartToArr(authorData.objects, "id");
-    var defaultId = utils.getSubProp(object, path);
-    str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
-    return str;
-  }
-  function handleParticleList(object, type, widget, path){
-    var str = '';
-    var objectList = utils.objPartToArr(authorData.particles, "id");
-    var defaultId = utils.getSubProp(object, path);
-    str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
-    return str;
-  }
-  function handleSoundList(object, type, widget, path){
-    var str = '';
-    var objectList = utils.objPartToArr(authorData.sounds, "id");
-    var defaultId = utils.getSubProp(object, path);
-    str += utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
-    return str;
-  }
   function handleText(object, type, widget, path, widthClass){
     var str = '';
     var defaultId = utils.getSubProp(object, path);

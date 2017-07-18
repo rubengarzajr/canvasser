@@ -148,6 +148,21 @@
             </div>
         </div>
 
+        <div id='varbank' class="skinnybank" style="position:absolute;left:997px; top:110px;">
+            <div class="titlebar" id="varmover">
+                <div class="wintitle">Vars</div>
+                <div class="sp_05 right"></div>
+                <div class ="right" onclick="window.author.toggleminmax('varcontents', 'togglevar', 664)" style="margin-top: 2px;"><img id="togglevar" src="image/icon_max_g.png"/></div>
+            </div>
+            <div id="varcontents" class="padlr" style="display:none">
+                <div id="varmenu" class="submenu">
+                    <div class="divmenu" onclick="window.author.menus.addItem('vars')">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.deleteItem('vars')">Delete</div>
+                </div>
+                <div id="varholder" class="padholder"></div>
+            </div>
+        </div>
+
         <div id='groupbank' class="skinnybank" style="position:absolute;left:832px; top:70px;">
             <div class="titlebar" id="groupmover">
                 <div class="wintitle">Groups</div>
@@ -209,6 +224,21 @@
             </div>
         </div>
 
+        <div id='testbank' class="skinnybank" style="position:absolute;left:502px; top:110px;">
+            <div class="titlebar" id="testmover">
+                <div class="wintitle">Tests</div>
+                <div class="sp_05 right"></div>
+                <div class ="right" onclick="window.author.toggleminmax('testcontents', 'toggletest', 664)" style="margin-top: 2px;"><img id="toggletest" src="image/icon_max_g.png"/></div>
+            </div>
+            <div id="testcontents" class="padlr" style="display:none">
+                <div id="testmenu" class="submenu">
+                    <div class="divmenu" onclick="window.author.menus.addItem('tests')">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.deleteItem('tests')">Delete</div>
+                </div>
+                <div id="testholder" class="padholder"></div>
+            </div>
+        </div>
+
         <div id='propertiesbank' class="skinnybank" style="position:absolute;left:800px; top:158px;">
             <div class="titlebar" id="propertiesmover">
                 <div class="wintitle">Properties</div>
@@ -224,7 +254,7 @@
             </div>
         </div>
 
-        <div id='learnbank' class="skinnybank" style="position:absolute;left:505px; top:110px;">
+        <div id='learnbank' class="skinnybank" style="position:absolute;left:263px; top:234px;">
             <div class="titlebar" id="learnmover">
                 <div class="wintitle">Learning</div>
                 <div class="sp_05 right"></div>

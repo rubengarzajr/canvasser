@@ -2,9 +2,10 @@
   "createtypes":["object","image","shape","settings"],
   "settings":{
     "canvasdomname": {"type":"text"},
-    "canvaswidth":   {"type":"int"},
-    "canvasheight":  {"type":"int"},
-    "canvasparent":  {"type":"text"}
+    "canvaswidth":   {"type":"number"},
+    "canvasheight":  {"type":"number"},
+    "canvasparent":  {"type":"text"},
+    "usecache":      {"type":"bool"}
   },
   "object":{
     "image":{
@@ -130,22 +131,27 @@
   "actions":[
     {"type":"cleardown",    "widgets":[]},
     {"type":"console",      "widgets":[{"field":"text",       "type":"text"}]},
-    {"type":"conditional",  "widgets":[{"field":"check",      "type":"select", "id":"conditionaltype"}, {"field":"itemtocheck",   "type":"objlist"}, {"field":"position",   "type":"objlist"}]},
-    {"type":"function",     "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"function",  "type":"text"}]},
-    {"type":"groupcolor",   "widgets":[{"field":"id",         "type":"text"},                           {"field":"source",  "type":"text"}]},
-    {"type":"increment",    "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"},      {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}, {"field":"rangemin",   "type":"number"}, {"field":"rangemax",   "type":"number"}]},
-    {"type":"loadinto",     "widgets":[{"field":"url",        "type":"text"},                           {"field":"vari",    "type":"text"}]},
-    {"type":"loadpage",     "widgets":[{"field":"url",        "type":"text"},      {"field":"newpage",     "type":"bool"},  {"field":"intodiv",     "type":"bool"}]},
-    {"type":"objectcolor",  "widgets":[{"field":"id",         "type":"text"},      {"field":"source",  "type":"text"}]},
+    {"type":"conditional",  "widgets":[{"field":"check",      "type":"select", "id":"conditionaltype", "display":"Condition"}, {"type":"linkedcontent", "link":"check", "sourcelist":"conditionals"}]},
+    {"type":"function",     "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"function",   "type":"text"}]},
+    {"type":"groupcolor",   "widgets":[{"field":"id",         "type":"text"},                           {"field":"source",     "type":"text"}]},
+    {"type":"increment",    "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"},      {"field":"id",         "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}, {"field":"rangemin",   "type":"number"}, {"field":"rangemax",   "type":"number"}]},
+    {"type":"loadinto",     "widgets":[{"field":"url",        "type":"text"},                           {"field":"vari",       "type":"text"}]},
+    {"type":"loadpage",     "widgets":[{"field":"url",        "type":"text"},                           {"field":"newpage",    "type":"bool"},     {"field":"intodiv",     "type":"bool"}]},
+    {"type":"modvar",       "widgets":[{"field":"id",         "type":"varlist"},                           {"field":"operation",  "type":"select", "id":"operationtype"}, {"field":"amount", "type":"number"}]},
+    {"type":"objectcolor",  "widgets":[{"field":"id",         "type":"text"},                           {"field":"source",     "type":"text"}]},
     {"type":"playanim",     "widgets":[{"field":"animation",  "type":"anmlist"}]},
     {"type":"pstart",       "widgets":[{"field":"id",         "type":"parlist"}]},
-    {"type":"set",          "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"}, {"field":"id",    "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
-    {"type":"slideobject",  "widgets":[{"field":"id",         "type":"objlist"},   {"field":"constrainx",     "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
+    {"type":"set",          "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"},      {"field":"id",         "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
+    {"type":"slideobject",  "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"constrainx", "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
     {"type":"sound",        "widgets":[{"field":"id",         "type":"sndlist"}]},
-    {"type":"testpset",     "widgets":[{"field":"testp",      "type":"bool"},      {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}]},
-    {"type":"url",          "widgets":[{"field":"url",        "type":"filename"},  {"field":"target",  "type":"text"}]},
-    {"type":"vis",          "widgets":[{"field":"id",         "type":"objlist"},   {"field":"filter",  "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
+    {"type":"testpset",     "widgets":[{"field":"testp",      "type":"bool"},                           {"field":"id",         "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}]},
+    {"type":"url",          "widgets":[{"field":"url",        "type":"filename"},                       {"field":"target",     "type":"text"}]},
+    {"type":"vis",          "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"filter",     "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
   ],
+  "conditionals":{
+    "position":{"widgets":[{"field":"itemtocheck",   "type":"objlist"}, {"field":"position",   "type":"objlist"}]},
+    "var":     {"widgets":[{"field":"itemtocheck",   "type":"varlist"}, {"field":"value",      "type":"number"}, {"field":"comparetype",  "type":"select", "id":"comparetype"} ]}
+  },
   "anims":[
     {"type":"console",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"text",      "type":"text"}]},
     {"type":"fade",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startalpha",  "type":"number"}, {"field":"endalpha",  "type":"number"}]},
@@ -154,11 +160,15 @@
     {"type":"move",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startpos",  "type":"posxy", "display":"Start Position"}, {"field":"endpos",  "type":"posxy",  "display":"End Position"}, {"field":"ease",  "type":"select", "id":"easetype", "display":"Ease"}]},
     {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"animlist"}]},
     {"type":"pstart",       "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"parlist"}]},
-    {"type":"scale",        "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startscale",  "type":"number"}, {"field":"endscale",  "type":"number"}]},
+    {"type":"scale",        "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startscale",  "type":"number"}, {"field":"endscale",  "type":"number"}]},
     {"type":"sound",        "widgets":[{"field":"starttime",  "type":"number"},  {"field":"id",        "type":"sndlist"}]},
     {"type":"testpset",     "widgets":[{"field":"testp",       "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}]},
     {"type":"turn",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]},
     {"type":"vis",          "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"show", "type":"bool"}]}
+  ],
+  "tests":[
+    {"field":"id",        "type":"text"},
+    {"field":"active",    "type":"bool"}
   ],
   "samples":[
     {"id":"Animation: Atlas",           "url":"anim_atlas.json"},
@@ -181,11 +191,13 @@
     "xy":{"x":"int","y":"int"}
   },
   "select":{
-    "conditionaltype":{"list":["position"]},
+    "conditionaltype":{"list":["position","var"]},
+    "comparetype":{"list":["equal","greater", "less"]},
     "easetype":{"list":["linear","inExp","outExp","inOutExp","inQuad", "outQuad", "inOutQuad"]},
     "filtertype":{"list":["object", "group","particle"]},
     "objectorigin":{"list":["upper_left", "center"]},
     "objecttype":{"list":["image", "shape"]},
+    "operationtype":{"list":["add", "sub","set"]},
     "particletype":{"list":["burst"]},
     "composite":{"list":["source-over", "source-in", "source-out", "source-atop", "destination-over", "destination-in", "destination-out", "destination-atop", "lighter", "copy", "xor", "multiply",
        "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity" ]}

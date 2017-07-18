@@ -11,6 +11,8 @@ function Menus(){
     if (!toUp || toUp === 'settings')  updateSettings();
     if (!toUp || toUp === 'sounds')    updateMenu('sounds');
     if (!toUp || toUp === 'shapes')    updateMenu('shapes');
+    if (!toUp || toUp === 'tests')     updateMenu('tests');
+    if (!toUp || toUp === 'vars')      updateMenu('vars');
   }
 
   function updateMenu(type){
@@ -23,7 +25,7 @@ function Menus(){
       window.rules.samples.forEach(function(sampy){authorData[type].push(sampy)});
     }
     authorData[type].forEach(function(menuItem){
-      if (type === 'anims' || type === 'groups' ||type === 'particles' || type === 'sounds'){
+      if (type === 'anims' || type === 'groups' ||type === 'particles' || type === 'shapes' || type === 'sounds' || type === 'tests' || type === 'vars'){
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td width="100%">' + menuItem.id + '</td>';
         menu += '</tr>';
@@ -42,18 +44,13 @@ function Menus(){
         menu += '</tr>';
       }
       if (type === 'paths'){
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getPath(\''+ menuItem.id + '\')">';
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td width="50%">' + menuItem.id + '</td>';
         menu +='<td width="50%">' +menuItem.url + '</td>';
         menu += '</tr>';
       }
       if (type === 'samples'){
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.loadSample(\''+ menuItem.url + '\')">';
-        menu +='<td class="shapeid"><div>' + menuItem.id + '</div></td>';
-        menu += '</tr>';
-      }
-      if (type === 'shapes'){
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\'shapes\',\''+ menuItem.id + '\')">';
         menu +='<td class="shapeid"><div>' + menuItem.id + '</div></td>';
         menu += '</tr>';
       }
@@ -67,7 +64,7 @@ function Menus(){
     var settings = '<table class="objtable" id="settingstable" width="100%">';
 
     Object.keys(authorData.settings).forEach(function(setting){
-      settings += '<tr class="clicktr" id="settings_'+setting+'" onclick="window.author.getSetting(\''+ setting + '\')">';
+      settings += '<tr class="clicktr" id="settings_'+setting+'" onclick="window.author.getProps(\'settings\',\''+ setting + '\')">';
       settings +='<td width="50%">' + setting + '</td>';
       settings +='<td width="50%">' + authorData.settings[setting] + '</td>';
       settings += '</tr>';
@@ -77,6 +74,7 @@ function Menus(){
   }
 
   this.addItem = function(type){
+    if (authorData[type] === undefined) authorData[type] = [];
     var itemName  = type.slice(0, -1);
     var itemCnt   = 0;
     var tryAgain  = true;
@@ -94,6 +92,8 @@ function Menus(){
     if (type === 'paths')     authorData[type].push({id:itemName, url:"./"});
     if (type === 'shapes')    authorData[type].push({id:itemName});
     if (type === 'sounds')    authorData[type].push({id:itemName, url:"./"});
+    if (type === 'tests')     authorData[type].push({id:itemName, active:true});
+    if (type === 'vars')      authorData[type].push({id:itemName, value:0});
 
     updateMenu(type)
     initCanvasser("sample", JSON.stringify(authorData), "string");
