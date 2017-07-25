@@ -98,7 +98,6 @@ function canvasser(vari, interactiveData, dataForm){
         element.addEventListener("click", function(){window[vari].external(JSON.parse(element.getAttribute('data-canvasser-command')))});
       });
     }
-    if (window.location.hash !== "") window[vari].external([{"command":"selectonly", "item":window.location.hash.substring(1)}]);
     loop();
   }
 
