@@ -62,7 +62,6 @@ function canvasser(vari, interactiveData, dataForm){
 
     act.imageList = {};
     act.data.images.forEach(function(image){
-      if (image.path != undefined) image.url = act.pathList[image.path] + '/' + image.url;
       var imageObj = new Image();
       imageObj.crossOrigin = "Anonymous";
       imageObj.onload = function(){
@@ -81,7 +80,7 @@ function canvasser(vari, interactiveData, dataForm){
           act.imageList[image.id].atlas.numY       = Math.floor(this.height / image.cellheight);
         }
       };
-      imageObj.src = image.url;
+      imageObj.src = image.path != undefined ? act.pathList[image.path] + '/' + image.url : image.url;
       if (act.data.settings.usecache === false) imageObj.src += '?' + new Date().getTime();
     });
 
