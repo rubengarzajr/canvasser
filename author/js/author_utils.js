@@ -16,8 +16,8 @@ function CanvasserUtils(){
     }
     obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
   }
-
-  this.getSubProp = function(obj, desc){
+  this.getSubProp = getSubProp;
+  function getSubProp(obj, desc){
     var arr = desc.split(".");
     while(arr.length > 1){
       var isnum = /^\d+$/.test(arr[0]);
@@ -56,7 +56,8 @@ function CanvasserUtils(){
     return newArr;
   }
 
-  this.buildDiv = function(classes, content, clicker, params){
+  this.buildDiv = buildDiv;
+  function buildDiv(classes, content, clicker, params){
     var click = ''
     if (clicker !== undefined) {
       click = ' onclick="' + clicker + '(';
@@ -69,9 +70,10 @@ function CanvasserUtils(){
     return '<div class="' + classes + '"' + click + '>' + content + '</div>';
   }
 
-   this.buildSelect = function(fn, object, type, list, defaultId, path){
+  this.buildSelect = buildSelect;
+   function buildSelect(fn, object, type, list, defaultId, path){
     var out = '<select id="prop_'+path+'" class="sellist"';
-    out += this.buildFnString(fn, [object, type, path], true) + '>';
+    out += buildFnString(fn, [object, type, path], true) + '>';
     var newList = list.slice();
     newList.unshift("---NONE---");
     newList.forEach(function(listObject){
@@ -81,45 +83,110 @@ function CanvasserUtils(){
     return out;
   }
 
-  this.handleBoolean = function(object, type, widget, path){
+  this.handleBoolean = handleBoolean;
+  function handleBoolean(object, type, widget, path){
+    var display = widget.display === undefined ? widget.field : widget.display;
     var str = '';
-    var defaultId = this.getSubProp(object, path);
-    str += '<div class="entrylabel c_entrytitle_text w100">' + widget.field;
+    var defaultId = getSubProp(object, path);
+    str += '<div class="entrylabel c_entrytitle_text w100">' + display;
     str += '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
-    str += this.buildFnString('window.author.updateItem', [object.id, type, path], true) + '><br>';
+    str += buildFnString('window.author.updateItem', [object.id, type, path], true) + '><br>';
     return str;
   }
 
-  this.handleNumber = function(object, type, widget, path){
+  this.handleTypeList = handleTypeList;
+  function handleTypeList(filter, object, type, widget, path){
     var str = '';
-    var num = this.getSubProp(object, path);
+    var objectList = objPartToArr(authorData[filter], "id");
+    var defaultId = getSubProp(object, path);
+    str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    str += buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
+    return str;
+  }
+
+  this.handleAction = function(item, types, widget){
+    var str = '';
+    var type = types.slice(0, -1);
+    var actionsList = [];
+      window.rules.actions.forEach(function(template){actionsList.push(template.type)});
+      str += '<div><div class="pos_holder mw400"><div class="pos_title">' + widget.display + '</div>';
+      if (item[widget.field] !== undefined){
+        item[widget.field].forEach(function(itemAct, idx){
+          var actionWidgets = window.rules.actions.filter(function(rType){ return rType.type === itemAct.type});
+          if (actionWidgets.length === 0) return;
+          actionWidgets = actionWidgets[0].widgets;
+          str += '<div class="actionblock">';
+          str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
+          str += buildSelect('window.author.updateActionList',  item.id, types, actionsList, itemAct.type, widget.field+'.'+idx+'.type');
+          str += '<div class="rightx" onclick="window.author.deleteaction('+"'"+item.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
+          actionWidgets.forEach(function(subWidget, idxPart){
+            var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
+            if (subWidget.type === 'anmlist') str += handleTypeList('anims', item, type, subWidget, widgetPath);
+            if (subWidget.type === 'bool')    str += handleBoolean(item,  type, subWidget, widgetPath);
+            if (subWidget.type === "linkedcontent") {
+              var filterPath = widgetPath.substr(0, widgetPath.lastIndexOf(".")) + '.' + subWidget['link'] ;
+              var defaultId = getSubProp(item, filterPath);
+              if (defaultId){
+                window.rules[subWidget.sourcelist][defaultId].widgets.forEach(function(subsub, idxSub){
+                  var subWidgetPath =  widget.field + '.' +  idx + '.' + subsub.field;
+                  if (subsub.type === 'objlist') str += handleTypeList(types,  item, type, subsub, subWidgetPath);
+                  if (subsub.type === 'varlist') str += handleTypeList('vars', item, type, subsub, subWidgetPath);
+                  if (subsub.type === 'number')  str += handleNumber(item, type, subsub, subWidgetPath);
+                  if (subsub.type === 'select')  str += handleSelect(item, type, subsub, subWidgetPath);
+                });
+              }
+            }
+            if (subWidget.type === 'number')  str += handleNumber(item, type, subWidget, widgetPath);
+            if (subWidget.type === 'objlist') str += handleTypeList(types, item,   type,  subWidget, widgetPath);
+            if (subWidget.type === 'varlist') str += handleTypeList('vars', item,   type,  subWidget, widgetPath);
+            if (subWidget.type === 'parlist') str += handleTypeList('particles', item,   type,  subWidget, widgetPath);
+            if (subWidget.type === 'posxy')   str += handlePosition(item, type, subWidget, widgetPath);
+            if (subWidget.type === 'select')  str += handleSelect(item, type, subWidget, widgetPath);
+            if (subWidget.type === 'sndlist') str += handleTypeList('sounds', item,   type,  subWidget, widgetPath);
+            if (subWidget.type === "text")    str += handleText(item, type, subWidget, widgetPath, 'w100');
+          });
+          str += '</div>';
+        });
+        str += '<br>';
+      }
+      str += buildDiv('divbutton', 'Add Action', 'window.author.addaction', [item.id, types, widget.field]);
+      str += '</div>';
+      return str;
+  }
+
+  this.handleNumber = handleNumber;
+  function handleNumber(object, type, widget, path){
+    var str = '';
+    var num = getSubProp(object, path);
     if (num === undefined) num = 0;
-    str += this.buildDiv('entrylabel c_entrytitle_text w100', (widget.display ? widget.display : widget.field) );
+    str += buildDiv('entrylabel c_entrytitle_text w100', (widget.display ? widget.display : widget.field) );
     str += '<input class="auth_xy" type="number" value="'+ num + '" ';
-    str += this.buildFnString('window.author.updateItem', [object.id, type, path], true);
+    str += buildFnString('window.author.updateItem', [object.id, type, path], true);
     str +=   '>'  + "<br>";
     return str;
   }
 
-  this.objPartToArr = function(obj, part){
+  this.objPartToArr = objPartToArr
+  function objPartToArr(obj, part){
     var out = [];
     for(var prop in obj){
       out.push(obj[prop][part]);
     }
     return out;
   }
-
-  this.handleSelect = function(object, type, widget, path, list){
+  this.handleSelect = handleSelect;
+  function handleSelect(object, type, widget, path, list){
     var str = '';
     var selOp = (list === undefined ? window.rules.select[widget.id].list : list);
-    var defaultId = this.getSubProp(object, path);
+    var defaultId = getSubProp(object, path);
     var display = widget.display ? widget.display : widget.field;
-    str += this.buildDiv('entrylabel c_entrytitle_text w100',  display);
-    str += this.buildSelect('window.author.updateItem',  object.id, type, selOp, defaultId, path) + '<br>';
+    str += buildDiv('entrylabel c_entrytitle_text w100',  display);
+    str += buildSelect('window.author.updateItem',  object.id, type, selOp, defaultId, path) + '<br>';
     return str;
   }
 
-  this.buildFnString = function(fn, params, change){
+  this.buildFnString = buildFnString;
+  function buildFnString(fn, params, change){
     var str = (change ? 'onchange=' : '') + '"' + fn + '(this';
     params.forEach(function(pName){
       str += ", '" + pName + "'";
@@ -127,22 +194,50 @@ function CanvasserUtils(){
     return str + ')" ';
   }
 
-  this.handlePosition = function(object, type, widget, path){
+  this.handleImage = handleImage;
+  function handleImage(item, type, widget, path){
+    str = '';
+    var imageList = objPartToArr(authorData.images, "id");
+    str += buildDiv('entrylabel c_entrytitle_text w100', widget.field );
+    str += buildSelect('window.author.updateItem',  item.id, type, imageList, item[widget.field], widget.field) + '<br>';
+    var flipTest = authorData.images.filter(function(img){ return img.id === item.image})[0];
+    if (flipTest){
+      if(flipTest.atlas){
+        str += handleNumber(item, type, {field:'atlascell.x'}, 'atlascell.x');
+        str += handleNumber(item, type, {field:'atlascell.y'}, 'atlascell.y');
+      }
+    }
+    return str;
+  }
+
+
+  this.handlePosition = handlePosition;
+  function handlePosition(object, type, widget, path){
     var str = '';
-    var pos = {x:this.getSubProp(object, path+'.x'), y:this.getSubProp(object, path+'.y')};
+    var pos = {x:getSubProp(object, path+'.x'), y:getSubProp(object, path+'.y')};
     if (pos.x === undefined) pos.x = 0;
     if (pos.y === undefined) pos.y = 0;
     var display = widget.display ? widget.display : widget.field;
-    str += this.buildDiv('entrylabel c_entrylabel_pos w100', display);
+    str += buildDiv('entrylabel c_entrylabel_pos w100', display);
     str += '<span>';
     str += '<span class="entrytitle c_entrylabel_pos">X</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.x + '" ';
-    str += this.buildFnString('window.author.updateItem', [object.id, type, path+'.x'], true);
+    str += buildFnString('window.author.updateItem', [object.id, type, path+'.x'], true);
     str +=   '>';
     str += '<span class="entrytitle c_entrylabel_pos">Y</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.y + '" ';
-    str += this.buildFnString('window.author.updateItem', [object.id, type, path+'.y'], true);
+    str += buildFnString('window.author.updateItem', [object.id, type, path+'.y'], true);
     str +=   '>'  + "</span><br>";
+    return str;
+  }
+  this.handleText = handleText;
+  function handleText(object, type, widget, path, widthClass){
+    var str = '';
+    var defaultId = getSubProp(object, path);
+    str += buildDiv('entrylabel c_entrytitle_text ' + widthClass, widget.field );
+    str += '<input class="auth_text" type="text" value="'+ defaultId + '" ';
+    str += buildFnString('window.author.updateItem', [object.id, type, path], true);
+    str +=   '>'  + "<br>";
     return str;
   }
 

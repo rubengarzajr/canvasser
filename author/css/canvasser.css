@@ -353,7 +353,7 @@ a{
   margin-bottom: 3px;
   margin-left: 3px;
   margin-right: 0px;
-
+  font-family:button;
 }
 
 .entrylabel{
@@ -363,6 +363,7 @@ a{
   margin-left: 3px;
   margin-right: 0px;
   display: inline-block;
+  font-family:button;
 }
 
 .c_entrytitle_pos{
@@ -412,6 +413,7 @@ a{
     border-bottom: 1px black solid;
     padding: 2px 0px;
     text-indent: 4px;
+    font-family:button;
 }
 
 .propbox{

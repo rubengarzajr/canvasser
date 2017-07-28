@@ -495,6 +495,7 @@ function canvasser(vari, interactiveData, dataForm){
   }
 
   function drawShapes(act, parent, pos, shapeData, color, doTest, testP, scale){
+    if (color.current === undefined) color.current = ['rgb(0,0,0,1)'];
     if (shapeData === undefined) return;
     var ctx = act.context;
     var test = false;
@@ -509,7 +510,7 @@ function canvasser(vari, interactiveData, dataForm){
     }
     var sizer = scale * par.scale;
     ctx.beginPath();
-
+    if (shapeData.drawcode === undefined) shapeData.drawcode = [];
     shapeData.drawcode.forEach(function(shape){
       var offset = {x:0, y:0};
       if (shape.offset!== undefined) offset = {x:shape.offset.x, y:shape.offset.y};

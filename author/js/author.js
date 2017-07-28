@@ -365,9 +365,9 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   this.updateActionList = function(domElement, objectId, type, paramPath){
-    var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
-    var prop = utils.getSubProp(objGet, paramPath);
-    this.updateItem(domElement, objectId, 'object', paramPath);
+    var item = authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
+    var prop = utils.getSubProp(item, paramPath);
+    this.updateItem(domElement, objectId, type.slice(0, -1), paramPath);
     var newRule = window.rules.actions.filter(function(ruleName){
       return ruleName.elementType === domElement.value}
     )[0];
@@ -411,12 +411,12 @@ function authorcanvasser(dataFile, dataForm){
     restartCanvasser("sample", authorData, "string");
   };
 
-  this.addaction = function(objName, listType){
-    var objGet = authorData.objects.filter(function(finder){return (finder.id === objName);});
+  this.addaction = function(id, type, listType){
+    var objGet = authorData[type].filter(function(finder){return (finder.id === id);});
     if (objGet.length === 0) return;
     if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
     objGet[0][listType].push({"type":"cleardown"});
-    getProps("objects",objGet[0].id);
+    getProps(type,objGet[0].id);
     restartCanvasser("sample", authorData, "string");
   }
 
