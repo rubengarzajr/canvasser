@@ -59,11 +59,11 @@
             "on": true,
             "image": "p",
             "genType": "burst",
-            "emitCounter": 100,
+            "emitCounter": 10000,
             "emitterSize": 60,
             "emitDirStart": 85,
             "emitDirEnd": 95,
-            "emitRate": 2,
+            "emitRate": 20,
             "pParams": {
                 "life": {
                     "min": 200,
@@ -110,5 +110,8 @@
             "value": 0
         }
     ],
-    "anims": []
+    "anims": [],
+    "groups": [],
+    "sounds": [],
+    "tests": []
 }

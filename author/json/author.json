@@ -93,12 +93,12 @@
         {"field":"position",  "type":"posxy"},
         {"field":"atlascell", "type":"cellxy"},
         {"field":"scale",     "type":"scale"},
-        {"field":"testp",     "type":"bool"},
-        {"field":"clicklist", "type":"actions", "display":"Click/Touch Event"},
-        {"field":"draglist",  "type":"actions", "display":"Drag Event"},
-        {"field":"droplist",  "type":"actions", "display":"Drop Event"},
-        {"field":"truelist",  "type":"actions", "display":"Conditional True"},
-        {"field":"falselist", "type":"actions", "display":"Conditional False"}
+        {"field":"testp",     "type":"bool",    "display":"Interactive"},
+        {"field":"clicklist", "type":"actions", "display":"Click/Touch Event", "dependson":"testp"},
+        {"field":"draglist",  "type":"actions", "display":"Drag Event",        "dependson":"testp"},
+        {"field":"droplist",  "type":"actions", "display":"Drop Event",        "dependson":"testp"},
+        {"field":"truelist",  "type":"actions", "display":"Conditional True",  "dependson":"testp"},
+        {"field":"falselist", "type":"actions", "display":"Conditional False", "dependson":"testp"}
       ]
     },
     "shape":{
@@ -149,8 +149,7 @@
     {"id":"Animation: Motion Easing",   "url":"anim_motionease.json"},
     {"id":"Image: Fade",                "url":"image_fade.json"},
     {"id":"Particle Sample 1",          "url":"particles_sample1.json"},
-    {"id":"Particle Sample 2",          "url":"particles_sample2.json"},
-    {"id":"Particle Facing Motion",     "url":"particles_sample3.json"},
+    {"id":"Particle Facing Motion",     "url":"particles_sample2.json"},
     {"id":"Particle Emitter Animation", "url":"particles_sample4.json"},
     {"id":"Particle Rain",              "url":"particles_rain.json"},
     {"id":"lotsostuff",                 "url":"multi.json"}
@@ -163,7 +162,7 @@
     "objectorigin":{"list":["upper_left", "center"]},
     "objecttype":{"list":["image", "shape"]},
     "operationtype":{"list":["add", "sub","set"]},
-    "particletype":{"list":["burst"]},
+    "particletype":{"list":["flow","burst"]},
     "composite":{"list":["source-over", "source-in", "source-out", "source-atop", "destination-over", "destination-in", "destination-out", "destination-atop", "lighter", "copy", "xor", "multiply",
        "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity" ]}
   },

@@ -123,13 +123,20 @@ function canvasser(vari, interactiveData, dataForm){
     }
 
     this.create = function(obj){
-      var newPSystem              = new pSystem();
-      newPSystem.id               = obj.id;
-      newPSystem.info             = copyObj(obj, {});
-      newPSystem.info.position    = undefined;
-      newPSystem.position         = {current:{x:obj.position.current.x, y:obj.position.current.y}};
-      //newPSystem.info.emitCounter = obj.emitCounter;
-      pSystemList.push(newPSystem);
+      var pExist = pSystemList.filter(function(parTest){return parTest.id === obj.id})[0];
+      if (pExist === undefined) {
+        var newPSystem              = new pSystem();
+        newPSystem.id               = obj.id;
+        newPSystem.info             = copyObj(obj, {});
+        newPSystem.info.position    = undefined;
+        newPSystem.position         = {current:{x:obj.position.current.x, y:obj.position.current.y}};
+        pSystemList.push(newPSystem);
+      }
+      else{
+        pExist.time             = {start:Date.now(), now:Date.now(), prev:Date.now(), diff:0, total:0};
+        pExist.info             = copyObj(obj, {});
+        pExist.position         = {current:{x:obj.position.current.x, y:obj.position.current.y}};
+      }
     }
 
     function pSystem(){
@@ -145,38 +152,42 @@ function canvasser(vari, interactiveData, dataForm){
         pSystem.time.total = pSystem.time.now - pSystem.time.start;
 
         if (pSystem.time.diff > 1000/pSystem.info.emitRate && pSystem.info.emitCounter > pSystem.time.total){
+          var spawnCount = 1;
+          if (pSystem.info.genType === 'burst') spawnCount = pSystem.info.emitRate;
           pSystem.time.prev = pSystem.time.now;
-          var partPos = {x:pSystem.position.current.x, y:pSystem.position.current.y};
-          if (pSystem.info.emitterSize > 1){
-            t  = 2 * Math.PI * randInterval(0,1);
-            u  = randInterval(0,1) + randInterval(0,1);
-            r  = u > 1 ? 2-u : u
-            r *= pSystem.info.emitterSize;
-            partPos = {x:r*Math.cos(t) + partPos.x, y:r*Math.sin(t) + partPos.y};
-          }
-          if (isNaN(pSystem.info.emitDirStart)) pSystem.info.emitDirStart = 0;
-          if (isNaN(pSystem.info.emitDirEnd))   pSystem.info.emitDirEnd = 0;
-          var rot      = 0;
-          var dirgrees = randInterval(pSystem.info.emitDirStart-90, pSystem.info.emitDirEnd-90);
-          var dir      = radians(dirgrees);
+          for (cnt=0; cnt < spawnCount; cnt ++){
+            var partPos = {x:pSystem.position.current.x, y:pSystem.position.current.y};
+            if (pSystem.info.emitterSize > 1){
+              t  = 2 * Math.PI * randInterval(0,1);
+              u  = randInterval(0,1) + randInterval(0,1);
+              r  = u > 1 ? 2-u : u
+              r *= pSystem.info.emitterSize;
+              partPos = {x:r*Math.cos(t) + partPos.x, y:r*Math.sin(t) + partPos.y};
+            }
+            if (isNaN(pSystem.info.emitDirStart)) pSystem.info.emitDirStart = 0;
+            if (isNaN(pSystem.info.emitDirEnd))   pSystem.info.emitDirEnd = 0;
+            var rot      = 0;
+            var dirgrees = randInterval(pSystem.info.emitDirStart-90, pSystem.info.emitDirEnd-90);
+            var dir      = radians(dirgrees);
 
-          if (pSystem.info.faceMotion){
-            rot = dir;
-            if (pSystem.info.faceAngle) rot += radians(pSystem.info.faceAngle);
-          }
+            if (pSystem.info.faceMotion){
+              rot = dir;
+              if (pSystem.info.faceAngle) rot += radians(pSystem.info.faceAngle);
+            }
 
-          var rndDir   = {x:Math.cos(dir),y:Math.sin(dir)};
-          var scale    = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
-          var rndLife  = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
-          var speed    = {position:randInterval(pSystem.info.pParams.speed.position.min,pSystem.info.pParams.speed.position.max),rotation:randInterval(pSystem.info.pParams.speed.rotation.min,pSystem.info.pParams.speed.rotation.max)}
-          var unit     = getUnit(rndDir);
-          var parentTransform = {position:{x:0,y:0}, scale:1, rotation:0};
+            var rndDir   = {x:Math.cos(dir),y:Math.sin(dir)};
+            var scale    = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
+            var rndLife  = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
+            var speed    = {position:randInterval(pSystem.info.pParams.speed.position.min,pSystem.info.pParams.speed.position.max),rotation:randInterval(pSystem.info.pParams.speed.rotation.min,pSystem.info.pParams.speed.rotation.max)}
+            var unit     = getUnit(rndDir);
+            var parentTransform = {position:{x:0,y:0}, scale:1, rotation:0};
 
-          if (pSystem.info.parent !== undefined){
-            if (pSystem.info.parent.object !== undefined) parentTransform.position = {x:pSystem.info.parent.object.position.current.x,y:pSystem.info.parent.object.position.current.y};
+            if (pSystem.info.parent !== undefined){
+              if (pSystem.info.parent.object !== undefined) parentTransform.position = {x:pSystem.info.parent.object.position.current.x,y:pSystem.info.parent.object.position.current.y};
+            }
+            partPos = {x:partPos.x + parentTransform.position.x, y:partPos.y + parentTransform.position.y};
+            pSystem.pList.push({position:partPos, rotation:rot,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
           }
-          partPos = {x:partPos.x + parentTransform.position.x, y:partPos.y + parentTransform.position.y};
-          pSystem.pList.push({position:partPos, rotation:rot,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
         }
 
         if (act.imageList[pSystem.info.image] == undefined) return;

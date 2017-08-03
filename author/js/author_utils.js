@@ -94,6 +94,9 @@ function CanvasserUtils(){
   }
 
   this.handleAction = function(item, types, widget){
+    var go = true;
+    if (widget.dependson != undefined) go = item[widget.dependson];
+    if (go === undefined || go === false) return '<div><div class="pos_holder mw400"><div class="pos_title">' + widget.display + '</div></div>';
     var str = '';
     var type = types.slice(0, -1);
     var actionsList = [];

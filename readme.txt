@@ -15,6 +15,9 @@ It still works once I manually put endalpha and a value for it in the json
 Samples are getting placed in exported JSON.
 
 DONE:
+2017-08-03 Only one particle of a type can exist at a time and animations will override old one.
+2017-08-03 Renamed testp to Interactive in UI and hide actions if object not interactive.
+2017-08-03 Added "flow" particle emission type.  Burst now emits all particles at once.
 2017-08-03 Version 1.1.0
 2017-08-03 Fixed move anims referencing particle archetype rather than particle instance.
 2017-08-02 Fixed animation bug with undefined previous time triggering anims twice.

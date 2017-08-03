@@ -21,19 +21,19 @@
             "genType": "burst",
             "faceMotion": true,
             "faceAngle": -90,
-            "emitCounter": 10,
+            "emitCounter": 100,
             "emitterSize": 1,
             "emitDirStart": 0,
             "emitDirEnd": 360,
-            "emitRate": 4,
+            "emitRate": 40,
             "pParams": {
                 "life": {
-                    "min": 90,
-                    "max": 200
+                    "min": 1000,
+                    "max": 2000
                 },
                 "fade": {
-                    "in": 25,
-                    "out": 90
+                    "in": 5,
+                    "out": 95
                 },
                 "scale": {
                     "min": 0.1,
@@ -85,5 +85,46 @@
             ],
             "loop": true
         }
-    ]
+    ],
+    "groups": [],
+    "samples": [
+        {
+            "id": "Animation: Atlas",
+            "url": "anim_atlas.json"
+        },
+        {
+            "id": "Animation: Motion Easing",
+            "url": "anim_motionease.json"
+        },
+        {
+            "id": "Image: Fade",
+            "url": "image_fade.json"
+        },
+        {
+            "id": "Particle Sample 1",
+            "url": "particles_sample1.json"
+        },
+        {
+            "id": "Particle Sample 2",
+            "url": "particles_sample2.json"
+        },
+        {
+            "id": "Particle Facing Motion",
+            "url": "particles_sample3.json"
+        },
+        {
+            "id": "Particle Emitter Animation",
+            "url": "particles_sample4.json"
+        },
+        {
+            "id": "Particle Rain",
+            "url": "particles_rain.json"
+        },
+        {
+            "id": "lotsostuff",
+            "url": "multi.json"
+        }
+    ],
+    "sounds": [],
+    "tests": []
 }

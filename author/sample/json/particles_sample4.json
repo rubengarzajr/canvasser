@@ -36,6 +36,23 @@
                     "y": 0
                 }
             }
+        },
+        {
+            "id": "sway",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 300,
+                    "y": 300
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "image": "p",
+            "origin": "center"
         }
     ],
     "images": [
@@ -62,11 +79,11 @@
             "on": true,
             "image": "p",
             "genType": "burst",
-            "emitCounter": 500,
-            "emitterSize": 80,
+            "emitCounter": 3000,
+            "emitterSize": 50,
             "emitDirStart": -10,
             "emitDirEnd": 10,
-            "emitRate": 4,
+            "emitRate": 40,
             "pParams": {
                 "life": {
                     "min": 10,
@@ -91,7 +108,10 @@
                     }
                 }
             },
-            "blend": "screen"
+            "blend": "screen",
+            "parent": {
+                "id": "sway"
+            }
         }
     ],
     "paths": [
@@ -139,6 +159,72 @@
                     "id": "particlesample"
                 }
             ]
+        },
+        {
+            "id": "wave",
+            "autostart": true,
+            "length": 1000,
+            "timelist": [
+                {
+                    "type": "move",
+                    "filter": "object",
+                    "id": "sway",
+                    "endtime": 500,
+                    "endpos": {
+                        "x": 100
+                    },
+                    "ease": "inOutQuad"
+                },
+                {
+                    "type": "move",
+                    "filter": "object",
+                    "id": "sway",
+                    "starttime": 501,
+                    "endtime": 1000,
+                    "startpos": {
+                        "x": 100
+                    },
+                    "ease": "inOutQuad"
+                }
+            ],
+            "loop": true
         }
-    ]
+    ],
+    "groups": [],
+    "samples": [
+        {
+            "id": "Animation: Atlas",
+            "url": "anim_atlas.json"
+        },
+        {
+            "id": "Animation: Motion Easing",
+            "url": "anim_motionease.json"
+        },
+        {
+            "id": "Image: Fade",
+            "url": "image_fade.json"
+        },
+        {
+            "id": "Particle Sample 1",
+            "url": "particles_sample1.json"
+        },
+        {
+            "id": "Particle Facing Motion",
+            "url": "particles_sample2.json"
+        },
+        {
+            "id": "Particle Emitter Animation",
+            "url": "particles_sample4.json"
+        },
+        {
+            "id": "Particle Rain",
+            "url": "particles_rain.json"
+        },
+        {
+            "id": "lotsostuff",
+            "url": "multi.json"
+        }
+    ],
+    "sounds": [],
+    "tests": []
 }
