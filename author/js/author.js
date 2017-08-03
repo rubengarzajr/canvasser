@@ -94,10 +94,25 @@ function authorcanvasser(dataFile, dataForm){
   menus.update();
   loop();
 
+
+  function getVisibleArea(){
+    return {
+      x:window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth||0,
+      y:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight||0
+    }
+  }
+
   function loop(){
     if (UIdata.moveElement !== null && UIdata.move){
       UIdata.moveElement.style.left = UIdata.mousePos.x  - UIdata.offset.x + "px";
       UIdata.moveElement.style.top  = UIdata.mousePos.y  - UIdata.offset.y + "px";
+      var ext = getVisibleArea();
+      var win = UIdata.moveElement.getBoundingClientRect();
+
+      if (UIdata.mousePos.x - UIdata.offset.x < 5) UIdata.moveElement.style.left = '5px';
+      if (UIdata.mousePos.y - UIdata.offset.y < 5) UIdata.moveElement.style.top  = '5px';
+      if (win.right  > ext.x-5)  UIdata.moveElement.style.left = (ext.x-5-win.width)  +'px';
+      if (win.bottom > ext.y-10) UIdata.moveElement.style.top  = (ext.y-10-win.height)+'px';
     }
     window.requestAnimationFrame(loop);
   }
@@ -400,11 +415,7 @@ function authorcanvasser(dataFile, dataForm){
     var newVal = domElement.value.toString();
     if (domElement.type === 'checkbox') newVal = domElement.checked;
     if (newVal === '---NONE---')        newVal = undefined;
-
-    //var objGet = objectId;
-    //if (authorData[type+'s'].isArray){
     var   objGet = authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
-    //}
     utils.setSubProp(objGet, paramPath, newVal);
     getProps(type+'s', objGet.id);
     menus.update(type);
@@ -420,11 +431,20 @@ function authorcanvasser(dataFile, dataForm){
     restartCanvasser("sample", authorData, "string");
   }
 
-  this.deleteaction = function(objName, listType, index){
-    var objGet = authorData.objects.filter(function(finder){return (finder.id === objName);});
+  this.addtest = function(id, type, listType){
+    var objGet = authorData[type].filter(function(finder){return (finder.id === id);});
+    if (objGet.length === 0) return;
+    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
+    objGet[0][listType].push({"type":"var"});
+    getProps(type,objGet[0].id);
+    restartCanvasser("sample", authorData, "string");
+  }
+
+  this.deleteitem = function(type, objName, listType, index){
+    var objGet = authorData[type].filter(function(finder){return (finder.id === objName);});
     if (objGet.length === 0) return;
     objGet[0][listType].splice(index,1);
-    getProps("objects",objGet[0].id);
+    getProps(type,objGet[0].id);
     restartCanvasser("sample", authorData, "string");
   }
 

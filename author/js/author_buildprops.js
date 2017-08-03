@@ -280,60 +280,13 @@ function BuildProp(){
   this.tests = function(test){
     var output = '<div class="propbody">' ;
     window.rules.tests.forEach(function(widget, idx, source){
-      if (widget.type === "text")    output += utils.handleText(test, 'test', widget, widget.field, 'w100');
-      if (widget.type === 'bool')    output += utils.handleBoolean(test,  'test', widget,  widget.field);
-      if (widget.type === "actions") output += utils.handleAction(test, 'tests', widget);
-
-      if (widget.type === "tests"){
-          var testsList = Object.keys(window.rules.conditionals);
-          console.log(testsList);
-          output += '<div><div class="pos_holder mw400"><div class="pos_title">' + widget.display + '</div>';
-          if (test[widget.field] !== undefined){
-            test[widget.field].forEach(function(actobject, idx){
-              var actionWidgets = window.rules.actions.filter(function(type){ return type.type === actobject.type});
-              if (actionWidgets.length === 0) return;
-              actionWidgets = actionWidgets[0].widgets;
-              output += '<div class="actionblock">';
-              output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-              output += utils.buildSelect('window.author.updateActionList',  test.id, "tests", actionsList, actobject.type, widget.field+'.'+idx+'.type');
-              output += '<div class="rightx" onclick="window.author.deleteaction('+"'"+object.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
-              actionWidgets.forEach(function(subWidget, idxPart){
-                var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
-                if (subWidget.type === 'anmlist') output += utils.handleTypeList('anims', test,       'test', subWidget, widgetPath);
-                if (subWidget.type === 'bool')    output += utils.handleBoolean(test,  'test', subWidget, widgetPath);
-                if (subWidget.type === "linkedcontent") {
-                  var filterPath = widgetPath.substr(0, widgetPath.lastIndexOf(".")) + '.' + subWidget['link'] ;
-                  var defaultId = utils.getSubProp(test, filterPath);
-                  if (defaultId){
-                    window.rules[subWidget.sourcelist][defaultId].widgets.forEach(function(subsub, idxSub){
-                      var subWidgetPath =  widget.field + '.' +  idx + '.' + subsub.field;
-                      if (subsub.type === 'objlist') output += utils.handleTypeList('tests', test, 'test', subsub, subWidgetPath);
-                      if (subsub.type === 'varlist') output += utils.handleTypeList('vars',    test, 'test', subsub, subWidgetPath);
-                      if (subsub.type === 'number')  output += utils.handleNumber(test,   'test', subsub, subWidgetPath);
-                      if (subsub.type === 'select')  output += utils.handleSelect(test,   'test', subsub, subWidgetPath);
-                    });
-                  }
-                }
-                if (subWidget.type === 'number')  output += utils.handleNumber(test,   'test', subWidget, widgetPath);
-                if (subWidget.type === 'objlist') output += utils.handleTypeList('tests',    test,   'test',  subWidget, widgetPath);
-                if (subWidget.type === 'varlist') output += utils.handleTypeList('vars',    test,   'test',  subWidget, widgetPath);
-                if (subWidget.type === 'parlist') output += utils.handleTypeList('particles',  test,   'test',  subWidget, widgetPath);
-                if (subWidget.type === 'posxy')   output += utils.handlePosition(test, 'test', subWidget, widgetPath);
-                if (subWidget.type === 'select')  output += utils.handleSelect(test,   'test', subWidget, widgetPath);
-                if (subWidget.type === 'sndlist') output += utils.handleTypeList('sounds',     test,   'test',  subWidget, widgetPath);
-                if (subWidget.type === "text")    output += utils.handleText(test,           'test', subWidget, widgetPath, 'w100');
-              });
-              output += '</div>';
-            });
-            output += '<br>';
-          }
-          output += utils.buildDiv('divbutton', 'Add Test', 'window.author.addtest', [test.id, widget.field]);
-          output += '</div>';
-      }
+      if (widget.type === "text")    output += utils.handleText(   test, 'test',  widget, widget.field, 'w100');
+      if (widget.type === 'bool')    output += utils.handleBoolean(test, 'test',  widget, widget.field);
+      if (widget.type === "actions") output += utils.handleAction( test, 'tests', widget);
+      if (widget.type === "tests")   output += utils.handleTest(   test, 'tests', widget);
     });
     return output + '</div>';
   }
-
 
   this.vars = function(thisVar){
     var prop = '<div class="propbody">' ;
@@ -349,7 +302,4 @@ function BuildProp(){
     prop += '><br>';
     return prop + '</div>';
   }
-
-
-
 }

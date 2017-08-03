@@ -88,7 +88,9 @@ function Menus(){
     if (type === 'groups')    authorData[type].push({id:itemName});
     if (type === 'images')    authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
     if (type === 'objects')   authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
-    if (type === 'particles') authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}});
+    if (type === 'particles') authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}},
+    emitRate:10, pParams:{fade: {in:0, out:100}, scale: {min:1, max:1}, life: {min:1000, max:1000},
+    speed:{position:{min:1, max:1}, rotation:{min:0.1, max:0.1}}}, genType:"burst", emitCounter:1000, emitDirEnd:360, emitDirStart:0});
     if (type === 'paths')     authorData[type].push({id:itemName, url:"./"});
     if (type === 'shapes')    authorData[type].push({id:itemName});
     if (type === 'sounds')    authorData[type].push({id:itemName, url:"./"});

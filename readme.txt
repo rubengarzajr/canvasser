@@ -15,6 +15,13 @@ It still works once I manually put endalpha and a value for it in the json
 Samples are getting placed in exported JSON.
 
 DONE:
+2017-08-03 Version 1.1.0
+2017-08-03 Fixed move anims referencing particle archetype rather than particle instance.
+2017-08-02 Fixed animation bug with undefined previous time triggering anims twice.
+2017-08-02 Permanent particle persisting working.
+2017-08-02 Windows no longer go off of screen.
+2017-08-01 Particle parenting working.
+2017-07-28 Tests hooked up.
 2017-07-18 Tests Window added to UI.
 2017-07-18 Conditional position and variable added to UI.
 2017-07-17 Sound UI and Add/Delete implemented.
