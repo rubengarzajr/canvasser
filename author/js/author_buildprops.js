@@ -140,7 +140,6 @@ function BuildProp(){
       if (widget.type === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="auth_text" type="text" value="'+ object[widget.field]+'"><br>';
       if (widget.type === "bool") output += utils.handleBoolean(object, 'object', widget, widget.field);
       if (widget.type === "color"){
-        console.log(object, widget.field)
         if (object[widget.field] === undefined)object[widget.field] = {};
         output += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
         Object.keys(object[widget.field]).forEach(function(colorList){
@@ -197,7 +196,7 @@ function BuildProp(){
   }
 
   this.settings = function(id){
-    var output = '<div class="propbody">' ;
+    var output = '<div class="propbody">';
     var type   = window.rules.settings[id].type;
     if (type === "bool") output += utils.handleBoolean(authorData.settings, 'setting', {field:"usecache"}, id);
     else {

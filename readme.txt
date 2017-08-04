@@ -1,20 +1,30 @@
-Canvasser TODO:
-
-author_buildprops - unify into one function
-Wait until all images are loaded before displaying anything
-
-Groups UI
-Shapes UI
-Tests Prop UI
-Settings UI Broken
-From current on animations acting weird
-
+Canvasser           TODO:
+-------------------------
+Bugs:
 I think there's something wrong with the fade animation in canvasser.
-If I add it through the animation panel, it'll have startalpha but not endalpha in the json file.
-It still works once I manually put endalpha and a value for it in the json
+
+Feature Requests:
+Wait until all images are loaded before displaying anything
+Tests (position) need to be hooked up
+Particles spawned in animation should have a unique id so that mode than one can exist and anim knows which to call
+
+
+Canvasser Authoring TODO:
+-------------------------
+Bugs:
+If I add it through the animation panel, it'll have startalpha but not endalpha in the json file. It still works once I manually put endalpha and a value for it in the json
+From current on animations acting weird
+Groups property UI not hooked up
+Shapes property UI not hooked up
 Samples are getting placed in exported JSON.
 
+Feature Requests:
+Particle Copy Menu Item
+
+
 DONE:
+2017-08-04 Test for variable condition working.
+2017-08-04 Fixed settings property window.
 2017-08-03 Only one particle of a type can exist at a time and animations will override old one.
 2017-08-03 Renamed testp to Interactive in UI and hide actions if object not interactive.
 2017-08-03 Added "flow" particle emission type.  Burst now emits all particles at once.

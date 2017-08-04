@@ -215,10 +215,9 @@ function authorcanvasser(dataFile, dataForm){
 
   this.getProps = getProps;
   function getProps(type, id){
-    //var thisProp = id;
-
-    var  thisProp = authorData[type].filter(function(selected){return selected.id === id;})[0];
-
+    var thisProp = undefined;
+    if (Array.isArray(authorData[type])) thisProp = authorData[type].filter(function(selected){return selected.id === id;})[0];
+    else thisProp = id;
     if (thisProp === undefined) return;
     var titleText = '<div class="proptitle">' + type.charAt(0).toUpperCase() + type.slice(1, -1);
     document.getElementById("propertiestitle").innerHTML = titleText + ' : ' + id + '</div>';

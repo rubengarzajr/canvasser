@@ -121,7 +121,7 @@ function CanvasserUtils(){
               if (defaultId){
                 window.rules[subWidget.sourcelist][defaultId].widgets.forEach(function(subsub, idxSub){
                   var subWidgetPath =  widget.field + '.' +  idx + '.' + subsub.field;
-                  if (subsub.type === 'objlist') str += handleTypeList(types,  item, type, subsub, subWidgetPath);
+                  if (subsub.type === 'objlist') str += handleTypeList('objects',  item, type, subsub, subWidgetPath);
                   if (subsub.type === 'varlist') str += handleTypeList('vars', item, type, subsub, subWidgetPath);
                   if (subsub.type === 'number')  str += handleNumber(item, type, subsub, subWidgetPath);
                   if (subsub.type === 'select')  str += handleSelect(item, type, subsub, subWidgetPath);
@@ -129,7 +129,7 @@ function CanvasserUtils(){
               }
             }
             if (subWidget.type === 'number')  str += handleNumber(item, type, subWidget, widgetPath);
-            if (subWidget.type === 'objlist') str += handleTypeList(types, item,   type,  subWidget, widgetPath);
+            if (subWidget.type === 'objlist') str += handleTypeList('objects', item,   type,  subWidget, widgetPath);
             if (subWidget.type === 'varlist') str += handleTypeList('vars', item,   type,  subWidget, widgetPath);
             if (subWidget.type === 'parlist') str += handleTypeList('particles', item,   type,  subWidget, widgetPath);
             if (subWidget.type === 'posxy')   str += handlePosition(item, type, subWidget, widgetPath);

@@ -249,52 +249,60 @@ function canvasser(vari, interactiveData, dataForm){
   }
 
   function tests(test){
-    if (test.type === 'position'){
-      var item  = act.data.objects.filter(function(obj){return obj.id === test.itemtocheck})[0];
-      var testp = act.data.objects.filter(function(obj){return obj.id === test.position})[0];
-      var pos = {"x":item.position.current.x, "y":item.position.current.y};
-      if (item.origin === "center") {
-        //TODO: Not working
-        var oPos = item.position.current
-        pos={"x":Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current), "y":Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
+    var goAll = true;
+    if (test.testlist === undefined) return;
+    test.testlist.forEach(function(subtest){
+      // if (test.type === 'position'){
+      //   var item  = act.data.objects.filter(function(obj){return obj.id === test.itemtocheck})[0];
+      //   var testp = act.data.objects.filter(function(obj){return obj.id === test.position})[0];
+      //   var pos = {"x":item.position.current.x, "y":item.position.current.y};
+      //   if (item.origin === "center") {
+      //     //TODO: Not working
+      //     var oPos = item.position.current
+      //     pos={"x":Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current), "y":Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
+      //   }
+      //
+      //   var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
+      //   if (pixelData_img[3] != 0) {
+      //     act.applyAction = [testp];
+      //     act.mode = 'true';
+      //     actions();
+      //   } else {
+      //     act.applyAction = [testp];
+      //     act.mode = 'false';
+      //     actions();
+      //   }
+      // }
+      if (subtest.type === "var"){
+        var thisVar = act.data.vars.filter(function(obj){return obj.id === subtest.itemtocheck})[0];
+        if (thisVar !== undefined){
+          var go = false;
+          if (subtest.comparetype === 'equal') {
+            if (thisVar.value === subtest.value) go = true;
+          }
+          if (subtest.comparetype === 'greater') {
+            if (thisVar.value > subtest.value) go = true;
+          }
+          if (subtest.comparetype === 'less') {
+            if (thisVar.value < subtest.value) go = true;
+          }
+          if (go){
+
+          } else {
+            goAll = false;
+          }
+        }
       }
 
-      var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
-      if (pixelData_img[3] != 0) {
-        act.applyAction = [testp];
-        act.mode = 'true';
-        actions();
-      } else {
-        act.applyAction = [testp];
-        act.mode = 'false';
-        actions();
-      }
+    });
+
+    if (goAll){
+      if (test.trueoff) test.active = false;
+      act.applyAction = [{truelist:test.truelist}];
+      act.mode = 'true';
+      actions();
     }
 
-    if (test.type === "var"){
-      var thisVar = act.data.vars.filter(function(obj){return obj.id === test.itemtocheck})[0];
-      if (thisVar !== undefined){
-        var go = false;
-        if (test.comparetype === 'equal') {
-          if (thisVar.value === test.value) go = true;
-        }
-        if (test.comparetype === 'greater') {
-          if (thisVar.value > test.value) go = true;
-        }
-        if (test.comparetype === 'less') {
-          if (thisVar.value < test.value) go = true;
-        }
-        if (go){
-          act.applyAction = [over];
-          act.mode = 'true';
-          actions();
-        } else  {
-          act.applyAction = [over];
-          act.mode = 'false';
-          actions();
-        }
-      }
-    }
   }
 
   function loop(){
@@ -381,7 +389,7 @@ function canvasser(vari, interactiveData, dataForm){
             animOb.opacity.current = anim.endalpha;
           }
           if (anim.type === "move") {
-            animOb.position.current = {x:anim.endpos.x,y:anim.endpos.y};
+            if (anim.endpos != undefined) animOb.position.current = {x:anim.endpos.x,y:anim.endpos.y};
           }
           if (anim.type === "turn") {
             animOb.rotation = radians(anim.endrot);
