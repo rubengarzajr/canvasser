@@ -23,6 +23,22 @@ and open the template in the editor.
   src: url(../font/alterebro-pixel-font.woff);
 }
 
+.nosplit{
+  display: inline-block;
+}
+.grouper{
+  border: black solid 1px;
+  border-radius: 6px;
+  background-color: #5f99cc;
+  padding-bottom: 10px;
+}
+
+.grouptitle{
+  color: #f0efff;
+  text-align: center;
+  font-family: button;
+}
+
 .actionspacer{
   margin-top: 15px;
 }

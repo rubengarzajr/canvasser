@@ -421,6 +421,33 @@ function authorcanvasser(dataFile, dataForm){
     restartCanvasser("sample", authorData, "string");
   };
 
+  this.togglegroup = function(domElement, objectId, type, paramPath, groupName){
+    var element = domElement.checked;
+    var objGet  = authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
+    if (objGet.groups === undefined) objGet.groups = [];
+
+    if (element){
+      if (findInGroup(objGet, groupName) === -1) objGet.groups.push({id:groupName});
+    } else {
+      var splicer = findInGroup(objGet, groupName);
+      if (splicer > -1) objGet.groups.splice(splicer, 1);
+    }
+
+    menus.update(type);
+    restartCanvasser("sample", authorData, "string");
+  }
+
+  function findInGroup(item, groupName){
+    var index = -1;
+    if (item.groups === undefined) return index;
+    item.groups.forEach(function(subObj, idx){
+      if (subObj.id === groupName) {
+        index = idx;
+      }
+    });
+    return index;
+  }
+
   this.addaction = function(id, type, listType){
     var objGet = authorData[type].filter(function(finder){return (finder.id === id);});
     if (objGet.length === 0) return;

@@ -375,9 +375,14 @@ function canvasser(vari, interactiveData, dataForm){
             anim.delete = true;
         }
         if (anim.type === "vis"){
+          if (anim.filter === 'group') {
+            var groupObjs = findInGroup(anim.id);
+            groupObjs.forEach(function(animSubOb){animSubOb.show = anim.show;});
+          } else {
             var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
             animOb.show = anim.show;
-            anim.delete = true;
+          }
+          anim.delete = true;
         }
         if (anim.endtime === undefined) return;
         if (anim.endtime < play.time){
@@ -389,7 +394,12 @@ function canvasser(vari, interactiveData, dataForm){
             animOb.opacity.current = anim.endalpha;
           }
           if (anim.type === "move") {
-            if (anim.endpos != undefined) animOb.position.current = {x:anim.endpos.x,y:anim.endpos.y};
+            if (anim.endpos != undefined){
+              if (anim.filter === 'group') {
+                var groupObjs = findInGroup(animOb.id);
+                groupObjs.forEach(function(animSubOb){animSubOb.position.current = {x:anim.endpos.x,y:anim.endpos.y};});
+              } else animOb.position.current = {x:anim.endpos.x,y:anim.endpos.y};
+            }
           }
           if (anim.type === "turn") {
             animOb.rotation = radians(anim.endrot);
@@ -432,7 +442,10 @@ function canvasser(vari, interactiveData, dataForm){
           };
           if (isNaN(posDiff.x)){console.log("posDiff x NaN");}
           if (isNaN(posDiff.y)){console.log("posDiff y NaN");}
-          animOb.position.current = {x:Math.round(posDiff.x), y:Math.round(posDiff.y)};
+          if (anim.filter === 'group') {
+            var groupObjs = findInGroup(animOb.id)
+            groupObjs.forEach(function(animSubOb){animSubOb.position.current = {x:Math.round(posDiff.x), y:Math.round(posDiff.y)};});
+          } else animOb.position.current = {x:Math.round(posDiff.x), y:Math.round(posDiff.y)};
         }
         if (anim.type === "scale") {
           if (anim.startscale === undefined || anim.fromcurrent) anim.startscale = animOb.scale.current;
@@ -481,30 +494,29 @@ function canvasser(vari, interactiveData, dataForm){
         if (act.imageList[obj.image] === undefined) return;
         obj.parentTransform = {position:{x:0,y:0}, scale:1, rotation:0};
         if (obj.parent !== undefined){
-          var parentPos = {current:{x:0,y:0}};
-          var parentScl = {current:1};
           if (obj.parent.object !== undefined){
             obj.parentTransform = {
               position:{x: obj.parent.object.position.current.x, y: obj.parent.object.position.current.y},
-              scale:obj.parent.object.scale,
+              scale:obj.parent.object.scale.current,
               rotation:obj.parent.object.rotation
             };
           }
-          obj.scale.current = parentScl.current;
         }
 
         var pos = {x:obj.position.current.x + obj.parentTransform.position.x, y:obj.position.current.y + obj.parentTransform.position.y};
         var atlas = act.imageList[obj.image].atlas;
-
         if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
           obj.scale.current = 0.01;
         }
         if (obj.originxy === undefined) obj.originxy = {current:{x:0, y:0}};
         if (obj.origin === "center") {
           if (atlas){
-              obj.originxy.current ={"x":-(atlas.cellwidth/2*obj.scale.current), "y":-(atlas.cellheight/2*obj.scale.current)};
+              obj.originxy.current ={"x":-Math.floor((atlas.cellwidth/2*obj.scale.current)), "y":-Math.floor((atlas.cellheight/2*obj.scale.current))};
           } else {
-            obj.originxy.current ={"x":-(Math.floor(act.imageList[obj.image].imageData.naturalWidth/2*obj.scale.current)), "y":-(Math.floor(act.imageList[obj.image].imageData.naturalHeight/2*obj.scale.current))};
+            obj.originxy.current = {
+              "x":-(Math.floor(act.imageList[obj.image].imageData.naturalWidth  / 2 * obj.scale.current * obj.parentTransform.scale)),
+              "y":-(Math.floor(act.imageList[obj.image].imageData.naturalHeight / 2 * obj.scale.current * obj.parentTransform.scale))
+            };
           }
         }
         if (isNaN(pos.x)){console.log("x NaN"); pos.x = 0;}
@@ -517,16 +529,17 @@ function canvasser(vari, interactiveData, dataForm){
           act.context.translate(pos.x, pos.y);
           act.context.rotate(obj.rotation);
           act.context.translate(obj.originxy.current.x, obj.originxy.current.y);
+          act.context.scale(obj.scale.current * obj.parentTransform.scale, obj.scale.current * obj.parentTransform.scale);
           if (atlas){
             if (obj.atlascell === undefined) obj.atlascell = {x:0,y:0};
             act.context.drawImage(act.imageList[obj.image].imageData,
               atlas.cellwidth*obj.atlascell.x, atlas.cellheight*obj.atlascell.y,
               atlas.cellwidth, atlas.cellheight, 0,0,
-              atlas.cellwidth*obj.scale.current, atlas.cellheight*obj.scale.current,
+              atlas.cellwidth, atlas.cellheight,
               atlas.cellwidth, atlas.cellheight
             );
           } else {
-            act.context.drawImage(act.imageList[obj.image].imageData, 0, 0, act.imageList[obj.image].imageData.naturalWidth*obj.scale.current, act.imageList[obj.image].imageData.naturalHeight*obj.scale.current);
+            act.context.drawImage(act.imageList[obj.image].imageData, 0, 0, act.imageList[obj.image].imageData.naturalWidth, act.imageList[obj.image].imageData.naturalHeight);
           }
           act.context.restore();
           act.context.globalAlpha = 1;
@@ -1019,6 +1032,20 @@ function canvasser(vari, interactiveData, dataForm){
         if (parentObj !== undefined) item.parent.object = parentObj;
       }
     }
+  }
+
+  function findInGroup(groupName){
+    var objList = [];
+    return act.data.objects.filter(function(obj){
+      if (obj.groups === undefined) return;
+      var hasId = false
+      obj.groups.forEach(function(subObj){
+        if (subObj.id === groupName) {
+          hasId = true;
+        }
+      });
+      if (hasId) return true;
+    });
   }
 
   function appendToArray(inArray){

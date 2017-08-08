@@ -14,15 +14,22 @@ Canvasser Authoring TODO:
 Bugs:
 If I add it through the animation panel, it'll have startalpha but not endalpha in the json file. It still works once I manually put endalpha and a value for it in the json
 From current on animations acting weird
-Groups property UI not hooked up
 Shapes property UI not hooked up
+Groups not select list (allow multiple?)
 Samples are getting placed in exported JSON.
+Vis action doesn't select particles or groups
+
 
 Feature Requests:
 Particle Copy Menu Item
 
 
 DONE:
+2017-08-08 Objects now take their scale * parent scale.
+2017-08-08 Groups vis command hooked up for animation.
+2017-08-07 Groups assignment UI hooked up on Objects.
+2017-08-07 Animation of Groups hooked up.
+2017-08-07 Groups Window UI hooked up.
 2017-08-04 Test for variable condition working.
 2017-08-04 Fixed settings property window.
 2017-08-03 Only one particle of a type can exist at a time and animations will override old one.

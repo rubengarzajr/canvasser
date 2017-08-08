@@ -62,13 +62,14 @@ function BuildProp(){
                 output += utils.handleNumber(animation,   'anim', subWidget, widgetPath);
               }
               if (subWidget.type === 'objlist') output += utils.handleTypeList('objects',   animation, 'anim', subWidget, widgetPath);
+              if (subWidget.type === 'grplist') output += utils.handleTypeList('groups',    animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'anmlist') output += utils.handleTypeList('anims',     animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'parlist') output += utils.handleTypeList('particles', animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === "filterlink") {
                 var filterPath = widgetPath.substr(0, widgetPath.lastIndexOf(".")) + '.' + subWidget['link'] ;
                 var defaultId = utils.getSubProp(animation, filterPath);
-                if (defaultId === "object")   output +=  utils.handleTypeList('objects', animation,  'anim', subWidget, widgetPath);
-                if (defaultId === "group")    output +="group here"
+                if (defaultId === "object")   output += utils.handleTypeList('objects',   animation,  'anim', subWidget, widgetPath);
+                if (defaultId === "group")    output += utils.handleTypeList('groups',    animation,  'anim', subWidget, widgetPath);
                 if (defaultId === "particle") output += utils.handleTypeList('particles', animation,   'anim', subWidget, widgetPath);
               }
 
@@ -90,25 +91,13 @@ function BuildProp(){
   }
 
   this.groups = function(group){
-    var output = '<div class="propbody">';
-    var pathList = utils.objPartToArr(authorData.paths, "id");
-    var defaultId = utils.getSubProp(group, 'path');
-    window.rules.groups.widgets.forEach(function(widget, idx, source){
-      if (widget.type === "text"){
-        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += '<input class="auth_text w200" type="text" value="'+ group[widget.field] + '" ';
-        output += utils.buildFnString('window.author.updateItem', [group.id, 'group', widget.field], true);
-        output += '><br>';
-      }
-      if (widget.type === "select"){
-        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += utils.buildSelect('window.author.updateItem',  group.id, 'group', pathList, defaultId, 'path') + '<br>';
-      }
-      if (widget.type === "number")       output += utils.handleNumber(group, 'group', widget, widget.field);
-      if (widget.type === "bool")         output += utils.handleBoolean(group, 'group', widget, widget.field);
-    });
+    var prop = '<div class="propbody">' ;
+    prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
+    prop += '<input class="auth_text w200" type="text" ';
+    prop += 'value="'+ group.id + '" ';
+    prop += utils.buildFnString('window.author.updateItem', [group.id, 'group', 'id'], true);
     menus.update('groups');
-    return output + '</div>';
+    return prop + '</div>';
   }
 
   this.images = function(image){
@@ -137,7 +126,6 @@ function BuildProp(){
     var output = '<div class="propbody">' ;
     window.rules.object[object.type].widgets.forEach(function(widget, idx, source){
       if (widget.type === "actions") output += utils.handleAction(object, 'objects', widget);
-      if (widget.type === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="auth_text" type="text" value="'+ object[widget.field]+'"><br>';
       if (widget.type === "bool") output += utils.handleBoolean(object, 'object', widget, widget.field);
       if (widget.type === "color"){
         if (object[widget.field] === undefined)object[widget.field] = {};
@@ -150,6 +138,7 @@ function BuildProp(){
         });
         output += '</div><br>';
       }
+      if (widget.type === "grplist")   output += utils.handleGroup(object, 'object', widget, widget.field);
       if (widget.type === "imagedata") output += utils.handleImage(object, 'object', widget, widget.field);
       if (widget.type === "number")    output += utils.handleNumber(object, 'object', widget, widget.field);
       if (widget.type === "objlist")   output += utils.handleTypeList('objects', object, 'object', widget, widget.field);
@@ -166,15 +155,14 @@ function BuildProp(){
   this.particles = function(particle){
     var output = '<div class="propbody">' ;
     window.rules.particle.widgets.forEach(function(widget, idx, source){
-      if (widget.type === "text")         output += utils.handleText(particle, 'particle', widget, widget.field, 'w100');
-      if (widget.type === "number")       output += utils.handleNumber(particle, 'particle', widget, widget.field);
-      if (widget.type === "select")       output += utils.handleSelect(particle, 'particle', widget, widget.field);
-      if (widget.type === "arraystrings") output += '<div class="entrylabel c_entrytitle_text w100">' + widget.field + '</div><input class="auth_text" type="text" value="'+ particle[widget.field]+'"><br>';
-      if (widget.type === "bool")         output += utils.handleBoolean(particle, 'particle', widget, widget.field);
-      if (widget.type === "imagedata")    output += utils.handleImage(particle, 'particle', widget, widget.field);
-      if (widget.type === "shapelist")    output += utils.handleTypeList('shapes', particle,  'particle', widget, widget.field);
-      if (widget.type === "objlist")      output += utils.handleTypeList('objects', particle, 'particle', widget, widget.field);
-      if (widget.type === "posxy")        output += utils.handlePosition(particle, 'particle', widget, widget.field+'.current');
+      if (widget.type === "bool")      output += utils.handleBoolean(particle, 'particle', widget, widget.field);
+      if (widget.type === "imagedata") output += utils.handleImage(particle, 'particle', widget, widget.field);
+      if (widget.type === "number")    output += utils.handleNumber(particle, 'particle', widget, widget.field);
+      if (widget.type === "objlist")   output += utils.handleTypeList('objects', particle, 'particle', widget, widget.field);
+      if (widget.type === "posxy")     output += utils.handlePosition(particle, 'particle', widget, widget.field+'.current');
+      if (widget.type === "select")    output += utils.handleSelect(particle, 'particle', widget, widget.field);
+      if (widget.type === "shapelist") output += utils.handleTypeList('shapes', particle,  'particle', widget, widget.field);
+      if (widget.type === "text")      output += utils.handleText(particle, 'particle', widget, widget.field, 'w100');
     });
     output += " " + particle;
     return output + '</div>';

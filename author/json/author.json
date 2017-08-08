@@ -42,7 +42,7 @@
     {"type":"sound",        "widgets":[{"field":"starttime",  "type":"number"},  {"field":"id",        "type":"sndlist"}]},
     {"type":"testpset",     "widgets":[{"field":"testp",       "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}]},
     {"type":"turn",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]},
-    {"type":"vis",          "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"show", "type":"bool"}]}
+    {"type":"vis",          "widgets":[{"field":"starttime",   "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"show", "type":"bool"}]}
   ],
   "authorsettings":{
   },
@@ -84,7 +84,7 @@
         {"field":"id",        "type":"text"},
         {"field":"type",      "type":"select", "id":"objecttype"},
         {"field":"order",     "type":"number"},
-        {"field":"group",     "type":"arraystrings"},
+        {"field":"group",     "type":"grplist"},
         {"field":"parent.id", "type":"objlist"},
         {"field":"show",      "type":"bool"},
         {"field":"image",     "type":"imagedata"},
@@ -105,7 +105,7 @@
       "widgets":[
         {"field":"id",        "type":"text"},
         {"field":"order",     "type":"number"},
-        {"field":"group",     "type":"arraystrings"},
+        {"field":"group",     "type":"grplist"},
         {"field":"show",      "type":"bool"},
         {"field":"color",     "type":"color"},
         {"field":"shape",     "type":"shapelist"},

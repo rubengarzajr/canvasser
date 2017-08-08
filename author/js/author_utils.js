@@ -157,6 +157,33 @@ function CanvasserUtils(){
     return str;
   }
 
+  this.handleGroup = handleGroup;
+  function handleGroup(object, type, widget, path){
+    var groupList = objPartToArr(authorData.groups, "id");
+    if (object.groups === undefined) object.groups = [];
+    var display = widget.display === undefined ? widget.field : widget.display;
+    var str = '<div class="grouper"> <div class="grouptitle">Groups:</div>';
+    groupList.forEach(function(grp, idx){
+      var defaultId = findInGroup(object, grp);
+      str += '<div class="nosplit"><div class="entrylabel c_entrytitle_text w100">' + grp;
+      str += '</div><input class="checkbox" type="checkbox" ' + (defaultId > -1 ? "checked " : "");
+      str += buildFnString('window.author.togglegroup', [object.id, type, path, grp], true) + '></div>';
+    });
+    return str+'</div>';
+  }
+
+  //TODO: REDUNDANT ALSO IN author.js
+  function findInGroup(item, groupName){
+    var index = -1;
+    if (item.groups === undefined) return index;
+    item.groups.forEach(function(subObj, idx){
+      if (subObj.id === groupName) {
+        index = idx;
+      }
+    });
+    return index;
+  }
+
   this.handleImage = handleImage;
   function handleImage(item, type, widget, path){
     str = '';
@@ -283,9 +310,6 @@ function CanvasserUtils(){
     str += buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
     return str;
   }
-
-
-
 
   this.objPartToArr = objPartToArr
   function objPartToArr(obj, part){
