@@ -2,6 +2,9 @@ Canvasser           TODO:
 -------------------------
 Bugs:
 I think there's something wrong with the fade animation in canvasser.
+Clicking on scaled objects not suppored yet.
+Order not being used - particles always render on top of everything.
+
 
 Feature Requests:
 Wait until all images are loaded before displaying anything
@@ -18,7 +21,7 @@ Shapes property UI not hooked up
 Groups not select list (allow multiple?)
 Samples are getting placed in exported JSON.
 Vis action doesn't select particles or groups
-
+click/touch event vis filter not working as expected ui
 
 Feature Requests:
 Particle Copy Menu Item

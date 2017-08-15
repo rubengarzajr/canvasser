@@ -358,7 +358,9 @@ a{
   color: #000000;
   margin-left: 10px;
 }
-
+.textspacer{
+  margin-bottom: 25px;
+}
 .padholder{
   margin-bottom:5px;
 }
