@@ -15,7 +15,7 @@
     {"type":"set",          "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"},      {"field":"id",         "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
     {"type":"slideobject",  "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"constrainx", "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
     {"type":"sound",        "widgets":[{"field":"id",         "type":"sndlist"}]},
-    {"type":"testpset",     "widgets":[{"field":"testp",      "type":"bool"},                           {"field":"id",         "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}]},
+    {"type":"testpset",     "widgets":[{"field":"testp",      "type":"bool"},                           {"field":"filter",  "type":"select", "id":"filtertype"},      {"field":"id", "type":"filterlink", "link":"filter"}]},
     {"type":"url",          "widgets":[{"field":"url",        "type":"filename"},                       {"field":"target",     "type":"text"}]},
     {"type":"vis",          "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"filter",     "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
   ],
@@ -32,16 +32,16 @@
   },
   "anims":[
     {"type":"console",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"text",      "type":"text"}]},
-    {"type":"fade",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startalpha",  "type":"number"}, {"field":"endalpha",  "type":"number"}]},
-    {"type":"flipbook",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"atlascell.x",  "type":"number"}, {"field":"atlascell.y",  "type":"number"}]},
+    {"type":"fade",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"},{"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startalpha",  "type":"number"}, {"field":"endalpha",  "type":"number"}]},
+    {"type":"flipbook",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"atlascell.x",  "type":"number"}, {"field":"atlascell.y",  "type":"number"}]},
     {"type":"loadinto",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"url",       "type":"text"},   {"field":"vari",    "type":"text"}]},
     {"type":"move",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startpos",  "type":"posxy", "display":"Start Position"}, {"field":"endpos",  "type":"posxy",  "display":"End Position"}, {"field":"ease",  "type":"select", "id":"easetype", "display":"Ease"}]},
     {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"animlist"}]},
     {"type":"pstart",       "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"parlist"}]},
     {"type":"scale",        "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startscale",  "type":"number"}, {"field":"endscale",  "type":"number"}]},
     {"type":"sound",        "widgets":[{"field":"starttime",  "type":"number"},  {"field":"id",        "type":"sndlist"}]},
-    {"type":"testpset",     "widgets":[{"field":"testp",       "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}]},
-    {"type":"turn",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"id",     "type":"objlist"},  {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]},
+    {"type":"testpset",     "widgets":[{"field":"testp",       "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}]},
+    {"type":"turn",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]},
     {"type":"vis",          "widgets":[{"field":"starttime",   "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"show", "type":"bool"}]}
   ],
   "authorsettings":{

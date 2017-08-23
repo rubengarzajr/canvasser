@@ -346,6 +346,8 @@ function canvasser(vari, interactiveData, dataForm){
         if (anim.type === "flipbook"){
           var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
           if (anim.atlascell === undefined) anim.atlascell = {x:0, y:0};
+          if (anim.atlascell.x === undefined) anim.atlascell.x = 0;
+          if (anim.atlascell.y === undefined) anim.atlascell.y = 0;
           if (animOb) animOb.atlascell = {x:anim.atlascell.x, y:anim.atlascell.y};
           anim.delete = true;
         }
@@ -390,8 +392,20 @@ function canvasser(vari, interactiveData, dataForm){
           if (animOb === undefined) return;
 
           if (anim.type === "fade") {
-            if (animOb.opacity === undefined) animOb.opacity = {current:1};
-            animOb.opacity.current = anim.endalpha;
+            if (anim.filter === 'group') {
+              var groupObjs = findInGroup(anim.id);
+              groupObjs.forEach(function(animSubOb){
+                if (animSubOb.opacity === undefined) animSubOb.opacity = {current:0};
+                animSubOb.opacity.current = anim.endalpha;
+              });
+            } else {
+              var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+              if (animOb != undefined) {
+                if (animOb.opacity === undefined) animOb.opacity = {current:0};
+                if (anim.endalpha === undefined) anim.endalpha = 0;
+                animOb.opacity.current = anim.endalpha;
+             }
+            }
           }
           if (anim.type === "move") {
             if (anim.endpos != undefined){
@@ -414,13 +428,30 @@ function canvasser(vari, interactiveData, dataForm){
         if (animOb === undefined) return;
 
         if (anim.type === "fade") {
-          if (animOb.opacity === undefined) animOb.opacity = {current:1};
-          if (anim.startalpha === undefined || anim.startalpha === null || anim.fromcurrent){
-            anim.startalpha = animOb.opacity.current;
+          if (anim.startalpha === undefined ) anim.startalpha = 0;
+          if (anim.endalpha === undefined)    anim.endalpha   = 0;
+
+          if (anim.filter === 'group') {
+            var groupObjs = findInGroup(anim.id);
+            groupObjs.forEach(function(animSubOb){
+              if (animSubOb.opacity === undefined) animSubOb.opacity = {current:0};
+              if (anim.fromcurrent) anim.startalpha = animSubOb.opacity.current;
+              var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
+              var alphaDiff = (anim.endalpha - anim.startalpha) * percent + anim.startalpha;
+              animSubOb.opacity.current = alphaDiff;
+            });
+          } else {
+            var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+            if (animOb.opacity === undefined) animOb.opacity = {current:0};
+            if (anim.fromcurrent) anim.startalpha = animOb.opacity.current;
+            var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
+            var alphaDiff = (anim.endalpha - anim.startalpha) * percent + anim.startalpha;
+            if (animOb != undefined) {
+              if (animOb.opacity === undefined) animOb.opacity = {current:0}
+              if (anim.endalpha === undefined) anim.endalpha = 0;
+              animOb.opacity.current = alphaDiff;
+           }
           }
-          var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
-          var alphaDiff = (anim.endalpha - anim.startalpha) * percent + anim.startalpha;
-          animOb.opacity.current = alphaDiff;
         }
         if (anim.type === "move") {
           if (anim.fromcurrent) anim.startpos = {x:animOb.position.current.x,y:animOb.position.current.y};

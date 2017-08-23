@@ -28,6 +28,8 @@ Particle Copy Menu Item
 
 
 DONE:
+2017-08-22 Object/Group/Particle filter working on more(all?) properties.
+2017-08-22 Flipbook works if missing x or y values (defaults to 0).
 2017-08-08 Objects now take their scale * parent scale.
 2017-08-08 Groups vis command hooked up for animation.
 2017-08-07 Groups assignment UI hooked up on Objects.
