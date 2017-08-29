@@ -840,7 +840,6 @@ function canvasser(vari, interactiveData, dataForm){
           var source = document.getElementById(action.source);
           if (target !== undefined && source !== undefined && target !== null && source !== null){
             target.innerHTML = source.innerHTML;
-            window.location.hash = over.id;
           }
         }
         if (action.type === 'execute'){

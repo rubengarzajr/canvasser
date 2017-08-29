@@ -3,6 +3,7 @@
     {"type":"cleardown",    "widgets":[]},
     {"type":"console",      "widgets":[{"field":"text",       "type":"text"}]},
     {"type":"conditional",  "widgets":[{"field":"check",      "type":"select", "id":"conditionaltype", "display":"Condition"}, {"type":"linkedcontent", "link":"check", "sourcelist":"conditionals"}]},
+    {"type":"copyelement",  "widgets":[{"field":"source",       "type":"text"}, {"field":"target",       "type":"text"}]},
     {"type":"function",     "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"function",   "type":"text"}]},
     {"type":"groupcolor",   "widgets":[{"field":"id",         "type":"text"},                           {"field":"source",     "type":"text"}]},
     {"type":"increment",    "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"},      {"field":"id",         "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}, {"field":"rangemin",   "type":"number"}, {"field":"rangemax",   "type":"number"}]},
@@ -33,7 +34,7 @@
   "anims":[
     {"type":"console",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"text",      "type":"text"}]},
     {"type":"fade",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"},{"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startalpha",  "type":"number"}, {"field":"endalpha",  "type":"number"}]},
-    {"type":"flipbook",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"atlascell.x",  "type":"number"}, {"field":"atlascell.y",  "type":"number"}]},
+    {"type":"flipbook",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"filter",    "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"atlascell.x",  "type":"number"}, {"field":"atlascell.y",  "type":"number"}]},
     {"type":"loadinto",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"url",       "type":"text"},   {"field":"vari",    "type":"text"}]},
     {"type":"move",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startpos",  "type":"posxy", "display":"Start Position"}, {"field":"endpos",  "type":"posxy",  "display":"End Position"}, {"field":"ease",  "type":"select", "id":"easetype", "display":"Ease"}]},
     {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"animlist"}]},
