@@ -372,8 +372,17 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           anim.delete = true;
         }
         if (anim.type === "sound"){
+          if (anim.id != undefined){
             act.soundList[anim.id].play();
-            anim.delete = true;
+          }
+          anim.delete = true;
+        }
+        if (anim.type === "soundstop"){
+          if (anim.id != undefined){
+            act.soundList[anim.id].pause();
+            act.soundList[anim.id].currentTime = 0;
+          }
+          anim.delete = true;
         }
         if (anim.type === "testpset"){
             var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];

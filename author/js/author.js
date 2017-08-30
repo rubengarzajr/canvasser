@@ -50,14 +50,14 @@ function restartCanvasser(name, data, type){
   menus.update();
 
   function getMousePos(canvas, evt) {
-          var rect = canvas.getBoundingClientRect();
-          return {
-            x: evt.clientX - rect.left,
-            y: evt.clientY - rect.top
-          };
-        }
-
-  var canvas = document.getElementById('activity');
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+  }
+  var canvasParent = document.getElementById(data.settings.canvasparent);
+  var canvas = canvasParent.firstChild;
   var context = canvas.getContext('2d');
   canvas.addEventListener('mousemove', function(evt) {
     var mousePos = getMousePos(canvas, evt);

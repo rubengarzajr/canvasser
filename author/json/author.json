@@ -16,6 +16,7 @@
     {"type":"set",          "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"},      {"field":"id",         "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
     {"type":"slideobject",  "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"constrainx", "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
     {"type":"sound",        "widgets":[{"field":"id",         "type":"sndlist"}]},
+    {"type":"soundstop",    "widgets":[{"field":"id",         "type":"sndlist"}]},
     {"type":"testpset",     "widgets":[{"field":"testp",      "type":"bool"},                           {"field":"filter",  "type":"select", "id":"filtertype"},      {"field":"id", "type":"filterlink", "link":"filter"}]},
     {"type":"url",          "widgets":[{"field":"url",        "type":"filename"},                       {"field":"target",     "type":"text"}]},
     {"type":"vis",          "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"filter",     "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
@@ -41,6 +42,7 @@
     {"type":"pstart",       "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"parlist"}]},
     {"type":"scale",        "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startscale",  "type":"number"}, {"field":"endscale",  "type":"number"}]},
     {"type":"sound",        "widgets":[{"field":"starttime",  "type":"number"},  {"field":"id",        "type":"sndlist"}]},
+    {"type":"soundstop",    "widgets":[{"field":"starttime",  "type":"number"},  {"field":"id",        "type":"sndlist"}]},
     {"type":"testpset",     "widgets":[{"field":"testp",       "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}]},
     {"type":"turn",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]},
     {"type":"vis",          "widgets":[{"field":"starttime",   "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"show", "type":"bool"}]}
