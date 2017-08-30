@@ -31,7 +31,7 @@ function canvasser(vari, interactiveData, dataForm){
 
   function init(data){
     act.canvas        = document.createElement('canvas');
-    act.canvas.id     = data.settings.canvasdomname;
+    //act.canvas.id     = data.settings.canvasdomname; // no longer used
     act.context       = act.canvas.getContext('2d');
     act.canvas.width  = data.settings.canvaswidth;
     act.canvas.height = data.settings.canvasheight;
