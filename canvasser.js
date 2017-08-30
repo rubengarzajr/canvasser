@@ -1,13 +1,14 @@
 // Canvasser rubengarzajr@gmail.com
 
-function initCanvasser(vari, datafile, dataForm){
+function initCanvasser(vari, datafile, dataForm, overrides){
+  if (overrides == undefined) overrides = [];
   if (window[vari]) window[vari].act.loop = false;
   var oldPos = window[vari] ? {x:window[vari].act.position.x, y:window[vari].act.position.y} : {x:0,y:0};
-  window[vari] = new canvasser(vari, datafile, dataForm);
+  window[vari] = new canvasser(vari, datafile, dataForm, overrides);
   window[vari].act.position = {x:oldPos.x, y:oldPos.y};
 }
 
-function canvasser(vari, interactiveData, dataForm){
+function canvasser(vari, interactiveData, dataForm, overrides){
   var act      = new interaction();
   this.act     = act;
   var pManager = new particleManager();
@@ -30,8 +31,11 @@ function canvasser(vari, interactiveData, dataForm){
   }
 
   function init(data){
+    overrides.forEach(function(override){
+      setSubProp(data, Object.keys(override)[0], Object.values(override)[0]);
+    });
+
     act.canvas        = document.createElement('canvas');
-    //act.canvas.id     = data.settings.canvasdomname; // no longer used
     act.context       = act.canvas.getContext('2d');
     act.canvas.width  = data.settings.canvaswidth;
     act.canvas.height = data.settings.canvasheight;

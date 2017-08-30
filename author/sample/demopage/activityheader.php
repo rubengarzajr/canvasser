@@ -7,8 +7,8 @@ and open the template in the editor.
 <html>
     <head>
         <meta charset="UTF-8">
-        <script src="../../../js/canvasser.js" type="text/javascript"></script>
+        <script src="../../../canvasser.js" type="text/javascript"></script>
         <link rel="shortcut icon" href="../../../favicon.ico" />
-        <link href="../../../css/normalize.css" rel="stylesheet" type="text/css"/>
-        <link href="../../../css/canvasser.css" rel="stylesheet" type="text/css"/>
+        <link href="../../../author/css/normalize.css" rel="stylesheet" type="text/css"/>
+        <link href="../../../author/css/canvasser.css" rel="stylesheet" type="text/css"/>
     </head>
