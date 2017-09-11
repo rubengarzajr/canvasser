@@ -1,0 +1,123 @@
+{
+    "objects": [
+        {
+            "id": "object",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 300,
+                    "y": 250
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "groups": [],
+            "image": "image"
+        },
+        {
+            "id": "click",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "groups": [],
+            "image": "click",
+            "testp": true,
+            "clicklist": [
+                {
+                    "type": "cleardown"
+                },
+                {
+                    "type": "pauseanim",
+                    "animation": "anim",
+                    "toggle": true
+                }
+            ]
+        }
+    ],
+    "groups": [],
+    "images": [
+        {
+            "id": "image",
+            "path": "sample_images",
+            "url": "sphere.png"
+        },
+        {
+            "id": "click",
+            "path": "sample_images",
+            "url": "sample_click_1.png"
+        }
+    ],
+    "sounds": [],
+    "anims": [
+        {
+            "id": "anim",
+            "autostart": true,
+            "length": 2000,
+            "timelist": [
+                {
+                    "type": "move",
+                    "filter": "object",
+                    "id": "object",
+                    "startpos": {
+                        "x": 200,
+                        "y": 0
+                    },
+                    "endpos": {
+                        "x": 200,
+                        "y": 100
+                    },
+                    "endtime": 1000
+                },
+                {
+                    "type": "move",
+                    "starttime": 1001,
+                    "endtime": 2000,
+                    "filter": "object",
+                    "id": "object",
+                    "startpos": {
+                        "x": 200,
+                        "y": 100
+                    },
+                    "endpos": {
+                        "x": 200
+                    }
+                }
+            ],
+            "loop": true
+        }
+    ],
+    "paths": [
+        {
+            "id": "author",
+            "url": "./image"
+        },
+        {
+            "id": "sample_images",
+            "url": "./sample/image"
+        }
+    ],
+    "shapes": [],
+    "settings": {
+        "canvaswidth": "600",
+        "canvasheight": "500",
+        "canvasdomname": "activity",
+        "canvasparent": "canvasholder",
+        "usecache": false
+    },
+    "particles": [],
+    "samples": [],
+    "tests": [],
+    "vars": []
+}

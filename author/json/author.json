@@ -11,10 +11,11 @@
     {"type":"loadpage",     "widgets":[{"field":"url",        "type":"text"},                           {"field":"newpage",    "type":"bool"},     {"field":"intodiv",     "type":"bool"}]},
     {"type":"modvar",       "widgets":[{"field":"id",         "type":"varlist"},                           {"field":"operation",  "type":"select", "id":"operationtype"}, {"field":"amount", "type":"number"}]},
     {"type":"objectcolor",  "widgets":[{"field":"id",         "type":"text"},                           {"field":"source",     "type":"text"}]},
+    {"type":"pauseanim",    "widgets":[{"field":"animation",  "type":"anmlist"},  {"field":"toggle",      "type":"bool"}]},
     {"type":"playanim",     "widgets":[{"field":"animation",  "type":"anmlist"}]},
     {"type":"pstart",       "widgets":[{"field":"id",         "type":"parlist"}]},
-    {"type":"set",          "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"},      {"field":"id",         "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
-    {"type":"slideobject",  "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"constrainx", "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
+    {"type":"set",          "widgets":[{"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type"},      {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
+    {"type":"slideobject",  "widgets":[{"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type"},      {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"constrainx", "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
     {"type":"sound",        "widgets":[{"field":"id",         "type":"sndlist"}]},
     {"type":"soundstop",    "widgets":[{"field":"id",         "type":"sndlist"}]},
     {"type":"testpset",     "widgets":[{"field":"testp",      "type":"bool"},                           {"field":"filter",  "type":"select", "id":"filtertype"},      {"field":"id", "type":"filterlink", "link":"filter"}]},
@@ -27,6 +28,7 @@
         {"field":"id",        "type":"text", "css":"w100"},
         {"field":"autostart", "type":"bool"},
         {"field":"loop",      "type":"bool"},
+        {"field":"pause",     "type":"bool"},
         {"field":"length",    "type":"number"},
         {"field":"timelist",  "type":"timelist", "display":"Timeline"}
       ]
@@ -38,6 +40,7 @@
     {"type":"flipbook",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"filter",    "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"atlascell.x",  "type":"number"}, {"field":"atlascell.y",  "type":"number"}]},
     {"type":"loadinto",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"url",       "type":"text"},   {"field":"vari",    "type":"text"}]},
     {"type":"move",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startpos",  "type":"posxy", "display":"Start Position"}, {"field":"endpos",  "type":"posxy",  "display":"End Position"}, {"field":"ease",  "type":"select", "id":"easetype", "display":"Ease"}]},
+    {"type":"pause",        "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"animlist"},  {"field":"toggle",      "type":"bool"}]},
     {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"animlist"}]},
     {"type":"pstart",       "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"parlist"}]},
     {"type":"scale",        "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startscale",  "type":"number"}, {"field":"endscale",  "type":"number"}]},
@@ -45,13 +48,30 @@
     {"type":"soundstop",    "widgets":[{"field":"starttime",  "type":"number"},  {"field":"id",        "type":"sndlist"}]},
     {"type":"testpset",     "widgets":[{"field":"testp",       "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}]},
     {"type":"turn",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]},
-    {"type":"vis",          "widgets":[{"field":"starttime",   "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"show", "type":"bool"}]}
+    {"type":"vis",          "widgets":[{"field":"starttime",   "type":"number"}, {"field":"filter",    "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"show", "type":"bool"}]}
   ],
   "authorsettings":{
   },
   "conditionals":{
     "position":{"widgets":[{"field":"itemtocheck",   "type":"objlist"}, {"field":"position",   "type":"objlist"}]},
     "var":     {"widgets":[{"field":"itemtocheck",   "type":"varlist"}, {"field":"value",      "type":"number"}, {"field":"comparetype",  "type":"select", "id":"comparetype"} ]}
+  },
+  "constraint":{
+      "widgets":[
+        {"field":"id",          "type":"text", "css":"w100"},
+        {"field":"active",      "type":"bool"},
+        {"field":"driverlist",  "type":"driverlist", "display":"Drivers"}
+      ],
+      "drivers":[
+        {"type":"position",      "widgets":[{"field":"axis",        "type":"select", "id":"axistype", "display":"Select Axis"},
+                                            {"field":"driver",      "type":"objlist"},
+                                            {"field":"constrained", "type":"objlist"},
+                                            {"field":"offset",      "type":"posxy"},
+                                            {"field":"operation",   "type":"select", "id":"constraintype"},
+                                            {"field":"value",       "type":"number"}
+                                           ]
+        }
+      ]
   },
   "createtypes":["object","image","shape","settings"],
   "drawcode":[
@@ -85,13 +105,14 @@
     "image":{
       "widgets":[
         {"field":"id",        "type":"text"},
-        {"field":"type",      "type":"select", "id":"objecttype"},
+        {"field":"type",      "type":"select",  "id":"objecttype"},
+        {"field":"image",     "type":"imagedata"},
         {"field":"order",     "type":"number"},
+        {"field":"blend",     "type":"select",  "id":"composite"},
         {"field":"group",     "type":"grplist"},
         {"field":"parent.id", "type":"objlist"},
         {"field":"show",      "type":"bool"},
-        {"field":"image",     "type":"imagedata"},
-        {"field":"origin",    "type":"select", "id":"objectorigin"},
+        {"field":"origin",    "type":"select",  "id":"objectorigin"},
         {"field":"originxy",  "type":"posxy"},
         {"field":"position",  "type":"posxy"},
         {"field":"atlascell", "type":"cellxy"},
@@ -150,6 +171,9 @@
   "samples":[
     {"id":"Animation: Atlas",           "url":"anim_atlas.json"},
     {"id":"Animation: Motion Easing",   "url":"anim_motionease.json"},
+    {"id":"Animation: Pause",           "url":"anim_pause.json"},
+    {"id":"Blend Modes: Image Object",  "url":"blendmode.json"},
+    {"id":"Constraint: Drag Multiply",  "url":"constraint_multiply.json"},
     {"id":"Image: Fade",                "url":"image_fade.json"},
     {"id":"Particle Sample 1",          "url":"particles_sample1.json"},
     {"id":"Particle Facing Motion",     "url":"particles_sample2.json"},
@@ -158,7 +182,9 @@
     {"id":"lotsostuff",                 "url":"multi.json"}
   ],
   "select":{
+    "axistype":{"list":["xy","x","y"]},
     "conditionaltype":{"list":["position","var"]},
+    "constraintype":{"list":["add", "subtract","multiply", "divide"]},
     "comparetype":{"list":["equal","greater", "less"]},
     "easetype":{"list":["linear","inExp","outExp","inOutExp","inQuad", "outQuad", "inOutQuad"]},
     "filtertype":{"list":["object", "group","particle"]},

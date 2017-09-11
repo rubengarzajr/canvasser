@@ -1,0 +1,143 @@
+{
+    "objects": [
+        {
+            "id": "object",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "scale": {
+                "current": 2
+            },
+            "groups": [],
+            "image": "background",
+            "blend": "source-over",
+            "originxy": {
+                "current": {
+                    "x": 0
+                }
+            }
+        },
+        {
+            "id": "mask",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 300,
+                    "y": 250
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "groups": [],
+            "image": "image",
+            "blend": "destination-atop"
+        },
+        {
+            "id": "us",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "groups": [],
+            "image": "us",
+            "blend": "destination-atop"
+        }
+    ],
+    "groups": [],
+    "images": [
+        {
+            "id": "image",
+            "path": "sample_images",
+            "url": "sample_target.png"
+        },
+        {
+            "id": "background",
+            "path": "sample_images",
+            "url": "background_400px.png"
+        },
+        {
+            "id": "us",
+            "path": "sample_images",
+            "url": "us.png"
+        }
+    ],
+    "sounds": [],
+    "anims": [
+        {
+            "id": "anim",
+            "autostart": true,
+            "length": 4000,
+            "timelist": [
+                {
+                    "type": "move",
+                    "endtime": 2000,
+                    "startpos": {
+                        "y": 150
+                    },
+                    "endpos": {
+                        "y": 150,
+                        "x": 400
+                    },
+                    "filter": "object",
+                    "id": "mask",
+                    "ease": "inOutQuad"
+                },
+                {
+                    "type": "move",
+                    "filter": "object",
+                    "id": "mask",
+                    "starttime": 2001,
+                    "endtime": 4000,
+                    "startpos": {
+                        "x": 400,
+                        "y": 150
+                    },
+                    "endpos": {
+                        "y": 150
+                    },
+                    "ease": "inOutQuad"
+                }
+            ],
+            "loop": true
+        }
+    ],
+    "paths": [
+        {
+            "id": "author",
+            "url": "./image"
+        },
+        {
+            "id": "sample_images",
+            "url": "./sample/image"
+        }
+    ],
+    "shapes": [],
+    "settings": {
+        "canvaswidth": "700",
+        "canvasheight": "500",
+        "canvasdomname": "activity",
+        "canvasparent": "canvasholder",
+        "usecache": false
+    },
+    "particles": [],
+    "samples": [],
+    "tests": [],
+    "vars": []
+}

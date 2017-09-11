@@ -82,7 +82,7 @@ function authorcanvasser(dataFile, dataForm){
   };
 
   authorData = dataFile;
-  var wins = ['anim','canvas','group', 'image', 'json', 'learn', 'object', 'particle', 'path', 'properties', 'sample', 'setting', 'shape', 'sound', 'test', 'var'];
+  var wins = ['anim','canvas','constraint','group', 'image', 'json', 'learn', 'object', 'particle', 'path', 'properties', 'sample', 'setting', 'shape', 'sound', 'test', 'var'];
   wins.forEach(function(idRoot){
     document.getElementById(idRoot+"contents").addEventListener("mousedown",    function(){focusObjD(idRoot+"bank")},       false);
     document.getElementById(idRoot+"mover").addEventListener("mousedown",       function(){moveObjD(idRoot+"bank")},       false);
@@ -155,7 +155,6 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   this.reload = function(){
-    //initCanvasser("sample", JSON.stringify(authorData), "string");
     restartCanvasser("sample", authorData, "string");
     window.author.view()
   }
@@ -285,7 +284,6 @@ function authorcanvasser(dataFile, dataForm){
     var shape = authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
     shape.drawcode.push({type:'fill'});
     getProps('shapes', id);
-    //initCanvasser("sample", JSON.stringify(authorData), "string");
     restartCanvasser("sample", authorData, "string");
   }
 
@@ -298,7 +296,6 @@ function authorcanvasser(dataFile, dataForm){
     }
     obj.splice(moveto, 0, obj.splice(arr[0], 1)[0]);
     getProps(type, id);
-    //initCanvasser("sample", JSON.stringify(authorData), "string");
     restartCanvasser("sample", authorData, "string");
   }
 
@@ -487,6 +484,13 @@ function authorcanvasser(dataFile, dataForm){
     if (animGet.length === 0) return;
     animGet[0][timelist].push({"type":"console"});
     getProps("anims",animName);
+  }
+
+  this.addConstraint = function(constraintName, driverlist){
+    var driver = authorData.constraints.filter(function(finder){return (finder.id === constraintName);});
+    if (driver.length === 0) return;
+    driver[0][driverlist].push({"type":"position"});
+    getProps("constraints", constraintName);
   }
 
   function printRecusiveObj(output, element, indent){

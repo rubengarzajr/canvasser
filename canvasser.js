@@ -97,6 +97,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         act.player.push(copyObj(anim, {}));
       });
     }
+    if (act.data.constraints === undefined) act.data.constraints = [];
     var externals = Array.from(document.querySelectorAll('[data-canvasser="'+vari+'"]'));
     if (externals.length > 0){
       externals.forEach(function(element){
@@ -317,6 +318,35 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     });
     act.canvas.scale = act.canvas.scrollWidth / act.canvas.width;
 
+    act.data.constraints.forEach(function(constraint){
+      if (!constraint.active) return;
+      constraint.driverlist.forEach(function(dr){
+        if (dr.type === 'position'){
+          if (dr.driver === undefined || dr.constrained === undefined || dr.axis === undefined || dr.operation === undefined || dr.value === undefined) return;
+          var parent = act.data.objects.filter(function(obj){return obj.id === dr.driver})[0];
+          var child  = act.data.objects.filter(function(obj){return obj.id === dr.constrained})[0];
+          if (parent === undefined || child === undefined) return;
+          if (dr.offset === undefined) dr.offset = {x:0, y:0};
+          if (dr.offset.x === undefined) dr.offset.x = 0;
+          if (dr.offset.y === undefined) dr.offset.y = 0;
+          var modPos = {
+            x:modVal(dr.operation, parent.position.current.x, dr.value),
+            y:modVal(dr.operation, parent.position.current.y, dr.value)
+          };
+          if (dr.axis === 'x' || dr.axis === 'xy') child.position.current.x = modPos.x + dr.offset.x;
+          if (dr.axis === 'y' || dr.axis === 'xy') child.position.current.y = modPos.y + dr.offset.y;
+        }
+      });
+    });
+
+    modVal = function(operation, startVal, modVal){
+      if (operation === "add") return startVal + modVal;
+      if (operation === "subtract") return startVal - modVal;
+      if (operation === "multiply") return startVal * modVal;
+      if (operation === "divide") return startVal / modVal;
+    }
+
+
     act.player.forEach(function(play){
       if (play.playing   === undefined) play.playing   = [];
       if (play.nowStamp  === undefined) play.nowStamp = Date.now()-30;
@@ -324,8 +354,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
       play.prevStamp     = play.nowStamp;
       play.prevTime      = play.time;
-
       play.nowStamp      = Date.now();
+      if (play.pause) return;
       play.time         += play.nowStamp - play.prevStamp;
 
       if (play.time >= play.length) {
@@ -568,8 +598,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
         if (obj.show){
           if (obj.opacity === undefined) obj.opacity = {current:1};
-          act.context.globalAlpha = obj.opacity.current;
           act.context.save();
+          act.context.globalAlpha = obj.opacity.current;
+          if (obj.blend) act.context.globalCompositeOperation = obj.blend;
           act.context.translate(pos.x, pos.y);
           act.context.rotate(obj.rotation);
           act.context.translate(obj.originxy.current.x, obj.originxy.current.y);
@@ -586,7 +617,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             act.context.drawImage(act.imageList[obj.image].imageData, 0, 0, act.imageList[obj.image].imageData.naturalWidth, act.imageList[obj.image].imageData.naturalHeight);
           }
           act.context.restore();
-          act.context.globalAlpha = 1;
           if (!obj.testp) return;
           var pixelData_img = [0,0,0,0];
           if (obj.scale.current>.001){
@@ -878,6 +908,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (action.type === 'loadpage'){
           if (action.newpage) {window.open(action.url);}
           else {window.location.href = action.url;}
+        }
+        if (action.type === 'pauseanim'){
+          var animPlaying = act.player.filter(function(obj){return obj.id === action.animation})[0];
+          if (animPlaying.pause === undefined) animPlaying.pause = false;
+          if (action.toggle) animPlaying.pause = !animPlaying.pause;
+          else animPlaying.pause = true;
         }
         if (action.type === 'playanim'){
           var animToPlay = act.data.anims.filter(function(obj){return obj.id === action.animation})[0];

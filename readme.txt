@@ -22,12 +22,17 @@ Groups not select list (allow multiple?)
 Samples are getting placed in exported JSON.
 Vis action doesn't select particles or groups
 click/touch event vis filter not working as expected ui
+Test Position not working
 
 Feature Requests:
 Particle Copy Menu Item
 
 
 DONE:
+2017-09-11 Added simple constraint system.
+2017-09-07 Added animation pause.
+2017-09-07 Added blend modes to image objects.
+2017-09-07 Removed Samples from JSON output.
 2017-08-22 Object/Group/Particle filter working on more(all?) properties.
 2017-08-22 Flipbook works if missing x or y values (defaults to 0).
 2017-08-08 Objects now take their scale * parent scale.

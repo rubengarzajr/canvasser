@@ -1,0 +1,105 @@
+{
+    "objects": [
+        {
+            "id": "constrain",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "groups": [],
+            "image": "image1",
+            "origin": "center"
+        },
+        {
+            "id": "driver",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 300,
+                    "y": 250
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "groups": [],
+            "testp": true,
+            "draglist": [
+                {
+                    "type": "slideobject",
+                    "filter": "object",
+                    "id": "driver"
+                }
+            ],
+            "image": "image",
+            "origin": "center"
+        }
+    ],
+    "groups": [],
+    "images": [
+        {
+            "id": "image",
+            "path": "sample_images",
+            "url": "icon_up.png"
+        },
+        {
+            "id": "image1",
+            "path": "sample_images",
+            "url": "sample_target.png"
+        }
+    ],
+    "sounds": [],
+    "anims": [],
+    "paths": [
+        {
+            "id": "author",
+            "url": "./image"
+        },
+        {
+            "id": "sample_images",
+            "url": "./sample/image"
+        }
+    ],
+    "shapes": [],
+    "settings": {
+        "canvaswidth": "600",
+        "canvasheight": "500",
+        "canvasdomname": "activity",
+        "canvasparent": "canvasholder",
+        "usecache": false
+    },
+    "particles": [],
+    "samples": [],
+    "tests": [],
+    "vars": [],
+    "constraints": [
+        {
+            "id": "constraint",
+            "active": true,
+            "driverlist": [
+                {
+                    "type": "position",
+                    "driver": "driver",
+                    "constrained": "constrain",
+                    "operation": "multiply",
+                    "value": 1.2,
+                    "offset": {
+                        "x": -60,
+                        "y": -50
+                    },
+                    "axis": "xy"
+                }
+            ]
+        }
+    ]
+}

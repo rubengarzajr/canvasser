@@ -124,6 +124,7 @@ function CanvasserUtils(){
                   if (subsub.type === 'objlist') str += handleTypeList('objects',  item, type, subsub, subWidgetPath);
                   if (subsub.type === 'varlist') str += handleTypeList('vars', item, type, subsub, subWidgetPath);
                   if (subsub.type === 'number')  str += handleNumber(item, type, subsub, subWidgetPath);
+                  if (subsub.type === "filterlink") str += handleSelectLink(item, type, subsub, subWidgetPath);
                   if (subsub.type === 'select')  str += handleSelect(item, type, subsub, subWidgetPath);
                 });
               }
@@ -133,6 +134,7 @@ function CanvasserUtils(){
             if (subWidget.type === 'varlist') str += handleTypeList('vars', item,   type,  subWidget, widgetPath);
             if (subWidget.type === 'parlist') str += handleTypeList('particles', item,   type,  subWidget, widgetPath);
             if (subWidget.type === 'posxy')   str += handlePosition(item, type, subWidget, widgetPath);
+            if (subWidget.type === "filterlink") str += handleSelectLink(item, type, subWidget, widgetPath);
             if (subWidget.type === 'select')  str += handleSelect(item, type, subWidget, widgetPath);
             if (subWidget.type === 'sndlist') str += handleTypeList('sounds', item,   type,  subWidget, widgetPath);
             if (subWidget.type === "text")    str += handleText(item, type, subWidget, widgetPath, 'w100');
@@ -232,6 +234,17 @@ function CanvasserUtils(){
     return str;
   }
 
+  this.handleSelectLink = handleSelectLink;
+  function handleSelectLink(object, type, widget, path){
+    var str = '';
+    var filterPath = path.substr(0, path.lastIndexOf(".")) + '.' + widget['link'] ;
+    var defaultId = getSubProp(object, filterPath);
+    if (defaultId === "object")   str += handleTypeList('objects',   object,  type, widget, path);
+    if (defaultId === "group")    str += handleTypeList('groups',    object,  type, widget, path);
+    if (defaultId === "particle") str += handleTypeList('particles', object,  type, widget, path);
+    return str;
+  }
+
   this.handleSelect = handleSelect;
   function handleSelect(object, type, widget, path, list){
     var str = '';
@@ -319,9 +332,6 @@ function CanvasserUtils(){
     }
     return out;
   }
-
-
-
 
   this.requestJSON = function(fileNamePath, returnFunction){
       var xhr = new XMLHttpRequest();

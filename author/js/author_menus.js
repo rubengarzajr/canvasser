@@ -1,31 +1,37 @@
 function Menus(){
   var utils = new CanvasserUtils();
   this.update = function(toUp){
-    if (!toUp || toUp === 'anims')     updateMenu('anims');
-    if (!toUp || toUp === 'groups')    updateMenu('groups');
-    if (!toUp || toUp === 'images')    updateMenu('images');
-    if (!toUp || toUp === 'objects')   updateMenu('objects');
-    if (!toUp || toUp === 'particles') updateMenu('particles');
-    if (!toUp || toUp === 'paths')     updateMenu('paths');
-    if (!toUp || toUp === 'samples')   updateMenu('samples');
-    if (!toUp || toUp === 'settings')  updateSettings();
-    if (!toUp || toUp === 'sounds')    updateMenu('sounds');
-    if (!toUp || toUp === 'shapes')    updateMenu('shapes');
-    if (!toUp || toUp === 'tests')     updateMenu('tests');
-    if (!toUp || toUp === 'vars')      updateMenu('vars');
+    if (!toUp || toUp === 'anims')       updateMenu('anims');
+    if (!toUp || toUp === 'constraints') updateMenu('constraints');
+    if (!toUp || toUp === 'groups')      updateMenu('groups');
+    if (!toUp || toUp === 'images')      updateMenu('images');
+    if (!toUp || toUp === 'objects')     updateMenu('objects');
+    if (!toUp || toUp === 'particles')   updateMenu('particles');
+    if (!toUp || toUp === 'paths')       updateMenu('paths');
+    if (!toUp || toUp === 'samples')     updateMenu('samples');
+    if (!toUp || toUp === 'settings')    updateSettings();
+    if (!toUp || toUp === 'sounds')      updateMenu('sounds');
+    if (!toUp || toUp === 'shapes')      updateMenu('shapes');
+    if (!toUp || toUp === 'tests')       updateMenu('tests');
+    if (!toUp || toUp === 'vars')        updateMenu('vars');
   }
 
   function updateMenu(type){
     var menuHolder = document.getElementById(type.slice(0, -1) + "holder");
-    var menu = '<table class="objtable" id="'+type+'table" width="100%">';
-
+    var menu       = '<table class="objtable" id="' + type + 'table" width="100%">';
     if (authorData[type] === undefined) authorData[type] = [];
     if (type === 'samples'){
-      authorData.samples = [];
-      window.rules.samples.forEach(function(sampy){authorData[type].push(sampy)});
+      window.rules.samples.forEach(function(sampy){
+        menu += '<tr class="clicktr" id="'+type+'_'+sampy.id+'" onclick="window.author.loadSample(\''+ sampy.url + '\')">';
+        menu +='<td class="shapeid"><div>' + sampy.id + '</div></td>';
+        menu += '</tr>';
+      });
+      menu +='</table>';
+      menuHolder.innerHTML = menu;
+      return;
     }
     authorData[type].forEach(function(menuItem){
-      if (type === 'anims' || type === 'groups' ||type === 'particles' || type === 'shapes' || type === 'sounds' || type === 'tests' || type === 'vars'){
+      if (type === 'anims' || type === 'constraints' || type === 'groups' ||type === 'particles' || type === 'shapes' || type === 'sounds' || type === 'tests' || type === 'vars'){
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td width="100%">' + menuItem.id + '</td>';
         menu += '</tr>';
@@ -47,11 +53,6 @@ function Menus(){
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td width="50%">' + menuItem.id + '</td>';
         menu +='<td width="50%">' +menuItem.url + '</td>';
-        menu += '</tr>';
-      }
-      if (type === 'samples'){
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.loadSample(\''+ menuItem.url + '\')">';
-        menu +='<td class="shapeid"><div>' + menuItem.id + '</div></td>';
         menu += '</tr>';
       }
     });
@@ -84,18 +85,19 @@ function Menus(){
         itemName = type.slice(0, -1) + itemCnt;
       } else tryAgain = false;
     }
-    if (type === 'anims')     authorData[type].push({id:itemName, autostart:false, length:1000, timelist:[]});
-    if (type === 'groups')    authorData[type].push({id:itemName});
-    if (type === 'images')    authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
-    if (type === 'objects')   authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
-    if (type === 'particles') authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}},
+    if (type === 'anims')       authorData[type].push({id:itemName, autostart:false, length:1000, timelist:[]});
+    if (type === 'constraints') authorData[type].push({id:itemName, active:true, driverlist:[]});
+    if (type === 'groups')      authorData[type].push({id:itemName});
+    if (type === 'images')      authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
+    if (type === 'objects')     authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
+    if (type === 'particles')   authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}},
     emitRate:10, pParams:{fade: {in:0, out:100}, scale: {min:1, max:1}, life: {min:1000, max:1000},
     speed:{position:{min:1, max:1}, rotation:{min:0.1, max:0.1}}}, genType:"burst", emitCounter:1000, emitDirEnd:360, emitDirStart:0});
-    if (type === 'paths')     authorData[type].push({id:itemName, url:"./"});
-    if (type === 'shapes')    authorData[type].push({id:itemName});
-    if (type === 'sounds')    authorData[type].push({id:itemName, url:"./"});
-    if (type === 'tests')     authorData[type].push({id:itemName, active:true});
-    if (type === 'vars')      authorData[type].push({id:itemName, value:0});
+    if (type === 'paths')       authorData[type].push({id:itemName, url:"./"});
+    if (type === 'shapes')      authorData[type].push({id:itemName});
+    if (type === 'sounds')      authorData[type].push({id:itemName, url:"./"});
+    if (type === 'tests')       authorData[type].push({id:itemName, active:true});
+    if (type === 'vars')        authorData[type].push({id:itemName, value:0});
 
     updateMenu(type)
     initCanvasser("sample", JSON.stringify(authorData), "string");

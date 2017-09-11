@@ -209,6 +209,22 @@
             </div>
         </div>
 
+        <div id='constraintbank' class="skinnybank" style="position:absolute;left:667px; top:110px;">
+            <div class="titlebar" id="constraintmover">
+                <div class="wintitle">Constraints</div>
+                <div class="sp_05 right"></div>
+                <div class ="right" onclick="window.author.toggleminmax('constraintcontents', 'toggleanim', 664)" style="margin-top: 2px;"><img id="toggleanim" src="image/icon_max_g.png"/></div>
+            </div>
+            <div id="constraintcontents" class="padlr" style="display:none">
+                <div id="constraintmenu" class="submenu">
+                    <div class="divmenu" onclick="window.author.menus.addItem('constraints')">Add</div>
+                    <div class="divmenu" onclick="window.author.menus.deleteItem('constraints')">Delete</div>
+                    <div class="divmenu" onclick="window.author.copy('constraints')">Copy</div>
+                </div>
+                <div id="constraintholder" class="padholder"></div>
+            </div>
+        </div>
+
         <div id='soundbank' class="skinnybank" style="position:absolute;left:175px; top:110px;">
             <div class="titlebar" id="soundmover">
                 <div class="wintitle">Sounds</div>
