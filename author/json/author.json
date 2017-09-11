@@ -63,6 +63,11 @@
         {"field":"driverlist",  "type":"driverlist", "display":"Drivers"}
       ],
       "drivers":[
+        {"type":"lookat",        "widgets":[{"field":"angle",       "type":"number"},
+                                            {"field":"driver",      "type":"objlist"},
+                                            {"field":"constrained", "type":"objlist"}
+                                           ]
+        },
         {"type":"position",      "widgets":[{"field":"axis",        "type":"select", "id":"axistype", "display":"Select Axis"},
                                             {"field":"driver",      "type":"objlist"},
                                             {"field":"constrained", "type":"objlist"},
@@ -174,6 +179,7 @@
     {"id":"Animation: Pause",           "url":"anim_pause.json"},
     {"id":"Blend Modes: Image Object",  "url":"blendmode.json"},
     {"id":"Constraint: Drag Multiply",  "url":"constraint_multiply.json"},
+    {"id":"Constraint: Look At",        "url":"constraint_lookat.json"},
     {"id":"Image: Fade",                "url":"image_fade.json"},
     {"id":"Particle Sample 1",          "url":"particles_sample1.json"},
     {"id":"Particle Facing Motion",     "url":"particles_sample2.json"},

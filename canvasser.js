@@ -336,6 +336,17 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (dr.axis === 'x' || dr.axis === 'xy') child.position.current.x = modPos.x + dr.offset.x;
           if (dr.axis === 'y' || dr.axis === 'xy') child.position.current.y = modPos.y + dr.offset.y;
         }
+        if (dr.type === 'lookat'){
+          var parent = act.data.objects.filter(function(obj){return obj.id === dr.driver})[0];
+          var child  = act.data.objects.filter(function(obj){return obj.id === dr.constrained})[0];
+          if (parent === undefined || child === undefined) return;
+          var diff   = {x: parent.position.current.x - child.position.current.x, y:parent.position.current.y - child.position.current.y};
+          var vv = Math.sqrt(diff.x*diff.x + diff.y*diff.y);
+          var norm = {x:diff.x / vv, y:diff.y / vv};
+          if (dr.angle === undefined) dr.angle = 0;
+          if (child.rotation === undefined) child.rotation = 0;
+          child.rotation = -Math.atan2(norm.x, norm.y) + 3.1415926536 + radians(dr.angle);
+        }
       });
     });
 

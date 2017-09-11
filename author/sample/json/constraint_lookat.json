@@ -1,0 +1,193 @@
+{
+    "objects": [
+        {
+            "id": "target",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 300,
+                    "y": 250
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "groups": [],
+            "image": "target",
+            "origin": "center",
+            "testp": false,
+            "draglist": []
+        },
+        {
+            "id": "looker",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 30,
+                    "y": 250
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "groups": [],
+            "image": "looker",
+            "origin": "center"
+        },
+        {
+            "id": "drag",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 450,
+                    "y": 250
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "groups": [],
+            "image": "drag",
+            "origin": "center",
+            "testp": true,
+            "draglist": [
+                {
+                    "type": "slideobject",
+                    "filter": "object",
+                    "id": "drag"
+                }
+            ]
+        },
+        {
+            "id": "looker_drag",
+            "type": "image",
+            "shape": "",
+            "show": true,
+            "position": {
+                "current": {
+                    "x": 560,
+                    "y": 250
+                }
+            },
+            "scale": {
+                "current": 1
+            },
+            "groups": [],
+            "image": "looker",
+            "origin": "center"
+        }
+    ],
+    "groups": [],
+    "images": [
+        {
+            "id": "looker",
+            "path": "sample_images",
+            "url": "icon_up.png"
+        },
+        {
+            "id": "target",
+            "path": "sample_images",
+            "url": "sample_target.png"
+        },
+        {
+            "id": "drag",
+            "path": "sample_images",
+            "url": "sample_drag_1.png"
+        }
+    ],
+    "sounds": [],
+    "anims": [
+        {
+            "id": "anim",
+            "autostart": true,
+            "length": 3000,
+            "timelist": [
+                {
+                    "type": "move",
+                    "filter": "object",
+                    "id": "target",
+                    "endpos": {
+                        "x": 200,
+                        "y": 400
+                    },
+                    "startpos": {
+                        "y": 100,
+                        "x": 200
+                    },
+                    "endtime": 1500,
+                    "ease": "inOutQuad"
+                },
+                {
+                    "type": "move",
+                    "starttime": 1501,
+                    "endtime": 3000,
+                    "filter": "object",
+                    "id": "target",
+                    "startpos": {
+                        "x": 200,
+                        "y": 400
+                    },
+                    "ease": "inOutQuad",
+                    "endpos": {
+                        "x": 200,
+                        "y": 100
+                    }
+                }
+            ],
+            "loop": true
+        }
+    ],
+    "paths": [
+        {
+            "id": "author",
+            "url": "./image"
+        },
+        {
+            "id": "sample_images",
+            "url": "./sample/image"
+        }
+    ],
+    "shapes": [],
+    "settings": {
+        "canvaswidth": "600",
+        "canvasheight": "500",
+        "canvasdomname": "activity",
+        "canvasparent": "canvasholder",
+        "usecache": false
+    },
+    "constraints": [
+        {
+            "id": "constraint",
+            "active": true,
+            "driverlist": [
+                {
+                    "type": "lookat",
+                    "driver": "target",
+                    "constrained": "looker",
+                    "angle": 0
+                }
+            ]
+        },
+        {
+            "id": "constraint1",
+            "active": true,
+            "driverlist": [
+                {
+                    "type": "lookat",
+                    "driver": "drag",
+                    "constrained": "looker_drag"
+                }
+            ]
+        }
+    ],
+    "particles": [],
+    "samples": [],
+    "tests": [],
+    "vars": []
+}

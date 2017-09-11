@@ -105,7 +105,7 @@ function BuildProp(){
             output += '<div class="actionblock">';
             output += '<div class="rightx" onclick="window.author.deletedriver('+"'"+constraint.id+"'"+','+idx+')">X</div>' + '<br>';
             output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-            output += utils.buildSelect('window.author.updateDriver',  constraint.id, "anim", timeList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
+            output += utils.buildSelect('window.author.updateItem',  constraint.id, "constraint", timeList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
 
             actionWidgets.forEach(function(subWidget, idxPart){
               var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
