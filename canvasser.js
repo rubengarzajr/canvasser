@@ -350,11 +350,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       });
     });
 
-    modVal = function(operation, startVal, modVal){
-      if (operation === "add") return startVal + modVal;
-      if (operation === "subtract") return startVal - modVal;
-      if (operation === "multiply") return startVal * modVal;
-      if (operation === "divide") return startVal / modVal;
+    function modVal(operation, startVal, val){
+      if (operation === "add") return startVal + val;
+      if (operation === "subtract") return startVal - val;
+      if (operation === "multiply") return startVal * val;
+      if (operation === "divide") return startVal / val;
     }
 
 
