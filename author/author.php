@@ -19,12 +19,12 @@
   </head>
   <body onload="initAuthorCanvasser()" class="authorbk">
     <div class="header">
-    <div class="titlecenter">CANVASSER</div>
+    <div id="titlelabel" class="titlecenter">CANVASSER</div>
     </div>
     <div id="menu">
     </div>
     <div id="graphical">
-      <div id='canvasbank' class="skinnybank" style="position:absolute; left:180px; top:158px;">
+      <div id='canvasbank' class="skinnybank" style="position:absolute; left:10px; top:174px;">
         <div class="titlebar" id="canvasmover">
           <div class="wintitle">Output</div>
           <div class="sp_05 right"></div>
@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <div id='imagebank' class="skinnybank" style="position:absolute;left:10px; top:285px;">
+      <div id='imagebank' class="skinnybank" style="position:absolute;left:174px; top:110px;">
         <div class="titlebar" id="imagemover">
           <div class="wintitle">Images</div>
           <div class="sp_05 right"></div>
@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <div id='shapebank' class="skinnybank" style="position:absolute;left:174px; top:70px;">
+      <div id='shapebank' class="skinnybank" style="position:absolute;left:174px; top:40px;">
         <div class="titlebar" id="shapemover">
           <div class="wintitle">Shapes</div>
           <div class="sp_05 right"></div>
@@ -69,7 +69,7 @@
         </div>
       </div>
 
-      <div id='samplebank' class="skinnybank" style="position:absolute; left:338px; top:70px;">
+      <div id='samplebank' class="skinnybank" style="position:absolute; left:338px; top:40px;">
         <div class="titlebar" id="samplemover">
           <div class="wintitle">Samples</div>
           <div class="sp_05 right"></div>
@@ -102,7 +102,7 @@
       </div>
     </div>
 
-        <div id='jsonbank' class="skinnybank" style="position:absolute;left:667px; top:70px;">
+        <div id='jsonbank' class="skinnybank" style="position:absolute;left:667px; top:40px;">
             <div class="titlebar" id="jsonmover">
                 <div class="wintitle">JSON</div>
                 <div class="sp_05 right"></div>
@@ -120,7 +120,7 @@
             </div>
         </div>
 
-        <div id='settingbank' class="skinnybank" style="position:absolute;left:10px; top:70px;">
+        <div id='settingbank' class="skinnybank" style="position:absolute;left:10px; top:40px;">
             <div class="titlebar" id="settingmover">
                 <div class="wintitle">Settings</div>
                 <div class="sp_05 right"></div>
@@ -133,7 +133,7 @@
             </div>
         </div>
 
-        <div id='pathbank' class="skinnybank" style="position:absolute;left:502px; top:70px;">
+        <div id='pathbank' class="skinnybank" style="position:absolute;left:502px; top:40px;">
             <div class="titlebar" id="pathmover">
                 <div class="wintitle">Paths</div>
                 <div class="sp_05 right"></div>
@@ -148,7 +148,7 @@
             </div>
         </div>
 
-        <div id='varbank' class="skinnybank" style="position:absolute;left:997px; top:110px;">
+        <div id='varbank' class="skinnybank" style="position:absolute;left:338px; top:76px;">
             <div class="titlebar" id="varmover">
                 <div class="wintitle">Vars</div>
                 <div class="sp_05 right"></div>
@@ -163,7 +163,7 @@
             </div>
         </div>
 
-        <div id='groupbank' class="skinnybank" style="position:absolute;left:832px; top:70px;">
+        <div id='groupbank' class="skinnybank" style="position:absolute;left:10px; top:76px;">
             <div class="titlebar" id="groupmover">
                 <div class="wintitle">Groups</div>
                 <div class="sp_05 right"></div>
@@ -178,7 +178,7 @@
             </div>
         </div>
 
-        <div id='particlebank' class="skinnybank" style="position:absolute;left:997px; top:70px;">
+        <div id='particlebank' class="skinnybank" style="position:absolute;left:174px; top:76px;">
             <div class="titlebar" id="particlemover">
                 <div class="wintitle">Particles</div>
                 <div class="sp_05 right"></div>
@@ -209,7 +209,7 @@
             </div>
         </div>
 
-        <div id='constraintbank' class="skinnybank" style="position:absolute;left:667px; top:110px;">
+        <div id='constraintbank' class="skinnybank" style="position:absolute;left:667px; top:76px;">
             <div class="titlebar" id="constraintmover">
                 <div class="wintitle">Constraints</div>
                 <div class="sp_05 right"></div>
@@ -225,7 +225,7 @@
             </div>
         </div>
 
-        <div id='soundbank' class="skinnybank" style="position:absolute;left:175px; top:110px;">
+        <div id='soundbank' class="skinnybank" style="position:absolute;left:502px; top:76px;">
             <div class="titlebar" id="soundmover">
                 <div class="wintitle">Sounds</div>
                 <div class="sp_05 right"></div>
@@ -255,7 +255,7 @@
             </div>
         </div>
 
-        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:800px; top:158px;">
+        <div id='propertiesbank' class="skinnybank" style="position:absolute;left:834px; top:40px;">
             <div class="titlebar" id="propertiesmover">
                 <div class="wintitle">Properties</div>
                 <div class="sp_05 right"></div>
@@ -270,7 +270,7 @@
             </div>
         </div>
 
-        <div id='learnbank' class="skinnybank" style="position:absolute;left:263px; top:234px;">
+        <div id='learnbank' class="skinnybank" style="position:absolute;left:502px; top:140px;">
             <div class="titlebar" id="learnmover">
                 <div class="wintitle">Learning</div>
                 <div class="sp_05 right"></div>

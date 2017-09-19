@@ -10,7 +10,7 @@ and open the template in the editor.
 
 @font-face {
   font-family: title;
-  src: url(../font/advancedpixel.woff);
+  src: url(../font/CharriotDeluxe.woff);
 }
 
 @font-face {
@@ -27,9 +27,7 @@ and open the template in the editor.
   display: inline-block;
 }
 .grouper{
-  border: black solid 1px;
-  border-radius: 6px;
-  background-color: #5f99cc;
+  background-color: rgb(150, 150, 150);
   padding-bottom: 10px;
 }
 
@@ -117,15 +115,13 @@ a{
 .header{
   display: block;
   background-color: rgb(243, 243, 243);
-  padding-top: 10px;
-  padding-bottom: 10px;
   border-bottom: 2px #dadada solid;
   box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  height: 35px;
+  height: 30px;
 }
 
 .titlebar{
-  background-color: rgb(127, 164, 220);
+  background-color: rgb(122, 122, 122);
   cursor: move;
 }
 
@@ -136,7 +132,7 @@ a{
   left: 0;
   right: 0;
   font-size: 1.5em;
-  color: crimson;
+  color: black;
 }
 
 .rightfloater{
@@ -146,9 +142,8 @@ a{
 }
 
 .skinnybank{
-  background-color: rgb(106, 127, 144);
-  border: 1px rgb(106, 127, 144) solid;
-  border-radius: 4px;
+  background-color: rgb(86, 86, 86);
+  border: 1px rgb(142, 142, 142) solid;
   min-width:160px;
 }
 
@@ -163,6 +158,7 @@ a{
 .mw400{
   min-width:400px;
 }
+
  #objectholder{
   border: 2px rgb(165, 165, 165) solid;
   border-radius: 4px;
@@ -230,16 +226,16 @@ a{
   background-color: white;
   overflow: auto;
   resize: both;
-  height: 300px;
-  width: 300px;
+  height: 655px;
+  width: 320px;
   margin-bottom: 5px;
 }
 
 #propertiestitle{
   width:100%;
   text-align: center;
-  background-color: rgb(212, 226, 226);
-  border-bottom: 2px rgb(106, 127, 144) solid;
+  background-color: rgb(236, 236, 236);
+  border-bottom: 2px rgb(27, 27, 27) solid;
 }
 
 .proptitle{
@@ -259,9 +255,8 @@ a{
 
 .auth_xy{
   display: table-cell;
-  width:75px;
-  background-color:rgb(191, 212, 211);
-  margin-left: 0px;
+  width: 65px;
+  background-color: rgb(199, 199, 199);
   margin-left: 2px;
   margin-top: 3px;
   margin-bottom: 3px;
@@ -269,6 +264,8 @@ a{
   border: 0px;
   border-top: 1px rgb(191, 212, 211) solid;
   border-bottom: 1px rgb(191, 212, 211) solid;
+  font-family: button;
+  font-size: .8em;
 }
 
 .authorbk{
@@ -276,7 +273,9 @@ a{
 }
 
 .auth_text{
-  background-color:rgb(212, 218, 226);
+  background-color: rgb(199, 199, 199);
+  font-size: .8em;
+  font-family: button;
   display: table-cell;
   width:150px;
   margin-left: 0px;
@@ -296,7 +295,7 @@ a{
 .divbutton{
   cursor: pointer;
   font-family: button;
-  background-color: rgb(237, 255, 221);
+  background-color: white;
   border: 1px black solid;
   border-radius: 3px;
   display: inline-block;
@@ -324,8 +323,8 @@ a{
   color: white;
   font-size: 1em;
   display: inline-block;
-  padding: 4px;
   margin: 2px;
+  margin-left: 4px;
 }
 
 .submenu{
@@ -385,23 +384,29 @@ a{
 }
 
 .c_entrytitle_pos{
-    background-color:  rgb(191, 212, 211) ;
-    border: 1px rgb(191, 212, 211) solid;
+  background-color:  rgb(191, 212, 211) ;
+  border: 1px rgb(191, 212, 211) solid;
 }
 
 .c_entrytitle_text{
-    background-color: rgb(204, 213, 239);
-    border: 1px rgb(191, 212, 211) solid;
+  background-color: rgb(111, 111, 111);
+  color: rgb(220, 220, 220);
+  font-size: .8em;
+  border: 1px rgb(191, 212, 211) solid;
 }
 
 .c_entrylabel_pos{
-    background-color: rgb(212, 226, 226);
-    border: 1px rgb(191, 212, 211) solid;
+  background-color: rgb(111, 111, 111);
+  color: rgb(220, 220, 220);
+  font-size: .8em;
+  border: 1px rgb(191, 212, 211) solid;
 }
 .w100p{
   width: 100%;
 }
-
+.w95p{
+  width: 95%;
+}
 .w25{
     width: 25px;
 }
@@ -418,16 +423,16 @@ a{
     width: 400px;
 }
 .pos_holder{
-    background-color: rgb(106, 127, 144);
-    border: 1px rgb(106, 127, 144) solid;
-    display: inline-block;
-    margin-left: 3px;
-    margin-bottom: 10px;
+  background-color: rgb(162, 162, 162);
+  border: 1px rgb(56, 56, 56) solid;
+  display: inline-block;
+  margin-left: 3px;
+  margin-bottom: 10px;
 }
 .pos_title{
     display: block;
     width: 100%;
-    background-color: rgb(212, 226, 226);
+    background-color: rgb(224, 224, 224);
     border-bottom: 1px black solid;
     padding: 2px 0px;
     text-indent: 4px;
@@ -453,15 +458,17 @@ a{
 }
 
 .sellist{
-    border: 0px;
-    background: rgb(212, 209, 239);
-    padding: 4px;
-    width: 150px;
+  border: 0px;
+  background-color: rgb(199, 199, 199);
+  padding: 4px;
+  width: 150px;
+  font-size: .8em;
+  font-family: button;
 }
 
 .checkbox{
-    width: 29px;
-    height: 29px;
+    width: 26px;
+    height: 26px;
     vertical-align: middle;
 }
 
@@ -510,9 +517,9 @@ a{
 }
 
 .actionblock{
-  background-color: #7695af;
+  background-color: rgb(138, 138, 138);
   margin: 5px 0px;
-  border: #5a6b79 solid;
+  border: rgb(51, 51, 51) solid;
   border-width: 2px 0px;
 }
 

@@ -41,7 +41,7 @@ function BuildProp(){
       if (widget.type === "timelist"){
         var timeList = [];
         window.rules.anims.forEach(function(template){timeList.push(template.type)});
-        output += '<div><div class="pos_holder mw400"><div class="pos_title">' + widget.display + '</div>';
+        output += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
         if (animation[widget.field] !== undefined){
           animation[widget.field].forEach(function(actobject, idx){
             var actionWidgets = window.rules.anims.filter(function(type){ return type.type === actobject.type});
@@ -96,7 +96,7 @@ function BuildProp(){
       if (widget.type === "driverlist"){
         var timeList = [];
         window.rules.constraint.drivers.forEach(function(template){timeList.push(template.type)});
-        output += '<div><div class="pos_holder mw400"><div class="pos_title">' + widget.display + '</div>';
+        output += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
         if (constraint[widget.field] !== undefined){
           constraint[widget.field].forEach(function(actobject, idx){
             var actionWidgets = window.rules.constraint.drivers.filter(function(type){ return type.type === actobject.type});

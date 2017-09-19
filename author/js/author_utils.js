@@ -96,12 +96,12 @@ function CanvasserUtils(){
   this.handleAction = function(item, types, widget){
     var go = true;
     if (widget.dependson != undefined) go = item[widget.dependson];
-    if (go === undefined || go === false) return '<div><div class="pos_holder mw400"><div class="pos_title">' + widget.display + '</div></div>';
+    if (go === undefined || go === false) return '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div></div>';
     var str = '';
     var type = types.slice(0, -1);
     var actionsList = [];
       window.rules.actions.forEach(function(template){actionsList.push(template.type)});
-      str += '<div><div class="pos_holder mw400"><div class="pos_title">' + widget.display + '</div>';
+      str += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
       if (item[widget.field] !== undefined){
         item[widget.field].forEach(function(itemAct, idx){
           var actionWidgets = window.rules.actions.filter(function(rType){ return rType.type === itemAct.type});
@@ -259,7 +259,7 @@ function CanvasserUtils(){
   this.handleTest = function(test, types, widget){
     var str = '';
     var testsList = Object.keys(window.rules.conditionals);
-    str += '<div><div class="pos_holder mw400"><div class="pos_title">' + widget.display + '</div>';
+    str += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
     if (test[widget.field] !== undefined){
       test[widget.field].forEach(function(actobject, idx){
         var actionWidgets = window.rules.conditionals[actobject.type].widgets;
