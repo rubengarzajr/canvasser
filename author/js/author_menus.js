@@ -1,27 +1,27 @@
-function Menus(){
-  var utils = new CanvasserUtils();
-  this.update = function(toUp){
-    if (!toUp || toUp === 'anims')       updateMenu('anims');
-    if (!toUp || toUp === 'constraints') updateMenu('constraints');
-    if (!toUp || toUp === 'groups')      updateMenu('groups');
-    if (!toUp || toUp === 'images')      updateMenu('images');
-    if (!toUp || toUp === 'objects')     updateMenu('objects');
-    if (!toUp || toUp === 'particles')   updateMenu('particles');
-    if (!toUp || toUp === 'paths')       updateMenu('paths');
-    if (!toUp || toUp === 'samples')     updateMenu('samples');
-    if (!toUp || toUp === 'settings')    updateSettings();
-    if (!toUp || toUp === 'sounds')      updateMenu('sounds');
-    if (!toUp || toUp === 'shapes')      updateMenu('shapes');
-    if (!toUp || toUp === 'tests')       updateMenu('tests');
-    if (!toUp || toUp === 'vars')        updateMenu('vars');
-  }
+authorLibs.menus = {
 
-  function updateMenu(type){
+  update: function(toUp){
+    if (!toUp || toUp === 'anims')       authorLibs.menus.updateMenu('anims');
+    if (!toUp || toUp === 'constraints') authorLibs.menus.updateMenu('constraints');
+    if (!toUp || toUp === 'groups')      authorLibs.menus.updateMenu('groups');
+    if (!toUp || toUp === 'images')      authorLibs.menus.updateMenu('images');
+    if (!toUp || toUp === 'objects')     authorLibs.menus.updateMenu('objects');
+    if (!toUp || toUp === 'particles')   authorLibs.menus.updateMenu('particles');
+    if (!toUp || toUp === 'paths')       authorLibs.menus.updateMenu('paths');
+    if (!toUp || toUp === 'samples')     authorLibs.menus.updateMenu('samples');
+    if (!toUp || toUp === 'settings')    authorLibs.menus.updateSettings();
+    if (!toUp || toUp === 'sounds')      authorLibs.menus.updateMenu('sounds');
+    if (!toUp || toUp === 'shapes')      authorLibs.menus.updateMenu('shapes');
+    if (!toUp || toUp === 'tests')       authorLibs.menus.updateMenu('tests');
+    if (!toUp || toUp === 'vars')        authorLibs.menus.updateMenu('vars');
+  },
+
+  updateMenu: function(type){
     var menuHolder = document.getElementById(type.slice(0, -1) + "holder");
     var menu       = '<table class="objtable" id="' + type + 'table" width="100%">';
     if (authorData[type] === undefined) authorData[type] = [];
     if (type === 'samples'){
-      window.rules.samples.forEach(function(sampy){
+      authorLibs.rules.samples.forEach(function(sampy){
         menu += '<tr class="clicktr" id="'+type+'_'+sampy.id+'" onclick="window.author.loadSample(\''+ sampy.url + '\')">';
         menu +='<td class="shapeid"><div>' + sampy.id + '</div></td>';
         menu += '</tr>';
@@ -37,7 +37,7 @@ function Menus(){
         menu += '</tr>';
       }
       if (type === 'images'){
-        var url = utils.prePath(menuItem);
+        var url = authorLibs.utils.prePath(menuItem);
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td class="imageid"><div class="imagetext">' + menuItem.id + '</div></td>';
         menu +='<td width="50%"><img src="' + url + '" alt="' + menuItem.id + '"></td>';
@@ -58,9 +58,18 @@ function Menus(){
     });
     menu +='</table>';
     menuHolder.innerHTML = menu;
-  }
+  },
 
-  function updateSettings(){
+  updateSelectionWindow: function(type,id){
+    var table = document.getElementById(type + "table");
+    for (var i = 0, row; row = table.rows[i]; i++) {row.removeAttribute("style")};
+    var row = document.getElementById(type + '_' + id);
+    if (row === null) return;
+    row = row.rowIndex;
+    table.rows[row].style = "background-color:rgb(97, 255, 55);";
+  },
+
+  updateSettings: function(){
     var settingHolder = document.getElementById("settingholder");
     var settings = '<table class="objtable" id="settingstable" width="100%">';
 
@@ -72,9 +81,9 @@ function Menus(){
     });
     settings +='</table>';
     settingHolder.innerHTML = settings;
-  }
+  },
 
-  this.addItem = function(type){
+  addItem: function(type){
     if (authorData[type] === undefined) authorData[type] = [];
     var itemName  = type.slice(0, -1);
     var itemCnt   = 0;
@@ -99,12 +108,13 @@ function Menus(){
     if (type === 'tests')       authorData[type].push({id:itemName, active:true});
     if (type === 'vars')        authorData[type].push({id:itemName, value:0});
 
-    updateMenu(type)
+    authorLibs.menus.updateMenu(type)
     initCanvasser("sample", JSON.stringify(authorData), "string");
+    authorLibs.menus.updateSelectionWindow(type, itemName);
     window.author.view();
-  }
+  },
 
-  this.deleteItem = function(type){
+  deleteItem: function(type){
     var table = document.getElementById(type + "table");
     var delRow = undefined;
     for (var i = 0, row; row = table.rows[i]; i++) {
@@ -115,7 +125,37 @@ function Menus(){
     });
     document.getElementById("propertiestitle").innerHTML = '';
     document.getElementById("properties").innerHTML      = '';
-    updateMenu(type);
+    authorLibs.menus.updateMenu(type);
     restartCanvasser("sample", authorData, "string");
+  },
+
+  copy: function(type){
+    var table   = document.getElementById(type + "table");
+    var copyRow = undefined;
+    var newObj = undefined;
+
+    for (var i = 0, row; row = table.rows[i]; i++) {
+      if (row.style[0] === "background-color") copyRow = row.id;
+    };
+
+    var objList = authorData[type].filter(function(test){ return(type+'_'+test.id === copyRow)});
+    if (objList.length === 0 || objList === undefined) return;
+    newObj       = authorLibs.utils.copyObj(objList[0], {});
+    var itemName = newObj.id.replace(/\d+$/, "");
+    var itemCnt  = 0;
+    var tryAgain = true;
+    while (tryAgain){
+      if (authorData[type].filter(function(item){return item.id === itemName}).length > 0){
+        itemCnt ++;
+        itemName = newObj.id.replace(/\d+$/, "") + itemCnt;
+      } else tryAgain = false;
+    }
+    newObj.id = itemName;
+    authorData[type].push(newObj);
+    authorLibs.menus.update(type);
+    restartCanvasser("sample", authorData, "string");
+    authorLibs.menus.updateSelectionWindow(type, newObj.id);
+    authorLibs.buildProp.getProps(type,  newObj.id);
   }
+
 }

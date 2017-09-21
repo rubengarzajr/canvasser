@@ -242,5 +242,8 @@
     "shapename":"shape",
     "text":"string",
     "xy":{"x":"int","y":"int"}
-  }
+  },
+  "windows":[
+    {"type":"object"}
+  ]
 }
