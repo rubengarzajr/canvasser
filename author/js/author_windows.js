@@ -28,7 +28,7 @@ authorLibs.windows = {
       var bank      = authorLibs.windows.makeDiv(parent,  win.id + 'bank', 'window_movable','left:'+win.position.x+'px; top:'+win.position.y+'px;', null, null);
       var title     = authorLibs.windows.makeDiv(bank,  win.id + 'mover', 'titlebar', null, null, null);
       var winTitle  = authorLibs.windows.makeDiv(title,  null, 'wintitle', null, win.id.charAt(0).toUpperCase() +  win.id.slice(1) + 's', null);
-      authorLibs.windows.makeDiv(title,  null, 'button_righter', null, '<img id="toggle'+win.id+'s" src="image/icon_'+(win.min ? 'max': 'min')+'_g.png"/>', function(){window.author.toggleminmax(win.id+'contents', 'toggle'+win.id+'s', 664)});
+      authorLibs.windows.makeDiv(title,  null, 'button_righter', null, '<img id="toggle'+win.id+'s" src="' + authorLibs.externalsPath +'image/icon_'+(win.min ? 'max': 'min')+'_g.png"/>', function(){window.author.toggleminmax(win.id+'contents', 'toggle'+win.id+'s', 664)});
       var display   = win.min ? "display:none" : "display:block";
       var contents  = authorLibs.windows.makeDiv(bank,  win.id + 'contents', 'padlr', display, null, null);
       var menu      = authorLibs.windows.makeDiv(contents,  win.id + 'menu', 'submenu', null, null, null);

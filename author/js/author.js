@@ -189,11 +189,11 @@ function authorcanvasser(dataFile, dataForm){
     var b = document.getElementById(minmax);
     if (d.style.display === "block"){
       d.style.display="none";
-      b.src="image/icon_max_g.png";
+      b.src=authorLibs.externalsPath + "image/icon_max_g.png";
     }
     else {
       d.style.display = "block";
-      b.src="image/icon_min_g.png";
+      b.src=authorLibs.externalsPath +"image/icon_min_g.png";
     }
   }
 
