@@ -1,5 +1,12 @@
 var authorLibs = {};
 
+document.onreadystatechange = function(){
+     if(document.readyState === 'complete'){
+        initAuthorCanvasser();
+     }
+}
+
+
 function learning(action, page){
   if (window.learningHistory === undefined) window.learningHistory = {idx:-1, pages:[]};
 
