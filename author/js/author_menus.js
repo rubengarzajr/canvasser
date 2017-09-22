@@ -108,9 +108,9 @@ authorLibs.menus = {
     if (type === 'particles')   authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}},
     emitRate:10, pParams:{fade: {in:0, out:100}, scale: {min:1, max:1}, life: {min:1000, max:1000},
     speed:{position:{min:1, max:1}, rotation:{min:0.1, max:0.1}}}, genType:"burst", emitCounter:1000, emitDirEnd:360, emitDirStart:0});
-    if (type === 'paths')       authorData[type].push({id:itemName, url:"./"});
+    if (type === 'paths')       authorData[type].push({id:itemName, url:authorLibs.externalsPath});
     if (type === 'shapes')      authorData[type].push({id:itemName});
-    if (type === 'sounds')      authorData[type].push({id:itemName, url:"./"});
+    if (type === 'sounds')      authorData[type].push({id:itemName, url:authorLibs.externalsPath});
     if (type === 'tests')       authorData[type].push({id:itemName, active:true});
     if (type === 'vars')        authorData[type].push({id:itemName, value:0});
 

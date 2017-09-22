@@ -1,4 +1,7 @@
-var authorLibs = {};
+var authorLibs = {
+  externalsPath: './',
+  defaultJSON: "./json/default.json"
+};
 
 document.onreadystatechange = function(){
      if(document.readyState === 'complete'){
@@ -16,12 +19,12 @@ function learning(action, page){
     }
     window.learningHistory.pages.push(page);
     window.learningHistory.idx ++;
-    authorLibs.utils.requestFile("./learning/html/"+page+".html", popLearn);
+    authorLibs.utils.requestFile(authorLibs.externalsPath + "learning/html/"+page+".html", popLearn);
   }
   if (action === 'back'){
     if (window.learningHistory.idx <= 0) return;
     window.learningHistory.idx --;
-    authorLibs.utils.requestFile("./learning/html/"+window.learningHistory.pages[ window.learningHistory.idx]+".html", popLearn);
+    authorLibs.utils.requestFile(authorLibs.externalsPath + "learning/html/"+window.learningHistory.pages[ window.learningHistory.idx]+".html", popLearn);
   }
 }
 function popLearn(contents){
@@ -36,10 +39,10 @@ function pickWin(win, toggle, size, bank){
 function initAuthorCanvasser(vari, datafile, dataForm){
   authorLibs.windows.build();
   learning('load', 'welcome');
-  authorLibs.utils.requestJSON("./json/author.json", setRules);
+  authorLibs.utils.requestJSON(authorLibs.externalsPath + "json/author.json", setRules);
   function setRules(data){
     authorLibs.rules  = data;
-    authorLibs.utils.requestJSON("./json/default.json", initEdit);
+    authorLibs.utils.requestJSON(authorLibs.defaultJSON, initEdit);
   }
 
   function initEdit(datafile){
@@ -146,7 +149,7 @@ function authorcanvasser(dataFile, dataForm){
     UIdata.moveElement = null;
   }
   this.loadSample = function(url){
-    authorLibs.utils.requestJSON('./sample/json/' + url + '?' + new Date().getTime(), function(data){restartCanvasser("sample", data, 'string');});
+    authorLibs.utils.requestJSON(authorLibs.externalsPath + 'sample/json/' + url + '?' + new Date().getTime(), function(data){restartCanvasser("sample", data, 'string');});
   }
 
   this.reload = function(){
