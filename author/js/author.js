@@ -53,6 +53,11 @@ function initAuthorCanvasser(vari, datafile, dataForm){
 }
 
 function restartCanvasser(name, data, type){
+
+  data.paths.forEach(function(path){
+    if (path.url.substring(0,2) === './') path.url = authorLibs.externalsPath + path.url.substring(2)
+  });
+
   authorLibs.authorData = data;
   authorLibs.canvasser = initCanvasser(name, JSON.stringify(data), type);
   authorLibs.menus.update();
