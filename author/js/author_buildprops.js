@@ -20,12 +20,12 @@ authorLibs.buildProp = {
       if (widget.type === "text"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += '<input class="auth_text w200" type="text" value="'+ group[widget.field] + '" ';
-        output += authorLibs.utils.buildFnString('window.author.updateItem', [group.id, 'group', widget.field], true);
+        output += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [group.id, 'group', widget.field], true);
         output += '><br>';
       }
       if (widget.type === "select"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += authorLibs.utils.buildSelect('window.author.updateItem',  group.id, 'group', pathList, defaultId, 'path') + '<br>';
+        output += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  group.id, 'group', pathList, defaultId, 'path') + '<br>';
       }
       if (widget.type === "number")       output += authorLibs.utils.handleNumber(group, 'group', widget, widget.field);
       if (widget.type === "bool")         output += authorLibs.utils.handleBoolean(group, 'group', widget, widget.field);
@@ -41,7 +41,7 @@ authorLibs.buildProp = {
       if (widget.type === "text"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += '<input class="auth_text '+widget.css+'" type="text" value="'+ animation[widget.field] + '" ';
-        output += authorLibs.utils.buildFnString('window.author.updateItem', [animation.id, 'anim',  widget.field], true);
+        output += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [animation.id, 'anim',  widget.field], true);
         output += '><br>';
       }
       if (widget.type === "number")   output += authorLibs.utils.handleNumber(animation, 'anim', widget, widget.field);
@@ -56,9 +56,9 @@ authorLibs.buildProp = {
             if (actionWidgets.length === 0) return;
             actionWidgets = actionWidgets[0].widgets;
             output += '<div class="actionblock">';
-            output += '<div class="rightx" onclick="window.author.deletetimeline('+"'"+animation.id+"'"+','+idx+')">X</div>' + '<br>';
+            output += '<div class="rightx" onclick="authorLibs.author.deletetimeline('+"'"+animation.id+"'"+','+idx+')">X</div>' + '<br>';
             output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-            output += authorLibs.utils.buildSelect('window.author.updateTimeline',  animation.id, "anim", timeList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
+            output += authorLibs.utils.buildSelect('authorLibs.author.updateTimeline',  animation.id, "anim", timeList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
 
             actionWidgets.forEach(function(subWidget, idxPart){
               var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
@@ -80,7 +80,7 @@ authorLibs.buildProp = {
           });
           output += '<br>';
         }
-        output += authorLibs.utils.buildDiv('divbutton', 'Add Command', 'window.author.addAnimCommand', [animation.id, widget.field]);
+        output += authorLibs.utils.buildDiv('divbutton', 'Add Command', 'authorLibs.author.addAnimCommand', [animation.id, widget.field]);
         output += '</div>';
       }
     });
@@ -95,7 +95,7 @@ authorLibs.buildProp = {
       if (widget.type === "text"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += '<input class="auth_text '+widget.css+'" type="text" value="'+ constraint[widget.field] + '" ';
-        output += authorLibs.utils.buildFnString('window.author.updateItem', [constraint.id, 'constraint',  widget.field], true);
+        output += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [constraint.id, 'constraint',  widget.field], true);
         output += '><br>';
       }
       if (widget.type === "number")   output += authorLibs.utils.handleNumber(constraint, 'constraint', widget, widget.field);
@@ -110,9 +110,9 @@ authorLibs.buildProp = {
             if (actionWidgets.length === 0) return;
             actionWidgets = actionWidgets[0].widgets;
             output += '<div class="actionblock">';
-            output += '<div class="rightx" onclick="window.author.deletedriver('+"'"+constraint.id+"'"+','+idx+')">X</div>' + '<br>';
+            output += '<div class="rightx" onclick="authorLibs.author.deletedriver('+"'"+constraint.id+"'"+','+idx+')">X</div>' + '<br>';
             output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-            output += authorLibs.utils.buildSelect('window.author.updateItem',  constraint.id, "constraint", timeList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
+            output += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  constraint.id, "constraint", timeList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
 
             actionWidgets.forEach(function(subWidget, idxPart){
               var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
@@ -132,7 +132,7 @@ authorLibs.buildProp = {
           });
           output += '<br>';
         }
-        output += authorLibs.utils.buildDiv('divbutton', 'Add Command', 'window.author.addConstraint', [constraint.id, widget.field]);
+        output += authorLibs.utils.buildDiv('divbutton', 'Add Command', 'authorLibs.author.addConstraint', [constraint.id, widget.field]);
         output += '</div>';
       }
     });
@@ -145,7 +145,7 @@ authorLibs.buildProp = {
     prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
     prop += '<input class="auth_text w200" type="text" ';
     prop += 'value="'+ group.id + '" ';
-    prop += authorLibs.utils.buildFnString('window.author.updateItem', [group.id, 'group', 'id'], true);
+    prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [group.id, 'group', 'id'], true);
     authorLibs.menus.update('groups');
     return prop + '</div>';
   },
@@ -158,12 +158,12 @@ authorLibs.buildProp = {
       if (widget.type === "text"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += '<input class="auth_text w200" type="text" value="'+ image[widget.field] + '" ';
-        output += authorLibs.utils.buildFnString('window.author.updateItem', [image.id, 'image', widget.field], true);
+        output += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [image.id, 'image', widget.field], true);
         output += '><br>';
       }
       if (widget.type === "select"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += authorLibs.utils.buildSelect('window.author.updateItem',  image.id, 'image', pathList, defaultId, 'path') + '<br>';
+        output += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  image.id, 'image', pathList, defaultId, 'path') + '<br>';
       }
       if (widget.type === "number")       output += authorLibs.utils.handleNumber(image, 'image', widget, widget.field);
       if (widget.type === "bool")         output += authorLibs.utils.handleBoolean(image, 'image', widget, widget.field);
@@ -226,12 +226,12 @@ authorLibs.buildProp = {
     prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
     prop += '<input class="auth_text w200" type="text" ';
     prop += 'value="'+ path.id + '" ';
-    prop += authorLibs.utils.buildFnString('window.author.updateItem', [path.id, 'path', 'id'], true);
+    prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [path.id, 'path', 'id'], true);
     prop += '><br>';
     prop += '<div class="entrylabel c_entrytitle_text w50">url</div>';
     prop += '<input class="auth_text w200" type="text" ';
     prop += 'value="'+ path.url + '" ';
-    prop += authorLibs.utils.buildFnString('window.author.updateItem', [path.id, 'path', 'url'], true);
+    prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [path.id, 'path', 'url'], true);
     prop += '><br>';
     return prop + '</div>';
   },
@@ -244,7 +244,7 @@ authorLibs.buildProp = {
       output += '<div class="entrylabel c_entrytitle_text w200">'+id+'</div>';
       output += '<input class="auth_text w200" type="'+ type +'" ';
       output += 'value="'+ authorLibs.authorData.settings[id] + '" ';
-      output += authorLibs.utils.buildFnString('window.author.updateSetting', [id], true);
+      output += authorLibs.utils.buildFnString('authorLibs.author.updateSetting', [id], true);
       output += '><br>';
     }
     return output + '</div>';
@@ -258,12 +258,12 @@ authorLibs.buildProp = {
       if (widget.type === "text"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += '<input class="auth_text w200" type="text" value="'+ sound[widget.field] + '" ';
-        output += authorLibs.utils.buildFnString('window.author.updateItem', [sound.id, 'sound', widget.field], true);
+        output += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [sound.id, 'sound', widget.field], true);
         output += '><br>';
       }
       if (widget.type === "select"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += authorLibs.utils.buildSelect('window.author.updateItem',  sound.id, 'sound', pathList, defaultId, 'path') + '<br>';
+        output += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  sound.id, 'sound', pathList, defaultId, 'path') + '<br>';
       }
       if (widget.type === "number")       output += authorLibs.utils.handleNumber(sound, 'sound', widget, widget.field);
       if (widget.type === "bool")         output += authorLibs.utils.handleBoolean(sound, 'sound', widget, widget.field);
@@ -284,14 +284,14 @@ authorLibs.buildProp = {
     thisProp.drawcode.forEach(function(widget, idx, source){
       prop += '<div class="propbox">'
       prop += '<div class="rightfloater">';
-      prop += '<div class="deleter" onclick="window.author.deleteprop(\'shapes\', \''+thisProp.id+'\', \'drawcode.'+idx+'\')">';
+      prop += '<div class="deleter" onclick="authorLibs.author.deleteprop(\'shapes\', \''+thisProp.id+'\', \'drawcode.'+idx+'\')">';
       prop += '<img id="removeshape" src="image/icon_x.png"/></div>';
       if (idx > 0){
-        prop += '<div onclick="window.author.moveprop(\'shapes\', \''+thisProp.id+'\', \'drawcode.'+idx+'\',\''+(idx-1)+'\')">';
+        prop += '<div onclick="authorLibs.author.moveprop(\'shapes\', \''+thisProp.id+'\', \'drawcode.'+idx+'\',\''+(idx-1)+'\')">';
         prop += '<img id="removeshape" src="image/icon_move_up.png"/></div>';
       }
       if (idx < thisProp.drawcode.length-1){
-        prop += '<div onclick="window.author.moveprop(\'shapes\', \''+thisProp.id+'\',\'drawcode.'+idx+'\',\''+(idx+1)+'\')">';
+        prop += '<div onclick="authorLibs.author.moveprop(\'shapes\', \''+thisProp.id+'\',\'drawcode.'+idx+'\',\''+(idx+1)+'\')">';
         prop += '<img id="removeshape" src="image/icon_move_down.png"/></div>';
       }
       prop += '</div>';
@@ -312,7 +312,7 @@ authorLibs.buildProp = {
       prop += '</div>';
     });
     authorLibs.menus.update('shapes');
-    prop += authorLibs.utils.buildDiv('divbutton', 'Add drawcode', 'window.author.adddrawcode', [shape.id]);
+    prop += authorLibs.utils.buildDiv('divbutton', 'Add drawcode', 'authorLibs.author.adddrawcode', [shape.id]);
     return prop + '</div>';
   },
 
@@ -332,12 +332,12 @@ authorLibs.buildProp = {
     prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
     prop += '<input class="auth_text w200" type="text" ';
     prop += 'value="'+ thisVar.id + '" ';
-    prop += authorLibs.utils.buildFnString('window.author.updateItem', [thisVar.id, 'var', 'id'], true);
+    prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [thisVar.id, 'var', 'id'], true);
     prop += '><br>';
     prop += '<div class="entrylabel c_entrytitle_text w50">value</div>';
     prop += '<input class="auth_text w200" type="number" ';
     prop += 'value="'+ thisVar.value + '" ';
-    prop += authorLibs.utils.buildFnString('window.author.updateItem', [thisVar.id, 'var', 'value'], true);
+    prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [thisVar.id, 'var', 'value'], true);
     prop += '><br>';
     return prop + '</div>';
   }

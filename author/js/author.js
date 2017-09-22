@@ -31,8 +31,8 @@ function popLearn(contents){
   document.getElementById("learning").innerHTML = contents;
 }
 function pickWin(win, toggle, size, bank){
-  document.getElementById(bank).style.zIndex = window.author.zPlus();
-  window.author.toggleminmax(win, toggle, size);
+  document.getElementById(bank).style.zIndex = authorLibs.author.zPlus();
+  authorLibs.author.toggleminmax(win, toggle, size);
 }
 
 
@@ -46,7 +46,7 @@ function initAuthorCanvasser(vari, datafile, dataForm){
   }
 
   function initEdit(datafile){
-    window.author = new authorcanvasser(datafile, 'file');
+    authorLibs.author = new authorcanvasser(datafile, 'file');
   }
 }
 
@@ -154,7 +154,7 @@ function authorcanvasser(dataFile, dataForm){
 
   this.reload = function(){
     restartCanvasser("sample", authorLibs.authorData, "string");
-    window.author.view()
+    authorLibs.author.view()
   }
   this.load_click = function(){
     document.getElementById("uploader").click();
@@ -236,11 +236,11 @@ function authorcanvasser(dataFile, dataForm){
     str += '<span>';
     str += '<span class="entrytitle c_entrylabel_pos">X</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.x + '" ';
-    str += authorLibs.utils.buildFnString('window.author.updateItem', [object.id, type, path+'.x'], true);
+    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path+'.x'], true);
     str +=   '>';
     str += '<span class="entrytitle c_entrylabel_pos">Y</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.y + '" ';
-    str += authorLibs.utils.buildFnString('window.author.updateItem', [object.id, type, path+'.y'], true);
+    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path+'.y'], true);
     str +=   '>'  + "</span><br>";
     return str;
   }

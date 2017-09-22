@@ -22,7 +22,7 @@ authorLibs.menus = {
     if (authorLibs.authorData[type] === undefined) authorLibs.authorData[type] = [];
     if (type === 'samples'){
       authorLibs.rules.samples.forEach(function(sampy){
-        menu += '<tr class="clicktr" id="'+type+'_'+sampy.id+'" onclick="window.author.loadSample(\''+ sampy.url + '\')">';
+        menu += '<tr class="clicktr" id="'+type+'_'+sampy.id+'" onclick="authorLibs.author.loadSample(\''+ sampy.url + '\')">';
         menu +='<td class="shapeid"><div>' + sampy.id + '</div></td>';
         menu += '</tr>';
       });
@@ -32,25 +32,25 @@ authorLibs.menus = {
     }
     authorLibs.authorData[type].forEach(function(menuItem){
       if (type === 'anims' || type === 'constraints' || type === 'groups' ||type === 'particles' || type === 'shapes' || type === 'sounds' || type === 'tests' || type === 'vars'){
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td width="100%">' + menuItem.id + '</td>';
         menu += '</tr>';
       }
       if (type === 'images'){
         var url = authorLibs.utils.prePath(menuItem);
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td class="imageid"><div class="imagetext">' + menuItem.id + '</div></td>';
         menu +='<td width="50px"><img src="' + url + '" alt="' + menuItem.id + '"></td>';
         menu += '</tr>';
       }
       if (type === 'objects'){
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td width="75%" style="font-size:1.3em;">' + menuItem.id + '</td>';
         menu +='<td width="25%">' + menuItem.type + '</td>';
         menu += '</tr>';
       }
       if (type === 'paths'){
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
+        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td width="50%">' + menuItem.id + '</td>';
         menu +='<td width="50%">' +menuItem.url + '</td>';
         menu += '</tr>';
@@ -74,7 +74,7 @@ authorLibs.menus = {
     var settings = '<table class="objtable" id="settingstable" width="100%">';
 
     Object.keys(authorLibs.authorData.settings).forEach(function(setting){
-      settings += '<tr class="clicktr" id="settings_'+setting+'" onclick="window.author.getProps(\'settings\',\''+ setting + '\')">';
+      settings += '<tr class="clicktr" id="settings_'+setting+'" onclick="authorLibs.author.getProps(\'settings\',\''+ setting + '\')">';
       settings +='<td width="50%">' + setting + '</td>';
       settings +='<td width="50%">' + authorLibs.authorData.settings[setting] + '</td>';
       settings += '</tr>';
@@ -117,7 +117,7 @@ authorLibs.menus = {
     authorLibs.menus.updateMenu(type)
     initCanvasser("sample", JSON.stringify(authorLibs.authorData), "string");
     authorLibs.menus.updateSelectionWindow(type, itemName);
-    window.author.view();
+    authorLibs.author.view();
   },
 
   deleteItem: function(type){

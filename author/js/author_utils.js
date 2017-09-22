@@ -102,8 +102,8 @@ authorLibs.utils = {
           actionWidgets = actionWidgets[0].widgets;
           str += '<div class="actionblock">';
           str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-          str += authorLibs.utils.buildSelect('window.author.updateActionList',  item.id, types, actionsList, itemAct.type, widget.field+'.'+idx+'.type');
-          str += '<div class="rightx" onclick="window.author.deleteitem('+"'objects'"+','+"'"+item.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
+          str += authorLibs.utils.buildSelect('authorLibs.author.updateActionList',  item.id, types, actionsList, itemAct.type, widget.field+'.'+idx+'.type');
+          str += '<div class="rightx" onclick="authorLibs.author.deleteitem('+"'objects'"+','+"'"+item.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
           actionWidgets.forEach(function(subWidget, idxPart){
             var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
             if (subWidget.type === 'anmlist') str += authorLibs.utils.handleTypeList('anims', item, type, subWidget, widgetPath);
@@ -136,7 +136,7 @@ authorLibs.utils = {
         });
         str += '<br>';
       }
-      str += authorLibs.utils.buildDiv('divbutton', 'Add Action', 'window.author.addaction', [item.id, types, widget.field]);
+      str += authorLibs.utils.buildDiv('divbutton', 'Add Action', 'authorLibs.author.addaction', [item.id, types, widget.field]);
       str += '</div>';
       return str;
   },
@@ -147,7 +147,7 @@ authorLibs.utils = {
     var defaultId = authorLibs.utils.getSubProp(object, path);
     str += '<div class="entrylabel c_entrytitle_text w100">' + display;
     str += '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
-    str += authorLibs.utils.buildFnString('window.author.updateItem', [object.id, type, path], true) + '><br>';
+    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path], true) + '><br>';
     return str;
   },
 
@@ -160,7 +160,7 @@ authorLibs.utils = {
       var defaultId = authorLibs.utils.findInGroup(object, grp);
       str += '<div class="nosplit"><div class="entrylabel c_entrytitle_text w100">' + grp;
       str += '</div><input class="checkbox" type="checkbox" ' + (defaultId > -1 ? "checked " : "");
-      str += authorLibs.utils.buildFnString('window.author.togglegroup', [object.id, type, path, grp], true) + '></div>';
+      str += authorLibs.utils.buildFnString('authorLibs.author.togglegroup', [object.id, type, path, grp], true) + '></div>';
     });
     return str+'</div>';
   },
@@ -180,7 +180,7 @@ authorLibs.utils = {
     str = '';
     var imageList = authorLibs.utils.objPartToArr(authorLibs.authorData.images, "id");
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += authorLibs.utils.buildSelect('window.author.updateItem',  item.id, type, imageList, item[widget.field], widget.field) + '<br>';
+    str += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  item.id, type, imageList, item[widget.field], widget.field) + '<br>';
     var flipTest = authorLibs.authorData.images.filter(function(img){ return img.id === item.image})[0];
     if (flipTest){
       if(flipTest.atlas){
@@ -197,7 +197,7 @@ authorLibs.utils = {
     if (num === undefined) num = 0;
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', (widget.display ? widget.display : widget.field) );
     str += '<input class="auth_xy" type="number" value="'+ num + '" ';
-    str += authorLibs.utils.buildFnString('window.author.updateItem', [object.id, type, path], true);
+    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path], true);
     str +=   '>'  + "<br>";
     return str;
   },
@@ -212,11 +212,11 @@ authorLibs.utils = {
     str += '<span>';
     str += '<span class="entrytitle c_entrylabel_pos">X</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.x + '" ';
-    str += authorLibs.utils.buildFnString('window.author.updateItem', [object.id, type, path+'.x'], true);
+    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path+'.x'], true);
     str +=   '>';
     str += '<span class="entrytitle c_entrylabel_pos">Y</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.y + '" ';
-    str += authorLibs.utils.buildFnString('window.author.updateItem', [object.id, type, path+'.y'], true);
+    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path+'.y'], true);
     str +=   '>'  + "</span><br>";
     return str;
   },
@@ -237,7 +237,7 @@ authorLibs.utils = {
     var defaultId = authorLibs.utils.getSubProp(object, path);
     var display = widget.display ? widget.display : widget.field;
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
-    str += authorLibs.utils.buildSelect('window.author.updateItem',  object.id, type, selOp, defaultId, path) + '<br>';
+    str += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  object.id, type, selOp, defaultId, path) + '<br>';
     return str;
   },
 
@@ -251,8 +251,8 @@ authorLibs.utils = {
         if (actionWidgets.length === 0) return;
         str += '<div class="actionblock">';
         str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-        str += authorLibs.utils.buildSelect('window.author.updateActionList',  test.id, "tests", testsList, actobject.type, widget.field+'.'+idx+'.type');
-        str += '<div class="rightx" onclick="window.author.deleteitem('+"'tests'," +"'"+test.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
+        str += authorLibs.utils.buildSelect('authorLibs.author.updateActionList',  test.id, "tests", testsList, actobject.type, widget.field+'.'+idx+'.type');
+        str += '<div class="rightx" onclick="authorLibs.author.deleteitem('+"'tests'," +"'"+test.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
         actionWidgets.forEach(function(subWidget, idxPart){
           var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
           if (subWidget.type === 'anmlist') str += authorLibs.utils.handleTypeList('anims', test,       'test', subWidget, widgetPath);
@@ -283,7 +283,7 @@ authorLibs.utils = {
       });
       str += '<br>';
     }
-    str += authorLibs.utils.buildDiv('divbutton', 'Add Test', 'window.author.addtest', [test.id, 'tests', widget.field]);
+    str += authorLibs.utils.buildDiv('divbutton', 'Add Test', 'authorLibs.author.addtest', [test.id, 'tests', widget.field]);
     str += '</div>';
     return str;
   },
@@ -293,7 +293,7 @@ authorLibs.utils = {
     var defaultId = authorLibs.utils.getSubProp(object, path);
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text ' + widthClass, widget.field );
     str += '<input class="auth_text" type="text" value="'+ defaultId + '" ';
-    str += authorLibs.utils.buildFnString('window.author.updateItem', [object.id, type, path], true);
+    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path], true);
     str +=   '>'  + "<br>";
     return str;
   },
@@ -303,7 +303,7 @@ authorLibs.utils = {
     var objectList = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "id");
     var defaultId = authorLibs.utils.getSubProp(object, path);
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += authorLibs.utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
+    str += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
     return str;
   },
 
