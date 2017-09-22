@@ -2,7 +2,7 @@ authorLibs.utils = {
   prePath: function(item){
     var url = item.url;
     if (!item.path) return url;
-    preUrl  = authorData.paths.filter(function(selected){return selected.id === item.path;})[0];
+    preUrl  = authorLibs.authorData.paths.filter(function(selected){return selected.id === item.path;})[0];
     if (!preUrl) return url;
     return preUrl.url + '/' + item.url;
   },
@@ -152,7 +152,7 @@ authorLibs.utils = {
   },
 
   handleGroup: function(object, type, widget, path){
-    var groupList = authorLibs.utils.objPartToArr(authorData.groups, "id");
+    var groupList = authorLibs.utils.objPartToArr(authorLibs.authorData.groups, "id");
     if (object.groups === undefined) object.groups = [];
     var display = widget.display === undefined ? widget.field : widget.display;
     var str = '<div class="grouper"> <div class="grouptitle">Groups:</div>';
@@ -178,10 +178,10 @@ authorLibs.utils = {
 
   handleImage: function(item, type, widget, path){
     str = '';
-    var imageList = authorLibs.utils.objPartToArr(authorData.images, "id");
+    var imageList = authorLibs.utils.objPartToArr(authorLibs.authorData.images, "id");
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += authorLibs.utils.buildSelect('window.author.updateItem',  item.id, type, imageList, item[widget.field], widget.field) + '<br>';
-    var flipTest = authorData.images.filter(function(img){ return img.id === item.image})[0];
+    var flipTest = authorLibs.authorData.images.filter(function(img){ return img.id === item.image})[0];
     if (flipTest){
       if(flipTest.atlas){
         str += authorLibs.utils.handleNumber(item, type, {field:'atlascell.x'}, 'atlascell.x');
@@ -300,7 +300,7 @@ authorLibs.utils = {
 
   handleTypeList: function(filter, object, type, widget, path){
     var str = '';
-    var objectList = authorLibs.utils.objPartToArr(authorData[filter], "id");
+    var objectList = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "id");
     var defaultId = authorLibs.utils.getSubProp(object, path);
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += authorLibs.utils.buildSelect('window.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';

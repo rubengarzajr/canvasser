@@ -19,7 +19,7 @@ authorLibs.menus = {
   updateMenu: function(type){
     var menuHolder = document.getElementById(type.slice(0, -1) + "holder");
     var menu       = '<table class="objtable" id="' + type + 'table" width="100%">';
-    if (authorData[type] === undefined) authorData[type] = [];
+    if (authorLibs.authorData[type] === undefined) authorLibs.authorData[type] = [];
     if (type === 'samples'){
       authorLibs.rules.samples.forEach(function(sampy){
         menu += '<tr class="clicktr" id="'+type+'_'+sampy.id+'" onclick="window.author.loadSample(\''+ sampy.url + '\')">';
@@ -30,7 +30,7 @@ authorLibs.menus = {
       menuHolder.innerHTML = menu;
       return;
     }
-    authorData[type].forEach(function(menuItem){
+    authorLibs.authorData[type].forEach(function(menuItem){
       if (type === 'anims' || type === 'constraints' || type === 'groups' ||type === 'particles' || type === 'shapes' || type === 'sounds' || type === 'tests' || type === 'vars'){
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td width="100%">' + menuItem.id + '</td>';
@@ -73,10 +73,10 @@ authorLibs.menus = {
     var settingHolder = document.getElementById("settingholder");
     var settings = '<table class="objtable" id="settingstable" width="100%">';
 
-    Object.keys(authorData.settings).forEach(function(setting){
+    Object.keys(authorLibs.authorData.settings).forEach(function(setting){
       settings += '<tr class="clicktr" id="settings_'+setting+'" onclick="window.author.getProps(\'settings\',\''+ setting + '\')">';
       settings +='<td width="50%">' + setting + '</td>';
-      settings +='<td width="50%">' + authorData.settings[setting] + '</td>';
+      settings +='<td width="50%">' + authorLibs.authorData.settings[setting] + '</td>';
       settings += '</tr>';
     });
     settings +='</table>';
@@ -84,38 +84,38 @@ authorLibs.menus = {
   },
 
   addItem: function(type){
-    if (authorData[type] === undefined) authorData[type] = [];
+    if (authorLibs.authorData[type] === undefined) authorLibs.authorData[type] = [];
     var itemName  = type.slice(0, -1);
     var itemCnt   = 0;
     var tryAgain  = true;
     while (tryAgain){
-      if (authorData[type].filter(function(item){return item.id === itemName}).length > 0){
+      if (authorLibs.authorData[type].filter(function(item){return item.id === itemName}).length > 0){
         itemCnt ++;
         itemName = type.slice(0, -1) + itemCnt;
       } else tryAgain = false;
     }
-    if (type === 'anims')       authorData[type].push({id:itemName, autostart:false, length:1000, timelist:[]});
-    if (type === 'constraints') authorData[type].push({id:itemName, active:true, driverlist:[]});
-    if (type === 'groups')      authorData[type].push({id:itemName});
+    if (type === 'anims')       authorLibs.authorData[type].push({id:itemName, autostart:false, length:1000, timelist:[]});
+    if (type === 'constraints') authorLibs.authorData[type].push({id:itemName, active:true, driverlist:[]});
+    if (type === 'groups')      authorLibs.authorData[type].push({id:itemName});
     if (type === 'images')      {
-      authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
-      if (authorData[type].length === 1) document.getElementById('imageholder').style.height = "65px";
+      authorLibs.authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
+      if (authorLibs.authorData[type].length === 1) document.getElementById('imageholder').style.height = "65px";
     }
     if (type === 'objects')     {
-      authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
-      if (authorData[type].length === 1) document.getElementById('objectholder').style.height = "35px";
+      authorLibs.authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}}, scale:{current:1}});
+      if (authorLibs.authorData[type].length === 1) document.getElementById('objectholder').style.height = "35px";
     }
-    if (type === 'particles')   authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}},
+    if (type === 'particles')   authorLibs.authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}},
     emitRate:10, pParams:{fade: {in:0, out:100}, scale: {min:1, max:1}, life: {min:1000, max:1000},
     speed:{position:{min:1, max:1}, rotation:{min:0.1, max:0.1}}}, genType:"burst", emitCounter:1000, emitDirEnd:360, emitDirStart:0});
-    if (type === 'paths')       authorData[type].push({id:itemName, url:authorLibs.externalsPath});
-    if (type === 'shapes')      authorData[type].push({id:itemName});
-    if (type === 'sounds')      authorData[type].push({id:itemName, url:authorLibs.externalsPath});
-    if (type === 'tests')       authorData[type].push({id:itemName, active:true});
-    if (type === 'vars')        authorData[type].push({id:itemName, value:0});
+    if (type === 'paths')       authorLibs.authorData[type].push({id:itemName, url:authorLibs.externalsPath});
+    if (type === 'shapes')      authorLibs.authorData[type].push({id:itemName});
+    if (type === 'sounds')      authorLibs.authorData[type].push({id:itemName, url:authorLibs.externalsPath});
+    if (type === 'tests')       authorLibs.authorData[type].push({id:itemName, active:true});
+    if (type === 'vars')        authorLibs.authorData[type].push({id:itemName, value:0});
 
     authorLibs.menus.updateMenu(type)
-    initCanvasser("sample", JSON.stringify(authorData), "string");
+    initCanvasser("sample", JSON.stringify(authorLibs.authorData), "string");
     authorLibs.menus.updateSelectionWindow(type, itemName);
     window.author.view();
   },
@@ -126,13 +126,13 @@ authorLibs.menus = {
     for (var i = 0, row; row = table.rows[i]; i++) {
       if (row.style[0] === "background-color") delRow = row.id;
     };
-    authorData[type].forEach(function(test, idx){
-      if (type + '_' + test.id === delRow){ authorData[type].splice(idx,1); }
+    authorLibs.authorData[type].forEach(function(test, idx){
+      if (type + '_' + test.id === delRow){ authorLibs.authorData[type].splice(idx,1); }
     });
     document.getElementById("propertiestitle").innerHTML = '';
     document.getElementById("properties").innerHTML      = '';
     authorLibs.menus.updateMenu(type);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
   copy: function(type){
@@ -144,22 +144,22 @@ authorLibs.menus = {
       if (row.style[0] === "background-color") copyRow = row.id;
     };
 
-    var objList = authorData[type].filter(function(test){ return(type+'_'+test.id === copyRow)});
+    var objList = authorLibs.authorData[type].filter(function(test){ return(type+'_'+test.id === copyRow)});
     if (objList.length === 0 || objList === undefined) return;
     newObj       = authorLibs.utils.copyObj(objList[0], {});
     var itemName = newObj.id.replace(/\d+$/, "");
     var itemCnt  = 0;
     var tryAgain = true;
     while (tryAgain){
-      if (authorData[type].filter(function(item){return item.id === itemName}).length > 0){
+      if (authorLibs.authorData[type].filter(function(item){return item.id === itemName}).length > 0){
         itemCnt ++;
         itemName = newObj.id.replace(/\d+$/, "") + itemCnt;
       } else tryAgain = false;
     }
     newObj.id = itemName;
-    authorData[type].push(newObj);
+    authorLibs.authorData[type].push(newObj);
     authorLibs.menus.update(type);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
     authorLibs.menus.updateSelectionWindow(type, newObj.id);
     authorLibs.buildProp.getProps(type,  newObj.id);
   },
@@ -177,21 +177,21 @@ authorLibs.menus = {
     };
 
     if (direction === "up" && swapRow > 0){
-      var b = authorLibs.utils.copyObj(authorData[type][swapRow], {});
-      authorData[type][swapRow] = authorData[type][swapRow-1];
-      authorData[type][swapRow-1] = b;
+      var b = authorLibs.utils.copyObj(authorLibs.authorData[type][swapRow], {});
+      authorLibs.authorData[type][swapRow] = authorLibs.authorData[type][swapRow-1];
+      authorLibs.authorData[type][swapRow-1] = b;
       select = b.id;
     }
-    if (direction === "down" && swapRow < authorData[type].length-1){
-      var b = authorLibs.utils.copyObj(authorData[type][swapRow], {});
-      authorData[type][swapRow] = authorData[type][swapRow+1];
-      authorData[type][swapRow+1] = b;
+    if (direction === "down" && swapRow < authorLibs.authorData[type].length-1){
+      var b = authorLibs.utils.copyObj(authorLibs.authorData[type][swapRow], {});
+      authorLibs.authorData[type][swapRow] = authorLibs.authorData[type][swapRow+1];
+      authorLibs.authorData[type][swapRow+1] = b;
       select = b.id;
     }
 
     authorLibs.menus.update(type);
     authorLibs.buildProp.getProps(type, swapId.substring(swapId.indexOf("_") + 1));
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
     if (select !== undefined) authorLibs.menus.updateSelectionWindow(type, select);
   }
 

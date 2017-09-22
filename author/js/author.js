@@ -51,7 +51,7 @@ function initAuthorCanvasser(vari, datafile, dataForm){
 }
 
 function restartCanvasser(name, data, type){
-  authorData = data;
+  authorLibs.authorData = data;
   authorLibs.canvasser = initCanvasser(name, JSON.stringify(data), type);
   authorLibs.menus.update();
 
@@ -86,7 +86,7 @@ function authorcanvasser(dataFile, dataForm){
     zidx: 25
   };
 
-  authorData = dataFile;
+  authorLibs.authorData = dataFile;
   var wins = ['anim','canvas','constraint','group', 'image', 'json', 'learn', 'object', 'particle', 'path', 'properties', 'sample', 'setting', 'shape', 'sound', 'test', 'var'];
   wins.forEach(function(idRoot){
     document.getElementById(idRoot+"contents").addEventListener("mousedown",    function(){focusObjD(idRoot+"bank")},       false);
@@ -95,7 +95,7 @@ function authorcanvasser(dataFile, dataForm){
 
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);
-  restartCanvasser("sample", authorData, "string");
+  restartCanvasser("sample", authorLibs.authorData, "string");
   authorLibs.menus.update();
 
   loop();
@@ -153,7 +153,7 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   this.reload = function(){
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
     window.author.view()
   }
   this.load_click = function(){
@@ -173,7 +173,7 @@ function authorcanvasser(dataFile, dataForm){
     }
   }
   this.view = function(){
-    document.getElementById("paste").value = JSON.stringify(authorData);
+    document.getElementById("paste").value = JSON.stringify(authorLibs.authorData);
   }
   this.paste = function(){
     var pasteData = document.getElementById("paste").value;
@@ -182,7 +182,7 @@ function authorcanvasser(dataFile, dataForm){
   }
   this.format = function(){
     var pasteData = document.getElementById("paste").value;
-    document.getElementById("paste").value = JSON.stringify(authorData, null, 4);
+    document.getElementById("paste").value = JSON.stringify(authorLibs.authorData, null, 4);
   }
   this.toggleminmax= function(element, minmax, maxsize){
     var d = document.getElementById(element);
@@ -198,14 +198,14 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   this.adddrawcode = function(id){
-    var shape = authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
+    var shape = authorLibs.authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
     shape.drawcode.push({type:'fill'});
     authorLibs.buildProp.getProps('shapes', id);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   this.moveprop = function(type,id,path,moveto){
-    var obj = authorData[type].filter(function(test){return test.id === id})[0];
+    var obj = authorLibs.authorData[type].filter(function(test){return test.id === id})[0];
     var arr = path.split(".");
     while(arr.length > 1){
       if (obj[arr[0]] === undefined) obj[arr[0]] = {};
@@ -213,11 +213,11 @@ function authorcanvasser(dataFile, dataForm){
     }
     obj.splice(moveto, 0, obj.splice(arr[0], 1)[0]);
     authorLibs.buildProp.getProps(type, id);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   this.deleteprop = function(type,id,path){
-    var obj = authorData[type].filter(function(test){return test.id === id})[0];
+    var obj = authorLibs.authorData[type].filter(function(test){return test.id === id})[0];
     var arr = path.split(".");
     while(arr.length > 1){
       if (obj[arr[0]] === undefined) obj[arr[0]] = {};
@@ -225,7 +225,7 @@ function authorcanvasser(dataFile, dataForm){
     }
     obj.splice(arr[0],1);
     authorLibs.buildProp.getProps(type, id);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   function handleColor(object, type, widget, path){
@@ -251,28 +251,28 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   this.createPosXY = function(objectId, paramPath){
-    var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
+    var objGet = authorLibs.authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
     this.createItem("0", objectId, 'position.'+paramPath+'.x');
     this.createItem("0", objectId, 'position.'+paramPath+'.y');
     authorLibs.buildProp.getProps("objects",objGet.id);
   };
 
   this.createScale = function(objectId, paramPath){
-    var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
+    var objGet = authorLibs.authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
     this.createItem("1", objectId, 'scale.'+paramPath);
     authorLibs.buildProp.getProps("objects",objGet.id);
   };
 
   this.createItem = function(newVal, objectId, paramPath){
-    var objGet = authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
+    var objGet = authorLibs.authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
     authorLibs.utils.setSubProp(objGet, paramPath, newVal);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   };
 
 
 
   this.updateSelect = function(domElement, objectId, positionId, axisId){
-    var objGet = authorData[type].filter(function(finder){return (finder.id === id);})[0];
+    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);})[0];
     var newRule = authorLibs.rules.actions.filter(function(ruleName){
       return ruleName.elementType === domElement.value}
     )[0];
@@ -289,11 +289,11 @@ function authorcanvasser(dataFile, dataForm){
     }
     authorLibs.menus.update(type);
     authorLibs.buildProp.getProps(type, id);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   this.updateActionList = function(domElement, objectId, type, paramPath){
-    var item = authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
+    var item = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
     var prop = authorLibs.utils.getSubProp(item, paramPath);
     this.updateItem(domElement, objectId, type.slice(0, -1), paramPath);
     var newRule = authorLibs.rules.actions.filter(function(ruleName){
@@ -302,11 +302,11 @@ function authorcanvasser(dataFile, dataForm){
 
     authorLibs.menus.update('objects');
     authorLibs.buildProp.getProps('objects', objectId);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   this.updateTimeline = function(domElement, objectId, type, paramPath){
-    var objGet = authorData.anims.filter(function(finder){return (finder.id === objectId);})[0];
+    var objGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === objectId);})[0];
     var prop = authorLibs.utils.getSubProp(objGet, paramPath);
     this.updateItem(domElement, objectId, 'anim', paramPath);
     var newRule = authorLibs.rules.actions.filter(function(ruleName){
@@ -315,29 +315,29 @@ function authorcanvasser(dataFile, dataForm){
 
     authorLibs.menus.update('objects');
     authorLibs.buildProp.getProps('objects', objectId);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   this.updateSetting = function(domElement, setting){
-    authorData.settings[setting] = domElement.value;
+    authorLibs.authorData.settings[setting] = domElement.value;
     authorLibs.menus.update('settings');
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   this.updateItem = function(domElement, objectId, type, paramPath){
     var newVal = domElement.value.toString();
     if (domElement.type === 'checkbox') newVal = domElement.checked;
     if (newVal === '---NONE---')        newVal = undefined;
-    var   objGet = authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
+    var   objGet = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
     authorLibs.utils.setSubProp(objGet, paramPath, newVal);
     authorLibs.buildProp.getProps(type+'s', objGet.id);
     authorLibs.menus.update(type);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   };
 
   this.togglegroup = function(domElement, objectId, type, paramPath, groupName){
     var element = domElement.checked;
-    var objGet  = authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
+    var objGet  = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
     if (objGet.groups === undefined) objGet.groups = [];
 
     if (element){
@@ -348,7 +348,7 @@ function authorcanvasser(dataFile, dataForm){
     }
 
     authorLibs.menus.update(type);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   function findInGroup(item, groupName){
@@ -363,48 +363,48 @@ function authorcanvasser(dataFile, dataForm){
   }
 
   this.addaction = function(id, type, listType){
-    var objGet = authorData[type].filter(function(finder){return (finder.id === id);});
+    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
     if (objGet.length === 0) return;
     if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
     objGet[0][listType].push({"type":"cleardown"});
     authorLibs.buildProp.getProps(type,objGet[0].id);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   this.addtest = function(id, type, listType){
-    var objGet = authorData[type].filter(function(finder){return (finder.id === id);});
+    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
     if (objGet.length === 0) return;
     if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
     objGet[0][listType].push({"type":"var"});
     authorLibs.buildProp.getProps(type,objGet[0].id);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   this.deleteitem = function(type, objName, listType, index){
-    var objGet = authorData[type].filter(function(finder){return (finder.id === objName);});
+    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === objName);});
     if (objGet.length === 0) return;
     objGet[0][listType].splice(index,1);
     authorLibs.buildProp.getProps(type,objGet[0].id);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   this.deletetimeline = function(animName, index){
-    var animGet = authorData.anims.filter(function(finder){return (finder.id === animName);});
+    var animGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === animName);});
     if (animGet.length === 0) return;
     animGet[0].timelist.splice(index,1);
     authorLibs.buildProp.getProps("anims",animName);
-    restartCanvasser("sample", authorData, "string");
+    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   this.addAnimCommand = function(animName, timelist){
-    var animGet = authorData.anims.filter(function(finder){return (finder.id === animName);});
+    var animGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === animName);});
     if (animGet.length === 0) return;
     animGet[0][timelist].push({"type":"console"});
     authorLibs.buildProp.getProps("anims",animName);
   }
 
   this.addConstraint = function(constraintName, driverlist){
-    var driver = authorData.constraints.filter(function(finder){return (finder.id === constraintName);});
+    var driver = authorLibs.authorData.constraints.filter(function(finder){return (finder.id === constraintName);});
     if (driver.length === 0) return;
     driver[0][driverlist].push({"type":"position"});
     authorLibs.buildProp.getProps("constraints", constraintName);

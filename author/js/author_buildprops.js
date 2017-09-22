@@ -2,7 +2,7 @@ authorLibs.buildProp = {
 
   getProps: function(type, id){
     var thisProp = undefined;
-    if (Array.isArray(authorData[type])) thisProp = authorData[type].filter(function(selected){return selected.id === id;})[0];
+    if (Array.isArray(authorLibs.authorData[type])) thisProp = authorLibs.authorData[type].filter(function(selected){return selected.id === id;})[0];
     else thisProp = id;
     if (thisProp === undefined) return;
     var titleText = '<div class="proptitle">' + type.charAt(0).toUpperCase() + type.slice(1, -1);
@@ -14,7 +14,7 @@ authorLibs.buildProp = {
 
   build: function(type, id){
     var output   = '<div class="propbody">';
-    var pathList = authorLibs.utils.objPartToArr(authorData.paths, "id");
+    var pathList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
     var defaultId = authorLibs.utils.getSubProp(group, 'path');
     authorLibs.rules.groups.widgets.forEach(function(widget, idx, source){
       if (widget.type === "text"){
@@ -152,7 +152,7 @@ authorLibs.buildProp = {
 
   images: function(image){
     var output = '<div class="propbody">';
-    var pathList = authorLibs.utils.objPartToArr(authorData.paths, "id");
+    var pathList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
     var defaultId = authorLibs.utils.getSubProp(image, 'path');
     authorLibs.rules.image.imagedata.widgets.forEach(function(widget, idx, source){
       if (widget.type === "text"){
@@ -239,11 +239,11 @@ authorLibs.buildProp = {
   settings: function(id){
     var output = '<div class="propbody">';
     var type   = authorLibs.rules.settings[id].type;
-    if (type === "bool") output += authorLibs.utils.handleBoolean(authorData.settings, 'setting', {field:"usecache"}, id);
+    if (type === "bool") output += authorLibs.utils.handleBoolean(authorLibs.authorData.settings, 'setting', {field:"usecache"}, id);
     else {
       output += '<div class="entrylabel c_entrytitle_text w200">'+id+'</div>';
       output += '<input class="auth_text w200" type="'+ type +'" ';
-      output += 'value="'+ authorData.settings[id] + '" ';
+      output += 'value="'+ authorLibs.authorData.settings[id] + '" ';
       output += authorLibs.utils.buildFnString('window.author.updateSetting', [id], true);
       output += '><br>';
     }
@@ -252,7 +252,7 @@ authorLibs.buildProp = {
 
   sounds: function(sound){
     var output = '<div class="propbody">';
-    var pathList = authorLibs.utils.objPartToArr(authorData.paths, "id");
+    var pathList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
     var defaultId = authorLibs.utils.getSubProp(sound, 'path');
     authorLibs.rules.sound.widgets.forEach(function(widget, idx, source){
       if (widget.type === "text"){
@@ -275,7 +275,7 @@ authorLibs.buildProp = {
   shapes: function(shape){
     var drawList = [];
     authorLibs.rules.drawcode.forEach(function(template){drawList.push(template.type)});
-    var thisProp = authorData.shapes.filter(function(check){return check.id === shape.id;})[0];
+    var thisProp = authorLibs.authorData.shapes.filter(function(check){return check.id === shape.id;})[0];
     if (thisProp === undefined) return;
 
     document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Shape: ' + shape.id + '</div>';
