@@ -1,6 +1,7 @@
 var authorLibs = {
-  externalsPath: './',
-  defaultJSON: "./json/default.json"
+  externalsPath:  './',
+  defaultJSONobj: false,
+  defaultJSON:    "./json/default.json"
 };
 
 document.onreadystatechange = function(){
@@ -42,7 +43,8 @@ function initAuthorCanvasser(vari, datafile, dataForm){
   authorLibs.utils.requestJSON(authorLibs.externalsPath + "json/author.json", setRules);
   function setRules(data){
     authorLibs.rules  = data;
-    authorLibs.utils.requestJSON(authorLibs.defaultJSON, initEdit);
+    if (authorLibs.defaultJSONobj) initEdit(authorLibs.defaultJSON);
+    else authorLibs.utils.requestJSON(authorLibs.defaultJSON, initEdit);
   }
 
   function initEdit(datafile){
