@@ -29,7 +29,6 @@ function pickWin(win, toggle, size, bank){
 function initAuthorCanvasser(vari, datafile, dataForm){
   authorLibs.windows.build();
   learning('load', 'welcome');
-
   authorLibs.utils.requestJSON("./json/author.json", setRules);
   function setRules(data){
     authorLibs.rules  = data;
@@ -41,10 +40,9 @@ function initAuthorCanvasser(vari, datafile, dataForm){
   }
 }
 
-
 function restartCanvasser(name, data, type){
   authorData = data;
-  initCanvasser(name, JSON.stringify(data), type);
+  authorLibs.canvasser = initCanvasser(name, JSON.stringify(data), type);
   authorLibs.menus.update();
 
   function getMousePos(canvas, evt) {
@@ -55,13 +53,16 @@ function restartCanvasser(name, data, type){
     };
   }
   var canvasParent = document.getElementById(data.settings.canvasparent);
-  var canvas = canvasParent.firstChild;
-  var context = canvas.getContext('2d');
+  var canvas       = canvasParent.firstChild;
+  var context      = canvas.getContext('2d');
   canvas.addEventListener('mousemove', function(evt) {
     var mousePos = getMousePos(canvas, evt);
     var message =  mousePos.x + ',' + mousePos.y;
     document.getElementById('outputtitle').innerHTML = message;
   }, false);
+
+  var title = document.getElementById('titlelabel');
+  if (title !== undefined) title.innerHTML = 'Canvasser <div class = "version">version ' + authorLibs.canvasser.version + '</span>';
 }
 
 function authorcanvasser(dataFile, dataForm){
@@ -86,21 +87,14 @@ function authorcanvasser(dataFile, dataForm){
   window.addEventListener("mousemove", mouseMove, false);
   restartCanvasser("sample", authorData, "string");
   authorLibs.menus.update();
+
   loop();
-
-
-  function getVisibleArea(){
-    return {
-      x:window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth||0,
-      y:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight||0
-    }
-  }
 
   function loop(){
     if (UIdata.moveElement !== null && UIdata.move){
       UIdata.moveElement.style.left = UIdata.mousePos.x  - UIdata.offset.x + "px";
       UIdata.moveElement.style.top  = UIdata.mousePos.y  - UIdata.offset.y + "px";
-      var ext = getVisibleArea();
+      var ext = authorLibs.utils.getVisibleArea();
       var win = UIdata.moveElement.getBoundingClientRect();
 
       if (UIdata.mousePos.x - UIdata.offset.x < 5) UIdata.moveElement.style.left = '5px';
@@ -191,47 +185,6 @@ function authorcanvasser(dataFile, dataForm){
       d.style.display = "block";
       b.src="image/icon_min_g.png";
     }
-  }
-
-  this.togglejson= function(){
-    var s = document.getElementById("jsonmenu");
-    var b = document.getElementById("togglejson");
-    if (s.style.display === "block") {
-      s.style.display = "none";
-      b.src="image/icon_max_g.png";
-    }
-    else {
-      s.style.display = "block";
-      b.src="image/icon_min_g.png";
-    }
-  }
-
-  this.reorder = function(type, direction){
-    var table   = document.getElementById(type + "table");
-    var swapRow = undefined;
-    var swapId  = undefined;
-
-    for (var i = 0, row; row = table.rows[i]; i++) {
-      if (row.style[0] === "background-color") {
-        swapRow = i;
-        swapId  = row.id;
-      }
-    };
-
-    if (direction === "up" && swapRow > 0){
-      var b = authorLibs.utils.copyObj(authorData[type][swapRow], {});
-      authorData[type][swapRow] = authorData[type][swapRow-1];
-      authorData[type][swapRow-1] = b;
-    }
-    if (direction === "down" && swapRow < authorData[type].length-1){
-      var b = authorLibs.utils.copyObj(authorData[type][swapRow], {});
-      authorData[type][swapRow] = authorData[type][swapRow+1];
-      authorData[type][swapRow+1] = b;
-    }
-
-    authorLibs.menus.update(type);
-    authorLibs.buildProp.getProps(type, swapId.substring(swapId.indexOf("_") + 1));
-    restartCanvasser("sample", authorData, "string");
   }
 
   this.adddrawcode = function(id){

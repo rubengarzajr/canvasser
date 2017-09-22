@@ -338,6 +338,13 @@ authorLibs.utils = {
       }
       xhr.open('GET', fileNamePath, true);
     xhr.send(null);
+  },
+
+  getVisibleArea: function(){
+    return {
+      x:window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth||0,
+      y:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight||0
+    }
   }
 
 }

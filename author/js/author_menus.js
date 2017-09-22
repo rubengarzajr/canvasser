@@ -40,7 +40,7 @@ authorLibs.menus = {
         var url = authorLibs.utils.prePath(menuItem);
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="window.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td class="imageid"><div class="imagetext">' + menuItem.id + '</div></td>';
-        menu +='<td width="50%"><img src="' + url + '" alt="' + menuItem.id + '"></td>';
+        menu +='<td width="50px"><img src="' + url + '" alt="' + menuItem.id + '"></td>';
         menu += '</tr>';
       }
       if (type === 'objects'){
@@ -97,8 +97,14 @@ authorLibs.menus = {
     if (type === 'anims')       authorData[type].push({id:itemName, autostart:false, length:1000, timelist:[]});
     if (type === 'constraints') authorData[type].push({id:itemName, active:true, driverlist:[]});
     if (type === 'groups')      authorData[type].push({id:itemName});
-    if (type === 'images')      authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
-    if (type === 'objects')     authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
+    if (type === 'images')      {
+      authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
+      if (authorData[type].length === 1) document.getElementById('imageholder').style.height = "65px";
+    }
+    if (type === 'objects')     {
+      authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}}, scale:{current:1}});
+      if (authorData[type].length === 1) document.getElementById('objectholder').style.height = "35px";
+    }
     if (type === 'particles')   authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorData.settings.canvaswidth/2), y:Math.floor(authorData.settings.canvasheight/2)}},
     emitRate:10, pParams:{fade: {in:0, out:100}, scale: {min:1, max:1}, life: {min:1000, max:1000},
     speed:{position:{min:1, max:1}, rotation:{min:0.1, max:0.1}}}, genType:"burst", emitCounter:1000, emitDirEnd:360, emitDirStart:0});
@@ -156,6 +162,37 @@ authorLibs.menus = {
     restartCanvasser("sample", authorData, "string");
     authorLibs.menus.updateSelectionWindow(type, newObj.id);
     authorLibs.buildProp.getProps(type,  newObj.id);
+  },
+
+  reorder: function(type, direction){
+    var table   = document.getElementById(type + "table");
+    var swapRow = undefined;
+    var swapId  = undefined;
+    var select  = undefined;
+    for (var i = 0, row; row = table.rows[i]; i++) {
+      if (row.style[0] === "background-color") {
+        swapRow = i;
+        swapId  = row.id;
+      }
+    };
+
+    if (direction === "up" && swapRow > 0){
+      var b = authorLibs.utils.copyObj(authorData[type][swapRow], {});
+      authorData[type][swapRow] = authorData[type][swapRow-1];
+      authorData[type][swapRow-1] = b;
+      select = b.id;
+    }
+    if (direction === "down" && swapRow < authorData[type].length-1){
+      var b = authorLibs.utils.copyObj(authorData[type][swapRow], {});
+      authorData[type][swapRow] = authorData[type][swapRow+1];
+      authorData[type][swapRow+1] = b;
+      select = b.id;
+    }
+
+    authorLibs.menus.update(type);
+    authorLibs.buildProp.getProps(type, swapId.substring(swapId.indexOf("_") + 1));
+    restartCanvasser("sample", authorData, "string");
+    if (select !== undefined) authorLibs.menus.updateSelectionWindow(type, select);
   }
 
 }

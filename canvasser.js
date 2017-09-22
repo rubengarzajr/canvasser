@@ -6,10 +6,11 @@ function initCanvasser(vari, datafile, dataForm, overrides){
   var oldPos = window[vari] ? {x:window[vari].act.position.x, y:window[vari].act.position.y} : {x:0,y:0};
   window[vari] = new canvasser(vari, datafile, dataForm, overrides);
   window[vari].act.position = {x:oldPos.x, y:oldPos.y};
+  return window[vari];
 }
 
 function canvasser(vari, interactiveData, dataForm, overrides){
-  this.version  = '1.0.1';
+  this.version  = '1.0.2';
   var act      = new interaction();
   this.act     = act;
   var pManager = new particleManager();
