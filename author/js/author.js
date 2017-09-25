@@ -29,8 +29,12 @@ function learning(action, page){
   }
 }
 function popLearn(contents){
-  document.getElementById("learning").innerHTML = contents;
+  var newContent = contents.split('"./').join('"' + authorLibs.externalsPath);
+  document.getElementById("learning").innerHTML = newContent;
 }
+
+
+
 function pickWin(win, toggle, size, bank){
   document.getElementById(bank).style.zIndex = authorLibs.author.zPlus();
   authorLibs.author.toggleminmax(win, toggle, size);
@@ -53,7 +57,6 @@ function initAuthorCanvasser(vari, datafile, dataForm){
 }
 
 function restartCanvasser(name, data, type){
-
   data.paths.forEach(function(path){
     if (path.url.substring(0,2) === './') path.url = authorLibs.externalsPath + path.url.substring(2)
   });
