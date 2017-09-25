@@ -184,8 +184,7 @@
     {"id":"Particle Sample 1",          "url":"particles_sample1.json"},
     {"id":"Particle Facing Motion",     "url":"particles_sample2.json"},
     {"id":"Particle Emitter Animation", "url":"particles_sample4.json"},
-    {"id":"Particle Rain",              "url":"particles_rain.json"},
-    {"id":"lotsostuff",                 "url":"multi.json"}
+    {"id":"Particle Rain",              "url":"particles_rain.json"}
   ],
   "select":{
     "axistype":{"list":["xy","x","y"]},
