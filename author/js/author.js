@@ -166,22 +166,7 @@ function authorcanvasser(dataFile, dataForm){
     restartCanvasser("sample", authorLibs.authorData, "string");
     authorLibs.author.view()
   }
-  this.load_click = function(){
-    document.getElementById("uploader").click();
-  }
-  this.load = function(){
-    var file = document.getElementById("uploader").files[0];
-    if (file) {
-      var reader = new FileReader();
-      reader.readAsText(file, "UTF-8");
-      reader.onload = function (evt) {
-        document.getElementById("paste").innerHTML = evt.target.result;
-      }
-      reader.onerror = function (evt) {
-        document.getElementById("paste").innerHTML = "error reading file";
-      }
-    }
-  }
+
   this.view = function(){
     document.getElementById("paste").value = JSON.stringify(authorLibs.authorData);
   }

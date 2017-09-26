@@ -93,6 +93,19 @@ a{
   margin-top: 29px;
 }
 
+#saver{
+  background-color: rgb(156, 233, 255);
+  display: inline-block;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  padding: 2px;
+  font-family: button;
+  border: 1px solid black;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
 .bottomlinks{
   margin-left:auto;
   margin-right:auto;

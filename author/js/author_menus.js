@@ -1,4 +1,43 @@
 authorLibs.menus = {
+  load_click: function(){
+    document.getElementById("upload_json").click();
+  },
+
+  upload: function(type){
+    console.log("WHAT")
+    if (type === 'images') document.getElementById("upload_image").click();
+  },
+
+  loadFile: function(){
+    var file = document.getElementById("upload_json").files[0];
+
+    if (file) {
+      var reader = new FileReader();
+      reader.readAsText(file, "UTF-8");
+      reader.onload = function (evt) {
+        document.getElementById("paste").innerHTML = evt.target.result;
+      }
+      reader.onerror = function (evt) {
+        document.getElementById("paste").innerHTML = "error reading file";
+      }
+    }
+  },
+
+  loadImage: function(event){
+    Array.from(event.target.files).forEach(function(file){
+      if (!file.type.match('image.*')) return;
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function (evt) {
+        authorLibs.authorData.images.push({id:file.name.slice(0, -4), path:"author",  url:file.name, local:true, data:evt.target.result});
+        if (authorLibs.authorData.images.length === 1) document.getElementById('imageholder').style.height = "65px";
+        authorLibs.menus.updateMenu('images');
+      }
+      reader.onerror = function (evt) {
+        document.getElementById("properties").innerHTML = "error reading file";
+      }
+    });
+  },
 
   update: function(toUp){
     if (!toUp || toUp === 'anims')       authorLibs.menus.updateMenu('anims');
@@ -40,7 +79,8 @@ authorLibs.menus = {
         var url = authorLibs.utils.prePath(menuItem);
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td class="imageid"><div class="imagetext">' + menuItem.id + '</div></td>';
-        menu +='<td width="50px"><img src="' + url + '" alt="' + menuItem.id + '"></td>';
+        if (menuItem.local) menu +='<td width="50px"><img src="' + menuItem.data + '" alt="' + menuItem.id + '"></td>';
+        else menu +='<td width="50px"><img src="' + url + '" alt="' + menuItem.id + '"></td>';
         menu += '</tr>';
       }
       if (type === 'objects'){

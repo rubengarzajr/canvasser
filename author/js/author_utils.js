@@ -7,6 +7,21 @@ authorLibs.utils = {
     return preUrl.url + '/' + item.url;
   },
 
+  saveToPhp:function(){
+    var data = authorLibs.authorData;
+    var xhr = new XMLHttpRequest(); // simplified for clarity
+    var url = "php/upload.php";
+
+    xhr.open("POST", url, true); // sending as POST
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() { //Call a function when the state changes.
+    if(xhr.readyState == 4 && xhr.status == 200) { // complete and no errors
+        alert(xhr.responseText); // some processing here, or whatever you want to do with the response
+        }
+    }
+    xhr.send("data="+JSON.stringify(data));
+  },
+
   setSubProp: function(obj, desc, val){
     var arr = desc.split(".");
     while(arr.length > 1){

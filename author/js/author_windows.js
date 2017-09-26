@@ -1,15 +1,21 @@
 authorLibs.windows = {
   build: function(){
     var parent = document.getElementById("canvasser_authoring");
-    var head = authorLibs.windows.makeDiv(parent, null,  'header', null, null, null);
-    authorLibs.windows.makeDiv(head, 'titlelabel', 'titlecenter', null, null, null);
+    var head   = authorLibs.windows.makeDiv({parent:parent, classes:'header'});
+    var saver  = authorLibs.windows.makeDiv({parent:parent, id:'saver', html:'Upload',  click:function(){authorLibs.utils.saveToPhp()}});
+
+    var upload_json = authorLibs.windows.makeElement({type:'input', subtype:'file', parent:parent, id:'upload_json', style:'display:none'});
+    upload_json.addEventListener('change', authorLibs.menus.loadFile, false);
+    var upload_image = authorLibs.windows.makeElement({type:'input', subtype:'file', parent:parent, id:'upload_image', style:'display:none'});
+    upload_image.addEventListener('change', authorLibs.menus.loadImage, false);
+    authorLibs.windows.makeDiv({parent:head, id:'titlelabel', classes:'titlecenter'});
 
     var winList = [
       {id:"anim",       position:{x:339, y:110}, menu:{add:true, delete:true, copy:true}, min:true},
       {id:"canvas",     position:{x:10,  y:174}, menu:{reload:true}},
       {id:"constraint", position:{x:667, y:76},  menu:{add:true, delete:true, copy:true}, min:true},
       {id:"group",      position:{x:10,  y:76},  menu:{add:true, delete:true}, min:true},
-      {id:"image",      position:{x:174, y:110}, menu:{add:true, delete:true}, min:true},
+      {id:"image",      position:{x:174, y:110}, menu:{add:true, delete:true, import:true}, min:true},
       {id:"json",       position:{x:667, y:40},  menu:{load:true, view:true, execute:true, format:true},min:true},
       {id:"object",     position:{x:10,  y:110}, menu:{add:true, delete:true, copy:true, reorder:true}, min:true},
       {id:"particle",   position:{x:174, y:76},  menu:{add:true, delete:true}, min:true},
@@ -25,30 +31,31 @@ authorLibs.windows = {
     ]
 
     winList.forEach(function(win){
-      var bank      = authorLibs.windows.makeDiv(parent,  win.id + 'bank', 'window_movable','left:'+win.position.x+'px; top:'+win.position.y+'px;', null, null);
-      var title     = authorLibs.windows.makeDiv(bank,  win.id + 'mover', 'titlebar', null, null, null);
-      var winTitle  = authorLibs.windows.makeDiv(title,  null, 'wintitle', null, win.id.charAt(0).toUpperCase() +  win.id.slice(1) + 's', null);
-      authorLibs.windows.makeDiv(title,  null, 'button_righter', null, '<img id="toggle'+win.id+'s" src="' + authorLibs.externalsPath +'image/icon_'+(win.min ? 'max': 'min')+'_g.png"/>', function(){authorLibs.author.toggleminmax(win.id+'contents', 'toggle'+win.id+'s', 664)});
+      var bank      = authorLibs.windows.makeDiv({parent:parent,  id:win.id + 'bank', classes:'window_movable',style:'left:'+win.position.x+'px; top:'+win.position.y+'px;'});
+      var title     = authorLibs.windows.makeDiv({parent:bank,  id:win.id + 'mover', classes:'titlebar'});
+      var winTitle  = authorLibs.windows.makeDiv({parent:title,  classes:'wintitle', html:win.id.charAt(0).toUpperCase() +  win.id.slice(1) + 's'});
+      authorLibs.windows.makeDiv({parent:title,  classes:'button_righter', html:'<img id="toggle'+win.id+'s" src="' + authorLibs.externalsPath +'image/icon_'+(win.min ? 'max': 'min')+'_g.png"/>', click:function(){authorLibs.author.toggleminmax(win.id+'contents', 'toggle'+win.id+'s', 664)}});
       var display   = win.min ? "display:none" : "display:block";
-      var contents  = authorLibs.windows.makeDiv(bank,  win.id + 'contents', 'padlr', display, null, null);
-      var menu      = authorLibs.windows.makeDiv(contents,  win.id + 'menu', 'submenu', null, null, null);
-      if (win.menu.add)     authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'Add', function(){authorLibs.menus.addItem( win.id +'s')});
-      if (win.menu.copy)    authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'Copy', function(){authorLibs.menus.copy( win.id +'s')});
-      if (win.menu.delete)  authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'Delete', function(){authorLibs.menus.deleteItem( win.id +'s')});
-      if (win.menu.execute) authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'Execute', function(){authorLibs.author.paste()});
-      if (win.menu.format)  authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'Format', function(){authorLibs.author.format()});
-      if (win.menu.load)    authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'Load', function(){authorLibs.author.load_click()});
-      if (win.menu.reload)  authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'Restart', function(){authorLibs.author.reload()});
+      var contents  = authorLibs.windows.makeDiv({parent:bank,  id:win.id + 'contents', classes:'padlr', style:display});
+      var menu      = authorLibs.windows.makeDiv({parent:contents, id:win.id + 'menu', classes:'submenu'});
+      if (win.menu.add)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Add',     click:function(){authorLibs.menus.addItem( win.id +'s')}});
+      if (win.menu.copy)    authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.menus.copy( win.id +'s')}});
+      if (win.menu.delete)  authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.menus.deleteItem( win.id +'s')}});
+      if (win.menu.execute) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Execute', click:function(){authorLibs.author.paste()}});
+      if (win.menu.format)  authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Format',  click:function(){authorLibs.author.format()}});
+      if (win.menu.load)    authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Load',    click:function(){authorLibs.menus.load_click()}});
+      if (win.menu.reload)  authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Restart', click:function(){authorLibs.author.reload()}});
       if (win.menu.reorder){
-         authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, '&#9650;', function(){authorLibs.menus.reorder( win.id +'s', 'up')});
-         authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, '&#9660;', function(){authorLibs.menus.reorder( win.id +'s', 'down')});
+         authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'&#9650;', click:function(){authorLibs.menus.reorder( win.id +'s', 'up')}});
+         authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'&#9660;', click:function(){authorLibs.menus.reorder( win.id +'s', 'down')}});
       }
-      if (win.menu.sample) authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'Load', function(){authorLibs.author.loadSample()});
-      if (win.menu.view) authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'View', function(){authorLibs.author.view()});
-      var holder = authorLibs.windows.makeDiv(contents,  win.id + 'holder', 'padholder', null, null, null);
+      if (win.menu.sample) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Load',   click:function(){authorLibs.author.loadSample()}});
+      if (win.menu.import) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Import', click:function(){authorLibs.menus.upload(win.id +'s')}});
+      if (win.menu.view) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'View', click:function(){authorLibs.author.view()}});
+      var holder = authorLibs.windows.makeDiv({parent:contents,  id:win.id + 'holder', classes:'padholder'});
 
       if (win.id === 'canvas'){
-        authorLibs.windows.makeDiv(title,  'outputtitle', 'wintitle right', null, 'X, Y', null);
+        authorLibs.windows.makeDiv({parent:title, id:'outputtitle', classes:'wintitle right', html:'X, Y'});
         winTitle.innerHTML = 'Output';
       }
       if (win.id === 'json'){
@@ -60,30 +67,40 @@ authorLibs.windows = {
         winTitle.innerHTML = "JSON";
       }
       if (win.id === 'learn'){
-        authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'Home', function(){window.learning('load','welcome')});
-        authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, 'Contents', function(){window.learning('load','contents')});
-        authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, '&#9668;', function(){window.learning('back')});
-        authorLibs.windows.makeDiv(menu,  null, 'divmenu', null, '&#9658;', function(){window.learning('forward')});
-        authorLibs.windows.makeDiv(menu,  'learning', null, null, null, null);
+        authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Home',     click:function(){window.learning('load','welcome')}});
+        authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Contents', click:function(){window.learning('load','contents')}});
+        authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'&#9668;',  click:function(){window.learning('back')}});
+        authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'&#9658;',  click:function(){window.learning('forward')}});
+        authorLibs.windows.makeDiv({parent:menu, id:'learning'});
         winTitle.innerHTML = "Learn";
       }
       if (win.id === 'properties'){
-        authorLibs.windows.makeDiv(contents,  'propertiestitle', null, null, null, null);
-        authorLibs.windows.makeDiv(contents,  'properties', null, null, null, null);
-        authorLibs.windows.makeDiv(contents,  'authorspace', null, null, null, null);
+        authorLibs.windows.makeDiv({parent:contents, id:'propertiestitle'});
+        authorLibs.windows.makeDiv({parent:contents, id:'properties'});
+        authorLibs.windows.makeDiv({parent:contents, id:'authorspace'});
         winTitle.innerHTML = "Properties";
       }
     });
   },
 
-  makeDiv: function(parent, id, classes, style, html, click){
-    var div    = document.createElement('div');
-    if (id !== null) div.id     = id;
-    if (classes !== null) div.className  = classes;
-    if (style !== null) div.style  = style;
-    if (html !== null) div.innerHTML  = html;
-    if (click != null) div.onclick = click;
-    parent.appendChild(div);
+
+  makeElement: function(settings){
+    var element                                   = document.createElement(settings.type);
+    if (settings.id !== undefined) element.id              = settings.id;
+    if (settings.subtype !== undefined) element.type       = settings.subtype;
+    if (settings.classes !== undefined) element.className  = settings.classes;
+    if (settings.style !== undefined) element.style        = settings.style;
+    if (settings.html !== undefined) element.innerHTML     = settings.html;
+    if (settings.click != undefined) element.onclick       = settings.click;
+    if (settings.multiple != undefined) element.multiple   = true;
+    settings.parent.appendChild(element);
+    return element;
+  },
+
+  makeDiv: function(settings){
+    settings.type = 'div';
+    var div = authorLibs.windows.makeElement(settings);
+    //settings.parent.appendChild(div);
     return div;
   }
 }

@@ -72,6 +72,18 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.data.images.forEach(function(image){
       var imageObj = new Image();
       imageObj.crossOrigin = "Anonymous";
+
+      // if (image.local){
+      //   console.log(image.data)
+      //   imageObj.src = "data:image/jpeg;base64," + image.data;
+      //   act.imageList[image.id] = {};
+      //   act.imageList[image.id].imageData     = "data:image/jpeg;base64," + btoa(image.data);
+      //   act.imageList[image.id].canvas        = document.createElement('canvas');
+      //   act.imageList[image.id].context       = act.imageList[image.id].canvas.getContext('2d');
+      //   act.imageList[image.id].context.drawImage(act.imageList[image.id].imageData, 0, 0, image.data.width, image.data.height);
+      //   return;
+      // }
+
       imageObj.onload = function(){
         act.imageList[image.id] = {};
         act.imageList[image.id].imageData     = this;
@@ -88,8 +100,28 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           act.imageList[image.id].atlas.numY       = Math.floor(this.height / image.cellheight);
         }
       };
-      imageObj.src = image.path != undefined ? act.pathList[image.path] + '/' + image.url : image.url;
-      if (act.data.settings.usecache === false) imageObj.src += '?' + new Date().getTime();
+      if (image.local){
+        var tempImage =  document.createElement("img")
+        tempImage.src= image.data;
+        imageObj.src = "data:image/jpeg;base64," + btoa(image.data);
+        act.imageList[image.id] = {};
+        act.imageList[image.id].imageData     = tempImage;
+        act.imageList[image.id].canvas        = document.createElement('canvas');
+        act.imageList[image.id].canvas.width  = tempImage.width;
+        act.imageList[image.id].canvas.height = tempImage.height;
+        act.imageList[image.id].context       = act.imageList[image.id].canvas.getContext('2d');
+        act.imageList[image.id].context.drawImage(tempImage, 0, 0, imageObj.src.width, imageObj.src.height);
+        if (image.atlas){
+          act.imageList[image.id].atlas = {};
+          act.imageList[image.id].atlas.cellwidth  = image.cellwidth;
+          act.imageList[image.id].atlas.cellheight = image.cellheight;
+          act.imageList[image.id].atlas.numX       = Math.floor(imageObj.src.width / image.cellwidth);
+          act.imageList[image.id].atlas.numY       = Math.floor(imageObj.src.height / image.cellheight);
+        }
+      } else {
+        imageObj.src = image.path != undefined ? act.pathList[image.path] + '/' + image.url : image.url;
+        if (act.data.settings.usecache === false && !image.local) imageObj.src += '?' + new Date().getTime();
+      }
     });
 
     act.player = [];
