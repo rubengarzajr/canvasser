@@ -1,7 +1,8 @@
 var authorLibs = {
   externalsPath:  './',
   defaultJSONobj: false,
-  defaultJSON:    "./json/default.json"
+  defaultJSON:    "./json/default.json",
+  contentPath: '../../canvasser_content'
 };
 
 document.onreadystatechange = function(){
@@ -86,8 +87,8 @@ function restartCanvasser(name, data, type){
 }
 
 function authorcanvasser(dataFile, dataForm){
-  this.getProps     = authorLibs.buildProp.getProps;
-  this.zPlus = function(){ UIdata.zidx ++; return  UIdata.zidx;}
+  this.getProps = authorLibs.buildProp.getProps;
+  this.zPlus    = function(){ UIdata.zidx ++; return  UIdata.zidx;}
   var UIdata = {
     mousedown: false,
     moveElement: null,
@@ -161,7 +162,9 @@ function authorcanvasser(dataFile, dataForm){
   this.loadSample = function(url){
     authorLibs.utils.requestJSON(authorLibs.externalsPath + 'sample/json/' + url + '?' + new Date().getTime(), function(data){restartCanvasser("sample", data, 'string');});
   }
-
+  this.loadDefault = function(){
+    if (!authorLibs.defaultJSONobj)  authorLibs.utils.requestJSON(authorLibs.defaultJSON, function(data){restartCanvasser("sample", data, 'string');});
+  }
   this.reload = function(){
     restartCanvasser("sample", authorLibs.authorData, "string");
     authorLibs.author.view()

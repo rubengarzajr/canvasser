@@ -8,19 +8,102 @@ authorLibs.utils = {
   },
 
   saveToPhp:function(){
+    var project = document.getElementById('project');
+    var file    = document.getElementById('file');
+    var alertB  = document.getElementById('alertbox');
+    var aData   = document.getElementById('alertdata');
+
+    if (project.value === '' || file.value === ''){
+      alertB.style.display = 'block';
+      aData.innerHTML = 'Please enter a project and file name.'
+      return;
+    }
+
+    document.getElementById('savebox').style.display = 'none';
     var data = authorLibs.authorData;
-    var xhr = new XMLHttpRequest(); // simplified for clarity
+    var xhr = new XMLHttpRequest();
     var url = "php/upload.php";
 
-    xhr.open("POST", url, true); // sending as POST
+    xhr.open("POST", url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() { //Call a function when the state changes.
-    if(xhr.readyState == 4 && xhr.status == 200) { // complete and no errors
-        alert(xhr.responseText); // some processing here, or whatever you want to do with the response
+    xhr.onreadystatechange = function() {
+    if(xhr.readyState == 4 && xhr.status == 200) {
+        alert(xhr.responseText);
         }
     }
-    xhr.send("data="+JSON.stringify(data));
+    xhr.send("data="+encodeURIComponent(JSON.stringify(data))+'&project='+project.value+'&file='+file.value+'&type=json');
+
+    data.images.forEach(function(image){
+      if (image.local){
+        var imageReq = new XMLHttpRequest();
+        var url = "php/upload.php";
+
+        imageReq.open("POST", url, true);
+        imageReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        imageReq.onreadystatechange = function() {
+        if(imageReq.readyState == 4 && imageReq.status == 200) {
+            alert(imageReq.responseText);
+            }
+        }
+        var name = image.url.replace(/\.[^/.]+$/, "");
+        var ext = image.url.split('.').pop();
+        var subdata = image.data.substring(image.data.indexOf(",") + 1);
+        imageReq.send("data="+encodeURIComponent(subdata)+'&project='+project.value+'&file='+name+'&ext='+ext+'&type=image');
+
+      }
+    });
+
   },
+
+  loadFromPhp:function(){
+    var xhr = new XMLHttpRequest();
+    var url = "php/filelist.php";
+
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+    if(xhr.readyState == 4 && xhr.status == 200) {
+        authorLibs.utils.loadFile(JSON.parse(xhr.responseText));
+      }
+    }
+    xhr.send();
+  },
+
+  loadFile: function(files){
+    var fileList = [];
+    files.data.forEach(function(file){
+      var found = fileList.filter(function(test){return test.project === file.project;});
+      if (found.length) {
+        var foundIdx = fileList.indexOf(found[0]);
+        fileList[foundIdx].files.push(file.file);
+      } else {
+        fileList.push({project:file.project, files:[file.file]});
+      }
+
+    });
+    fileList.sort(function(a,b) {return (a.project > b.project) ? 1 : ((b.project > a.project) ? -1 : 0);} );
+    document.getElementById('loadbox').style.display = 'block';
+    var filebox = document.getElementById('loaddata');
+    filebox.innerHTML = '';
+    fileList.forEach(function(item){
+      authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
+      item.files.forEach(function(file){
+        authorLibs.windows.makeDiv({parent:filebox, html:file, classes:'load_file', click:function(){authorLibs.utils.loadJson(item.project, file)}});
+      });
+    });
+  },
+
+  loadJson: function(project, file){
+    document.getElementById('loadbox').style.display = 'none';
+    authorLibs.utils.requestFile(
+      authorLibs.contentPath + '/' + project + '/json/' + file + '.json',
+      function(data){
+        json = JSON.parse(decodeURIComponent(data));
+        restartCanvasser("sample", json, 'string');
+      }
+    );
+  },
+
 
   setSubProp: function(obj, desc, val){
     var arr = desc.split(".");

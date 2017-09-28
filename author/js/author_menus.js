@@ -3,8 +3,7 @@ authorLibs.menus = {
     document.getElementById("upload_json").click();
   },
 
-  upload: function(type){
-    console.log("WHAT")
+  import: function(type){
     if (type === 'images') document.getElementById("upload_image").click();
   },
 
@@ -29,7 +28,7 @@ authorLibs.menus = {
       var reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = function (evt) {
-        authorLibs.authorData.images.push({id:file.name.slice(0, -4), path:"author",  url:file.name, local:true, data:evt.target.result});
+        authorLibs.authorData.images.push({id:file.name.slice(0, -4), path:"localstorage",  url:file.name, local:true, data:evt.target.result});
         if (authorLibs.authorData.images.length === 1) document.getElementById('imageholder').style.height = "65px";
         authorLibs.menus.updateMenu('images');
       }
@@ -53,6 +52,12 @@ authorLibs.menus = {
     if (!toUp || toUp === 'shapes')      authorLibs.menus.updateMenu('shapes');
     if (!toUp || toUp === 'tests')       authorLibs.menus.updateMenu('tests');
     if (!toUp || toUp === 'vars')        authorLibs.menus.updateMenu('vars');
+  },
+
+  menuToggle:function(toggle){
+    var toggler = document.getElementById(toggle);
+    if (toggler.style.display === "none") toggler.style.display = "block";
+    else toggler.style.display = "none";
   },
 
   updateMenu: function(type){

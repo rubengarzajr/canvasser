@@ -2,7 +2,65 @@ authorLibs.windows = {
   build: function(){
     var parent = document.getElementById("canvasser_authoring");
     var head   = authorLibs.windows.makeDiv({parent:parent, classes:'header'});
-    var saver  = authorLibs.windows.makeDiv({parent:parent, id:'saver', html:'Upload',  click:function(){authorLibs.utils.saveToPhp()}});
+    var projectHolder  = authorLibs.windows.makeDiv({parent:parent, id:'projectholder'});
+
+    var alert = authorLibs.windows.makeDiv({parent:parent, id:'alertbox', style:'display:none', click:function(){authorLibs.menus.menuToggle('alertbox')}});
+    authorLibs.windows.makeDiv({parent:alert, html:"ALERT", classes:'title_alert'});
+    authorLibs.windows.makeDiv({parent:alert, id:"alertdata", classes:'content_alert'});
+
+    var load = authorLibs.windows.makeDiv({parent:parent, id:'loadbox', style:'display:none'});
+    authorLibs.windows.makeDiv({parent:load, html:"LOAD FILE", classes:'title_load'});
+    authorLibs.windows.makeDiv({parent:load, id:"loaddata", classes:'content_load'});
+    authorLibs.windows.makeDiv({parent:load, html:"LOAD",   classes:'button_load',  click:function(){authorLibs.utils.loadfile()}});
+    authorLibs.windows.makeDiv({parent:load, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('loadbox')}});
+
+    var save = authorLibs.windows.makeDiv({parent:parent, id:'savebox', style:'display:none'});
+    authorLibs.windows.makeDiv({parent:save, html:"SAVE FILE", classes:'title_save'});
+    var divP = authorLibs.windows.makeDiv({parent:save, classes:'saveblock'});
+    authorLibs.windows.makeDiv({parent:divP, html:'Project:',  classes:"savelabel"});
+    authorLibs.windows.makeElement({parent:divP, type:'input', subtype:'text', classes:'savetextbox', id:'project'});
+    var divF = authorLibs.windows.makeDiv({parent:save, classes:'saveblock'});
+    authorLibs.windows.makeDiv({parent:divF, html:'File:',  classes:"savelabel"});
+    authorLibs.windows.makeElement({parent:divF, type:'input', subtype:'text', classes:'savetextbox', id:'file'});
+    var divC = authorLibs.windows.makeDiv({parent:save, classes:'saveblock'});
+    authorLibs.windows.makeDiv({parent:divC, html:'Separate Assets:',  classes:"savelabel"});
+    authorLibs.windows.makeElement({parent:divC, type:'input', subtype:'checkbox', classes:'savecheckbox', id:'separatecheck', checked:true});
+    authorLibs.windows.makeDiv({parent:save, html:"SAVE", classes:'button_load',  click:function(){authorLibs.utils.saveToPhp()}});
+    authorLibs.windows.makeDiv({parent:save, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('savebox')}});
+    var winList = [
+      {id:"anim",       position:{x:339, y:110}, menu:{add:true, delete:true, copy:true}, min:true},
+      {id:"canvas",     position:{x:10,  y:174}, menu:{reload:true}},
+      {id:"constraint", position:{x:667, y:76},  menu:{add:true, delete:true, copy:true}, min:true, hide:true},
+      {id:"group",      position:{x:10,  y:140}, menu:{add:true, delete:true}, min:true, hide:true},
+      {id:"image",      position:{x:174, y:110}, menu:{add:true, delete:true, import:true}, min:true},
+      {id:"json",       position:{x:667, y:110}, menu:{load:true, view:true, execute:true, format:true},min:true, hide:true},
+      {id:"object",     position:{x:10,  y:110}, menu:{add:true, delete:true, copy:true, reorder:true}, min:true},
+      {id:"particle",   position:{x:174, y:76},  menu:{add:true, delete:true}, min:true, hide:true},
+      {id:"path",       position:{x:502, y:76},  menu:{add:true, delete:true}, min:true, hide:true},
+      {id:"properties", position:{x:834, y:76},  menu:{add:true, delete:true}},
+      {id:"sample",     position:{x:338, y:76},  menu:{sample:true}, min:true},
+      {id:"setting",    position:{x:10,  y:76},  menu:{}, min:true},
+      {id:"sound",      position:{x:502, y:76},  menu:{add:true, delete:true}, min:true, hide:true},
+      {id:"shape",      position:{x:174, y:140}, menu:{add:true, delete:true}, min:true, hide:true},
+      {id:"test",       position:{x:502, y:110}, menu:{add:true, delete:true}, min:true, hide:true},
+      {id:"var",        position:{x:338, y:140}, menu:{add:true, delete:true}, min:true, hide:true},
+      {id:"learn",      position:{x:502, y:140}, menu:{}}
+    ]
+
+    var menuFile = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_file',    classes:'menu_items', html:'File', click:function(){authorLibs.menus.menuToggle('menu_file_dropdown')}});
+    var dropFile = authorLibs.windows.makeDiv({parent:menuFile, id:'menu_file_dropdown',  classes:"menu_dropdown", style:'display:none;'});
+    authorLibs.windows.makeDiv({parent:dropFile, html:'New',  classes:'drop_items', click:function(){authorLibs.author.loadDefault()}});
+    authorLibs.windows.makeDiv({parent:dropFile, id:'loader', classes:'drop_items', html:'Load File',  click:function(){authorLibs.utils.loadFromPhp()}});
+    authorLibs.windows.makeDiv({parent:dropFile, id:'saver',  classes:'drop_items', html:'Save File',  click:function(){authorLibs.menus.menuToggle('savebox')}});
+    authorLibs.windows.makeDiv({parent:dropFile,   classes:'drop_items', html:'Restart', click:function(){authorLibs.author.reload()}});
+
+    var menuWindows = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_windows', classes:'menu_items', html:'Windows', click:function(){authorLibs.menus.menuToggle('menu_windows_dropdown')}});
+    var dropWin = authorLibs.windows.makeDiv({parent:menuWindows, id:'menu_windows_dropdown', classes:"menu_dropdown", style:'display:none;'});
+    winList.forEach(function(win){
+      authorLibs.windows.makeDiv({parent:dropWin,  classes:'drop_items', html:win.id.charAt(0).toUpperCase() +  win.id.slice(1), click:function(){authorLibs.menus.menuToggle(win.id+'bank')}});
+    });
+
+    authorLibs.windows.makeDiv({parent:projectHolder,  classes:"projectspacer"});
 
     var upload_json = authorLibs.windows.makeElement({type:'input', subtype:'file', parent:parent, id:'upload_json', style:'display:none'});
     upload_json.addEventListener('change', authorLibs.menus.loadFile, false);
@@ -10,32 +68,17 @@ authorLibs.windows = {
     upload_image.addEventListener('change', authorLibs.menus.loadImage, false);
     authorLibs.windows.makeDiv({parent:head, id:'titlelabel', classes:'titlecenter'});
 
-    var winList = [
-      {id:"anim",       position:{x:339, y:110}, menu:{add:true, delete:true, copy:true}, min:true},
-      {id:"canvas",     position:{x:10,  y:174}, menu:{reload:true}},
-      {id:"constraint", position:{x:667, y:76},  menu:{add:true, delete:true, copy:true}, min:true},
-      {id:"group",      position:{x:10,  y:76},  menu:{add:true, delete:true}, min:true},
-      {id:"image",      position:{x:174, y:110}, menu:{add:true, delete:true, import:true}, min:true},
-      {id:"json",       position:{x:667, y:40},  menu:{load:true, view:true, execute:true, format:true},min:true},
-      {id:"object",     position:{x:10,  y:110}, menu:{add:true, delete:true, copy:true, reorder:true}, min:true},
-      {id:"particle",   position:{x:174, y:76},  menu:{add:true, delete:true}, min:true},
-      {id:"path",       position:{x:502, y:40},  menu:{add:true, delete:true}, min:true},
-      {id:"properties", position:{x:834, y:40},  menu:{add:true, delete:true}},
-      {id:"sample",     position:{x:338, y:40},  menu:{sample:true}, min:true},
-      {id:"setting",    position:{x:10,  y:40},  menu:{}, min:true},
-      {id:"sound",      position:{x:502, y:76},  menu:{add:true, delete:true}, min:true},
-      {id:"shape",      position:{x:174, y:40},  menu:{add:true, delete:true}, min:true},
-      {id:"test",       position:{x:502, y:110}, menu:{add:true, delete:true}, min:true},
-      {id:"var",        position:{x:338, y:75},  menu:{add:true, delete:true}, min:true},
-      {id:"learn",      position:{x:502, y:140}, menu:{}}
-    ]
+
 
     winList.forEach(function(win){
-      var bank      = authorLibs.windows.makeDiv({parent:parent,  id:win.id + 'bank', classes:'window_movable',style:'left:'+win.position.x+'px; top:'+win.position.y+'px;'});
+      var show   = win.hide ? "display:none" : "display:block";
+      var bank      = authorLibs.windows.makeDiv({parent:parent,  id:win.id + 'bank', classes:'window_movable',style:'left:'+win.position.x+'px; top:'+win.position.y+'px;'+show});
       var title     = authorLibs.windows.makeDiv({parent:bank,  id:win.id + 'mover', classes:'titlebar'});
       var winTitle  = authorLibs.windows.makeDiv({parent:title,  classes:'wintitle', html:win.id.charAt(0).toUpperCase() +  win.id.slice(1) + 's'});
+      authorLibs.windows.makeDiv({parent:title,  classes:'button_righter', html:'<img src="' + authorLibs.externalsPath +'image/icon_close_g.png"/>', click:function(){authorLibs.menus.menuToggle(win.id+'bank')}});
       authorLibs.windows.makeDiv({parent:title,  classes:'button_righter', html:'<img id="toggle'+win.id+'s" src="' + authorLibs.externalsPath +'image/icon_'+(win.min ? 'max': 'min')+'_g.png"/>', click:function(){authorLibs.author.toggleminmax(win.id+'contents', 'toggle'+win.id+'s', 664)}});
       var display   = win.min ? "display:none" : "display:block";
+
       var contents  = authorLibs.windows.makeDiv({parent:bank,  id:win.id + 'contents', classes:'padlr', style:display});
       var menu      = authorLibs.windows.makeDiv({parent:contents, id:win.id + 'menu', classes:'submenu'});
       if (win.menu.add)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Add',     click:function(){authorLibs.menus.addItem( win.id +'s')}});
@@ -50,7 +93,7 @@ authorLibs.windows = {
          authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'&#9660;', click:function(){authorLibs.menus.reorder( win.id +'s', 'down')}});
       }
       if (win.menu.sample) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Load',   click:function(){authorLibs.author.loadSample()}});
-      if (win.menu.import) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Import', click:function(){authorLibs.menus.upload(win.id +'s')}});
+      if (win.menu.import) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Import', click:function(){authorLibs.menus.import(win.id +'s')}});
       if (win.menu.view) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'View', click:function(){authorLibs.author.view()}});
       var holder = authorLibs.windows.makeDiv({parent:contents,  id:win.id + 'holder', classes:'padholder'});
 
@@ -93,6 +136,7 @@ authorLibs.windows = {
     if (settings.html !== undefined) element.innerHTML     = settings.html;
     if (settings.click != undefined) element.onclick       = settings.click;
     if (settings.multiple != undefined) element.multiple   = true;
+    if (settings.checked != undefined) element.checked   = true;
     settings.parent.appendChild(element);
     return element;
   },
