@@ -67,6 +67,7 @@ authorLibs.buildProp = {
                 output += authorLibs.utils.handleNumber(animation,   'anim', subWidget, widgetPath);
               }
               if (subWidget.type === 'objlist')    output += authorLibs.utils.handleTypeList('objects',   animation, 'anim', subWidget, widgetPath);
+              if (subWidget.type === 'animlist')   output += authorLibs.utils.handleTypeList('anims',     animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'grplist')    output += authorLibs.utils.handleTypeList('groups',    animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'anmlist')    output += authorLibs.utils.handleTypeList('anims',     animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'parlist')    output += authorLibs.utils.handleTypeList('particles', animation, 'anim', subWidget, widgetPath);

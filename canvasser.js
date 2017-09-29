@@ -10,7 +10,7 @@ function initCanvasser(vari, datafile, dataForm, overrides){
 }
 
 function canvasser(vari, interactiveData, dataForm, overrides){
-  this.version  = '1.0.2';
+  this.version  = '1.0.3';
   var act      = new interaction();
   this.act     = act;
   var pManager = new particleManager();
@@ -101,9 +101,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         }
       };
       if (image.local){
-        var tempImage =  document.createElement("img")
-        tempImage.src= image.data;
-        imageObj.src = "data:image/jpeg;base64," + btoa(image.data);
+        var tempImage = document.createElement("img")
+        tempImage.src = image.data;
+        imageObj.src  = "data:image;base64," + btoa(image.data);
         act.imageList[image.id] = {};
         act.imageList[image.id].imageData     = tempImage;
         act.imageList[image.id].canvas        = document.createElement('canvas');

@@ -4,9 +4,13 @@ authorLibs.windows = {
     var head   = authorLibs.windows.makeDiv({parent:parent, classes:'header'});
     var projectHolder  = authorLibs.windows.makeDiv({parent:parent, id:'projectholder'});
 
-    var alert = authorLibs.windows.makeDiv({parent:parent, id:'alertbox', style:'display:none', click:function(){authorLibs.menus.menuToggle('alertbox')}});
-    authorLibs.windows.makeDiv({parent:alert, html:"ALERT", classes:'title_alert'});
-    authorLibs.windows.makeDiv({parent:alert, id:"alertdata", classes:'content_alert'});
+    var alert = authorLibs.windows.makeDiv({parent:parent, id:'alert_box', style:'display:none', click:function(){authorLibs.menus.menuToggle('alert_box')}});
+    authorLibs.windows.makeDiv({parent:alert, html:"ALERT",   classes:'alert_title'});
+    authorLibs.windows.makeDiv({parent:alert, id:"alertdata", classes:'alert_content'});
+
+    var notice = authorLibs.windows.makeDiv({parent:parent, id:'notice_box', style:'display:none', click:function(){authorLibs.menus.menuToggle('notice_box')}});
+    authorLibs.windows.makeDiv({parent:notice, id:"notice_title", classes:'notice_title'});
+    authorLibs.windows.makeDiv({parent:notice, id:"notice_content",  classes:'notice_content'});
 
     var load = authorLibs.windows.makeDiv({parent:parent, id:'loadbox', style:'display:none'});
     authorLibs.windows.makeDiv({parent:load, html:"LOAD FILE", classes:'title_load'});
