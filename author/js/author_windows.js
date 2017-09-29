@@ -64,6 +64,18 @@ authorLibs.windows = {
       authorLibs.windows.makeDiv({parent:dropWin,  classes:'drop_items', html:win.id.charAt(0).toUpperCase() +  win.id.slice(1), click:function(){authorLibs.menus.menuToggle(win.id+'bank')}});
     });
 
+    var themeList = [
+      {id:"Default", filename:"canvasser.css"},
+      {id:"Pink", filename:"canvasser_pink.css"}
+    ];
+
+    var menuTheme = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_theme',    classes:'menu_items', html:'Theme', click:function(){authorLibs.menus.menuToggle('menu_theme_dropdown')}});
+    var dropTheme = authorLibs.windows.makeDiv({parent:menuTheme, id:'menu_theme_dropdown',  classes:"menu_dropdown", style:'display:none;'});
+    themeList.forEach(function(theme){
+      authorLibs.windows.makeDiv({parent:dropTheme,  classes:'drop_items', html:theme.id, click:function(){authorLibs.menus.theme(theme.filename)}});
+    });
+
+
     authorLibs.windows.makeDiv({parent:projectHolder,  classes:"projectspacer"});
 
     var upload_json = authorLibs.windows.makeElement({type:'input', subtype:'file', parent:parent, id:'upload_json', style:'display:none'});

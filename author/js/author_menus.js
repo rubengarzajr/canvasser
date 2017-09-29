@@ -238,6 +238,16 @@ authorLibs.menus = {
     authorLibs.buildProp.getProps(type, swapId.substring(swapId.indexOf("_") + 1));
     restartCanvasser("sample", authorLibs.authorData, "string");
     if (select !== undefined) authorLibs.menus.updateSelectionWindow(type, select);
+  },
+
+  theme: function(themeName){
+    Array.from(document.getElementsByTagName("link")).forEach(function(link, idx){
+      if (link.type != 'text/css') return;
+      if (link.href.indexOf('canvasser') > -1) {
+        var filename = link.href.replace(/^.*[\\\/]/, '')
+        link.href = link.href.replace(filename, themeName);
+      }
+    });
   }
 
 }
