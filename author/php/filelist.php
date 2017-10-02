@@ -1,7 +1,12 @@
 <?php
 
-//TODO: Make this env var
-chdir('/var/www/html/canvasser_content');
+$contentPath = getenv('CONTENT_PATH');
+if (empty($contentPath)){
+  $contentPath = '/var/www/html/canvasser_content';
+}
+
+chdir($contentPath);
+
 $start = './';
 $len = strlen($start);
 $Directory = new RecursiveDirectoryIterator($start);
