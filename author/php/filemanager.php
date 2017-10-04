@@ -8,7 +8,7 @@
   $action  = clean($_POST['action']);
   $project = clean($_POST['project']);
   $dir     = clean($_POST['dir']);
-  $file    = clean($_POST['action']);
+  $file    = clean($_POST['file']);
   $data    = $_POST['data'];
 
   $projectPath = $contentPath . '/' . $project;

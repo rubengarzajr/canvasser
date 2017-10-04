@@ -12,6 +12,10 @@ var authorLibs = {
   },
   lists:{
     fileManger:[]
+  },
+  endpoints:{
+    files:"files",
+    projects:"projects"
   }
 };
 

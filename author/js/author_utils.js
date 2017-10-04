@@ -100,7 +100,9 @@ authorLibs.utils = {
 
   loadFromPhp:function(funct, all){
     var xhr = new XMLHttpRequest();
-    var url = "php/filelist.php?all="+all;
+    //var url = "php/filelist.php?all="+all;
+    var url = authorLibs.endpoints.projects;
+    if (all) url = authorLibs.endpoints.files;
 
     xhr.open("GET", url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
