@@ -35,6 +35,7 @@ authorLibs.windows = {
       {id:"anim",       position:{x:339, y:110}, menu:{add:true, delete:true, copy:true}, min:true},
       {id:"canvas",     position:{x:10,  y:174}, menu:{reload:true}},
       {id:"constraint", position:{x:667, y:76},  menu:{add:true, delete:true, copy:true}, min:true, hide:true},
+      {id:"file",       position:{x:160, y:40},  menu:{refresh:true, renamefile:true, copyfile:true, deletefile:true}, hide:true},
       {id:"group",      position:{x:10,  y:140}, menu:{add:true, delete:true}, min:true, hide:true},
       {id:"image",      position:{x:174, y:110}, menu:{add:true, delete:true, import:true}, min:true},
       {id:"json",       position:{x:667, y:110}, menu:{load:true, view:true, execute:true, format:true},min:true, hide:true},
@@ -54,7 +55,7 @@ authorLibs.windows = {
     var menuFile = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_file',    classes:'menu_items', html:'File', click:function(){authorLibs.menus.menuToggle('menu_file_dropdown')}});
     var dropFile = authorLibs.windows.makeDiv({parent:menuFile, id:'menu_file_dropdown',  classes:"menu_dropdown", style:'display:none;'});
     authorLibs.windows.makeDiv({parent:dropFile, html:'New',  classes:'drop_items', click:function(){authorLibs.author.loadDefault()}});
-    authorLibs.windows.makeDiv({parent:dropFile, id:'loader', classes:'drop_items', html:'Load File',  click:function(){authorLibs.utils.loadFromPhp()}});
+    authorLibs.windows.makeDiv({parent:dropFile, id:'loader', classes:'drop_items', html:'Load File',  click:function(){authorLibs.utils.loadFromPhp('loadFile', false)}});
     authorLibs.windows.makeDiv({parent:dropFile, id:'saver',  classes:'drop_items', html:'Save File',  click:function(){authorLibs.menus.menuToggle('savebox')}});
     authorLibs.windows.makeDiv({parent:dropFile,   classes:'drop_items', html:'Restart', click:function(){authorLibs.author.reload()}});
 
@@ -84,10 +85,8 @@ authorLibs.windows = {
     upload_image.addEventListener('change', authorLibs.menus.loadImage, false);
     authorLibs.windows.makeDiv({parent:head, id:'titlelabel', classes:'titlecenter'});
 
-
-
     winList.forEach(function(win){
-      var show   = win.hide ? "display:none" : "display:block";
+      var show      = win.hide ? "display:none" : "display:block";
       var bank      = authorLibs.windows.makeDiv({parent:parent,  id:win.id + 'bank', classes:'window_movable',style:'left:'+win.position.x+'px; top:'+win.position.y+'px;'+show});
       var title     = authorLibs.windows.makeDiv({parent:bank,  id:win.id + 'mover', classes:'titlebar'});
       var winTitle  = authorLibs.windows.makeDiv({parent:title,  classes:'wintitle', html:win.id.charAt(0).toUpperCase() +  win.id.slice(1) + 's'});
@@ -97,13 +96,13 @@ authorLibs.windows = {
 
       var contents  = authorLibs.windows.makeDiv({parent:bank,  id:win.id + 'contents', classes:'padlr', style:display});
       var menu      = authorLibs.windows.makeDiv({parent:contents, id:win.id + 'menu', classes:'submenu'});
-      if (win.menu.add)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Add',     click:function(){authorLibs.menus.addItem( win.id +'s')}});
-      if (win.menu.copy)    authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.menus.copy( win.id +'s')}});
-      if (win.menu.delete)  authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.menus.deleteItem( win.id +'s')}});
-      if (win.menu.execute) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Execute', click:function(){authorLibs.author.paste()}});
-      if (win.menu.format)  authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Format',  click:function(){authorLibs.author.format()}});
-      if (win.menu.load)    authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Load',    click:function(){authorLibs.menus.load_click()}});
-      if (win.menu.reload)  authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Restart', click:function(){authorLibs.author.reload()}});
+      if (win.menu.add)        authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Add',     click:function(){authorLibs.menus.addItem( win.id +'s')}});
+      if (win.menu.copy)       authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.menus.copy( win.id +'s')}});
+      if (win.menu.delete)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.menus.deleteItem( win.id +'s')}});
+      if (win.menu.execute)    authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Execute', click:function(){authorLibs.author.paste()}});
+      if (win.menu.format)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Format',  click:function(){authorLibs.author.format()}});
+      if (win.menu.load)       authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Load',    click:function(){authorLibs.menus.load_click()}});
+      if (win.menu.reload)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Restart', click:function(){authorLibs.author.reload()}});
       if (win.menu.reorder){
          authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'&#9650;', click:function(){authorLibs.menus.reorder( win.id +'s', 'up')}});
          authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'&#9660;', click:function(){authorLibs.menus.reorder( win.id +'s', 'down')}});
@@ -113,9 +112,18 @@ authorLibs.windows = {
       if (win.menu.view) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'View', click:function(){authorLibs.author.view()}});
       var holder = authorLibs.windows.makeDiv({parent:contents,  id:win.id + 'holder', classes:'padholder'});
 
+      if (win.menu.refresh)    authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Refresh', click:function(){authorLibs.utils.loadFromPhp('refreshfiles', true)}});
+      if (win.menu.renamefile) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Rename',  click:function(){authorLibs.utils.fileRename(win.id +'s')}});
+      if (win.menu.copyfile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.utils.fileCopy(win.id +'s')}});
+      if (win.menu.deletefile) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.utils.fileDelete(authorLibs.lists.fileManger)}});
+
+
       if (win.id === 'canvas'){
         authorLibs.windows.makeDiv({parent:title, id:'outputtitle', classes:'wintitle right', html:'X, Y'});
         winTitle.innerHTML = 'Output';
+      }
+      if (win.id === 'file'){
+        authorLibs.windows.makeDiv({parent:contents, classes:'content_load_all', id:'filelist'});
       }
       if (win.id === 'json'){
         var txt  = document.createElement('textarea');
@@ -139,7 +147,28 @@ authorLibs.windows = {
         authorLibs.windows.makeDiv({parent:contents, id:'authorspace'});
         winTitle.innerHTML = "Properties";
       }
+
+      contents.addEventListener("mousedown", function(){authorLibs.windows.focusObjD(win.id+"bank")}, false);
+      title.addEventListener("mousedown",    function(){authorLibs.windows.moveObjD(win.id+"bank")},  false);
+
     });
+  },
+
+  moveObjD: function(element){
+    authorLibs.gui.move = true;
+    authorLibs.gui.mousedown   = true;
+    authorLibs.gui.moveElement = document.getElementById(element);
+    authorLibs.gui.zidx ++;
+    authorLibs.gui.moveElement.style.zIndex = authorLibs.gui.zidx;
+    var off = {x:0, y:0};
+    if (authorLibs.gui.moveElement.style.left !== "") off.x = authorLibs.gui.mousePos.x - parseInt(authorLibs.gui.moveElement.style.left.slice(0,-2));
+    if (authorLibs.gui.moveElement.style.top  !== "") off.y = authorLibs.gui.mousePos.y - parseInt(authorLibs.gui.moveElement.style.top.slice(0,-2));
+    authorLibs.gui.offset      = {x:off.x, y:off.y};
+  },
+
+  focusObjD: function(element){
+    authorLibs.gui.zidx ++;
+    document.getElementById(element).style.zIndex = authorLibs.gui.zidx;
   },
 
 

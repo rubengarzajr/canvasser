@@ -41,6 +41,7 @@ authorLibs.menus = {
   update: function(toUp){
     if (!toUp || toUp === 'anims')       authorLibs.menus.updateMenu('anims');
     if (!toUp || toUp === 'constraints') authorLibs.menus.updateMenu('constraints');
+    if (!toUp || toUp === 'files')       authorLibs.menus.updateMenu('files');
     if (!toUp || toUp === 'groups')      authorLibs.menus.updateMenu('groups');
     if (!toUp || toUp === 'images')      authorLibs.menus.updateMenu('images');
     if (!toUp || toUp === 'objects')     authorLibs.menus.updateMenu('objects');

@@ -98,15 +98,15 @@ authorLibs.utils = {
     document.getElementById('notice_content').innerHTML = authorLibs.saved.report;
   },
 
-  loadFromPhp:function(){
+  loadFromPhp:function(funct, all){
     var xhr = new XMLHttpRequest();
-    var url = "php/filelist.php";
+    var url = "php/filelist.php?all="+all;
 
-    xhr.open("POST", url, true);
+    xhr.open("GET", url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
     if(xhr.readyState == 4 && xhr.status == 200) {
-        authorLibs.utils.loadFile(JSON.parse(xhr.responseText));
+        authorLibs.utils[funct](JSON.parse(xhr.responseText));
       }
     }
     xhr.send();
@@ -134,6 +134,76 @@ authorLibs.utils = {
         authorLibs.windows.makeDiv({parent:filebox, html:file, classes:'load_file', click:function(){authorLibs.utils.loadJson(item.project, file)}});
       });
     });
+  },
+
+  refreshfiles: function(files){
+    var fileList = [];
+    files.data.forEach(function(file){
+      var found = fileList.filter(function(test){return test.project === file.project;});
+      if (found.length > 0) {
+        var foundIdx = fileList.indexOf(found[0]);
+          if (file.folder === '') fileList[foundIdx].root.push(file.file);
+          else {
+            if (fileList[foundIdx][file.folder] === undefined) fileList[foundIdx][file.folder] = [];
+            fileList[foundIdx][file.folder].push(file.file);
+          }
+      } else {
+        var newList = {project:file.project, json:[], image:[], sound:[], root:[]};
+        if (file.folder === '') newList.root.push(file.file);
+        else {
+          if (newList[file.folder] === undefined) newList[file.folder] = [];
+          newList[file.folder].push(file.file);
+        }
+        fileList.push(newList);
+      }
+
+    });
+    fileList.sort(function(a,b) {return (a.project > b.project) ? 1 : ((b.project > a.project) ? -1 : 0);} );
+    document.getElementById('filelist').style.display = 'block';
+    var filebox = document.getElementById('filelist');
+    filebox.innerHTML = '';
+    fileList.forEach(function(item){
+      authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
+      var subs = ['json','image','sound','root'];
+      subs.forEach(function(sub){
+        if (item[sub].length === 0) return;
+        authorLibs.windows.makeDiv({parent:filebox, html:sub, classes:'load_filefolder'});
+        item[sub].forEach(function(file){
+          authorLibs.windows.makeDiv({parent:filebox, html:file, classes:'load_file',
+            click:function(){authorLibs.utils.updateList(this, authorLibs.lists.fileManger, {id:file, project:item.project, dir:sub, type:'file'})
+          }});
+        });
+      });
+    });
+  },
+
+  fileDelete: function(list){
+    list.forEach(function(item){
+      console.log(item.project+'/'+item.dir+'/'+item.id);
+      var url = "php/filemanager.php";
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", url, true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+      if(xhr.readyState == 4 && xhr.status == 200) {
+          authorLibs.utils.loadFromPhp('refreshfiles', true)
+        }
+      }
+      xhr.send("action=delete"+'&project='+item.project+'&dir='+item.dir+'&file='+item.id);
+
+    });
+
+  },
+
+  updateList:function(element, list, item){
+    var finder = list.findIndex(function(check){return check.id === item.id && check.project === item.project && check.dir === item.dir;});
+    if (finder === -1) {
+      list.push(item);
+      element.style.backgroundColor = 'rgb(97, 255, 55)';
+    } else {
+      list.splice(finder[0],1);
+      element.style.backgroundColor = 'white';
+    }
   },
 
   loadJson: function(project, file){

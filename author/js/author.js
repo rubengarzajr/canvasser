@@ -2,7 +2,17 @@ var authorLibs = {
   externalsPath:  './',
   defaultJSONobj: false,
   defaultJSON:    "./json/default.json",
-  contentPath: '../../canvasser_content'
+  contentPath: '../../canvasser_content',
+  gui: {
+    mousedown: false,
+    moveElement: null,
+    mousePos: {x:0,y:0},
+    offset: {x:0,y:0},
+    zidx: 25
+  },
+  lists:{
+    fileManger:[]
+  }
 };
 
 document.onreadystatechange = function(){
@@ -88,21 +98,9 @@ function restartCanvasser(name, data, type){
 
 function authorcanvasser(dataFile, dataForm){
   this.getProps = authorLibs.buildProp.getProps;
-  this.zPlus    = function(){ UIdata.zidx ++; return  UIdata.zidx;}
-  var UIdata = {
-    mousedown: false,
-    moveElement: null,
-    mousePos: {x:0,y:0},
-    offset: {x:0,y:0},
-    zidx: 25
-  };
+  this.zPlus    = function(){ authorLibs.gui.zidx ++; return  authorLibs.gui.zidx;}
 
   authorLibs.authorData = dataFile;
-  var wins = ['anim','canvas','constraint','group', 'image', 'json', 'learn', 'object', 'particle', 'path', 'properties', 'sample', 'setting', 'shape', 'sound', 'test', 'var'];
-  wins.forEach(function(idRoot){
-    document.getElementById(idRoot+"contents").addEventListener("mousedown",    function(){focusObjD(idRoot+"bank")},       false);
-    document.getElementById(idRoot+"mover").addEventListener("mousedown",       function(){moveObjD(idRoot+"bank")},       false);
-  });
 
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);
@@ -112,24 +110,24 @@ function authorcanvasser(dataFile, dataForm){
   loop();
 
   function loop(){
-    if (UIdata.moveElement !== null && UIdata.move){
-      UIdata.moveElement.style.left = UIdata.mousePos.x  - UIdata.offset.x + "px";
-      UIdata.moveElement.style.top  = UIdata.mousePos.y  - UIdata.offset.y + "px";
+    if (authorLibs.gui.moveElement !== null && authorLibs.gui.move){
+      authorLibs.gui.moveElement.style.left = authorLibs.gui.mousePos.x  - authorLibs.gui.offset.x + "px";
+      authorLibs.gui.moveElement.style.top  = authorLibs.gui.mousePos.y  - authorLibs.gui.offset.y + "px";
       var ext = authorLibs.utils.getVisibleArea();
-      var win = UIdata.moveElement.getBoundingClientRect();
+      var win = authorLibs.gui.moveElement.getBoundingClientRect();
 
-      if (UIdata.mousePos.x - UIdata.offset.x < 5) UIdata.moveElement.style.left = '5px';
-      if (UIdata.mousePos.y - UIdata.offset.y < 5) UIdata.moveElement.style.top  = '5px';
-      if (win.right  > ext.x-5)  UIdata.moveElement.style.left = (ext.x-5-win.width)  +'px';
-      if (win.bottom > ext.y-10) UIdata.moveElement.style.top  = (ext.y-10-win.height)+'px';
+      if (authorLibs.gui.mousePos.x - authorLibs.gui.offset.x < 5) authorLibs.gui.moveElement.style.left = '5px';
+      if (authorLibs.gui.mousePos.y - authorLibs.gui.offset.y < 5) authorLibs.gui.moveElement.style.top  = '5px';
+      if (win.right  > ext.x-5)  authorLibs.gui.moveElement.style.left = (ext.x-5-win.width)  +'px';
+      if (win.bottom > ext.y-10) authorLibs.gui.moveElement.style.top  = (ext.y-10-win.height)+'px';
     }
     window.requestAnimationFrame(loop);
   }
 
   function mouseMove(ev){
-    UIdata.mousePos = {x:ev.clientX, y:ev.clientY };
+    authorLibs.gui.mousePos = {x:ev.clientX, y:ev.clientY };
 
-    if (UIdata.moveElement !== null){
+    if (authorLibs.gui.moveElement !== null){
       if (document.selection) {
         document.selection.empty()
       } else {
@@ -138,26 +136,26 @@ function authorcanvasser(dataFile, dataForm){
     }
   }
 
-  function moveObjD(element){
-    UIdata.move = true;
-    UIdata.mousedown   = true;
-    UIdata.moveElement = document.getElementById(element);
-    UIdata.zidx ++;
-    UIdata.moveElement.style.zIndex = UIdata.zidx;
-    var off = {x:0, y:0};
-    if (UIdata.moveElement.style.left !== "") off.x = UIdata.mousePos.x - parseInt(UIdata.moveElement.style.left.slice(0,-2));
-    if (UIdata.moveElement.style.top  !== "") off.y = UIdata.mousePos.y - parseInt(UIdata.moveElement.style.top.slice(0,-2));
-    UIdata.offset      = {x:off.x, y:off.y};
-  }
-
-  function focusObjD(element){
-    UIdata.zidx ++;
-    document.getElementById(element).style.zIndex = UIdata.zidx;
-  }
+  // function moveObjD(element){
+  //   authorLibs.gui.move = true;
+  //   authorLibs.gui.mousedown   = true;
+  //   authorLibs.gui.moveElement = document.getElementById(element);
+  //   authorLibs.gui.zidx ++;
+  //   authorLibs.gui.moveElement.style.zIndex = authorLibs.gui.zidx;
+  //   var off = {x:0, y:0};
+  //   if (authorLibs.gui.moveElement.style.left !== "") off.x = authorLibs.gui.mousePos.x - parseInt(authorLibs.gui.moveElement.style.left.slice(0,-2));
+  //   if (authorLibs.gui.moveElement.style.top  !== "") off.y = authorLibs.gui.mousePos.y - parseInt(authorLibs.gui.moveElement.style.top.slice(0,-2));
+  //   authorLibs.gui.offset      = {x:off.x, y:off.y};
+  // }
+  //
+  // function focusObjD(element){
+  //   authorLibs.gui.zidx ++;
+  //   document.getElementById(element).style.zIndex = authorLibs.gui.zidx;
+  // }
 
   function moveObjU(ev){
-    UIdata.mousedown = false;
-    UIdata.moveElement = null;
+    authorLibs.gui.mousedown = false;
+    authorLibs.gui.moveElement = null;
   }
   this.loadSample = function(url){
     authorLibs.utils.requestJSON(authorLibs.externalsPath + 'sample/json/' + url + '?' + new Date().getTime(), function(data){restartCanvasser("sample", data, 'string');});
