@@ -20,7 +20,7 @@ If you are running Ubuntu or some other Linux distro - you might need to enable 
 
 ```
 sudo a2enmod rewrite
-sudo service restart apache2
+sudo service apache2 restart
 ```
 
 Also, you may need to allow your .htaccess file to rewrite rules.
