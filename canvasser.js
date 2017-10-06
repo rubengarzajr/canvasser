@@ -52,6 +52,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.canvas.addEventListener("touchstart",   touchDown,   false);
     act.canvas.addEventListener("touchmove",    touchMove,   false);
     act.canvas.addEventListener("touchend",     touchUp,     false);
+    // Trying to handle tab going out of focus
+    //window.addEventListener("focus", function(event){act.paused = true});
+    //window.addEventListener("blur", function(event){act.paused  = false});
 
     act.pathList = {};
     if (act.data.paths){act.data.paths.forEach(function(path){
@@ -73,16 +76,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       var imageObj = new Image();
       imageObj.crossOrigin = "Anonymous";
 
-      // if (image.local){
-      //   console.log(image.data)
-      //   imageObj.src = "data:image/jpeg;base64," + image.data;
-      //   act.imageList[image.id] = {};
-      //   act.imageList[image.id].imageData     = "data:image/jpeg;base64," + btoa(image.data);
-      //   act.imageList[image.id].canvas        = document.createElement('canvas');
-      //   act.imageList[image.id].context       = act.imageList[image.id].canvas.getContext('2d');
-      //   act.imageList[image.id].context.drawImage(act.imageList[image.id].imageData, 0, 0, image.data.width, image.data.height);
-      //   return;
-      // }
 
       imageObj.onload = function(){
         act.imageList[image.id] = {};
@@ -152,6 +145,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     this.mode         = "none";
     this.dragging     = null;
     this.touch        = [];
+    this.paused       = false;
   }
 
   function particleManager(){
@@ -345,6 +339,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   }
 
   function loop(){
+    //if (act.paused && act.loop) window.requestAnimationFrame(loop);
+
     act.data.tests.forEach(function(test){
       if (!test.active) return;
       tests(test);

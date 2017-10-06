@@ -11,6 +11,9 @@ if (empty($contentUrl)){
 }
 
 $supportedFileTypes = '/^.+\.json|^.+\.mp3|^.+\.jpg|^.+\.gif|^.+\.png|^.+\.wav|^.+\.html/i';
+$imageFileTypes = '/^.+\.jpg|^.+\.gif|^.+\.png/i';
+$soundFileTypes = '/^.+\.mp3|^.+\.wav/i';
+
 
 echo "<h1>Canvasser API</h1>" . '<br>';
 echo $_SERVER['REQUEST_URI'] . '<br><br>';
@@ -42,7 +45,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (empty($_REQUEST['type'])) {
       $type = $supportedFileTypes;
     } else {
-      $type = '/^.+\.' . clean($_REQUEST['type']) . '/i';
+      $getType = clean($_REQUEST['type']);
+      if ($getType == 'image') {
+        echo "IMAGE <br>";
+        $type = $imageFileTypes;
+      } else if ($getType == 'sound') {
+        $type = $soundFileTypes;
+      } else {
+        $type = '/^.+\.' . clean($_REQUEST['type']) . '/i';
+      }
+
     }
     finder($contentPath, $type);
 }
@@ -85,7 +97,7 @@ function finder($contentPath, $type) {
       $modPath = substr($path_parts['dirname'] ,$len);
       $pathParts = explode("/", $modPath);
       if (count($pathParts) < 2) array_push($pathParts, '');
-      echo '{"project":"' .  $pathParts[0] . '","folder":"' .  $pathParts[1] . '","file":"' . $path_parts['filename'] . '.' . $path_parts['extension'] . '"}';
+      echo '{"project":"' .  $pathParts[0] . '","type":"' .  $pathParts[1] . '","file":"' . $path_parts['filename'] . '.' . $path_parts['extension'] . '"}';
     }
   }
   echo ']';
