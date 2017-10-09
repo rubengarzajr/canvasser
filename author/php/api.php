@@ -14,11 +14,6 @@ $supportedFileTypes = '/^.+\.json|^.+\.mp3|^.+\.jpg|^.+\.gif|^.+\.png|^.+\.wav|^
 $imageFileTypes = '/^.+\.jpg|^.+\.gif|^.+\.png/i';
 $soundFileTypes = '/^.+\.mp3|^.+\.wav/i';
 
-
-echo "<h1>Canvasser API</h1>" . '<br>';
-echo $_SERVER['REQUEST_URI'] . '<br><br>';
-echo $_SERVER['PHP_SELF'] . '<br><br>';
-echo $_SERVER['HTTP_HOST'] . '<br><br>';
 $url = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
 $path = explode("/",$url);
 
@@ -67,8 +62,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    // …
+  if ($api[0] == 'projects'){
+    if (count($api == 2)){
+      echo $contentPath . clean($api[1]);
+      delTree($contentPath . '/' . clean($api[1]));
+    }else if($api[2] == 'files'){
+      echo "cats";
+      finderFile($contentPath, $contentUrl, $api[3]);
+    }
+  }
 }
+
+function delTree($dir) {
+   $files = array_diff(scandir($dir), array('.','..'));
+    foreach ($files as $file) {
+      (is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file");
+    }
+    return rmdir($dir);
+  }
 
 
 function clean($string) {

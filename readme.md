@@ -13,14 +13,14 @@ RewriteEngine On
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ author/api/index.php [L]
+RewriteRule ^ author/php/api.php [L]
 ```
 
 If you are running Ubuntu or some other Linux distro - you might need to enable mod_rewrite.
 
 ```
 sudo a2enmod rewrite
-sudo service apache2 restart
+sudo service restart apache2
 ```
 
 Also, you may need to allow your .htaccess file to rewrite rules.
