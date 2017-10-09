@@ -618,7 +618,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           }
         }
 
-        var pos = {x:obj.position.current.x + obj.parentTransform.position.x, y:obj.position.current.y + obj.parentTransform.position.y};
+        var pos = {
+          x:obj.position.current.x * obj.parentTransform.scale + obj.parentTransform.position.x,
+          y:obj.position.current.y * obj.parentTransform.scale + obj.parentTransform.position.y
+        };
         var atlas = act.imageList[obj.image].atlas;
         if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
           obj.scale.current = 0.01;
