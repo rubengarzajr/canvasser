@@ -3,32 +3,37 @@
   <head>
     <meta charset="UTF-8">
     <title>API Reference</title>
-
     <link rel="shortcut icon" href="../favicon.ico" />
-    <script src="./author/js/testapi.js"         type="text/javascript"></script>
-
+    <script src="./author/js/testapi.js" type="text/javascript"></script>
     <link href="./author/css/normalize.css" rel="stylesheet" type="text/css"/>
-    <link href="./author/css/testapi.css" rel="stylesheet" type="text/css"/>
-
+    <link href="./author/css/testapi.css"   rel="stylesheet" type="text/css"/>
   </head>
   <body>
     <div id="title">Canvasser API</div>
     <div class="testholder">
-      <div class="label">GET all files in all Projects ./api/v1/files</div>
+      <div class="label">GET all files in all projects ./api/v1/files</div>
       <div class="button_load" onclick="apiGet('./api/v1/files')">GET</div>
     </div>
     <div class="testholder">
-      <div class="label">GET all of a type in all Projects ./api/v1/files?type=<input class="input" type="text" id="alloftype"></div>
+      <div class="label">GET all of a type in all projects ./api/v1/files?type=<input class="input" type="text" id="alloftype"></div>
       <div class="button_load" onclick="apiGet('./api/v1/files?type=', 'alloftype')">GET</div>
     </div>
     <div class="testholder">
-      <div class="label">POST all of a type in all Projects ./api/v1/files?type=<input class="input" type="text" id="alloftype"></div>
-      <div class="button_load" onclick="apiPost('./api/v1/files?type=', 'alloftype')">POST</div>
+      <div class="label">POST Create a project ./api/v1/projects/<input class="input" type="text" id="postmakeproject" placeholder="project"></div>
+      <div class="button_load" onclick="apiPost('./api/v1/projects', 'postmakeproject')">POST</div>
+    </div>
+    <div class="testholder">
+      <div class="label">POST file to project ./api/v1/projects/<input class="input" type="text" id="postproject" placeholder="project">/files/<input class="input" type="text" placeholder="file" id="postfile"></div>
+      <div class="button_load" onclick="apiPost('./api/v1/projects', 'alloftype')">POST</div>
     </div>
 
     <div class="testholder">
       <div class="label">DELETE a project ./api/v1/projects/<input class="input" type="text" id="deleteprojectname"></div>
-      <div class="button_load" onclick="apiDelete('./api/v1/projects/', 'deleteprojectname')">DELETE</div>
+      <div class="button_load" onclick="apiDelete('project')">DELETE</div>
+    </div>
+    <div class="testholder">
+      <div class="label">DELETE a file in a project ./api/v1/projects/<input class="input" type="text" id="deletefilesprojectname">/files/<input class="input" type="text" id="deletefilesfilename"></div>
+      <div class="button_load" onclick="apiDelete('file')">DELETE</div>
     </div>
 
   <textarea id="results"></textarea>

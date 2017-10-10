@@ -14,10 +14,9 @@ $supportedFileTypes = '/^.+\.json|^.+\.mp3|^.+\.jpg|^.+\.gif|^.+\.png|^.+\.wav|^
 $imageFileTypes = '/^.+\.jpg|^.+\.gif|^.+\.png/i';
 $soundFileTypes = '/^.+\.mp3|^.+\.wav/i';
 
-$url = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
-$path = explode("/",$url);
-
-$api = [];
+$url   = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
+$path  = explode("/",$url);
+$api   = [];
 $isApi = false;
 
 foreach ($path as $value) {
@@ -30,12 +29,26 @@ if ($api[0] != 'v1') {die("NOT v1 of API!");}
 
 array_shift($api);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // …
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+  $project = clean($api[1]);
+  $projectPath = $contentPath . '/' . $project;
+  if (!file_exists($contentPath . '/' . $project)) {
+    echo "Creating project: " . $project . '<br>';
+    mkdir($contentPath . '/' . $project, 0744);
+    mkdir($projectPath . '/json', 0744);
+    mkdir($projectPath . '/image', 0744);
+    mkdir($projectPath . '/sound', 0744);
+  }
+
+  if (count($api == 2)){
+
+  }else if($api[2] == 'files'){
+    echo 'make a file';
+  }
+
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-
   if ($api[0] == 'files'){
     if (empty($_REQUEST['type'])) {
       $type = $supportedFileTypes;
@@ -63,12 +76,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   if ($api[0] == 'projects'){
-    if (count($api == 2)){
+    if (count($api) == 2){
       echo $contentPath . clean($api[1]);
       delTree($contentPath . '/' . clean($api[1]));
     }else if($api[2] == 'files'){
-      echo "cats";
-      finderFile($contentPath, $contentUrl, $api[3]);
+      deleteFile($contentPath, $contentUrl, clean($api[3]));
     }
   }
 }
@@ -84,7 +96,7 @@ function delTree($dir) {
 
 function clean($string) {
   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-  $string = preg_replace('/[^A-Za-z0-9\-_]/', '', $string); // Removes special chars.
+  $string = preg_replace('/[^A-Za-z0-9\-_\.]/', '', $string); // Removes special chars.
   return preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
 }
 
@@ -125,7 +137,19 @@ function finderFile($contentPath, $contentUrl, $file) {
     $path_parts = pathinfo($testFile);
     if ( $path_parts['basename'] == $file) {echo '[{"url":"'.$testFile.'"}]'  . ' </br>';}
   }
+}
 
+function deleteFile($contentPath, $contentUrl, $file) {
+  $start     = $contentPath;
+  $len       = strlen($start) + 1;
+  $Directory = new RecursiveDirectoryIterator($start);
+  $Iterator  = new RecursiveIteratorIterator($Directory);
+  $fileList  = new RecursiveIteratorIterator($Directory, RecursiveIteratorIterator::SELF_FIRST);
+
+  foreach($fileList as $testFile){
+    $path_parts = pathinfo($testFile);
+    if ( $path_parts['basename'] == $file) {unlink($testFile);}
+  }
 }
 
 ?>
