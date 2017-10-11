@@ -10,6 +10,7 @@
   </head>
   <body>
     <div id="title">Canvasser API</div>
+
     <div class="testholder">
       <div class="label">GET all files in all projects ./api/v1/files</div>
       <div class="button_load" onclick="apiGet('./api/v1/files')">GET</div>
@@ -18,13 +19,15 @@
       <div class="label">GET all of a type in all projects ./api/v1/files?type=<input class="input" type="text" id="alloftype"></div>
       <div class="button_load" onclick="apiGet('./api/v1/files?type=', 'alloftype')">GET</div>
     </div>
+
     <div class="testholder">
       <div class="label">POST Create a project ./api/v1/projects/<input class="input" type="text" id="postmakeproject" placeholder="project"></div>
-      <div class="button_load" onclick="apiPost('./api/v1/projects', 'postmakeproject')">POST</div>
+      <div class="button_load" onclick="apiPost('postmakeproject')">POST</div>
     </div>
     <div class="testholder">
       <div class="label">POST file to project ./api/v1/projects/<input class="input" type="text" id="postproject" placeholder="project">/files/<input class="input" type="text" placeholder="file" id="postfile"></div>
-      <div class="button_load" onclick="apiPost('./api/v1/projects', 'alloftype')">POST</div>
+      <input type="file" id='upload_file' style="display:none">
+      <div class="button_load" onclick="load_click()">POST</div>
     </div>
 
     <div class="testholder">
@@ -35,6 +38,12 @@
       <div class="label">DELETE a file in a project ./api/v1/projects/<input class="input" type="text" id="deletefilesprojectname">/files/<input class="input" type="text" id="deletefilesfilename"></div>
       <div class="button_load" onclick="apiDelete('file')">DELETE</div>
     </div>
+
+    <div class="testholder">
+      <div class="label">COPY a project ./api/v1/projects/<input class="input" type="text" id="copyproject">/copy</div>
+      <div class="button_load" onclick="apiCopy('project')">COPY</div>
+    </div>
+
 
   <textarea id="results"></textarea>
   </body>

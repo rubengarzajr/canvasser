@@ -24,26 +24,54 @@ foreach ($path as $value) {
   if ($value == 'api') {$isApi = True;}
 }
 
-if (!$isApi)         {die("NOT API!");}
-if ($api[0] != 'v1') {die("NOT v1 of API!");}
+if (!$isApi)         {die('{"error":"NOT API!"}');}
+if ($api[0] != 'v1') {die('{"error":"NOT v1 of API!"}');}
 
 array_shift($api);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+  echo "POST" . '&#13;';
   $project = clean($api[1]);
   $projectPath = $contentPath . '/' . $project;
   if (!file_exists($contentPath . '/' . $project)) {
-    echo "Creating project: " . $project . '<br>';
+    echo "Creating project: " . $project . '&#13;';
     mkdir($contentPath . '/' . $project, 0744);
-    mkdir($projectPath . '/json', 0744);
-    mkdir($projectPath . '/image', 0744);
-    mkdir($projectPath . '/sound', 0744);
+    // mkdir($projectPath . '/json',  0744);
+    // mkdir($projectPath . '/image', 0744);
+    // mkdir($projectPath . '/sound', 0744);
   }
 
-  if (count($api == 2)){
-
+  if (count($api) == 2){
+    //Make a directory
   }else if($api[2] == 'files'){
-    echo 'make a file';
+    $fileNameFull  = clean($api[3]);
+    $pathParts     = pathinfo($fileNameFull);
+    $fileName      = $pathParts['filename'];
+    $extension     = $pathParts['extension'];
+    $data          = $_POST['data'];
+    if ($extension == 'json') {
+      file_put_contents($projectPath . "/json/" . $file . ".json", $data);
+
+      $html = '<html>' . "\r\n";
+      $html .= '<head>' . "\r\n";
+      $html .= '    <meta charset="UTF-8">' . "\r\n";
+      $html .= '    <script src="../../../../canvasser/canvasser.js" type="text/javascript"></script>' . "\r\n";
+      $html .= '    <link href=".../../../../canvasser/author/css/normalize.css" rel="stylesheet" type="text/css"/>' . "\r\n";
+      $html .= '    <link href=".../../../../canvasser/author/css/canvasser.css" rel="stylesheet" type="text/css"/>' . "\r\n";
+      $html .= '    <title>' . $project . ': ' . $file . '</title>' . "\r\n";
+      $html .= '</head>' . "\r\n";
+      $html .= '  <body onload=\'initCanvasser("activity","./json/' . $file . '.json", "file");\'>' . "\r\n";
+      $html .= '    <div id=\'canvasholder\'></div>' . "\r\n";
+      $html .= '  </body>' . "\r\n";
+      $html .= '</html>' . "\r\n";
+      file_put_contents($projectPath . "/" . $file . ".html", $html);
+      echo "HTML created: " . $file;
+    } else {
+      $binaryData = base64_decode($data);
+      file_put_contents($projectPath . '/' . strtolower($fileNameFull), $binaryData);
+      echo 'Saved: ' . $fileNameFull;
+      echo $data;
+    }
   }
 
 }
