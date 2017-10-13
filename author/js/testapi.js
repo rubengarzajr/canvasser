@@ -1,10 +1,11 @@
 var apiData = {
-  projectPath: './api/v1/projects/'
+  projectsPath: './api/v1/projects/',
+  filesPath: './api/v1/files'
 }
 
 document.onreadystatechange = function(){
  if(document.readyState === 'complete'){
-  apiGet("./api/v1/files");
+  apiGet('allFilesInAllProjects');
   upload_file.addEventListener('change', loadFile, false);
  }
 }
@@ -21,7 +22,7 @@ function loadFile(){
 
   if (file) {
     var reader = new FileReader();
-    if (file.type.indexOf('image') !== -1)  reader.readAsDataURL(file);
+    if (file.type.indexOf('image') !== -1 || file.type.indexOf('audio') !== -1)  reader.readAsDataURL(file);
     else reader.readAsText(file, "UTF-8");
     reader.onload = function (evt) {
       document.getElementById("results").innerHTML = evt.target.result;
@@ -33,56 +34,17 @@ function loadFile(){
   }
 }
 
-function apiGet(params, input){
-  if (input !== undefined) params += document.getElementById(input).value;
-  var xhr = new XMLHttpRequest();
-  var url = params;
-  xhr.open("GET", url, true);
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.onreadystatechange = function() {
-  if(xhr.readyState == 4 && xhr.status == 200) {
-      var data = JSON.parse(xhr.responseText)
-      document.getElementById('results').innerHTML = JSON.stringify(data, null, 4);
-    }
-  }
-  xhr.send();
+function apiCopy(action){
+  document.getElementById('results').innerHTML = "Not yet implemented.";
 }
 
-function apiPost(action, file, data){
-  var type = 'unknown';
-  if (action === 'postfile'){
-    console.log(file, file.name, file.type, file.size);
-    if (file.type !== '') type = file.type;
-  }
-  if (action === 'postmakeproject'){
-    return;
-  }
-  var projectName = document.getElementById('postproject').value;
-  var url = apiData.projectPath + projectName + '/files/' + file.name;
 
-  console.log(url)
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.onreadystatechange = function() {
-  if(xhr.readyState == 4 && xhr.status == 200) {
-      document.getElementById('results').innerHTML = xhr.responseText;
-    }
-  }
-  //if (data !== undefined) xhr.send("data="+encodeURIComponent(JSON.stringify(data)));
-  var subdata = data.substring(data.indexOf(",") + 1);
-  console.log(subdata)
-  if (subdata !== undefined) xhr.send("data="+encodeURIComponent(subdata));
-  else xhr.send();
-}
-
-function apiDelete(input){
-  var path = './api/v1/projects/';
-  if (input === 'project'){
+function apiDelete(action){
+  var path = apiData.projectsPath;
+  if (action === 'project'){
       path += document.getElementById('deleteprojectname').value;
   }
-  if (input === 'file'){
-    console.log('hi')
+  if (action === 'file'){
     path += document.getElementById('deletefilesprojectname').value;
     path += '/files/';
     path += document.getElementById('deletefilesfilename').value;
@@ -92,10 +54,72 @@ function apiDelete(input){
   xhr.open("DELETE", path, true);
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.onreadystatechange = function() {
-  if(xhr.readyState == 4 && xhr.status == 200) {
-      var data = xhr.responseText
-      document.getElementById('results').innerHTML =data;
+    if(xhr.readyState == 4 && xhr.status == 200){
+      document.getElementById('results').innerHTML = xhr.responseText;
     }
   }
   xhr.send();
+}
+
+
+function apiGet(action){
+  var url = '';
+  if (action === 'allFilesInAllProjects') url = apiData.filesPath;
+  if (action === 'allFilesOfATypeInAllProjects') {
+    var type = document.getElementById('getalloftype').value
+    url = apiData.filesPath + '?type='+ type ;
+  }
+  if (action === 'allFilesInAProject') {
+    var project = document.getElementById('getallfilesinaproject').value
+    url = apiData.projectsPath + project + '/files';
+  }
+  if (action === 'allfilesinaprojectofatype'){
+    var project = document.getElementById('project-getallfilesinaprojectofatype').value
+    var type    = document.getElementById('type-getallfilesinaprojectofatype').value
+    url = apiData.projectsPath + project + '/files' + '?type='+ type ;
+  }
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("GET", url, true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+  if(xhr.readyState == 4 && xhr.status == 200) {
+    console.log( xhr.responseText);
+      var data = JSON.parse(xhr.responseText);
+      document.getElementById('results').innerHTML = JSON.stringify(data, null, 4);
+    }
+  }
+  xhr.send();
+}
+
+function apiPost(action, file, data){
+  var type = 'unknown';
+  if (action === 'postfile'){
+    if (file.type !== '') type = file.type;
+  }
+  var projectName = '';
+  var url = '';
+  if (action === 'postmakeproject'){
+    projectName = document.getElementById('postmakeproject').value;
+    url = apiData.projectsPath + projectName;
+  } else {
+    projectName = document.getElementById('postproject').value;
+    url = apiData.projectsPath + projectName + '/files/' + file.name;
+  }
+  if (projectName === '') return;
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+  if(xhr.readyState == 4 && xhr.status == 200) {
+      document.getElementById('results').innerHTML = xhr.responseText;
+    }
+  }
+
+  if (subdata !== undefined){
+    var subdata = data;
+    if (type.indexOf("image") !== -1 || type.indexOf("sound") !== -1); data.substring(data.indexOf(",") + 1);
+    xhr.send("data="+encodeURIComponent(subdata));
+  } else xhr.send();
 }

@@ -30,7 +30,7 @@
 }
 
 .label{
-
+  display: inline;
 }
 
 .input{
@@ -42,6 +42,6 @@
   margin-left: 10px;
   border: 2px solid black;
   padding: 10px;
-  width: 600px;
+  width: 650px;
   margin: 10px;
 }

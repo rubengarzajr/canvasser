@@ -76,7 +76,6 @@ authorLibs.windows = {
       authorLibs.windows.makeDiv({parent:dropTheme,  classes:'drop_items', html:theme.id, click:function(){authorLibs.menus.theme(theme.filename)}});
     });
 
-
     authorLibs.windows.makeDiv({parent:projectHolder,  classes:"projectspacer"});
 
     var upload_json = authorLibs.windows.makeElement({type:'input', subtype:'file', parent:parent, id:'upload_json', style:'display:none'});
