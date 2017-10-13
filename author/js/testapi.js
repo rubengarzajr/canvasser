@@ -84,7 +84,6 @@ function apiGet(action){
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.onreadystatechange = function() {
   if(xhr.readyState == 4 && xhr.status == 200) {
-    console.log( xhr.responseText);
       var data = JSON.parse(xhr.responseText);
       document.getElementById('results').innerHTML = JSON.stringify(data, null, 4);
     }

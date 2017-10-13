@@ -78,26 +78,36 @@ Sample response:
 ```
 
 # DELETE
-05. Delete a specific file in a project
-DELETE api/v1/files?project=name&file=name.ext
+
+## Delete a project
+```
+DELETE SERVER/api/v1/projects/{projectName}
+```
+Sample response:
+```
+[{"status":"delete command received"}]
+```
+## Delete a specific file in a project
+```
 DELETE api/v1/projects/{projectName}/files/{fileName.ext}
+```
+
+```
+[{"status":"delete command received"}]
+```
 
 
-06. Delete a project
-DELETE api/v1/files?project=name
-DELETE api/v1/projects/{projectName}
-
-05. DELETE api/v1/projects/project=name
-
-04. Upload a file    
-
-
-POST JSON
-   Extract Images / Sounds
-
-
-07. Rename a file in a project
-08. rename a project
-
-09. Copy a file in a project
-10. Copy a project
+# RENAME
+## Rename a file in a project
+```
+```
+## Rename a project
+```
+```
+# COPY
+## Copy a file in a project
+```
+```
+## Copy a project
+```
+```
