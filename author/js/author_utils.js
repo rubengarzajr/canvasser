@@ -28,7 +28,7 @@ authorLibs.utils = {
     document.getElementById('savebox').style.display = 'none';
     var data = authorLibs.authorData;
     var xhr = new XMLHttpRequest();
-    var url = "php/upload.php";
+    var url =  authorLibs.endpoints.projects;
 
     if (document.getElementById('separatecheck').checked){
       var imageObj = {id:'image', url:'../../canvasser_content/'+project+'/image'};
@@ -68,7 +68,7 @@ authorLibs.utils = {
         if (authorLibs.saved.count === 0) authorLibs.utils.saveReport();
       }
     }
-    xhr.send("data="+encodeURIComponent(JSON.stringify(data))+'&project='+project+'&file='+file+'&type=json');
+    xhr.send("data="+encodeURIComponent(JSON.stringify(data)));
 
     imagesToUpload.forEach(function(image){
       authorLibs.saved.count ++;
@@ -100,7 +100,6 @@ authorLibs.utils = {
 
   loadFromPhp:function(funct, all){
     var xhr = new XMLHttpRequest();
-    //var url = "php/filelist.php?all="+all;
     var url = authorLibs.endpoints.projects;
     if (all) url = authorLibs.endpoints.files;
 
@@ -140,22 +139,17 @@ authorLibs.utils = {
 
   refreshfiles: function(files){
     var fileList = [];
-    files.data.forEach(function(file){
+    files.forEach(function(file){
       var found = fileList.filter(function(test){return test.project === file.project;});
+      var filename = file.url.replace(/^.*[\\\/]/, '')
       if (found.length > 0) {
         var foundIdx = fileList.indexOf(found[0]);
-          if (file.folder === '') fileList[foundIdx].root.push(file.file);
-          else {
-            if (fileList[foundIdx][file.folder] === undefined) fileList[foundIdx][file.folder] = [];
-            fileList[foundIdx][file.folder].push(file.file);
-          }
+        if (fileList[foundIdx][file.type] === undefined) fileList[foundIdx][file.type] = [];
+        fileList[foundIdx][file.type].push(filename);
       } else {
-        var newList = {project:file.project, json:[], image:[], sound:[], root:[]};
-        if (file.folder === '') newList.root.push(file.file);
-        else {
-          if (newList[file.folder] === undefined) newList[file.folder] = [];
-          newList[file.folder].push(file.file);
-        }
+        var newList = {project:file.project};
+        if (newList[file.type] === undefined) newList[file.type] = [];
+        newList[file.type].push(filename);
         fileList.push(newList);
       }
 
@@ -166,8 +160,9 @@ authorLibs.utils = {
     filebox.innerHTML = '';
     fileList.forEach(function(item){
       authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
-      var subs = ['json','image','sound','root'];
+      var subs = ['json','image','sound','html'];
       subs.forEach(function(sub){
+        if (item[sub] === undefined) return;
         if (item[sub].length === 0) return;
         authorLibs.windows.makeDiv({parent:filebox, html:sub, classes:'load_filefolder'});
         item[sub].forEach(function(file){
@@ -182,18 +177,73 @@ authorLibs.utils = {
   fileDelete: function(list){
     list.forEach(function(item){
       console.log(item.project+'/'+item.dir+'/'+item.id);
-      var url = "php/filemanager.php";
+      var url = authorLibs.endpoints.projects + '/' + item.project + '/files/' + item.id;
+      var xhr = new XMLHttpRequest();
+      xhr.open("DELETE", url, true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+      if(xhr.readyState == 4 && xhr.status == 200) {
+          authorLibs.utils.loadFromPhp('refreshfiles', true);
+        }
+      }
+      xhr.send();
+    });
+  },
+
+  selectProject: function(){
+    document.getElementById('uploadbox').style.display = 'block';
+  },
+
+  fileUploadPre: function(){
+    document.getElementById('uploadbox').style.display = 'none';
+    document.getElementById("fileUpload").click();
+  },
+
+  fileUpload: function(list){
+    console.log(list.srcElement.files);
+    document.getElementById('notice_box').style.display = 'block';
+    document.getElementById('notice_title').innerHTML = 'Upload Status';
+    document.getElementById('notice_content').innerHTML = '';
+    Array.from(list.srcElement.files).forEach(function(file){
+      //authorLibs.uploadList.push(file);
+      authorLibs.utils.postFile(file);
+    });
+  },
+
+  postFile: function(file){
+    var reader = new FileReader();
+    if (file.type.indexOf('image') !== -1 || file.type.indexOf('audio') !== -1)  reader.readAsDataURL(file);
+    else reader.readAsText(file, "UTF-8");
+
+    reader.onload = function (evt) {
+      evt.target.result
+      var projectName = document.getElementById('uploadproject').value;
+      if (projectName === '') return;
+
+      var url = authorLibs.endpoints.projects + '/' + projectName + '/files/' + file.name;
+
       var xhr = new XMLHttpRequest();
       xhr.open("POST", url, true);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       xhr.onreadystatechange = function() {
       if(xhr.readyState == 4 && xhr.status == 200) {
-          authorLibs.utils.loadFromPhp('refreshfiles', true)
+          var res = JSON.parse(xhr.responseText);
+          res.forEach(function(item){
+            document.getElementById('notice_content').innerHTML += item.project + ': ' + item.url + '<br>';
+          });
+          authorLibs.utils.loadFromPhp('refreshfiles', true);
         }
       }
-      xhr.send("action=delete"+'&project='+item.project+'&dir='+item.dir+'&file='+item.id);
 
-    });
+      if (subdata !== undefined){
+        var subdata = data;
+        if (type.indexOf("image") !== -1 || type.indexOf("sound") !== -1); data.substring(data.indexOf(",") + 1);
+        xhr.send("data="+encodeURIComponent(subdata));
+      } else xhr.send();
+    }
+    reader.onerror = function (evt) {
+      console.log('error', evt);
+    }
 
   },
 

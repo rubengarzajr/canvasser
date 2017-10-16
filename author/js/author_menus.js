@@ -56,8 +56,12 @@ authorLibs.menus = {
   },
 
   menuToggle:function(toggle){
-    var toggler = document.getElementById(toggle);
-    if (toggler.style.display === "none") toggler.style.display = "block";
+  var toggler = document.getElementById(toggle);
+  if (toggler.style.display === "none") {
+    toggler.style.display = "block";
+    authorLibs.gui.zidx ++;
+    toggler.style.zIndex = authorLibs.gui.zidx
+  }
     else toggler.style.display = "none";
   },
 

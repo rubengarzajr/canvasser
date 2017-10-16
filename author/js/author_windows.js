@@ -4,13 +4,18 @@ authorLibs.windows = {
     var head   = authorLibs.windows.makeDiv({parent:parent, classes:'header'});
     var projectHolder  = authorLibs.windows.makeDiv({parent:parent, id:'projectholder'});
 
-    var alert = authorLibs.windows.makeDiv({parent:parent, id:'alert_box', style:'display:none', click:function(){authorLibs.menus.menuToggle('alert_box')}});
+    var fileUpload = authorLibs.windows.makeElement({parent:parent, type:'input', subtype:'file', id:'fileUpload', style:'display:none;'});
+    fileUpload.addEventListener('change', authorLibs.utils.fileUpload, false);
+    fileUpload.multiple = true;
+
+    var alert = authorLibs.windows.makeDiv({parent:parent, id:'alert_box', style:'display:none',  click:function(){authorLibs.menus.menuToggle('alert_box');}});
     authorLibs.windows.makeDiv({parent:alert, html:"ALERT",   classes:'alert_title'});
     authorLibs.windows.makeDiv({parent:alert, id:"alertdata", classes:'alert_content'});
 
-    var notice = authorLibs.windows.makeDiv({parent:parent, id:'notice_box', style:'display:none', click:function(){authorLibs.menus.menuToggle('notice_box')}});
+    var notice = authorLibs.windows.makeDiv({parent:parent, id:'notice_box', style:'display:none'});
     authorLibs.windows.makeDiv({parent:notice, id:"notice_title", classes:'notice_title'});
     authorLibs.windows.makeDiv({parent:notice, id:"notice_content",  classes:'notice_content'});
+    authorLibs.windows.makeDiv({parent:notice, html:"CLOSE", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('notice_box');}});
 
     var load = authorLibs.windows.makeDiv({parent:parent, id:'loadbox', style:'display:none'});
     authorLibs.windows.makeDiv({parent:load, html:"LOAD FILE", classes:'title_load'});
@@ -31,32 +36,41 @@ authorLibs.windows = {
     authorLibs.windows.makeElement({parent:divC, type:'input', subtype:'checkbox', classes:'savecheckbox', id:'separatecheck', checked:true});
     authorLibs.windows.makeDiv({parent:save, html:"SAVE", classes:'button_load',  click:function(){authorLibs.utils.saveToPhp()}});
     authorLibs.windows.makeDiv({parent:save, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('savebox')}});
+
+    var upload = authorLibs.windows.makeDiv({parent:parent, id:'uploadbox', style:'display:none'});
+    authorLibs.windows.makeDiv({parent:upload, html:"UPLOAD FILES", classes:'title_save'});
+    var uDivP = authorLibs.windows.makeDiv({parent:upload, classes:'saveblock'});
+    authorLibs.windows.makeDiv({parent:uDivP, html:'Select Project:',  classes:"savelabel"});
+    authorLibs.windows.makeElement({parent:uDivP, type:'input', subtype:'text', classes:'savetextbox', id:'uploadproject'});
+    authorLibs.windows.makeDiv({parent:upload, html:"SELECT", classes:'button_load',  click:function(){authorLibs.utils.fileUploadPre()}});
+    authorLibs.windows.makeDiv({parent:upload, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('uploadbox')}});
     var winList = [
-      {id:"anim",       position:{x:339, y:110}, menu:{add:true, delete:true, copy:true}, min:true},
-      {id:"canvas",     position:{x:10,  y:174}, menu:{reload:true}},
-      {id:"constraint", position:{x:667, y:76},  menu:{add:true, delete:true, copy:true}, min:true, hide:true},
-      {id:"file",       position:{x:160, y:40},  menu:{refresh:true, renamefile:true, copyfile:true, deletefile:true}, hide:true},
-      {id:"group",      position:{x:10,  y:140}, menu:{add:true, delete:true}, min:true, hide:true},
-      {id:"image",      position:{x:174, y:110}, menu:{add:true, delete:true, import:true}, min:true},
-      {id:"json",       position:{x:667, y:110}, menu:{load:true, view:true, execute:true, format:true},min:true, hide:true},
-      {id:"object",     position:{x:10,  y:110}, menu:{add:true, delete:true, copy:true, reorder:true}, min:true},
-      {id:"particle",   position:{x:174, y:76},  menu:{add:true, delete:true}, min:true, hide:true},
-      {id:"path",       position:{x:502, y:76},  menu:{add:true, delete:true}, min:true, hide:true},
-      {id:"properties", position:{x:834, y:76},  menu:{add:true, delete:true}},
-      {id:"sample",     position:{x:338, y:76},  menu:{sample:true}, min:true},
-      {id:"setting",    position:{x:10,  y:76},  menu:{}, min:true},
-      {id:"sound",      position:{x:502, y:76},  menu:{add:true, delete:true}, min:true, hide:true},
-      {id:"shape",      position:{x:174, y:140}, menu:{add:true, delete:true}, min:true, hide:true},
-      {id:"test",       position:{x:502, y:110}, menu:{add:true, delete:true}, min:true, hide:true},
-      {id:"var",        position:{x:338, y:140}, menu:{add:true, delete:true}, min:true, hide:true},
+      {id:"anim",       position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
+      {id:"canvas",     position:{x: 10, y:174}, menu:{reload:true}},
+      {id:"constraint", position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
+      {id:"file",       position:{x:  5, y: 52}, menu:{refresh:true, uploadfile:true, renamefile:true, copyfile:true, deletefile:true}, hide:true},
+      {id:"group",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
+      {id:"image",      position:{x:675, y: 52}, menu:{add:true, delete:true}, min:true},
+      {id:"json",       position:{x:  5, y: 52}, menu:{load:true, view:true, execute:true, format:true},min:false, hide:true},
+      {id:"object",     position:{x:512, y: 52}, menu:{add:true, delete:true, copy:true, reorder:true}, min:true},
+      {id:"particle",   position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false,  hide:true},
+      {id:"path",       position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
+      {id:"properties", position:{x:838, y: 52}, menu:{add:true, delete:true}},
+      {id:"sample",     position:{x:349, y: 52}, menu:{sample:true}, min:true},
+      {id:"setting",    position:{x:186, y: 52}, menu:{}, min:true},
+      {id:"sound",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
+      {id:"shape",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
+      {id:"test",       position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
+      {id:"var",        position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
       {id:"learn",      position:{x:502, y:140}, menu:{}}
     ]
 
     var menuFile = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_file',    classes:'menu_items', html:'File', click:function(){authorLibs.menus.menuToggle('menu_file_dropdown')}});
     var dropFile = authorLibs.windows.makeDiv({parent:menuFile, id:'menu_file_dropdown',  classes:"menu_dropdown", style:'display:none;'});
-    authorLibs.windows.makeDiv({parent:dropFile, html:'New',  classes:'drop_items', click:function(){authorLibs.author.loadDefault()}});
-    authorLibs.windows.makeDiv({parent:dropFile, id:'loader', classes:'drop_items', html:'Load File',  click:function(){authorLibs.utils.loadFromPhp('loadFile', false)}});
-    authorLibs.windows.makeDiv({parent:dropFile, id:'saver',  classes:'drop_items', html:'Save File',  click:function(){authorLibs.menus.menuToggle('savebox')}});
+    authorLibs.windows.makeDiv({parent:dropFile, html:'New',     classes:'drop_items', click:function(){authorLibs.author.loadDefault()}});
+    authorLibs.windows.makeDiv({parent:dropFile, id:'loader',    classes:'drop_items', html:'Load File',  click:function(){authorLibs.utils.loadFromPhp('loadFile', false)}});
+    authorLibs.windows.makeDiv({parent:dropFile, id:'saver',     classes:'drop_items', html:'Save File',  click:function(){authorLibs.menus.menuToggle('savebox')}});
+    authorLibs.windows.makeDiv({parent:dropFile, id:'uploader',  classes:'drop_items', html:'Upload Files',  click:function(){authorLibs.utils.selectProject();}});
     authorLibs.windows.makeDiv({parent:dropFile,   classes:'drop_items', html:'Restart', click:function(){authorLibs.author.reload()}});
 
     var menuWindows = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_windows', classes:'menu_items', html:'Windows', click:function(){authorLibs.menus.menuToggle('menu_windows_dropdown')}});
@@ -111,10 +125,11 @@ authorLibs.windows = {
       if (win.menu.view) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'View', click:function(){authorLibs.author.view()}});
       var holder = authorLibs.windows.makeDiv({parent:contents,  id:win.id + 'holder', classes:'padholder'});
 
-      if (win.menu.refresh)    authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Refresh', click:function(){authorLibs.utils.loadFromPhp('refreshfiles', true)}});
-      if (win.menu.renamefile) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Rename',  click:function(){authorLibs.utils.fileRename(win.id +'s')}});
-      if (win.menu.copyfile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.utils.fileCopy(win.id +'s')}});
-      if (win.menu.deletefile) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.utils.fileDelete(authorLibs.lists.fileManger)}});
+      if (win.menu.refresh)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Refresh', click:function(){authorLibs.utils.loadFromPhp('refreshfiles', true)}});
+      if (win.menu.uploadfile) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Upload',  click:function(){authorLibs.utils.selectProject();}});
+      if (win.menu.renamefile)  authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Rename',  click:function(){authorLibs.utils.fileRename(win.id +'s')}});
+      if (win.menu.copyfile)    authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.utils.fileCopy(win.id +'s')}});
+      if (win.menu.deletefile)  authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.utils.fileDelete(authorLibs.lists.fileManger)}});
 
 
       if (win.id === 'canvas'){

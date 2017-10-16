@@ -13,9 +13,10 @@ var authorLibs = {
   lists:{
     fileManger:[]
   },
+  uploadList:[],
   endpoints:{
-    files:"files",
-    projects:"projects"
+    files:    "api/v1/files",
+    projects: "api/v1/projects"
   }
 };
 
