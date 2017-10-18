@@ -38,6 +38,45 @@ authorLibs.menus = {
     });
   },
 
+  addToProject: function(winId){
+    authorLibs.lists.fileManager.forEach(function(itemToAdd){
+      console.log(itemToAdd)
+      var pathOnly = itemToAdd.url.match(/(.*)[\/\\]/)[1]||'';
+      var existingPath = authorLibs.authorData.paths.filter(function(path){
+        return path.id === itemToAdd.project;
+      });
+
+      if (existingPath.length === 0){
+        authorLibs.authorData.paths.push({id:itemToAdd.project, url:pathOnly});
+      } else existingPath[0].url = pathOnly;
+
+      authorLibs.menus.update('paths');
+
+      var justName = itemToAdd.id.replace(/\.[^/.]+$/, "");
+      if (itemToAdd.type === 'image'){
+        var existingImage = authorLibs.authorData.images.filter(function(image){
+          return image.id === justName;
+        });
+
+        if (existingImage.length === 0){
+          authorLibs.authorData.images.push({id:justName, path:itemToAdd.project, url:itemToAdd.id});
+        } else existingPath[0].url = pathOnly;
+        authorLibs.menus.update('images');
+      }
+      if (itemToAdd.type === 'sound'){
+        var existingSound = authorLibs.authorData.sounds.filter(function(sound){
+          return sound.id === justName;
+        });
+
+        if (existingSound.length === 0){
+          authorLibs.authorData.sounds.push({id:justName, path:itemToAdd.project, url:itemToAdd.id});
+        } else existingPath[0].url = pathOnly;
+        authorLibs.menus.update('sounds');
+      }
+    });
+  },
+
+
   update: function(toUp){
     if (!toUp || toUp === 'anims')       authorLibs.menus.updateMenu('anims');
     if (!toUp || toUp === 'constraints') authorLibs.menus.updateMenu('constraints');
@@ -87,6 +126,7 @@ authorLibs.menus = {
       }
       if (type === 'images'){
         var url = authorLibs.utils.prePath(menuItem);
+        console.log('119', menuItem.local, url)
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td class="imageid"><div class="imagetext">' + menuItem.id + '</div></td>';
         if (menuItem.local) menu +='<td width="50px"><img src="' + menuItem.data + '" alt="' + menuItem.id + '"></td>';

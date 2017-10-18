@@ -7,7 +7,7 @@ if (empty($contentPath)){
 
 $contentUrl = getenv('CONTENT_URL');
 if (empty($contentUrl)){
-  $contentUrl = $_SERVER['HTTP_HOST'] . '/canvasser_content';
+  $contentUrl = (($_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . '/canvasser_content';
 }
 
 $supportedFiles = ['json','mp3','jpg','gif','png', 'wav', 'html'];
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
       $html .= '    <script src="../../../../canvasser/canvasser.js" type="text/javascript"></script>' . "\r\n";
       $html .= '    <link href=".../../../../canvasser/author/css/normalize.css" rel="stylesheet" type="text/css"/>' . "\r\n";
       $html .= '    <link href=".../../../../canvasser/author/css/canvasser.css" rel="stylesheet" type="text/css"/>' . "\r\n";
-      $html .= '    <title>' . $project . ': ' . $file . '</title>' . "\r\n";
+      $html .= '    <title>' . $project . ': ' . $fileName . '</title>' . "\r\n";
       $html .= '</head>' . "\r\n";
       $html .= '  <body onload=\'initCanvasser("activity","./' . $fileName . '.json", "file");\'>' . "\r\n";
       $html .= '    <div id=\'canvasholder\'></div>' . "\r\n";
@@ -93,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     arrayToJSON(dirToJSON($contentPath), $contentPath, $contentUrl, $filterArray );
   }
   if ($api[0] == 'projects'){
+    if (count($api) == 1) {die('{"error":"No files specified."}');}
     if($api[2] == 'files'){
       if ($api[1] == '') {die('{"error":"No project specified."}');}
       arrayToJSON(dirToJSON($contentPath . DIRECTORY_SEPARATOR . $api[1]), $contentPath, $contentUrl, $filterArray);

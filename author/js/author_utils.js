@@ -7,13 +7,13 @@ authorLibs.utils = {
     return preUrl.url + '/' + item.url;
   },
 
-  saveToPhp:function(){
+  saveJson:function(){
     var projectElement = document.getElementById('project');
     var fileElement    = document.getElementById('file');
     var alertB         = document.getElementById('alert_box');
     var aData          = document.getElementById('alertdata');
-    authorLibs.saved = {};
-    authorLibs.saved.count = 1;
+    authorLibs.saved        = {};
+    authorLibs.saved.count  = 1;
     authorLibs.saved.report = '';
 
     if (projectElement.value === '' || fileElement.value === ''){
@@ -21,44 +21,14 @@ authorLibs.utils = {
       aData.innerHTML = 'Please enter a project and file name.'
       return;
     }
-
-    var project = projectElement.value.toLowerCase();
-    var file    = fileElement.value.toLowerCase();
-
     document.getElementById('savebox').style.display = 'none';
-    var data = authorLibs.authorData;
-    var xhr = new XMLHttpRequest();
-    var url =  authorLibs.endpoints.projects;
 
-    if (document.getElementById('separatecheck').checked){
-      var imageObj = {id:'image', url:'../../canvasser_content/'+project+'/image'};
-      var soundObj = {id:'sound', url:'../../canvasser_content/'+project+'./sound'};
-
-      var imagePath = data.paths.filter(function(path){ return path.id==="image"})[0];
-      if (imagePath === undefined) data.paths.push(imageObj);
-      else imagePath = imageObj;
-      var soundPath = data.paths.filter(function(path){ return path.id==="sound"})[0];
-      if (soundPath === undefined) data.paths.push(soundObj);
-      else soundPath = soundObj;
-
-      var imagesToUpload = [];
-      var soundsToUpload = [];
-      data.images.forEach(function(image){
-        if (!image.local) return;
-        imagesToUpload.push({url:image.url, data:image.data});
-        image.local = false;
-        image.data  = '';
-        image.path  = 'image';
-      });
-      data.sounds.forEach(function(sound){
-        if (!sound.local) return;
-        soundsToUpload.push({url:sound.url, data:sound.data});
-        sound.local = false;
-        sound.data  = '';
-        sound.path  = 'sound';
-      });
-    }
-
+    var project = projectElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
+    var file    = fileElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
+    var data    = encodeURIComponent(JSON.stringify(authorLibs.authorData));
+    var xhr     = new XMLHttpRequest();
+    var url     = authorLibs.endpoints.projects + '/' + project + '/files/' + file + '.json';
+    console.log(url);
     xhr.open("POST", url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
@@ -68,27 +38,7 @@ authorLibs.utils = {
         if (authorLibs.saved.count === 0) authorLibs.utils.saveReport();
       }
     }
-    xhr.send("data="+encodeURIComponent(JSON.stringify(data)));
-
-    imagesToUpload.forEach(function(image){
-      authorLibs.saved.count ++;
-      var imageReq = new XMLHttpRequest();
-      var url = "php/upload.php";
-
-      imageReq.open("POST", url, true);
-      imageReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      imageReq.onreadystatechange = function() {
-      if(imageReq.readyState == 4 && imageReq.status == 200) {
-          authorLibs.saved.report += imageReq.responseText + '<br>';
-          authorLibs.saved.count --;
-          if (authorLibs.saved.count === 0) authorLibs.utils.saveReport();
-        }
-      }
-      var name    = image.url.replace(/\.[^/.]+$/, "");
-      var ext     = image.url.split('.').pop();
-      var subdata = image.data.substring(image.data.indexOf(",") + 1);
-      imageReq.send("data="+encodeURIComponent(subdata)+'&project='+project+'&file='+name+'&ext='+ext+'&type=image');
-    });
+    xhr.send("data="+data);
 
   },
 
@@ -102,7 +52,7 @@ authorLibs.utils = {
     var xhr = new XMLHttpRequest();
     var url = authorLibs.endpoints.projects;
     if (all) url = authorLibs.endpoints.files;
-
+    if (funct === 'loadFile') url = authorLibs.endpoints.files + '?type=json';
     xhr.open("GET", url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
@@ -115,41 +65,48 @@ authorLibs.utils = {
 
   loadFile: function(files){
     var fileList = [];
-    files.data.forEach(function(file){
+    if (files.length === 0) return;
+    document.getElementById('loadbox').style.display = 'block';
+
+    files.forEach(function(file){
       var found = fileList.filter(function(test){return test.project === file.project;});
+      var name = authorLibs.utils.fileFromUrl(file.url);
       if (found.length) {
         var foundIdx = fileList.indexOf(found[0]);
-        fileList[foundIdx].files.push(file.file);
+        fileList[foundIdx].files.push({id:name,url:file.url});
       } else {
-        fileList.push({project:file.project, files:[file.file]});
+        fileList.push({project:file.project, files:[{id:name,url:file.url}]});
       }
-
     });
+
     fileList.sort(function(a,b) {return (a.project > b.project) ? 1 : ((b.project > a.project) ? -1 : 0);} );
-    document.getElementById('loadbox').style.display = 'block';
     var filebox = document.getElementById('loaddata');
     filebox.innerHTML = '';
     fileList.forEach(function(item){
       authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
       item.files.forEach(function(file){
-        authorLibs.windows.makeDiv({parent:filebox, html:file, classes:'load_file', click:function(){authorLibs.utils.loadJson(item.project, file)}});
+        authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file', click:function(){authorLibs.utils.loadJson(file.url)}});
       });
     });
+  },
+
+  fileFromUrl: function(url){
+    return url.replace(/^.*[\\\/]/, '');
   },
 
   refreshfiles: function(files){
     var fileList = [];
     files.forEach(function(file){
       var found = fileList.filter(function(test){return test.project === file.project;});
-      var filename = file.url.replace(/^.*[\\\/]/, '')
+      var filename = file.url.replace(/^.*[\\\/]/, '');
       if (found.length > 0) {
         var foundIdx = fileList.indexOf(found[0]);
         if (fileList[foundIdx][file.type] === undefined) fileList[foundIdx][file.type] = [];
-        fileList[foundIdx][file.type].push(filename);
+        fileList[foundIdx][file.type].push({id:filename, url:file.url});
       } else {
         var newList = {project:file.project};
         if (newList[file.type] === undefined) newList[file.type] = [];
-        newList[file.type].push(filename);
+        newList[file.type].push({id:filename, url:file.url});
         fileList.push(newList);
       }
 
@@ -165,9 +122,10 @@ authorLibs.utils = {
         if (item[sub] === undefined) return;
         if (item[sub].length === 0) return;
         authorLibs.windows.makeDiv({parent:filebox, html:sub, classes:'load_filefolder'});
+
         item[sub].forEach(function(file){
-          authorLibs.windows.makeDiv({parent:filebox, html:file, classes:'load_file',
-            click:function(){authorLibs.utils.updateList(this, authorLibs.lists.fileManger, {id:file, project:item.project, dir:sub, type:'file'})
+          authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file',
+            click:function(){authorLibs.utils.updateList(this, authorLibs.lists.fileManager, {id:file.id, project:item.project, type:sub, url:file.url})
           }});
         });
       });
@@ -202,10 +160,9 @@ authorLibs.utils = {
   fileUpload: function(list){
     console.log(list.srcElement.files);
     document.getElementById('notice_box').style.display = 'block';
-    document.getElementById('notice_title').innerHTML = 'Upload Status';
+    document.getElementById('notice_title').innerHTML   = 'Upload Status';
     document.getElementById('notice_content').innerHTML = '';
     Array.from(list.srcElement.files).forEach(function(file){
-      //authorLibs.uploadList.push(file);
       authorLibs.utils.postFile(file);
     });
   },
@@ -216,7 +173,7 @@ authorLibs.utils = {
     else reader.readAsText(file, "UTF-8");
 
     reader.onload = function (evt) {
-      evt.target.result
+
       var projectName = document.getElementById('uploadproject').value;
       if (projectName === '') return;
 
@@ -235,10 +192,10 @@ authorLibs.utils = {
         }
       }
 
-      if (subdata !== undefined){
-        var subdata = data;
-        if (type.indexOf("image") !== -1 || type.indexOf("sound") !== -1); data.substring(data.indexOf(",") + 1);
-        xhr.send("data="+encodeURIComponent(subdata));
+      if (evt.target.result !== undefined){
+        var data =  evt.target.result;
+        if (file.type.indexOf("image") !== -1 || file.type.indexOf("sound") !== -1); data = data.substring(data.indexOf(",") + 1);
+        xhr.send("data="+encodeURIComponent(data));
       } else xhr.send();
     }
     reader.onerror = function (evt) {
@@ -256,13 +213,18 @@ authorLibs.utils = {
       list.splice(finder[0],1);
       element.style.backgroundColor = 'white';
     }
+    console.log(list)
   },
 
-  loadJson: function(project, file){
+  loadJson: function(url){
+    console.log('url')
+    console.log(url)
+
     document.getElementById('loadbox').style.display = 'none';
     authorLibs.utils.requestFile(
-      authorLibs.contentPath + '/' + project + '/json/' + file + '.json',
+      url,
       function(data){
+        console.log(data)
         json = JSON.parse(decodeURIComponent(data));
         restartCanvasser("sample", json, 'string');
       }

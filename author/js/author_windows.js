@@ -32,9 +32,7 @@ authorLibs.windows = {
     authorLibs.windows.makeDiv({parent:divF, html:'File:',  classes:"savelabel"});
     authorLibs.windows.makeElement({parent:divF, type:'input', subtype:'text', classes:'savetextbox', id:'file'});
     var divC = authorLibs.windows.makeDiv({parent:save, classes:'saveblock'});
-    authorLibs.windows.makeDiv({parent:divC, html:'Separate Assets:',  classes:"savelabel"});
-    authorLibs.windows.makeElement({parent:divC, type:'input', subtype:'checkbox', classes:'savecheckbox', id:'separatecheck', checked:true});
-    authorLibs.windows.makeDiv({parent:save, html:"SAVE", classes:'button_load',  click:function(){authorLibs.utils.saveToPhp()}});
+    authorLibs.windows.makeDiv({parent:save, html:"SAVE", classes:'button_load',  click:function(){authorLibs.utils.saveJson()}});
     authorLibs.windows.makeDiv({parent:save, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('savebox')}});
 
     var upload = authorLibs.windows.makeDiv({parent:parent, id:'uploadbox', style:'display:none'});
@@ -48,7 +46,7 @@ authorLibs.windows = {
       {id:"anim",       position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
       {id:"canvas",     position:{x: 10, y:174}, menu:{reload:true}},
       {id:"constraint", position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
-      {id:"file",       position:{x:  5, y: 52}, menu:{refresh:true, uploadfile:true, renamefile:true, copyfile:true, deletefile:true}, hide:true},
+      {id:"file",       position:{x: 23, y: 52}, menu:{refresh:true, uploadfile:true, renamefile:true, addtoproject:true, copyfile:true, deletefile:true}, min:true, hide:false},
       {id:"group",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
       {id:"image",      position:{x:675, y: 52}, menu:{add:true, delete:true}, min:true},
       {id:"json",       position:{x:  5, y: 52}, menu:{load:true, view:true, execute:true, format:true},min:false, hide:true},
@@ -125,11 +123,12 @@ authorLibs.windows = {
       if (win.menu.view) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'View', click:function(){authorLibs.author.view()}});
       var holder = authorLibs.windows.makeDiv({parent:contents,  id:win.id + 'holder', classes:'padholder'});
 
-      if (win.menu.refresh)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Refresh', click:function(){authorLibs.utils.loadFromPhp('refreshfiles', true)}});
-      if (win.menu.uploadfile) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Upload',  click:function(){authorLibs.utils.selectProject();}});
-      if (win.menu.renamefile)  authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Rename',  click:function(){authorLibs.utils.fileRename(win.id +'s')}});
-      if (win.menu.copyfile)    authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.utils.fileCopy(win.id +'s')}});
-      if (win.menu.deletefile)  authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.utils.fileDelete(authorLibs.lists.fileManger)}});
+      if (win.menu.refresh)      authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Refresh', click:function(){authorLibs.utils.loadFromPhp('refreshfiles', true)}});
+      if (win.menu.uploadfile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Upload',  click:function(){authorLibs.utils.selectProject();}});
+      if (win.menu.addtoproject) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Link',    click:function(){authorLibs.menus.addToProject( win.id +'s')}});
+      if (win.menu.renamefile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Rename',  click:function(){authorLibs.utils.fileRename(win.id +'s')}});
+      if (win.menu.copyfile)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.utils.fileCopy(win.id +'s')}});
+      if (win.menu.deletefile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.utils.fileDelete(authorLibs.lists.fileManager)}});
 
 
       if (win.id === 'canvas'){
