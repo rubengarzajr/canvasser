@@ -61,6 +61,7 @@ function initAuthorCanvasser(vari, datafile, dataForm){
   authorLibs.windows.build();
   learning('load', 'welcome');
   authorLibs.utils.requestJSON(authorLibs.externalsPath + "json/author.json", setRules);
+  authorLibs.windows.theme('default');
   function setRules(data){
     authorLibs.rules  = data;
     if (authorLibs.defaultJSONobj) initEdit(authorLibs.defaultJSON);

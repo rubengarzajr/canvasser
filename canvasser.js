@@ -1024,15 +1024,27 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           act.data.objects.forEach(function(obj){
             if (obj.id === undefined) return;
             if (act.dragging !== null && obj.id !== act.dragging.id) return;
+
             if (obj.id === action.id) {
               if (obj.parent !== undefined){
                 if (obj.position.offset === undefined) obj.position.offset = {x:obj.position.current.x,y:obj.position.current.y};
+
                 if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
                 if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
-              } else{
+              }else{
                 if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
                 if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
               }
+
+              if (action.limitx){
+                if (obj.position.current.x < action.minx) obj.position.current.x = action.minx;
+                if (obj.position.current.x > action.maxx) obj.position.current.x = action.maxx;
+              }
+              if (action.limity){
+                if (obj.position.current.y < action.miny) obj.position.current.y = action.miny;
+                if (obj.position.current.y > action.maxy) obj.position.current.y = action.maxy;
+              }
+
               act.dragging = obj;
             }
           });

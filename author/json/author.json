@@ -15,7 +15,7 @@
     {"type":"playanim",     "widgets":[{"field":"animation",  "type":"anmlist"}]},
     {"type":"pstart",       "widgets":[{"field":"id",         "type":"parlist"}]},
     {"type":"set",          "widgets":[{"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type"},      {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
-    {"type":"slideobject",  "widgets":[{"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type"},      {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"constrainx", "type":"bool"},  {"field":"constrainy",     "type":"bool"}]},
+    {"type":"slideobject",  "widgets":[{"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type"},      {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"constrainx", "type":"bool"},  {"field":"constrainy",     "type":"bool"}, {"field":"limitx", "type":"bool"}, {"field":"minx",   "type":"number"},  {"field":"maxx",   "type":"number"}, {"field":"limity",     "type":"bool"}, {"field":"miny",   "type":"number"},  {"field":"maxy",   "type":"number"}]},
     {"type":"sound",        "widgets":[{"field":"id",         "type":"sndlist"}]},
     {"type":"soundstop",    "widgets":[{"field":"id",         "type":"sndlist"}]},
     {"type":"testpset",     "widgets":[{"field":"testp",      "type":"bool"},                           {"field":"filter",  "type":"select", "id":"filtertype"},      {"field":"id", "type":"filterlink", "link":"filter"}]},

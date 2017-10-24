@@ -10,14 +10,14 @@ if (empty($contentUrl)){
   $contentUrl = (($_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . '/canvasser_content';
 }
 
-$supportedFiles = ['json','mp3','jpg','gif','png', 'wav', 'html'];
-$imageFiles = ['jpg','gif','png'];
-$soundFiles = ['mp3','wav'];
+$supportedFiles = array('json','mp3','jpg','gif','png', 'wav', 'html');
+$imageFiles = array('jpg','gif','png');
+$soundFiles = array('mp3','wav');
 
 
 $url   = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
 $path  = explode("/",$url);
-$api   = [];
+$api   = array();
 $isApi = false;
 
 foreach ($path as $value) {
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($getType == 'sound') {
       $filterArray = $soundFiles;
     } else {
-      $filterArray = [clean($_REQUEST['type'])];
+      $filterArray = array(clean($_REQUEST['type']));
     }
   }
 
