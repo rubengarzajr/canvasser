@@ -75,6 +75,17 @@
                                             {"field":"operation",   "type":"select", "id":"constraintype"},
                                             {"field":"value",       "type":"number"}
                                            ]
+        },
+        {"type":"relation",      "widgets":[{"field":"driver",         "type":"objlist"},
+                                            {"field":"useminmax",      "type":"bool",  "display":"Use Min Max"},
+                                            {"field":"driverop",       "type":"select", "id":"relationtype"},
+                                            {"field":"drivermin",      "type":"number"},
+                                            {"field":"drivermax",      "type":"number"},
+                                            {"field":"constrained",    "type":"objlist"},
+                                            {"field":"constrainop",    "type":"select", "id":"relationtype"},
+                                            {"field":"constrainmin",   "type":"number"},
+                                            {"field":"constrainmax",   "type":"number"}
+                                           ]
         }
       ]
   },
@@ -197,6 +208,7 @@
     "objecttype":{"list":["image", "shape"]},
     "operationtype":{"list":["add", "sub","set"]},
     "particletype":{"list":["flow","burst"]},
+    "relationtype":{"list":["position.current.x", "position.current.y", "scale.current", "rotation"]},
     "composite":{"list":["source-over", "source-in", "source-out", "source-atop", "destination-over", "destination-in", "destination-out", "destination-atop", "lighter", "copy", "xor", "multiply",
        "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity" ]}
   },

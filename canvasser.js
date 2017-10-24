@@ -377,6 +377,22 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (child.rotation === undefined) child.rotation = 0;
           child.rotation = -Math.atan2(norm.x, norm.y) + 3.1415926536 + radians(dr.angle);
         }
+        if (dr.type === 'relation'){
+          var parent = act.data.objects.filter(function(obj){return obj.id === dr.driver})[0];
+          var child  = act.data.objects.filter(function(obj){return obj.id === dr.constrained})[0];
+          if (parent === undefined || child === undefined) return;
+          var driver      = 0;
+          var constrained = 0;
+
+          driver = getSubProp(parent, dr.driverop);
+
+          if (dr.useminmax){
+          var percent = (driver -  dr.drivermin) / (dr.drivermax -  dr.drivermin);
+          var out =  percent * (dr.constrainmax -  dr.constrainmin) + dr.constrainmin ;
+          driver = out;
+          }
+          setSubProp(child, dr.constrainop, driver)
+        }
       });
     });
 

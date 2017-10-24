@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2017-10-24 Added relation constraint.
 - 2017-10-24 **Version 1.2.0**
 - 2017-10-24 Revised Themes.
 - 2017-10-23 Added slide object x, y min, max limits.
