@@ -1,0 +1,48 @@
+## Changelog:
+
+- 2017-10-24 **Version 1.2.0**
+- 2017-10-24 Revised Themes.
+- 2017-10-23 Added slide object x, y min, max limits.
+- 2017-10-22 API replaced all other PHP.
+- 2017-10-10 Created API.
+- 2017-10-02 CSS fix for tall images in Image window.
+- 2017-10-02 Generate HTML test file on save.
+- 2017-09-29 Fixed missing anim name from play animation command.
+- 2017-09-29 Added themes.
+- 2017-09-29 Save and load of JSON.  Separate images from JSON and save to image folder.
+- 2017-09-26 Added image import.
+- 2017-09-21 Removed old samples.  Moved authoring page to index.html.
+- 2017-09-21 Authoring windows now generated through code.
+- 2017-09-19 Object Copy now appends a number to the copy if a copy already exists.
+- 2017-09-19 Re-skinned Authoring interface.
+- 2017-09-11 Added simple constraint system.
+- 2017-09-07 Added animation pause.
+- 2017-09-07 Added blend modes to image objects.
+- 2017-09-07 Removed Samples from JSON output.
+- 2017-08-22 Object/Group/Particle filter working on more(all?) properties.
+- 2017-08-22 Flipbook works if missing x or y values (defaults to 0).
+- 2017-08-08 Objects now take their scale * parent scale.
+- 2017-08-08 Groups vis command hooked up for animation.
+- 2017-08-07 Groups assignment UI hooked up on Objects.
+- 2017-08-07 Animation of Groups hooked up.
+- 2017-08-07 Groups Window UI hooked up.
+- 2017-08-04 Test for variable condition working.
+- 2017-08-04 Fixed settings property window.
+- 2017-08-03 Only one particle of a type can exist at a time and animations will override old one.
+- 2017-08-03 Renamed testp to Interactive in UI and hide actions if object not interactive.
+- 2017-08-03 Added "flow" particle emission type.  Burst now emits all particles at once.
+- 2017-08-03 **Version 1.1.0**
+- 2017-08-03 Fixed move anims referencing particle archetype rather than particle instance.
+- 2017-08-02 Fixed animation bug with undefined previous time triggering anims twice.
+- 2017-08-02 Permanent particle persisting working.
+- 2017-08-02 Windows no longer go off of screen.
+- 2017-08-01 Particle parenting working.
+- 2017-07-28 Tests hooked up.
+- 2017-07-18 Tests Window added to UI.
+- 2017-07-18 Conditional position and variable added to UI.
+- 2017-07-17 Sound UI and Add/Delete implemented.
+- 2017-07-17 Combined functions for UI build menus.
+- 2017-07-14 Settings cached option (bool) added - defaults to use cached
+- 2017-07-14 Canvasser Init now grabs previous x,y mouse position for loadInto
+- 2017-07-14 loadInto now stops the loop - not sure if 100% fixed but seems okay
+- 2016-08-18 **Version 0.4.0**

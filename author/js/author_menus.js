@@ -40,7 +40,6 @@ authorLibs.menus = {
 
   addToProject: function(winId){
     authorLibs.lists.fileManager.forEach(function(itemToAdd){
-      console.log(itemToAdd)
       var pathOnly = itemToAdd.url.match(/(.*)[\/\\]/)[1]||'';
       var existingPath = authorLibs.authorData.paths.filter(function(path){
         return path.id === itemToAdd.project;
@@ -126,7 +125,6 @@ authorLibs.menus = {
       }
       if (type === 'images'){
         var url = authorLibs.utils.prePath(menuItem);
-        console.log('119', menuItem.local, url)
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td class="imageid"><div class="imagetext">' + menuItem.id + '</div></td>';
         if (menuItem.local) menu +='<td width="50px"><img src="' + menuItem.data + '" alt="' + menuItem.id + '"></td>';
@@ -283,16 +281,5 @@ authorLibs.menus = {
     authorLibs.buildProp.getProps(type, swapId.substring(swapId.indexOf("_") + 1));
     restartCanvasser("sample", authorLibs.authorData, "string");
     if (select !== undefined) authorLibs.menus.updateSelectionWindow(type, select);
-  },
-
-  theme: function(themeName){
-    Array.from(document.getElementsByTagName("link")).forEach(function(link, idx){
-      if (link.type != 'text/css') return;
-      if (link.href.indexOf('canvasser') > -1) {
-        var filename = link.href.replace(/^.*[\\\/]/, '')
-        link.href = link.href.replace(filename, themeName);
-      }
-    });
   }
-
 }

@@ -10,7 +10,7 @@ function initCanvasser(vari, datafile, dataForm, overrides){
 }
 
 function canvasser(vari, interactiveData, dataForm, overrides){
-  this.version  = '1.0.3';
+  this.version  = '1.2.0';
   var act      = new interaction();
   this.act     = act;
   var pManager = new particleManager();

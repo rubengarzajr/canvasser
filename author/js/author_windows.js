@@ -209,7 +209,7 @@ authorLibs.windows = {
   theme: function(theme){
     var colors = [
       {id:'alert-bg-color',       default:'rgb( 51,   0,   0)', blue:'rgb(51, 0, 0)',      green:'rgb( 51,   0,   0)'},
-      {id:'alert-color',          default:'white',              blue:'white',              green:'white'},
+      {id:'alert-color',          default:'white',              blue:'white',              green:'white'             },
       {id:'loadbox-bg-color',     default:'rgb( 99,  99,  99)', blue:'rgb( 99,  99, 199)', green:'rgb( 99, 199,  99)'},
       {id:'header-bg-color',      default:'rgb( 62,  62,  62)', blue:'rgb( 62,  62, 162)', green:'rgb( 62, 162,  62)'},
       {id:'header-color',         default:'white',              blue:'rgb(200, 200, 255)', green:'rgb(200, 255, 200)'},

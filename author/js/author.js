@@ -94,7 +94,7 @@ function restartCanvasser(name, data, type){
   var context      = canvas.getContext('2d');
   canvas.addEventListener('mousemove', function(evt) {
     var mousePos = getMousePos(canvas, evt);
-    var message =  mousePos.x + ',' + mousePos.y;
+    var message  = parseInt(mousePos.x) + ',' + parseInt(mousePos.y);
     document.getElementById('outputtitle').innerHTML = message;
   }, false);
 
@@ -141,23 +141,6 @@ function authorcanvasser(dataFile, dataForm){
       }
     }
   }
-
-  // function moveObjD(element){
-  //   authorLibs.gui.move = true;
-  //   authorLibs.gui.mousedown   = true;
-  //   authorLibs.gui.moveElement = document.getElementById(element);
-  //   authorLibs.gui.zidx ++;
-  //   authorLibs.gui.moveElement.style.zIndex = authorLibs.gui.zidx;
-  //   var off = {x:0, y:0};
-  //   if (authorLibs.gui.moveElement.style.left !== "") off.x = authorLibs.gui.mousePos.x - parseInt(authorLibs.gui.moveElement.style.left.slice(0,-2));
-  //   if (authorLibs.gui.moveElement.style.top  !== "") off.y = authorLibs.gui.mousePos.y - parseInt(authorLibs.gui.moveElement.style.top.slice(0,-2));
-  //   authorLibs.gui.offset      = {x:off.x, y:off.y};
-  // }
-  //
-  // function focusObjD(element){
-  //   authorLibs.gui.zidx ++;
-  //   document.getElementById(element).style.zIndex = authorLibs.gui.zidx;
-  // }
 
   function moveObjU(ev){
     authorLibs.gui.mousedown = false;
