@@ -54,6 +54,3 @@ Read the tutorials in the **Learning window** or view some samples by expanding 
 
 ## More Info:
 [Check out the Wiki!](https://github.com/rubengarzajr/canvasser/wiki)
-
-### Use Node to generate min file.
-uglifyjs  ~/Documents/canvasser/canvasser.js --compress --screw-ie8 --output ~/Documents/canvasser/canvasser.min.js
