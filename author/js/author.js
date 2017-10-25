@@ -5,6 +5,7 @@ var authorLibs = {
   contentPath: '../../canvasser_content',
   gui: {
     mousedown: false,
+    parentMouseDown: false,
     moveElement: null,
     mousePos: {x:0,y:0},
     offset: {x:0,y:0},

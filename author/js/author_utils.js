@@ -125,8 +125,14 @@ authorLibs.utils = {
 
         item[sub].forEach(function(file){
           authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file',
-            click:function(){authorLibs.utils.updateList(this, authorLibs.lists.fileManager, {id:file.id, project:item.project, type:sub, url:file.url})
-          }});
+            mousedown:function(){
+              authorLibs.utils.updateList(this, authorLibs.lists.fileManager, {id:file.id, project:item.project, type:sub, url:file.url})
+            },
+            mouseenter:function(){
+              if (!authorLibs.gui.parentMouseDown) return;
+              authorLibs.utils.updateList(this, authorLibs.lists.fileManager, {id:file.id, project:item.project, type:sub, url:file.url})
+            }
+          });
         });
       });
     });
@@ -205,15 +211,15 @@ authorLibs.utils = {
   },
 
   updateList:function(element, list, item){
-    var finder = list.findIndex(function(check){return check.id === item.id && check.project === item.project && check.dir === item.dir;});
+    var finder = list.findIndex(function(check){return check.id === item.id && check.project === item.project && check.url === item.url;});
+
     if (finder === -1) {
       list.push(item);
       element.style.backgroundColor = 'rgb(97, 255, 55)';
     } else {
-      list.splice(finder[0],1);
+      list.splice(finder,1);
       element.style.backgroundColor = 'white';
     }
-    console.log(list)
   },
 
   loadJson: function(url){

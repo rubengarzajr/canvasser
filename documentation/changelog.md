@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2017-10-25 Fixed file manager select and added multiselect.
+- 2017-10-25 Sliding objects works with x, y constraints better.
 - 2017-10-24 Added relation constraint.
 - 2017-10-24 **Version 1.2.0**
 - 2017-10-24 Revised Themes.

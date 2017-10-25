@@ -1,6 +1,10 @@
 authorLibs.windows = {
   build: function(){
     var parent = document.getElementById("canvasser_authoring");
+    parent.addEventListener('mousedown',    function(){authorLibs.gui.parentMouseDown = true;})
+    parent.addEventListener('mouseup',      function(){authorLibs.gui.parentMouseDown = false;})
+    parent.addEventListener('onmouseleave', function(){authorLibs.gui.parentMouseDown = false;})
+
     var head   = authorLibs.windows.makeDiv({parent:parent, classes:'header'});
     var projectHolder  = authorLibs.windows.makeDiv({parent:parent, id:'projectholder'});
 
@@ -137,7 +141,8 @@ authorLibs.windows = {
         winTitle.innerHTML = 'Output';
       }
       if (win.id === 'file'){
-        authorLibs.windows.makeDiv({parent:contents, classes:'content_load_all', id:'filelist'});
+        var filelistDiv = authorLibs.windows.makeDiv({parent:contents, classes:'content_load_all', id:'filelist'});
+
       }
       if (win.id === 'json'){
         var txt  = document.createElement('textarea');
@@ -169,7 +174,7 @@ authorLibs.windows = {
   },
 
   moveObjD: function(element){
-    authorLibs.gui.move = true;
+    authorLibs.gui.move        = true;
     authorLibs.gui.mousedown   = true;
     authorLibs.gui.moveElement = document.getElementById(element);
     authorLibs.gui.zidx ++;
@@ -187,15 +192,20 @@ authorLibs.windows = {
 
 
   makeElement: function(settings){
-    var element                                   = document.createElement(settings.type);
-    if (settings.id !== undefined) element.id              = settings.id;
-    if (settings.subtype !== undefined) element.type       = settings.subtype;
-    if (settings.classes !== undefined) element.className  = settings.classes;
-    if (settings.style !== undefined) element.style        = settings.style;
-    if (settings.html !== undefined) element.innerHTML     = settings.html;
-    if (settings.click != undefined) element.onclick       = settings.click;
-    if (settings.multiple != undefined) element.multiple   = true;
-    if (settings.checked != undefined) element.checked   = true;
+    var element = document.createElement(settings.type);
+    if (settings.checked   !== undefined) element.checked     = true;
+    if (settings.classes   !== undefined) element.className   = settings.classes;
+    if (settings.click     !== undefined) element.onclick     = settings.click;
+    if (settings.html      !== undefined) element.innerHTML   = settings.html;
+    if (settings.id        !== undefined) element.id          = settings.id;
+    if (settings.mousedown !== undefined) element.onmousedown = settings.mousedown;
+    if (settings.mouseenter   !== undefined) element.onmouseenter   = settings.mouseenter;
+    if (settings.mousemove !== undefined) element.onmousemove = settings.mousemove;
+    if (settings.mouseout  !== undefined) element.onmouseout  = settings.mouseout;
+    if (settings.mouseover !== undefined) element.onmouseover = settings.mouseover;
+    if (settings.multiple  !== undefined) element.multiple    = true;
+    if (settings.style     !== undefined) element.style       = settings.style;
+    if (settings.subtype   !== undefined) element.type        = settings.subtype;
     settings.parent.appendChild(element);
     return element;
   },

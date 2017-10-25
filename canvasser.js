@@ -685,7 +685,13 @@ function canvasser(vari, interactiveData, dataForm, overrides){
               Math.floor((act.position.y-pos.y-obj.originxy.current.y)/obj.scale.current), 1, 1
             ).data;
           }
-          if (pixelData_img[3] != 0) act.applyAction.unshift(obj);
+          if (pixelData_img[3] != 0) {
+            act.applyAction.unshift(obj);
+          } else {
+            if (act.dragging !== null) {
+              if (obj.id === act.dragging.id) act.applyAction.unshift(obj);
+            }
+          }
         }
     }
   });
@@ -1041,28 +1047,28 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             if (obj.id === undefined) return;
             if (act.dragging !== null && obj.id !== act.dragging.id) return;
 
-            if (obj.id === action.id) {
-              if (obj.parent !== undefined){
-                if (obj.position.offset === undefined) obj.position.offset = {x:obj.position.current.x,y:obj.position.current.y};
+            if (obj.id !== action.id) return;
+            if (obj.parent !== undefined){
+              if (obj.position.offset === undefined) obj.position.offset = {x:obj.position.current.x,y:obj.position.current.y};
 
-                if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
-                if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
-              }else{
-                if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
-                if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
-              }
-
-              if (action.limitx){
-                if (obj.position.current.x < action.minx) obj.position.current.x = action.minx;
-                if (obj.position.current.x > action.maxx) obj.position.current.x = action.maxx;
-              }
-              if (action.limity){
-                if (obj.position.current.y < action.miny) obj.position.current.y = action.miny;
-                if (obj.position.current.y > action.maxy) obj.position.current.y = action.maxy;
-              }
-
-              act.dragging = obj;
+              if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
+              if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
+            }else{
+              if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
+              if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
             }
+
+            if (action.limitx){
+              if (obj.position.current.x < action.minx) obj.position.current.x = action.minx;
+              if (obj.position.current.x > action.maxx) obj.position.current.x = action.maxx;
+            }
+            if (action.limity){
+              if (obj.position.current.y < action.miny) obj.position.current.y = action.miny;
+              if (obj.position.current.y > action.maxy) obj.position.current.y = action.maxy;
+            }
+
+            act.dragging = obj;
+
           });
         }
         if (action.type === "slideover"){

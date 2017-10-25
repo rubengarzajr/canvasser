@@ -145,11 +145,12 @@
 .content_load_all{
   background-color: white;
   height: 205px;
-  min-width: 250px;
   margin-bottom: 5px;
+  min-width: 250px;
   overflow-y: scroll;
   padding: 10px;
   resize: both;
+  user-select: none;
 }
 
 .button_load{
@@ -209,12 +210,13 @@
 .grouper{
   background-color: rgb(150, 150, 150);
   padding-bottom: 10px;
+  user-select: none;
 }
 
 .grouptitle{
   color: #f0efff;
-  text-align: center;
   font-family: button;
+  text-align: center;
 }
 
 .actionspacer{
@@ -226,9 +228,9 @@
 }
 
 .title{
-  text-align: center;
   font-size: 2.25em;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .subtitle{
@@ -237,8 +239,8 @@
 }
 
 .minititle{
-  text-align: center;
   font-size: 0.9em;
+  text-align: center;
 }
 
 .divspace{
@@ -303,9 +305,10 @@ a{
 
 .menu_items{
   color: white;
-  display: inline-block;
   cursor: pointer;
+  display: inline-block;
   margin-left: 10px;
+  user-select: none;
 }
 
 .saveblock{
@@ -360,6 +363,7 @@ a{
 .titlebar{
   background-color: var(--titlebar);
   cursor: move;
+  user-select: none;
 }
 
 .titlecenter{
@@ -369,6 +373,7 @@ a{
   position: absolute;
   right: 0;
   text-align: center;
+  user-select: none;
 }
 
 .rightfloater{
@@ -552,25 +557,27 @@ a{
 }
 
 .divbutton{
-  cursor: pointer;
-  font-family: button;
   background-color: white;
-  border: 1px black solid;
   border-radius: 3px;
-  display: inline-block;
-  padding: 4px;
-  margin: 2px;
+  border: 1px black solid;
   box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.25);
+  cursor: pointer;
+  display: inline-block;
+  font-family: button;
+  margin: 2px;
+  padding: 4px;
+  user-select: none;
 }
 
 .divmenu{
   color: rgb(220,220,220);
   cursor: pointer;
-  font-family: button;
   display: table-cell;
-  padding: 2px;
-  margin: 2px;
+  font-family: button;
   font-size: .85em;
+  margin: 2px;
+  padding: 2px;
+  user-select: none;
 }
 
 .divmenu:hover{
@@ -633,13 +640,14 @@ a{
 }
 
 .entrylabel{
-  padding: 4px;
-  margin-top: 3px;
+  display: inline-block;
+  font-family:button;
   margin-bottom: 3px;
   margin-left: 3px;
   margin-right: 0px;
-  display: inline-block;
-  font-family:button;
+  margin-top: 3px;
+  padding: 4px;
+  user-select: none;
 }
 
 .c_entrytitle_pos{
@@ -656,9 +664,10 @@ a{
 
 .c_entrylabel_pos{
   background-color: rgb(111, 111, 111);
+  border: 1px rgb(191, 212, 211) solid;
   color: rgb(220, 220, 220);
   font-size: .8em;
-  border: 1px rgb(191, 212, 211) solid;
+  user-select: none;
 }
 .w100p{
   width: 100%;
@@ -689,20 +698,21 @@ a{
   margin-bottom: 10px;
 }
 .pos_title{
-    display: block;
-    width: 100%;
-    background-color: rgb(224, 224, 224);
-    border-bottom: 1px black solid;
-    padding: 2px 0px;
-    text-indent: 4px;
-    font-family:button;
+  background-color: rgb(224, 224, 224);
+  border-bottom: 1px black solid;
+  display: block;
+  font-family:button;
+  padding: 2px 0px;
+  text-indent: 4px;
+  user-select: none;
+  width: 100%;
 }
 
 .propbox{
+  background-color: rgb(240,240,240);
   border: rgb(235,235,235) solid;
   margin-bottom: 10px;
   margin-top: 10px;
-  background-color: rgb(240,240,240);
   min-height: 120px;
   min-width: 120px;
 }
@@ -726,79 +736,80 @@ a{
 }
 
 .checkbox{
-    width: 26px;
-    height: 26px;
-    vertical-align: middle;
+  width: 26px;
+  height: 26px;
+  vertical-align: middle;
 }
 
 .clicktr{
-    cursor: pointer;
-    font-family: selecttext;
-    font-size: 1.6em;
-    padding: 0px;
+  cursor: pointer;
+  font-family: selecttext;
+  font-size: 1.6em;
+  padding: 0px;
+  user-select: none;
 }
 
 .objtable{
-    border-collapse: collapse;
-    font-size:.75em;
+  border-collapse: collapse;
+  font-size:.75em;
 }
 
 
 .objtable tr:nth-child(even){
-    background-color:rgb(241,241,241);
-    color: rgb(120,120,120);
+  background-color:rgb(241,241,241);
+  color: rgb(120,120,120);
 }
 
 .objtable tr:nth-child(odd){
-    background-color: rgb(236,236,236);
-    color: rgb(125,125,125);
+  background-color: rgb(236,236,236);
+  color: rgb(125,125,125);
 }
 
 .objtable tr:hover{
-    background-color: rgb(255,255,255);
-    color:black;
+  background-color: rgb(255,255,255);
+  color:black;
 }
 
 .clicktr td{
-    padding: 0px;
+  padding: 0px;
 
 }
 
 #paste{
-    border-radius: 4px;
+  border-radius: 4px;
 }
 
 
 #menu{
-    margin-top: 5px;
-    margin-bottom: 5px;
-    text-align: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  text-align: center;
 }
 
 .actionblock{
   background-color: rgb(138, 138, 138);
-  margin: 5px 0px;
-  border: rgb(51, 51, 51) solid;
   border-width: 2px 0px;
+  border: rgb(51, 51, 51) solid;
+  margin: 5px 0px;
 }
 
 .rightx{
-  float: right;
-  color: #ffb566;
-  margin: 2px 5px 0px 0px;
-  font-size: 1.2em;
   background-color: #960000;
-  padding: 1px 5px;
   border: #b1b1b1 2px solid;
+  color: #ffb566;
   cursor: pointer;
+  float: right;
+  font-size: 1.2em;
+  margin: 2px 5px 0px 0px;
+  padding: 1px 5px;
 }
 
 .sp_05{
-    padding: 5px;
-    display: inline;
+  display: inline;
+  padding: 5px;
 }
 
 .sp_10{
-    padding: 10px;
-    display: inline;
+  display: inline;
+  padding: 10px;
 }
