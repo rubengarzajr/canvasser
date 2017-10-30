@@ -46,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $extension     = $pathParts['extension'];
     $data          = $_POST['data'];
     $outType       = $extension;
-    if (!in_array($extension,$supportedFiles)){die('{"error":"File type not supported."}');}
+
+    if (!in_array($extension,$supportedFiles)){die('{"error":"File type not supported: ' . $fileNameFull . ' ' . $extension . '."}');}
     if (in_array($extension,$imageFiles)){$outType = 'image';}
     if (in_array($extension,$soundFiles)){$outType = 'sound';}
 

@@ -10,35 +10,37 @@ authorLibs.utils = {
   saveJson:function(){
     var projectElement = document.getElementById('project');
     var fileElement    = document.getElementById('file');
-    var alertB         = document.getElementById('alert_box');
+    var alertBox       = document.getElementById('alert_box');
     var aData          = document.getElementById('alertdata');
     authorLibs.saved        = {};
     authorLibs.saved.count  = 1;
     authorLibs.saved.report = '';
 
     if (projectElement.value === '' || fileElement.value === ''){
-      alertB.style.display = 'block';
+      alertBox.style.display = 'block';
       aData.innerHTML = 'Please enter a project and file name.'
       return;
     }
     document.getElementById('savebox').style.display = 'none';
 
-    var project = projectElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
-    var file    = fileElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
-    var data    = encodeURIComponent(JSON.stringify(authorLibs.authorData));
-    var xhr     = new XMLHttpRequest();
-    var url     = authorLibs.endpoints.projects + '/' + project + '/files/' + file + '.json';
-    console.log(url);
+    var projectName  = projectElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
+    var fileName     = fileElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-') + '.json';
+    var data         = JSON.stringify(authorLibs.authorData);
+    var url          = authorLibs.endpoints.projects + '/' + projectName + '/files';
+    var file         = new File([data], fileName);
+    var formData = new FormData();
+    formData.append('fileToUpload', file, fileName);
+
+    var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() {
-    if(xhr.readyState == 4 && xhr.status == 200) {
+    xhr.onload = function() {
+    if (xhr.status === 200) {
         authorLibs.saved.report += xhr.responseText + '<br>';
         authorLibs.saved.count --;
         if (authorLibs.saved.count === 0) authorLibs.utils.saveReport();
       }
     }
-    xhr.send("data="+data);
+    xhr.send(formData);
 
   },
 
@@ -176,9 +178,12 @@ authorLibs.utils = {
   postFile: function(file){
     var projectName = document.getElementById('uploadproject').value;
     if (projectName === '') return;
-    var formData    = new FormData();
+    var projectName = projectName.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
     var url         = authorLibs.endpoints.projects + '/' + projectName + '/files';
+
+    var formData    = new FormData();
     formData.append('fileToUpload', file, file.name);
+
     var xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
     xhr.onload = function () {
