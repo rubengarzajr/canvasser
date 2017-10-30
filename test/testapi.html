@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>API Reference</title>
+    <link rel="shortcut icon" href="../favicon.ico" />
+    <script src="./author/js/testapi.js" type="text/javascript"></script>
+    <link href="./author/css/normalize.css" rel="stylesheet" type="text/css"/>
+    <link href="./author/css/testapi.css"   rel="stylesheet" type="text/css"/>
+  </head>
+  <body>
+    <div id="title">Canvasser API</div>
+
+    <div class="testholder">
+      <div class="button_load" onclick="apiGet('allFilesInAllProjects')">GET</div>
+      <div class="label">all files in all projects ./api/v1/files</div>
+    </div>
+
+    <div class="testholder">
+      <div class="button_load" onclick="apiGet('allFilesOfATypeInAllProjects')">GET</div>
+      <div class="label">all of a type in all projects ./api/v1/files?type=<input class="input" type="text"  placeholder="{type}"" id="getalloftype"></div>
+    </div>
+
+    <div class="testholder">
+      <div class="button_load" onclick="apiGet('allFilesInAProject')">GET</div>
+      <div class="label">all files in a project ./api/v1/projects/<input class="input" placeholder="{project}" type="text" id="getallfilesinaproject">/files</div>
+    </div>
+
+    <div class="testholder">
+      <div class="button_load" onclick="apiGet('allfilesinaprojectofatype')">GET</div>
+      <div class="label">all of a type in a project ./api/v1/projects/<input class="input" placeholder="{project}" type="text" id="project-getallfilesinaprojectofatype">/files?type=<input class="input" type="text"  placeholder="{type}"" id="type-getallfilesinaprojectofatype"></div>
+    </div>
+
+    <div class="testholder">
+      <div class="button_load" onclick="apiPost('postmakeproject')">POST</div>
+      <div class="label"> Create a project ./api/v1/projects/<input class="input" type="text" id="postmakeproject" placeholder="{project}"></div>
+    </div>
+    <div class="testholder">
+      <div class="button_load" onclick="load_click()">POST</div>
+      <div class="label"> file to project ./api/v1/projects/<input class="input" type="text" id="postproject" placeholder="{project}">/files/<input class="input" type="text" placeholder="{file.ext}" id="postfile"></div>
+      <input type="file" id='upload_file' style="display:none">
+    </div>
+
+    <div class="testholder">
+      <div class="button_load" onclick="apiDelete('project')">DELETE</div>
+      <div class="label"> a project ./api/v1/projects/<input class="input" type="text" placeholder="{project}" id="deleteprojectname"></div>
+    </div>
+    <div class="testholder">
+      <div class="button_load" onclick="apiDelete('file')">DELETE</div>
+      <div class="label"> a file in a project ./api/v1/projects/<input class="input" type="text" id="deletefilesprojectname" placeholder="{project}">/files/<input class="input" type="text" id="deletefilesfilename" placeholder="{file.ext}"></div>
+    </div>
+
+    <div class="testholder">
+      <div class="button_load" onclick="apiCopy('project')">COPY</div>
+      <div class="label">a project ./api/v1/projects/<input class="input" type="text" id="copyprojectfrom" placeholder="{oldProject}">/copy/<input class="input" type="text" id="copyprojectto" placeholder="{newProject}"></div>
+    </div>
+
+
+  <textarea id="results"></textarea>
+  </body>
+</html>
