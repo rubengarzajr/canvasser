@@ -68,7 +68,7 @@ Sample response:
 ## Post a file to a Project
 
 ```
-POST SERVER/api/v1/projects/{projectName}/files/{fileName.extension}
+POST SERVER/api/v1/projects/{projectName}/files
 ```
 Sample response:
 ```

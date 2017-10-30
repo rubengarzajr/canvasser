@@ -174,41 +174,61 @@ authorLibs.utils = {
   },
 
   postFile: function(file){
-    var reader = new FileReader();
-    if (file.type.indexOf('image') !== -1 || file.type.indexOf('audio') !== -1)  reader.readAsDataURL(file);
-    else reader.readAsText(file, "UTF-8");
-
-    reader.onload = function (evt) {
-
-      var projectName = document.getElementById('uploadproject').value;
-      if (projectName === '') return;
-
-      var url = authorLibs.endpoints.projects + '/' + projectName + '/files/' + file.name;
-
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", url, true);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.onreadystatechange = function() {
-      if(xhr.readyState == 4 && xhr.status == 200) {
-          var res = JSON.parse(xhr.responseText);
-          res.forEach(function(item){
-            document.getElementById('notice_content').innerHTML += item.project + ': ' + item.url + '<br>';
-          });
-          authorLibs.utils.loadFromPhp('refreshfiles', true);
-        }
+    var projectName = document.getElementById('uploadproject').value;
+    if (projectName === '') return;
+    var formData    = new FormData();
+    var url         = authorLibs.endpoints.projects + '/' + projectName + '/files';
+    formData.append('fileToUpload', file, file.name);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        var res = JSON.parse(xhr.responseText);
+        res.forEach(function(item){
+          document.getElementById('notice_content').innerHTML += item.project + ': ' + item.url + '<br>';
+        });
+        authorLibs.utils.loadFromPhp('refreshfiles', true);
       }
-
-      if (evt.target.result !== undefined){
-        var data =  evt.target.result;
-        if (file.type.indexOf("image") !== -1 || file.type.indexOf("sound") !== -1); data = data.substring(data.indexOf(",") + 1);
-        xhr.send("data="+encodeURIComponent(data));
-      } else xhr.send();
     }
-    reader.onerror = function (evt) {
-      console.log('error', evt);
-    }
-
+    xhr.send(formData);
   },
+
+  // postFile: function(file){
+  //   var reader = new FileReader();
+  //   if (file.type.indexOf('image') !== -1 || file.type.indexOf('audio') !== -1)  reader.readAsDataURL(file);
+  //   else reader.readAsText(file, "UTF-8");
+  //
+  //   reader.onload = function (evt) {
+  //
+  //     var projectName = document.getElementById('uploadproject').value;
+  //     if (projectName === '') return;
+  //
+  //     var url = authorLibs.endpoints.projects + '/' + projectName + '/files/' + file.name;
+  //
+  //     var xhr = new XMLHttpRequest();
+  //     xhr.open("POST", url, true);
+  //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  //     xhr.onreadystatechange = function() {
+  //     if(xhr.readyState == 4 && xhr.status == 200) {
+  //         var res = JSON.parse(xhr.responseText);
+  //         res.forEach(function(item){
+  //           document.getElementById('notice_content').innerHTML += item.project + ': ' + item.url + '<br>';
+  //         });
+  //         authorLibs.utils.loadFromPhp('refreshfiles', true);
+  //       }
+  //     }
+  //
+  //     if (evt.target.result !== undefined){
+  //       var data =  evt.target.result;
+  //       if (file.type.indexOf("image") !== -1 || file.type.indexOf("sound") !== -1); data = data.substring(data.indexOf(",") + 1);
+  //       xhr.send("data="+encodeURIComponent(data));
+  //     } else xhr.send();
+  //   }
+  //   reader.onerror = function (evt) {
+  //     console.log('error', evt);
+  //   }
+  //
+  // },
 
   updateList:function(element, list, item){
     var finder = list.findIndex(function(check){return check.id === item.id && check.project === item.project && check.url === item.url;});
@@ -223,14 +243,10 @@ authorLibs.utils = {
   },
 
   loadJson: function(url){
-    console.log('url')
-    console.log(url)
-
     document.getElementById('loadbox').style.display = 'none';
     authorLibs.utils.requestFile(
-      url,
+      url + '?v="' + Date.now() + '"',
       function(data){
-        console.log(data)
         json = JSON.parse(decodeURIComponent(data));
         restartCanvasser("sample", json, 'string');
       }
@@ -379,6 +395,25 @@ authorLibs.utils = {
     str += '<div class="entrylabel c_entrytitle_text w100">' + display;
     str += '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
     str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path], true) + '><br>';
+    return str;
+  },
+
+  handleColor: function(object, type, widget, path){
+    console.log("HANDLECOLOR")
+    //var display = widget.display === undefined ? widget.field : widget.display;
+    var str = '';
+    //var defaultId = authorLibs.utils.getSubProp(object, path);
+
+    console.log(object[widget.field])
+    if (object[widget.field] === undefined || object[widget.field] === {})object[widget.field] = {current:["rgba[0,0,0,1]"]};
+    str += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
+    Object.keys(object[widget.field]).forEach(function(colorList){
+        str += '<div class="entrylabel c_entrylabel_pos w100">' + colorList + '</div>';
+        object.color[colorList].forEach(function(color,idx){
+        str += authorLibs.utils.handleText(object, 'object', {field:idx}, widget.field+'.'+colorList+'.'+idx, 'w20');
+      })
+    });
+    str += '</div><br>';
     return str;
   },
 

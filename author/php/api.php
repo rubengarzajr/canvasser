@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
   if (count($api) == 2){
     echo '[{"status":"successful"}]';
   }else if($api[2] == 'files'){
-    $fileNameFull  = strtolower(clean($api[3]));
+    $fileNameFull  = strtolower(clean(basename($_FILES["fileToUpload"]["name"])));
     $pathParts     = pathinfo($fileNameFull);
     $fileName      = $pathParts['filename'];
     $extension     = $pathParts['extension'];
@@ -65,13 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
       $html .= '    <div id=\'canvasholder\'></div>' . "\r\n";
       $html .= '  </body>' . "\r\n";
       $html .= '</html>' . "\r\n";
-      file_put_contents($projectPath . DIRECTORY_SEPARATOR . $fileName . ".html", $html);
-    } else {
-      $binaryData = base64_decode($data);
-      file_put_contents($projectPath . DIRECTORY_SEPARATOR . $fileNameFull, $binaryData);
+    }
 
-
+    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $projectPath . DIRECTORY_SEPARATOR . $fileNameFull)) {
       echo '[{"project": "' . $project . '", "url":"' . $contentUrl . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileNameFull .  '", "type":"' . $outType . '"}]';
+    } else {
+        echo '{"error":"' . $_FILES["fileToUpload"]["tmp_name"] . ' not saved!"}';
     }
   }
 }

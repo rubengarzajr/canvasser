@@ -616,7 +616,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       if (obj.type === "shape" && obj.show){
         var objParent = obj.parent != undefined ? obj.parent.object : undefined;
         var currentShape = act.data.shapes.filter(function(shape){return shape.id === obj.shape})[0];
+        act.context.save();
+        if (obj.blend) act.context.globalCompositeOperation = obj.blend;
         var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current);
+        act.context.restore();
         if (!obj.testp) return;
         if (posCheck) act.applyAction.unshift(obj);
       }
@@ -778,7 +781,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         ctx.fillText(shape.text, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       }
       if (shape.type === "stroketext") {
-        ctx.lineWidth = shape.stroke;
+        ctx.lineWidth   = shape.stroke;
         ctx.strokeStyle = color.current[colorIndex];
         ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
       }

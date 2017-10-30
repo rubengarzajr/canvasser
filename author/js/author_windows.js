@@ -8,7 +8,9 @@ authorLibs.windows = {
     var head   = authorLibs.windows.makeDiv({parent:parent, classes:'header'});
     var projectHolder  = authorLibs.windows.makeDiv({parent:parent, id:'projectholder'});
 
-    var fileUpload = authorLibs.windows.makeElement({parent:parent, type:'input', subtype:'file', id:'fileUpload', style:'display:none;'});
+    var uploadForm = authorLibs.windows.makeElement({parent:parent, type:'form', id:'fileUploadForm', style:'display:none;'});
+    var fileUpload = authorLibs.windows.makeElement({parent:uploadForm, type:'input', subtype:'file', id:'fileUpload', style:'display:none;'});
+    authorLibs.windows.makeElement({parent:uploadForm, type:'input', subtype:'submit', id:'fileUpload', style:'display:none;'});
     fileUpload.addEventListener('change', authorLibs.utils.fileUpload, false);
     fileUpload.multiple = true;
 

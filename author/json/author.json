@@ -91,7 +91,7 @@
   },
   "createtypes":["object","image","shape","settings"],
   "drawcode":[
-    {"type":"arc",          "widgets":[{"field":"offset",  "type":"posxy"}, {"field":"radius",  "type":"int"}, {"field":"startangle", "type":"int"}, {"field":"endangle", "type":"int"}, {"field":"counterclockwise", "type":"bool"}]},
+    {"type":"arc",          "widgets":[{"field":"offset",  "type":"posxy"}, {"field":"radius",  "type":"number"}, {"field":"startangle", "type":"number"}, {"field":"endangle", "type":"number"}, {"field":"counterclockwise", "type":"bool"}]},
     {"type":"bcurve",       "widgets":[{"field":"offseta", "type":"posxy"}, {"field":"offsetb", "type":"posxy"},  {"field":"offsetc",    "type":"posxy"}]},
     {"type":"begin",        "widgets":[]},
     {"type":"close",        "widgets":[]},
@@ -99,8 +99,9 @@
     {"type":"fillstyle",    "widgets":[{"field":"color",   "type":"color"}]},
     {"type":"filltext",     "widgets":[{"field":"offset",  "type":"posxy"},{"field":"text", "type":"text"}]},
     {"type":"font",         "widgets":[{"field":"font",    "type":"text"},{"field":"size", "type":"number"}]},
-    {"type":"line",         "widgets":[{"field":"offset",  "type":"posxy"}]},
-    {"type":"linewidth",    "widgets":[{"field":"width",   "type":"int"}]},
+    {"type":"line",         "widgets":[{"field":"origin",  "type":"posxy"}]},
+    {"type":"linewidth",    "widgets":[{"field":"width",   "type":"number"}]},
+    {"type":"move",         "widgets":[{"field":"origin",  "type":"posxy"}]},
     {"type":"ptest",        "widgets":[]},
     {"type":"rect",         "widgets":[{"field":"offset",  "type":"posxy"}, {"field":"width", "type":"number"},{"field":"height", "type":"number"}]},
     {"type":"strokestyle",  "widgets":[{"field":"color",   "type":"color"}]}
@@ -144,11 +145,13 @@
     "shape":{
       "widgets":[
         {"field":"id",        "type":"text"},
+        {"field":"type",      "type":"select",  "id":"objecttype"},
+        {"field":"shape",     "type":"shapelist"},
         {"field":"order",     "type":"number"},
+        {"field":"blend",     "type":"select",  "id":"composite"},
         {"field":"group",     "type":"grplist"},
         {"field":"show",      "type":"bool"},
         {"field":"color",     "type":"color"},
-        {"field":"shape",     "type":"shapelist"},
         {"field":"origin",    "type":"select", "id":"objectorigin"},
         {"field":"position",  "type":"posxy" },
         {"field":"scale",     "type":"scale"}
@@ -252,7 +255,7 @@
     "number":"number",
     "shapename":"shape",
     "text":"string",
-    "xy":{"x":"int","y":"int"}
+    "xy":{"x":"number","y":"number"}
   },
   "windows":[
     {"type":"object"}

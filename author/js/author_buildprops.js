@@ -176,19 +176,9 @@ authorLibs.buildProp = {
   objects: function(object){
     var output = '<div class="propbody">' ;
     authorLibs.rules.object[object.type].widgets.forEach(function(widget, idx, source){
-      if (widget.type === "actions") output += authorLibs.utils.handleAction(object, 'objects', widget);
-      if (widget.type === "bool") output += authorLibs.utils.handleBoolean(object, 'object', widget, widget.field);
-      if (widget.type === "color"){
-        if (object[widget.field] === undefined)object[widget.field] = {};
-        output += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
-        Object.keys(object[widget.field]).forEach(function(colorList){
-            output += '<div class="entrylabel c_entrylabel_pos w100">' + colorList + '</div>';
-            object.color[colorList].forEach(function(color,idx){
-            output += authorLibs.utils.handleText(object, 'object', {field:idx}, widget.field+'.'+colorList+'.'+idx, 'w20');
-          })
-        });
-        output += '</div><br>';
-      }
+      if (widget.type === "actions")    output += authorLibs.utils.handleAction(object, 'objects', widget);
+      if (widget.type === "bool")       output += authorLibs.utils.handleBoolean(object, 'object', widget, widget.field);
+      if (widget.type === "color")      output += authorLibs.utils.handleColor(object, 'object', widget, widget.field);
       if (widget.type === "grplist")    output += authorLibs.utils.handleGroup(object, 'object', widget, widget.field);
       if (widget.type === "imagedata")  output += authorLibs.utils.handleImage(object, 'object', widget, widget.field);
       if (widget.type === "filterlink") output += authorLibs.utils.handleSelectLink(object, 'object', widget,  widget.field);
