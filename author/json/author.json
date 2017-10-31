@@ -96,7 +96,7 @@
     {"type":"begin",        "widgets":[]},
     {"type":"close",        "widgets":[]},
     {"type":"fill",         "widgets":[]},
-    {"type":"fillstyle",    "widgets":[{"field":"color",   "type":"color"}]},
+    {"type":"fillcolor",    "widgets":[{"field":"color",   "type":"text"}]},
     {"type":"filltext",     "widgets":[{"field":"offset",  "type":"posxy"},{"field":"text", "type":"text"}]},
     {"type":"font",         "widgets":[{"field":"font",    "type":"text"},{"field":"size", "type":"number"}]},
     {"type":"line",         "widgets":[{"field":"origin",  "type":"posxy"}]},
@@ -104,7 +104,8 @@
     {"type":"move",         "widgets":[{"field":"origin",  "type":"posxy"}]},
     {"type":"ptest",        "widgets":[]},
     {"type":"rect",         "widgets":[{"field":"offset",  "type":"posxy"}, {"field":"width", "type":"number"},{"field":"height", "type":"number"}]},
-    {"type":"strokestyle",  "widgets":[{"field":"color",   "type":"color"}]}
+    {"type":"stroke",       "widgets":[]},
+    {"type":"strokecolor",  "widgets":[{"field":"color",   "type":"text"}]}
   ],
   "image":{
     "imagedata":{
@@ -151,6 +152,7 @@
         {"field":"blend",     "type":"select",  "id":"composite"},
         {"field":"group",     "type":"grplist"},
         {"field":"show",      "type":"bool"},
+        {"field":"usecolor",  "type":"bool"},
         {"field":"color",     "type":"color"},
         {"field":"origin",    "type":"select", "id":"objectorigin"},
         {"field":"position",  "type":"posxy" },
@@ -223,14 +225,9 @@
     "usecache":      {"type":"bool"}
   },
   "shape":{
-    "shapedata":{
-      "widgets":[
-        {"field":"color",        "type":"color"},
-        {"field":"defaultcolor", "type":"color"},
-        {"field":"selectcolor",  "type":"color"},
-        {"field":"widgetbank",   "type":"drawcode"}
-      ]
-    }
+    "widgets":[
+      {"field":"id",           "type":"text"}
+    ]
   },
   "sound":{
     "widgets":[

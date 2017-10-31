@@ -1,41 +1,39 @@
 authorLibs.menus = {
-  load_click: function(){
-    document.getElementById("upload_json").click();
-  },
-
-  import: function(type){
-    if (type === 'images') document.getElementById("upload_image").click();
-  },
-
-  loadFile: function(){
-    var file = document.getElementById("upload_json").files[0];
-
-    if (file) {
-      var reader = new FileReader();
-      reader.readAsText(file, "UTF-8");
-      reader.onload = function (evt) {
-        document.getElementById("paste").innerHTML = evt.target.result;
-      }
-      reader.onerror = function (evt) {
-        document.getElementById("paste").innerHTML = "error reading file";
-      }
+  addItem: function(type){
+    if (authorLibs.authorData[type] === undefined) authorLibs.authorData[type] = [];
+    var itemName  = type.slice(0, -1);
+    var itemCnt   = 0;
+    var tryAgain  = true;
+    while (tryAgain){
+      if (authorLibs.authorData[type].filter(function(item){return item.id === itemName}).length > 0){
+        itemCnt ++;
+        itemName = type.slice(0, -1) + itemCnt;
+      } else tryAgain = false;
     }
-  },
+    if (type === 'anims')       authorLibs.authorData[type].push({id:itemName, autostart:false, length:1000, timelist:[]});
+    if (type === 'constraints') authorLibs.authorData[type].push({id:itemName, active:true, driverlist:[]});
+    if (type === 'groups')      authorLibs.authorData[type].push({id:itemName});
+    if (type === 'images')      {
+      authorLibs.authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
+      if (authorLibs.authorData[type].length === 1) document.getElementById('imageholder').style.height = "65px";
+    }
+    if (type === 'objects')     {
+      authorLibs.authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}}, scale:{current:1}});
+      if (authorLibs.authorData[type].length === 1) document.getElementById('objectholder').style.height = "35px";
+    }
+    if (type === 'particles')   authorLibs.authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}},
+    emitRate:10, pParams:{fade: {in:0, out:100}, scale: {min:1, max:1}, life: {min:1000, max:1000},
+    speed:{position:{min:1, max:1}, rotation:{min:0.1, max:0.1}}}, genType:"burst", emitCounter:1000, emitDirEnd:360, emitDirStart:0});
+    if (type === 'paths')       authorLibs.authorData[type].push({id:itemName, url:authorLibs.externalsPath});
+    if (type === 'shapes')      authorLibs.authorData[type].push({id:itemName});
+    if (type === 'sounds')      authorLibs.authorData[type].push({id:itemName, url:authorLibs.externalsPath});
+    if (type === 'tests')       authorLibs.authorData[type].push({id:itemName, active:true});
+    if (type === 'vars')        authorLibs.authorData[type].push({id:itemName, value:0});
 
-  loadImage: function(event){
-    Array.from(event.target.files).forEach(function(file){
-      if (!file.type.match('image.*')) return;
-      var reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = function (evt) {
-        authorLibs.authorData.images.push({id:file.name.slice(0, -4), path:"localstorage",  url:file.name, local:true, data:evt.target.result});
-        if (authorLibs.authorData.images.length === 1) document.getElementById('imageholder').style.height = "65px";
-        authorLibs.menus.updateMenu('images');
-      }
-      reader.onerror = function (evt) {
-        document.getElementById("properties").innerHTML = "error reading file";
-      }
-    });
+    authorLibs.menus.updateMenu(type)
+    initCanvasser("sample", JSON.stringify(authorLibs.authorData), "string");
+    authorLibs.menus.updateSelectionWindow(type, itemName);
+    authorLibs.author.view();
   },
 
   addToProject: function(winId){
@@ -75,6 +73,129 @@ authorLibs.menus = {
     });
   },
 
+  copy: function(type){
+    var table   = document.getElementById(type + "table");
+    var copyRow = undefined;
+    var newObj = undefined;
+
+    for (var i = 0, row; row = table.rows[i]; i++) {
+      if (row.style[0] === "background-color") copyRow = row.id;
+    };
+
+    var objList = authorLibs.authorData[type].filter(function(test){ return(type+'_'+test.id === copyRow)});
+    if (objList.length === 0 || objList === undefined) return;
+    newObj       = authorLibs.utils.copyObj(objList[0], {});
+    var itemName = newObj.id.replace(/\d+$/, "");
+    var itemCnt  = 0;
+    var tryAgain = true;
+    while (tryAgain){
+      if (authorLibs.authorData[type].filter(function(item){return item.id === itemName}).length > 0){
+        itemCnt ++;
+        itemName = newObj.id.replace(/\d+$/, "") + itemCnt;
+      } else tryAgain = false;
+    }
+    newObj.id = itemName;
+    authorLibs.authorData[type].push(newObj);
+    authorLibs.menus.update(type);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+    authorLibs.menus.updateSelectionWindow(type, newObj.id);
+    authorLibs.buildProp.getProps(type,  newObj.id);
+  },
+
+  deleteItem: function(type){
+    var table = document.getElementById(type + "table");
+    var delRow = undefined;
+    for (var i = 0, row; row = table.rows[i]; i++) {
+      if (row.style[0] === "background-color") delRow = row.id;
+    };
+    authorLibs.authorData[type].forEach(function(test, idx){
+      if (type + '_' + test.id === delRow){ authorLibs.authorData[type].splice(idx,1); }
+    });
+    document.getElementById("propertiestitle").innerHTML = '';
+    document.getElementById("properties").innerHTML      = '';
+    authorLibs.menus.updateMenu(type);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
+  import: function(type){
+    if (type === 'images') document.getElementById("upload_image").click();
+  },
+
+  load_click: function(){
+    document.getElementById("upload_json").click();
+  },
+
+  loadFile: function(){
+    var file = document.getElementById("upload_json").files[0];
+
+    if (file) {
+      var reader = new FileReader();
+      reader.readAsText(file, "UTF-8");
+      reader.onload = function (evt) {
+        document.getElementById("paste").innerHTML = evt.target.result;
+      }
+      reader.onerror = function (evt) {
+        document.getElementById("paste").innerHTML = "error reading file";
+      }
+    }
+  },
+
+  loadImage: function(event){
+    Array.from(event.target.files).forEach(function(file){
+      if (!file.type.match('image.*')) return;
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function (evt) {
+        authorLibs.authorData.images.push({id:file.name.slice(0, -4), path:"localstorage",  url:file.name, local:true, data:evt.target.result});
+        if (authorLibs.authorData.images.length === 1) document.getElementById('imageholder').style.height = "65px";
+        authorLibs.menus.updateMenu('images');
+      }
+      reader.onerror = function (evt) {
+        document.getElementById("properties").innerHTML = "error reading file";
+      }
+    });
+  },
+
+  menuToggle:function(toggle){
+  var toggler = document.getElementById(toggle);
+  if (toggler.style.display === "none") {
+    toggler.style.display = "block";
+    authorLibs.gui.zidx ++;
+    toggler.style.zIndex = authorLibs.gui.zidx
+  }
+    else toggler.style.display = "none";
+  },
+
+  reorder: function(type, direction){
+    var table   = document.getElementById(type + "table");
+    var swapRow = undefined;
+    var swapId  = undefined;
+    var select  = undefined;
+    for (var i = 0, row; row = table.rows[i]; i++) {
+      if (row.style[0] === "background-color") {
+        swapRow = i;
+        swapId  = row.id;
+      }
+    };
+
+    if (direction === "up" && swapRow > 0){
+      var b = authorLibs.utils.copyObj(authorLibs.authorData[type][swapRow], {});
+      authorLibs.authorData[type][swapRow] = authorLibs.authorData[type][swapRow-1];
+      authorLibs.authorData[type][swapRow-1] = b;
+      select = b.id;
+    }
+    if (direction === "down" && swapRow < authorLibs.authorData[type].length-1){
+      var b = authorLibs.utils.copyObj(authorLibs.authorData[type][swapRow], {});
+      authorLibs.authorData[type][swapRow] = authorLibs.authorData[type][swapRow+1];
+      authorLibs.authorData[type][swapRow+1] = b;
+      select = b.id;
+    }
+
+    authorLibs.menus.update(type);
+    authorLibs.buildProp.getProps(type, swapId.substring(swapId.indexOf("_") + 1));
+    restartCanvasser("sample", authorLibs.authorData, "string");
+    if (select !== undefined) authorLibs.menus.updateSelectionWindow(type, select);
+  },
 
   update: function(toUp){
     if (!toUp || toUp === 'anims')       authorLibs.menus.updateMenu('anims');
@@ -91,16 +212,6 @@ authorLibs.menus = {
     if (!toUp || toUp === 'shapes')      authorLibs.menus.updateMenu('shapes');
     if (!toUp || toUp === 'tests')       authorLibs.menus.updateMenu('tests');
     if (!toUp || toUp === 'vars')        authorLibs.menus.updateMenu('vars');
-  },
-
-  menuToggle:function(toggle){
-  var toggler = document.getElementById(toggle);
-  if (toggler.style.display === "none") {
-    toggler.style.display = "block";
-    authorLibs.gui.zidx ++;
-    toggler.style.zIndex = authorLibs.gui.zidx
-  }
-    else toggler.style.display = "none";
   },
 
   updateMenu: function(type){
@@ -169,117 +280,6 @@ authorLibs.menus = {
     });
     settings +='</table>';
     settingHolder.innerHTML = settings;
-  },
-
-  addItem: function(type){
-    if (authorLibs.authorData[type] === undefined) authorLibs.authorData[type] = [];
-    var itemName  = type.slice(0, -1);
-    var itemCnt   = 0;
-    var tryAgain  = true;
-    while (tryAgain){
-      if (authorLibs.authorData[type].filter(function(item){return item.id === itemName}).length > 0){
-        itemCnt ++;
-        itemName = type.slice(0, -1) + itemCnt;
-      } else tryAgain = false;
-    }
-    if (type === 'anims')       authorLibs.authorData[type].push({id:itemName, autostart:false, length:1000, timelist:[]});
-    if (type === 'constraints') authorLibs.authorData[type].push({id:itemName, active:true, driverlist:[]});
-    if (type === 'groups')      authorLibs.authorData[type].push({id:itemName});
-    if (type === 'images')      {
-      authorLibs.authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
-      if (authorLibs.authorData[type].length === 1) document.getElementById('imageholder').style.height = "65px";
-    }
-    if (type === 'objects')     {
-      authorLibs.authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}}, scale:{current:1}});
-      if (authorLibs.authorData[type].length === 1) document.getElementById('objectholder').style.height = "35px";
-    }
-    if (type === 'particles')   authorLibs.authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}},
-    emitRate:10, pParams:{fade: {in:0, out:100}, scale: {min:1, max:1}, life: {min:1000, max:1000},
-    speed:{position:{min:1, max:1}, rotation:{min:0.1, max:0.1}}}, genType:"burst", emitCounter:1000, emitDirEnd:360, emitDirStart:0});
-    if (type === 'paths')       authorLibs.authorData[type].push({id:itemName, url:authorLibs.externalsPath});
-    if (type === 'shapes')      authorLibs.authorData[type].push({id:itemName});
-    if (type === 'sounds')      authorLibs.authorData[type].push({id:itemName, url:authorLibs.externalsPath});
-    if (type === 'tests')       authorLibs.authorData[type].push({id:itemName, active:true});
-    if (type === 'vars')        authorLibs.authorData[type].push({id:itemName, value:0});
-
-    authorLibs.menus.updateMenu(type)
-    initCanvasser("sample", JSON.stringify(authorLibs.authorData), "string");
-    authorLibs.menus.updateSelectionWindow(type, itemName);
-    authorLibs.author.view();
-  },
-
-  deleteItem: function(type){
-    var table = document.getElementById(type + "table");
-    var delRow = undefined;
-    for (var i = 0, row; row = table.rows[i]; i++) {
-      if (row.style[0] === "background-color") delRow = row.id;
-    };
-    authorLibs.authorData[type].forEach(function(test, idx){
-      if (type + '_' + test.id === delRow){ authorLibs.authorData[type].splice(idx,1); }
-    });
-    document.getElementById("propertiestitle").innerHTML = '';
-    document.getElementById("properties").innerHTML      = '';
-    authorLibs.menus.updateMenu(type);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
-  copy: function(type){
-    var table   = document.getElementById(type + "table");
-    var copyRow = undefined;
-    var newObj = undefined;
-
-    for (var i = 0, row; row = table.rows[i]; i++) {
-      if (row.style[0] === "background-color") copyRow = row.id;
-    };
-
-    var objList = authorLibs.authorData[type].filter(function(test){ return(type+'_'+test.id === copyRow)});
-    if (objList.length === 0 || objList === undefined) return;
-    newObj       = authorLibs.utils.copyObj(objList[0], {});
-    var itemName = newObj.id.replace(/\d+$/, "");
-    var itemCnt  = 0;
-    var tryAgain = true;
-    while (tryAgain){
-      if (authorLibs.authorData[type].filter(function(item){return item.id === itemName}).length > 0){
-        itemCnt ++;
-        itemName = newObj.id.replace(/\d+$/, "") + itemCnt;
-      } else tryAgain = false;
-    }
-    newObj.id = itemName;
-    authorLibs.authorData[type].push(newObj);
-    authorLibs.menus.update(type);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-    authorLibs.menus.updateSelectionWindow(type, newObj.id);
-    authorLibs.buildProp.getProps(type,  newObj.id);
-  },
-
-  reorder: function(type, direction){
-    var table   = document.getElementById(type + "table");
-    var swapRow = undefined;
-    var swapId  = undefined;
-    var select  = undefined;
-    for (var i = 0, row; row = table.rows[i]; i++) {
-      if (row.style[0] === "background-color") {
-        swapRow = i;
-        swapId  = row.id;
-      }
-    };
-
-    if (direction === "up" && swapRow > 0){
-      var b = authorLibs.utils.copyObj(authorLibs.authorData[type][swapRow], {});
-      authorLibs.authorData[type][swapRow] = authorLibs.authorData[type][swapRow-1];
-      authorLibs.authorData[type][swapRow-1] = b;
-      select = b.id;
-    }
-    if (direction === "down" && swapRow < authorLibs.authorData[type].length-1){
-      var b = authorLibs.utils.copyObj(authorLibs.authorData[type][swapRow], {});
-      authorLibs.authorData[type][swapRow] = authorLibs.authorData[type][swapRow+1];
-      authorLibs.authorData[type][swapRow+1] = b;
-      select = b.id;
-    }
-
-    authorLibs.menus.update(type);
-    authorLibs.buildProp.getProps(type, swapId.substring(swapId.indexOf("_") + 1));
-    restartCanvasser("sample", authorLibs.authorData, "string");
-    if (select !== undefined) authorLibs.menus.updateSelectionWindow(type, select);
   }
+
 }

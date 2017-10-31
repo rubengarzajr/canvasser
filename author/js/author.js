@@ -214,23 +214,6 @@ function authorcanvasser(dataFile, dataForm){
     restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
-  function handleColor(object, type, widget, path){
-    var str = '';
-    var pos = {x:authorLibs.utils.getSubProp(object, path+'.x'), y:authorLibs.utils.getSubProp(object, path+'.y')};
-
-    str += authorLibs.utils.buildDiv('entrylabel c_entrylabel_pos w100', widget.field );
-    str += '<span>';
-    str += '<span class="entrytitle c_entrylabel_pos">X</span>'
-    str += '<input class="auth_xy" type="number" value="'+ pos.x + '" ';
-    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path+'.x'], true);
-    str +=   '>';
-    str += '<span class="entrytitle c_entrylabel_pos">Y</span>'
-    str += '<input class="auth_xy" type="number" value="'+ pos.y + '" ';
-    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path+'.y'], true);
-    str +=   '>'  + "</span><br>";
-    return str;
-  }
-
   function outText(label, value, cmd){
     '<div class="entrylabel c_entrytitle_text w100">' + label + '</div><input class="auth_text" type="text" value="'+ value +'"><br>';
     return output;

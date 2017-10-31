@@ -241,36 +241,31 @@ authorLibs.buildProp = {
     return output + '</div>';
   },
 
-  sounds: function(sound){
-    var output = '<div class="propbody">';
-    var pathList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
-    var defaultId = authorLibs.utils.getSubProp(sound, 'path');
-    authorLibs.rules.sound.widgets.forEach(function(widget, idx, source){
-      if (widget.type === "text"){
-        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += '<input class="auth_text w200" type="text" value="'+ sound[widget.field] + '" ';
-        output += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [sound.id, 'sound', widget.field], true);
-        output += '><br>';
-      }
-      if (widget.type === "select"){
-        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  sound.id, 'sound', pathList, defaultId, 'path') + '<br>';
-      }
-      if (widget.type === "number")       output += authorLibs.utils.handleNumber(sound, 'sound', widget, widget.field);
-      if (widget.type === "bool")         output += authorLibs.utils.handleBoolean(sound, 'sound', widget, widget.field);
-    });
-    authorLibs.menus.update('sounds');
-    return output + '</div>';
-  },
 
   shapes: function(shape){
+    var prop = '<div class="propbody">' ;
+    authorLibs.rules.shape.widgets.forEach(function(widget, idx, source){
+      if (widget.type === "text"){
+        prop += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        prop += '<input class="auth_text w200" type="text" value="'+ shape[widget.field] + '" ';
+        prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [shape.id, 'shape', widget.field], true);
+        prop += '><br>';
+      }
+      if (widget.type === "select"){
+        prop += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        prop += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  shape.id, 'shape', pathList, defaultId, 'path') + '<br>';
+      }
+      if (widget.type === "number")       prop += authorLibs.utils.handleNumber(shape, 'shape', widget, widget.field);
+      if (widget.type === "bool")         prop += authorLibs.utils.handleBoolean(shape, 'shape', widget, widget.field);
+    });
+
     var drawList = [];
     authorLibs.rules.drawcode.forEach(function(template){drawList.push(template.type)});
     var thisProp = authorLibs.authorData.shapes.filter(function(check){return check.id === shape.id;})[0];
     if (thisProp === undefined) return;
 
     document.getElementById("propertiestitle").innerHTML ='<div class="proptitle">Shape: ' + shape.id + '</div>';
-    var prop = '<div class="propbody">' ;
+
     if (thisProp.drawcode === undefined) thisProp.drawcode = [];
     thisProp.drawcode.forEach(function(widget, idx, source){
       prop += '<div class="propbox">'
@@ -305,6 +300,28 @@ authorLibs.buildProp = {
     authorLibs.menus.update('shapes');
     prop += authorLibs.utils.buildDiv('divbutton', 'Add drawcode', 'authorLibs.author.adddrawcode', [shape.id]);
     return prop + '</div>';
+  },
+
+  sounds: function(sound){
+    var output = '<div class="propbody">';
+    var pathList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
+    var defaultId = authorLibs.utils.getSubProp(sound, 'path');
+    authorLibs.rules.sound.widgets.forEach(function(widget, idx, source){
+      if (widget.type === "text"){
+        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        output += '<input class="auth_text w200" type="text" value="'+ sound[widget.field] + '" ';
+        output += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [sound.id, 'sound', widget.field], true);
+        output += '><br>';
+      }
+      if (widget.type === "select"){
+        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
+        output += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  sound.id, 'sound', pathList, defaultId, 'path') + '<br>';
+      }
+      if (widget.type === "number")       output += authorLibs.utils.handleNumber(sound, 'sound', widget, widget.field);
+      if (widget.type === "bool")         output += authorLibs.utils.handleBoolean(sound, 'sound', widget, widget.field);
+    });
+    authorLibs.menus.update('sounds');
+    return output + '</div>';
   },
 
   tests: function(test){

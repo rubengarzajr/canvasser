@@ -404,22 +404,25 @@ authorLibs.utils = {
   },
 
   handleColor: function(object, type, widget, path){
-    console.log("HANDLECOLOR")
-    //var display = widget.display === undefined ? widget.field : widget.display;
     var str = '';
-    //var defaultId = authorLibs.utils.getSubProp(object, path);
-
-    console.log(object[widget.field])
-    if (object[widget.field] === undefined || object[widget.field] === {})object[widget.field] = {current:["rgba[0,0,0,1]"]};
+    if (object[widget.field] === undefined || object[widget.field] === {})object[widget.field] = {current:["rgba(0,0,0,1)"]};
     str += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
     Object.keys(object[widget.field]).forEach(function(colorList){
-        str += '<div class="entrylabel c_entrylabel_pos w100">' + colorList + '</div>';
         object.color[colorList].forEach(function(color,idx){
         str += authorLibs.utils.handleText(object, 'object', {field:idx}, widget.field+'.'+colorList+'.'+idx, 'w20');
       })
     });
     str += '</div><br>';
+    str += authorLibs.utils.buildDiv('divbutton', 'Add Color', 'authorLibs.utils.addColor', [object.id, widget.field]);
+    str += '<br>';
     return str;
+  },
+
+  addColor: function(id, widget){
+    var obj = authorLibs.authorData.objects.filter(function(object){ return object.id === id})[0];
+    if (obj.color === undefined) obj.color = {current:["rgba(0,0,0,1)"]};
+    obj.color.current.push("rgba(0,0,0,1)");
+    authorLibs.author.getProps('objects',id);
   },
 
   handleGroup: function(object, type, widget, path){

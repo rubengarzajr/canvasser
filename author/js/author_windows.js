@@ -175,23 +175,16 @@ authorLibs.windows = {
     });
   },
 
-  moveObjD: function(element){
-    authorLibs.gui.move        = true;
-    authorLibs.gui.mousedown   = true;
-    authorLibs.gui.moveElement = document.getElementById(element);
-    authorLibs.gui.zidx ++;
-    authorLibs.gui.moveElement.style.zIndex = authorLibs.gui.zidx;
-    var off = {x:0, y:0};
-    if (authorLibs.gui.moveElement.style.left !== "") off.x = authorLibs.gui.mousePos.x - parseInt(authorLibs.gui.moveElement.style.left.slice(0,-2));
-    if (authorLibs.gui.moveElement.style.top  !== "") off.y = authorLibs.gui.mousePos.y - parseInt(authorLibs.gui.moveElement.style.top.slice(0,-2));
-    authorLibs.gui.offset      = {x:off.x, y:off.y};
-  },
-
   focusObjD: function(element){
     authorLibs.gui.zidx ++;
     document.getElementById(element).style.zIndex = authorLibs.gui.zidx;
   },
 
+  makeDiv: function(settings){
+    settings.type = 'div';
+    var div = authorLibs.windows.makeElement(settings);
+    return div;
+  },
 
   makeElement: function(settings){
     var element = document.createElement(settings.type);
@@ -212,10 +205,16 @@ authorLibs.windows = {
     return element;
   },
 
-  makeDiv: function(settings){
-    settings.type = 'div';
-    var div = authorLibs.windows.makeElement(settings);
-    return div;
+  moveObjD: function(element){
+    authorLibs.gui.move        = true;
+    authorLibs.gui.mousedown   = true;
+    authorLibs.gui.moveElement = document.getElementById(element);
+    authorLibs.gui.zidx ++;
+    authorLibs.gui.moveElement.style.zIndex = authorLibs.gui.zidx;
+    var off = {x:0, y:0};
+    if (authorLibs.gui.moveElement.style.left !== "") off.x = authorLibs.gui.mousePos.x - parseInt(authorLibs.gui.moveElement.style.left.slice(0,-2));
+    if (authorLibs.gui.moveElement.style.top  !== "") off.y = authorLibs.gui.mousePos.y - parseInt(authorLibs.gui.moveElement.style.top.slice(0,-2));
+    authorLibs.gui.offset      = {x:off.x, y:off.y};
   },
 
   theme: function(theme){

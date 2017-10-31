@@ -618,7 +618,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         var currentShape = act.data.shapes.filter(function(shape){return shape.id === obj.shape})[0];
         act.context.save();
         if (obj.blend) act.context.globalCompositeOperation = obj.blend;
-        var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current);
+        var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current, obj.usecolor);
         act.context.restore();
         if (!obj.testp) return;
         if (posCheck) act.applyAction.unshift(obj);
@@ -740,13 +740,14 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     };
   }
 
-  function drawShapes(act, parent, pos, shapeData, color, doTest, testP, scale){
+  function drawShapes(act, parent, pos, shapeData, color, doTest, testP, scale, usecolor){
+
     if (color.current === undefined) color.current = ['rgb(0,0,0,1)'];
     if (shapeData === undefined) return;
-    var ctx = act.context;
-    var test = false;
+    var ctx        = act.context;
+    var test       = false;
     var colorIndex = 0;
-    var par = {"x":0,"y":0, "scale":1};
+    var par        = {"x":0,"y":0, "scale":1};
     if (parent !== undefined) {
       par = {"x":parent.position.current.x, "y":parent.position.current.y, "scale":parent.scale.current};
     }
@@ -762,16 +763,13 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       if (shape.offset!== undefined) offset = {x:shape.offset.x, y:shape.offset.y};
       if (shape.type === "move")      ctx.moveTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       if (shape.type === "rect")      ctx.rect(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.width*sizer,shape.height*sizer);
-      if (shape.type === "arc")       ctx.arc(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.radius*sizer, shape.startangle, shape.endangle, shape.counterclockwise);
+      if (shape.type === "arc")       ctx.arc(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.radius*sizer, radians(shape.startangle), radians(shape.endangle), shape.counterclockwise);
       if (shape.type === "bcurve")    ctx.bezierCurveTo(origin.x+offseta.x*sizer, origin.y+offseta.y*sizer, origin.x+offsetb.x*sizer, origin.y+offsetb.y*sizer, origin.x+offsetc.x*sizer, origin.y+offsetc.y*sizer);
       if (shape.type === "line")      ctx.lineTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       if (shape.type === "linewidth") ctx.lineWidth = shape.width*sizer;
-      if (shape.type === "fillStyle") {
-          if (color === null) ctx.fillStyle = shape.color;
-          else ctx.fillStyle = color.current[colorIndex];
-      }
+      if (shape.type === "fillcolor") ctx.fillStyle = shape.color;
       if (shape.type === "fill") {
-        ctx.fillStyle = color.current[colorIndex];
+        if (usecolor) ctx.fillStyle = color.current[colorIndex];
         ctx.fill();
       }
       if (shape.type === "filltext") {
@@ -794,10 +792,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
       }
       if (shape.type === "font") ctx.font = shape.size*sizer + "px " + shape.font;
-      if (shape.type === "strokestyle"){
-        if (color === null) ctx.strokeStyle = shape.color;
-        else ctx.strokeStyle = color.current[colorIndex];
-      }
+      if (shape.type === "strokecolor") ctx.strokeStyle = shape.color;
       if (shape.type === "stroke") ctx.stroke();
       if (shape.type === "ptest" && doTest) {
         if (ctx.isPointInPath(testP.x, testP.y)) test = true;
