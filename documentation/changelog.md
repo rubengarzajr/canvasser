@@ -1,5 +1,8 @@
 ## Changelog:
 
+- 2017-10-31 Can now override color in shape with object color.
+- 2017-10-31 Can now add color to shapes.
+- 2017-10-31 Can now rename shapes.
 - 2017-10-25 Fixed file manager select and added multiselect.
 - 2017-10-25 Sliding objects works with x, y constraints better.
 - 2017-10-24 Added relation constraint.
