@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2017-11-02 Text shape (solid, line) now fully implemented.
+- 2017-11-02 SVG file format now accepted.
 - 2017-10-31 Can now override color in shape with object color.
 - 2017-10-31 Can now add color to shapes.
 - 2017-10-31 Can now rename shapes.

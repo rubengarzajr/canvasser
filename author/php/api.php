@@ -10,10 +10,9 @@ if (empty($contentUrl)){
   $contentUrl = (($_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . '/canvasser_content';
 }
 
-$supportedFiles = array('json','mp3','jpg','gif','png', 'wav', 'html');
-$imageFiles = array('jpg','gif','png');
+$supportedFiles = array('gif','html','jpg','json','mp3','png','svg','wav');
+$imageFiles = array('gif','jpg','svg','png');
 $soundFiles = array('mp3','wav');
-
 
 $url   = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
 $path  = explode("/",$url);

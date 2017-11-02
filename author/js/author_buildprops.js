@@ -25,7 +25,9 @@ authorLibs.buildProp = {
       }
       if (widget.type === "select"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  group.id, 'group', pathList, defaultId, 'path') + '<br>';
+        output += authorLibs.utils.buildSelect(
+          {fn:'authorLibs.author.updateItem', object:group.id, type:'group', list:pathList, defaultId:defaultId, path:'path'}
+        ) + '<br>';
       }
       if (widget.type === "number")       output += authorLibs.utils.handleNumber(group, 'group', widget, widget.field);
       if (widget.type === "bool")         output += authorLibs.utils.handleBoolean(group, 'group', widget, widget.field);
@@ -58,7 +60,9 @@ authorLibs.buildProp = {
             output += '<div class="actionblock">';
             output += '<div class="rightx" onclick="authorLibs.author.deletetimeline('+"'"+animation.id+"'"+','+idx+')">X</div>' + '<br>';
             output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-            output += authorLibs.utils.buildSelect('authorLibs.author.updateTimeline',  animation.id, "anim", timeList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
+            output += authorLibs.utils.buildSelect(
+              {fn:'authorLibs.author.updateTimeline', object:animation.id, type:"anim", list:timeList, defaultId:actobject.type, path:widget.field+'.'+idx+'.type'}
+            ) + '<br>';
 
             actionWidgets.forEach(function(subWidget, idxPart){
               var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
@@ -113,7 +117,9 @@ authorLibs.buildProp = {
             output += '<div class="actionblock">';
             output += '<div class="rightx" onclick="authorLibs.author.deletedriver('+"'"+constraint.id+"'"+','+idx+')">X</div>' + '<br>';
             output += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-            output += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  constraint.id, "constraint", timeList, actobject.type, widget.field+'.'+idx+'.type') + '<br>';
+            output += authorLibs.utils.buildSelect(
+              {fn:'authorLibs.author.updateItem',  object:constraint.id, type:"constraint", list:timeList, defaultId:actobject.type, path:widget.field+'.'+idx+'.type'}
+            ) + '<br>';
 
             actionWidgets.forEach(function(subWidget, idxPart){
               var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
@@ -164,7 +170,9 @@ authorLibs.buildProp = {
       }
       if (widget.type === "select"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  image.id, 'image', pathList, defaultId, 'path') + '<br>';
+        output += authorLibs.utils.buildSelect(
+          {fn:'authorLibs.author.updateItem', object:image.id, type:'image', list:pathList, defaultId:defaultId, path:'path'}
+        ) + '<br>';
       }
       if (widget.type === "number")       output += authorLibs.utils.handleNumber(image, 'image', widget, widget.field);
       if (widget.type === "bool")         output += authorLibs.utils.handleBoolean(image, 'image', widget, widget.field);
@@ -253,8 +261,11 @@ authorLibs.buildProp = {
       }
       if (widget.type === "select"){
         prop += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        prop += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  shape.id, 'shape', pathList, defaultId, 'path') + '<br>';
+        prop += authorLibs.utils.buildSelect(
+          {fn:'authorLibs.author.updateItem', object:shape.id, type:'shape', list:pathList, defaultId:defaultId, path:'path'}
+        ) + '<br>';
       }
+
       if (widget.type === "number")       prop += authorLibs.utils.handleNumber(shape, 'shape', widget, widget.field);
       if (widget.type === "bool")         prop += authorLibs.utils.handleBoolean(shape, 'shape', widget, widget.field);
     });
@@ -288,11 +299,12 @@ authorLibs.buildProp = {
       currentDraw.widgets.forEach(function(subWidget){
       var widgetPath =  'drawcode' + '.' +  idx + '.' +  subWidget.field ;
       prop += '<div class="propitem">'
-      if (subWidget.type === "bool")      prop += authorLibs.utils.handleBoolean(thisProp,  'shape', subWidget, widgetPath);
-      if (subWidget.type === 'number')    prop += authorLibs.utils.handleNumber(thisProp,   'shape', subWidget, widgetPath);
-      if (subWidget.type === 'posxy')     prop += authorLibs.utils.handlePosition(thisProp, 'shape', subWidget, widgetPath);
-      if (subWidget.type === "select")    prop += authorLibs.utils.handleSelect(thisProp,   'shape', subWidget, widgetPath);
-      if (subWidget.type === "text")      prop += authorLibs.utils.handleText(thisProp,     'shape', subWidget, widgetPath, 'w100');
+      if (subWidget.type === "bool")       prop += authorLibs.utils.handleBoolean(thisProp,  'shape', subWidget, widgetPath);
+      if (subWidget.type === 'number')     prop += authorLibs.utils.handleNumber(thisProp,   'shape', subWidget, widgetPath);
+      if (subWidget.type === 'posxy')      prop += authorLibs.utils.handlePosition(thisProp, 'shape', subWidget, widgetPath);
+      if (subWidget.type === "select")     prop += authorLibs.utils.handleSelect(thisProp,   'shape', subWidget, widgetPath);
+      if (subWidget.type === "selecttext") prop += authorLibs.utils.handleSelectText(thisProp, 'shape', subWidget, widgetPath);
+      if (subWidget.type === "text")       prop += authorLibs.utils.handleText(thisProp,     'shape', subWidget, widgetPath, 'w100');
       prop += '</div>';
       });
       prop += '</div>';
@@ -315,7 +327,9 @@ authorLibs.buildProp = {
       }
       if (widget.type === "select"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  sound.id, 'sound', pathList, defaultId, 'path') + '<br>';
+        output += authorLibs.utils.buildSelect(
+          {fn:'authorLibs.author.updateItem', object:sound.id, type:'sound', list:pathList, defailtId:defaultId, path:'path'}
+        ) + '<br>';
       }
       if (widget.type === "number")       output += authorLibs.utils.handleNumber(sound, 'sound', widget, widget.field);
       if (widget.type === "bool")         output += authorLibs.utils.handleBoolean(sound, 'sound', widget, widget.field);

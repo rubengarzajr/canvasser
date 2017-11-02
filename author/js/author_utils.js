@@ -1,68 +1,23 @@
 authorLibs.utils = {
-  prePath: function(item){
-    var url = item.url;
-    if (!item.path) return url;
-    preUrl  = authorLibs.authorData.paths.filter(function(selected){return selected.id === item.path;})[0];
-    if (!preUrl) return url;
-    return preUrl.url + '/' + item.url;
-  },
 
-  saveJson:function(){
-    var projectElement = document.getElementById('project');
-    var fileElement    = document.getElementById('file');
-    var alertBox       = document.getElementById('alert_box');
-    var aData          = document.getElementById('alertdata');
-    authorLibs.saved        = {};
-    authorLibs.saved.count  = 1;
-    authorLibs.saved.report = '';
-
-    if (projectElement.value === '' || fileElement.value === ''){
-      alertBox.style.display = 'block';
-      aData.innerHTML = 'Please enter a project and file name.'
-      return;
-    }
-    document.getElementById('savebox').style.display = 'none';
-
-    var projectName  = projectElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
-    var fileName     = fileElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-') + '.json';
-    var data         = JSON.stringify(authorLibs.authorData);
-    var url          = authorLibs.endpoints.projects + '/' + projectName + '/files';
-    var file         = new File([data], fileName);
-    var formData = new FormData();
-    formData.append('fileToUpload', file, fileName);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-    xhr.onload = function() {
-    if (xhr.status === 200) {
-        authorLibs.saved.report += xhr.responseText + '<br>';
-        authorLibs.saved.count --;
-        if (authorLibs.saved.count === 0) authorLibs.utils.saveReport();
+  fileDelete: function(list){
+    list.forEach(function(item){
+      console.log(item.project+'/'+item.dir+'/'+item.id);
+      var url = authorLibs.endpoints.projects + '/' + item.project + '/files/' + item.id;
+      var xhr = new XMLHttpRequest();
+      xhr.open("DELETE", url, true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+      if(xhr.readyState == 4 && xhr.status == 200) {
+          authorLibs.utils.loadFromPhp('refreshfiles', true);
+        }
       }
-    }
-    xhr.send(formData);
-
+      xhr.send();
+    });
   },
 
-  saveReport:function(){
-    document.getElementById('notice_box').style.display = 'block';
-    document.getElementById('notice_title').innerHTML = "Save Status"
-    document.getElementById('notice_content').innerHTML = authorLibs.saved.report;
-  },
-
-  loadFromPhp:function(funct, all){
-    var xhr = new XMLHttpRequest();
-    var url = authorLibs.endpoints.projects;
-    if (all) url = authorLibs.endpoints.files;
-    if (funct === 'loadFile') url = authorLibs.endpoints.files + '?type=json';
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() {
-    if(xhr.readyState == 4 && xhr.status == 200) {
-        authorLibs.utils[funct](JSON.parse(xhr.responseText));
-      }
-    }
-    xhr.send();
+  fileFromUrl: function(url){
+    return url.replace(/^.*[\\\/]/, '');
   },
 
   loadFile: function(files){
@@ -92,8 +47,27 @@ authorLibs.utils = {
     });
   },
 
-  fileFromUrl: function(url){
-    return url.replace(/^.*[\\\/]/, '');
+  loadFromPhp:function(funct, all){
+    var xhr = new XMLHttpRequest();
+    var url = authorLibs.endpoints.projects;
+    if (all) url = authorLibs.endpoints.files;
+    if (funct === 'loadFile') url = authorLibs.endpoints.files + '?type=json';
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+    if(xhr.readyState == 4 && xhr.status == 200) {
+        authorLibs.utils[funct](JSON.parse(xhr.responseText));
+      }
+    }
+    xhr.send();
+  },
+
+  prePath: function(item){
+    var url = item.url;
+    if (!item.path) return url;
+    preUrl  = authorLibs.authorData.paths.filter(function(selected){return selected.id === item.path;})[0];
+    if (!preUrl) return url;
+    return preUrl.url + '/' + item.url;
   },
 
   refreshfiles: function(files){
@@ -140,20 +114,47 @@ authorLibs.utils = {
     });
   },
 
-  fileDelete: function(list){
-    list.forEach(function(item){
-      console.log(item.project+'/'+item.dir+'/'+item.id);
-      var url = authorLibs.endpoints.projects + '/' + item.project + '/files/' + item.id;
-      var xhr = new XMLHttpRequest();
-      xhr.open("DELETE", url, true);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.onreadystatechange = function() {
-      if(xhr.readyState == 4 && xhr.status == 200) {
-          authorLibs.utils.loadFromPhp('refreshfiles', true);
-        }
+  saveJson:function(){
+    var projectElement = document.getElementById('project');
+    var fileElement    = document.getElementById('file');
+    var alertBox       = document.getElementById('alert_box');
+    var aData          = document.getElementById('alertdata');
+    authorLibs.saved        = {};
+    authorLibs.saved.count  = 1;
+    authorLibs.saved.report = '';
+
+    if (projectElement.value === '' || fileElement.value === ''){
+      alertBox.style.display = 'block';
+      aData.innerHTML = 'Please enter a project and file name.'
+      return;
+    }
+    document.getElementById('savebox').style.display = 'none';
+
+    var projectName  = projectElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
+    var fileName     = fileElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-') + '.json';
+    var data         = JSON.stringify(authorLibs.authorData);
+    var url          = authorLibs.endpoints.projects + '/' + projectName + '/files';
+    var file         = new File([data], fileName);
+    var formData = new FormData();
+    formData.append('fileToUpload', file, fileName);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.onload = function() {
+    if (xhr.status === 200) {
+        authorLibs.saved.report += xhr.responseText + '<br>';
+        authorLibs.saved.count --;
+        if (authorLibs.saved.count === 0) authorLibs.utils.saveReport();
       }
-      xhr.send();
-    });
+    }
+    xhr.send(formData);
+
+  },
+
+  saveReport:function(){
+    document.getElementById('notice_box').style.display = 'block';
+    document.getElementById('notice_title').innerHTML = "Save Status"
+    document.getElementById('notice_content').innerHTML = authorLibs.saved.report;
   },
 
   selectProject: function(){
@@ -326,16 +327,30 @@ authorLibs.utils = {
     return str + ')" ';
   },
 
-  buildSelect: function(fn, object, type, list, defaultId, path){
-    var out = '<select id="prop_'+path+'" class="sellist"';
-    out += authorLibs.utils.buildFnString(fn, [object, type, path], true) + '>';
-    var newList = list.slice();
-    newList.unshift("---NONE---");
-    newList.forEach(function(listObject){
-      out += '<option value="'+ listObject + '"'+ (listObject === defaultId ? " selected" : "" )+ '>' + listObject + '</option>';
-    });
-    out += "</select>";
-    return out;
+  buildSelect: function(obj){
+    var out = '';
+    if (obj.text){
+      out = '<input type:"text" id="prop_'+obj.path+'" class="sellist" value="'+obj.defaultId+'" list="datalist_'+obj.path+'"';
+      out += authorLibs.utils.buildFnString(obj.fn, [obj.object, obj.type, obj.path], true) + '>';
+      out += '<datalist id="datalist_'+obj.path+'">';
+      var newList = obj.list.slice();
+      newList.unshift("---NONE---");
+      newList.forEach(function(listObject){
+        out += '<option>' + listObject + '</option>';
+      });
+      out += "</datalist>";
+      return out;
+    } else {
+      out = '<select id="prop_'+obj.path+'" class="sellist"';
+      out += authorLibs.utils.buildFnString(obj.fn, [obj.object, obj.type, obj.path], true) + '>';
+      var newList = obj.list.slice();
+      newList.unshift("---NONE---");
+      newList.forEach(function(listObject){
+        out += '<option value="'+ listObject + '"'+ (listObject === obj.defaultId ? " selected" : "" )+ '>' + listObject + '</option>';
+      });
+      out += "</select>";
+      return out;
+    }
   },
 
   handleAction: function(item, types, widget){
@@ -354,7 +369,9 @@ authorLibs.utils = {
           actionWidgets = actionWidgets[0].widgets;
           str += '<div class="actionblock">';
           str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-          str += authorLibs.utils.buildSelect('authorLibs.author.updateActionList',  item.id, types, actionsList, itemAct.type, widget.field+'.'+idx+'.type');
+          str += authorLibs.utils.buildSelect(
+            {fn:'authorLibs.author.updateActionList', object:item.id, type:types, list:actionsList, defaultId:itemAct.type, path:widget.field+'.'+idx+'.type'}
+          );
           str += '<div class="rightx" onclick="authorLibs.author.deleteitem('+"'objects'"+','+"'"+item.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
           actionWidgets.forEach(function(subWidget, idxPart){
             var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
@@ -454,7 +471,9 @@ authorLibs.utils = {
     str = '';
     var imageList = authorLibs.utils.objPartToArr(authorLibs.authorData.images, "id");
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  item.id, type, imageList, item[widget.field], widget.field) + '<br>';
+    str += authorLibs.utils.buildSelect(
+      {fn:'authorLibs.author.updateItem', object:item.id, type:type, list:imageList, defaultId:item[widget.field], path:widget.field}
+    ) + '<br>';
     var flipTest = authorLibs.authorData.images.filter(function(img){ return img.id === item.image})[0];
     if (flipTest){
       if(flipTest.atlas){
@@ -505,13 +524,27 @@ authorLibs.utils = {
     return str;
   },
 
-  handleSelect: function(object, type, widget, path, list){
+  handleSelect: function(object, type, widget, path, list,){
     var str = '';
     var selOp = (list === undefined ? authorLibs.rules.select[widget.id].list : list);
     var defaultId = authorLibs.utils.getSubProp(object, path);
     var display = widget.display ? widget.display : widget.field;
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
-    str += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  object.id, type, selOp, defaultId, path) + '<br>';
+    str += authorLibs.utils.buildSelect(
+      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:selOp, defaultId:defaultId, path:path}
+    ) + '<br>';
+    return str;
+  },
+
+  handleSelectText: function(object, type, widget, path, list){
+    var str = '';
+    var selOp = (list === undefined ? authorLibs.rules.select[widget.id].list : list);
+    var defaultId = authorLibs.utils.getSubProp(object, path);
+    var display = widget.display ? widget.display : widget.field;
+    str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
+    str += authorLibs.utils.buildSelect(
+      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:selOp, defaultId:defaultId, path:path, text:true}
+    ) + '<br>';
     return str;
   },
 
@@ -525,7 +558,9 @@ authorLibs.utils = {
         if (actionWidgets.length === 0) return;
         str += '<div class="actionblock">';
         str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-        str += authorLibs.utils.buildSelect('authorLibs.author.updateActionList',  test.id, "tests", testsList, actobject.type, widget.field+'.'+idx+'.type');
+        str += authorLibs.utils.buildSelect(
+          {fn:'authorLibs.author.updateActionList', object:test.id, type:"tests", list:testsList, defaultId:actobject.type, path:widget.field+'.'+idx+'.type'}
+        );
         str += '<div class="rightx" onclick="authorLibs.author.deleteitem('+"'tests'," +"'"+test.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
         actionWidgets.forEach(function(subWidget, idxPart){
           var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
@@ -577,7 +612,9 @@ authorLibs.utils = {
     var objectList = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "id");
     var defaultId = authorLibs.utils.getSubProp(object, path);
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += authorLibs.utils.buildSelect('authorLibs.author.updateItem',  object.id, type, objectList, defaultId, path) + '<br>';
+    str += authorLibs.utils.buildSelect(
+      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:objectList, defaultId:defaultId, path:path}
+    ) + '<br>';
     return str;
   },
 

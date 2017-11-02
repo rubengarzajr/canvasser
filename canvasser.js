@@ -772,26 +772,47 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (usecolor) ctx.fillStyle = color.current[colorIndex];
         ctx.fill();
       }
-      if (shape.type === "filltext") {
-        ctx.fillStyle = color.current[colorIndex];
+      if (shape.type === "textfill") {
+        if (origin === undefined) origin = {x:0,y:0};
         var offset = {x:0, y:0};
-        if (shape.offset != undefined) offset= {x:shape.offset.x, y:shape.offset.y};
+        if (shape.offset != undefined){
+          if (shape.offset.x !== undefined) offset.x = shape.offset.x;
+          if (shape.offset.y !== undefined) offset.y = shape.offset.y;
+        }
+        if (usecolor) ctx.fillStyle = color.current[colorIndex];
+        else {
+          if (shape.color !== undefined) ctx.fillStyle = shape.color;
+        }
+        if (shape.size !== undefined) size = shape.size;
+        if (shape.font) ctx.font = size*sizer + "px " + shape.font;
         ctx.fillText(shape.text, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       }
-      if (shape.type === "stroketext") {
-        ctx.lineWidth   = shape.stroke;
-        ctx.strokeStyle = color.current[colorIndex];
-        ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+      if (shape.type === "textline") {
+        if (origin === undefined) origin = {x:0,y:0};
+        var offset = {x:0, y:0};
+        if (shape.offset != undefined){
+          if (shape.offset.x !== undefined) offset.x = shape.offset.x;
+          if (shape.offset.y !== undefined) offset.y = shape.offset.y;
+        }
+        ctx.lineWidth = shape.width;
+        if (usecolor) ctx.strokeStyle = color.current[colorIndex];
+        else {
+          if (shape.color !== undefined) ctx.strokeStyle = shape.color;
+        }
+        var size = 1;
+        if (shape.size !== undefined) size = shape.size;
+        if (shape.font) ctx.font = size*sizer + "px " + shape.font;
+        ctx.strokeText(shape.text, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       }
       if (shape.type === "outlinetext") {
         ctx.lineWidth   = shape.stroke;
         ctx.strokeStyle = color.current[colorIndex];
-        ctx.strokeText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+        ctx.strokeText(shape.text, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
         colorIndex ++
         ctx.fillStyle = color.current[colorIndex];
-        ctx.fillText(shape.text, origin.x+shape.offset.x*sizer, origin.y+shape.offset.y*sizer);
+        ctx.fillText(shape.text, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       }
-      if (shape.type === "font") ctx.font = shape.size*sizer + "px " + shape.font;
+      if (shape.type === "textfont") ctx.font = shape.size*sizer + "px " + shape.font;
       if (shape.type === "strokecolor") ctx.strokeStyle = shape.color;
       if (shape.type === "stroke") ctx.stroke();
       if (shape.type === "ptest" && doTest) {

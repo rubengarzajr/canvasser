@@ -97,15 +97,17 @@
     {"type":"close",        "widgets":[]},
     {"type":"fill",         "widgets":[]},
     {"type":"fillcolor",    "widgets":[{"field":"color",   "type":"text"}]},
-    {"type":"filltext",     "widgets":[{"field":"offset",  "type":"posxy"},{"field":"text", "type":"text"}]},
-    {"type":"font",         "widgets":[{"field":"font",    "type":"text"},{"field":"size", "type":"number"}]},
     {"type":"line",         "widgets":[{"field":"origin",  "type":"posxy"}]},
     {"type":"linewidth",    "widgets":[{"field":"width",   "type":"number"}]},
     {"type":"move",         "widgets":[{"field":"origin",  "type":"posxy"}]},
     {"type":"ptest",        "widgets":[]},
     {"type":"rect",         "widgets":[{"field":"offset",  "type":"posxy"}, {"field":"width", "type":"number"},{"field":"height", "type":"number"}]},
     {"type":"stroke",       "widgets":[]},
-    {"type":"strokecolor",  "widgets":[{"field":"color",   "type":"text"}]}
+    {"type":"strokecolor",  "widgets":[{"field":"color",   "type":"text"}]},
+    {"type":"textfill",     "widgets":[{"field":"offset",  "type":"posxy"},{"field":"text", "type":"text"},{"field":"color", "type":"text"},{"field":"font",    "type":"selecttext", "id":"fontlist"}, {"field":"size",   "type":"number"}]},
+    {"type":"textfont",     "widgets":[{"field":"font",    "type":"text"},{"field":"size", "type":"number"}]},
+    {"type":"textline",     "widgets":[{"field":"offset",  "type":"posxy"},{"field":"text", "type":"text"},{"field":"color", "type":"text"},{"field":"width",   "type":"number"},
+                                       {"field":"font",    "type":"selecttext", "id":"fontlist"}, {"field":"size",   "type":"number"}]}
   ],
   "image":{
     "imagedata":{
@@ -209,6 +211,7 @@
     "comparetype":{"list":["equal","greater", "less"]},
     "easetype":{"list":["linear","inExp","outExp","inOutExp","inQuad", "outQuad", "inOutQuad"]},
     "filtertype":{"list":["object", "group","particle"]},
+    "fontlist":{"list":["Arial","Arial Black", "Courier New", "Impact","Lucida Console","Lucida Sans Unicode","Tahoma","Trebuchet MS","Verdana"]},
     "objectorigin":{"list":["upper_left", "center"]},
     "objecttype":{"list":["image", "shape"]},
     "operationtype":{"list":["add", "sub","set"]},
