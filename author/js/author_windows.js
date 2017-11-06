@@ -18,16 +18,22 @@ authorLibs.windows = {
     authorLibs.windows.makeDiv({parent:alert, html:"ALERT",   classes:'alert_title'});
     authorLibs.windows.makeDiv({parent:alert, id:"alertdata", classes:'alert_content'});
 
-    var notice = authorLibs.windows.makeDiv({parent:parent, id:'notice_box', style:'display:none'});
-    authorLibs.windows.makeDiv({parent:notice, id:"notice_title", classes:'notice_title'});
-    authorLibs.windows.makeDiv({parent:notice, id:"notice_content",  classes:'notice_content'});
-    authorLibs.windows.makeDiv({parent:notice, html:"CLOSE", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('notice_box');}});
+    var deleteB = authorLibs.windows.makeDiv({parent:parent, id:'delete_box', style:'display:none'});
+    authorLibs.windows.makeDiv({parent:deleteB, id:"delete_title", classes:'notice_title'});
+    authorLibs.windows.makeDiv({parent:deleteB, id:"delete_content",  classes:'notice_content'});
+    authorLibs.windows.makeDiv({parent:deleteB, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('delete_box');}});
+    authorLibs.windows.makeDiv({parent:deleteB, html:"DELETE", classes:'button_load',  click:function(){authorLibs.utils.fileDeleteGo('fileManager');}});
 
     var load = authorLibs.windows.makeDiv({parent:parent, id:'loadbox', style:'display:none'});
     authorLibs.windows.makeDiv({parent:load, html:"LOAD FILE", classes:'title_load'});
     authorLibs.windows.makeDiv({parent:load, id:"loaddata", classes:'content_load'});
     authorLibs.windows.makeDiv({parent:load, html:"LOAD",   classes:'button_load',  click:function(){authorLibs.utils.loadfile()}});
     authorLibs.windows.makeDiv({parent:load, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('loadbox')}});
+
+    var notice = authorLibs.windows.makeDiv({parent:parent, id:'notice_box', style:'display:none'});
+    authorLibs.windows.makeDiv({parent:notice, id:"notice_title", classes:'notice_title'});
+    authorLibs.windows.makeDiv({parent:notice, id:"notice_content",  classes:'notice_content'});
+    authorLibs.windows.makeDiv({parent:notice, html:"CLOSE", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('notice_box');}});
 
     var save = authorLibs.windows.makeDiv({parent:parent, id:'savebox', style:'display:none'});
     authorLibs.windows.makeDiv({parent:save, html:"SAVE FILE", classes:'title_save'});
@@ -135,7 +141,7 @@ authorLibs.windows = {
       if (win.menu.addtoproject) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Link',    click:function(){authorLibs.menus.addToProject( win.id +'s')}});
       if (win.menu.renamefile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Rename',  click:function(){authorLibs.utils.fileRename(win.id +'s')}});
       if (win.menu.copyfile)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.utils.fileCopy(win.id +'s')}});
-      if (win.menu.deletefile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.utils.fileDelete(authorLibs.lists.fileManager)}});
+      if (win.menu.deletefile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.utils.fileDeleteWin('fileManager')}});
 
 
       if (win.id === 'canvas'){

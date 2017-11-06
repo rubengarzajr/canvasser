@@ -43,6 +43,23 @@
   text-align: center;
 }
 
+#delete_box{
+  background-color: var(--notice-bg-color);
+  border-radius: 10px;
+  border: 5px solid rgb(109, 109, 109);
+  bottom: 0;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  color: var(--notice-color);
+  font-family: button;
+  height: 400px;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 800px;
+  z-index: 9999;
+}
 
 #notice_box{
   background-color: var(--notice-bg-color);

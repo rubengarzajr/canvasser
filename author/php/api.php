@@ -46,13 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $data          = $_POST['data'];
     $outType       = $extension;
 
+    //die('[{"fileNameFull":"' . $fileNameFull . '", "fileName": "' . $fileName . '", "extension":"' . $extension . '"}]');
+
     if (!in_array($extension,$supportedFiles)){die('{"error":"File type not supported: ' . $fileNameFull . ' ' . $extension . '."}');}
     if (in_array($extension,$imageFiles)){$outType = 'image';}
     if (in_array($extension,$soundFiles)){$outType = 'sound';}
 
     if ($extension == 'json') {
-      file_put_contents($projectPath . '/' . $fileName . ".json", $data);
-      echo "JSON created: " . $projectPath . '/' . $fileName . ".json" . '&#13;';
       $html = '<html>' . "\r\n";
       $html .= '<head>' . "\r\n";
       $html .= '    <meta charset="UTF-8">' . "\r\n";
@@ -65,6 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
       $html .= '    <div id=\'canvasholder\'></div>' . "\r\n";
       $html .= '  </body>' . "\r\n";
       $html .= '</html>' . "\r\n";
+      file_put_contents($projectPath . "/" . $fileName . ".html", $html);
+      echo '[{"project": "' . $project . '", "url":"' . $contentUrl . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileName .  '.html", "type":"html"}]';
     }
 
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $projectPath . DIRECTORY_SEPARATOR . $fileNameFull)) {

@@ -1,19 +1,35 @@
 authorLibs.utils = {
 
-  fileDelete: function(list){
-    list.forEach(function(item){
-      console.log(item.project+'/'+item.dir+'/'+item.id);
-      var url = authorLibs.endpoints.projects + '/' + item.project + '/files/' + item.id;
-      var xhr = new XMLHttpRequest();
-      xhr.open("DELETE", url, true);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.onreadystatechange = function() {
-      if(xhr.readyState == 4 && xhr.status == 200) {
-          authorLibs.utils.loadFromPhp('refreshfiles', true);
-        }
+  fileDelete: function(item){
+    var url = authorLibs.endpoints.projects + '/' + item.project + '/files/' + item.id;
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+    if(xhr.readyState == 4 && xhr.status == 200) {
+        authorLibs.utils.loadFromPhp('refreshfiles', true);
       }
-      xhr.send();
+    }
+    xhr.send();
+  },
+
+  fileDeleteWin: function(listName){
+    document.getElementById('delete_box').style.display = "block";
+    var content = document.getElementById('delete_content');
+
+    var output = "Confirm delete:<br>";
+    authorLibs.lists[listName].forEach(function(item){
+      output += item.id + '<br>';
     });
+    content.innerHTML = output;
+  },
+
+  fileDeleteGo: function(listName){
+    authorLibs.lists[listName].forEach(function(item){
+      authorLibs.utils.fileDelete(item);
+    });
+    authorLibs.lists[listName] = [];
+    document.getElementById('delete_box').style.display = "none";
   },
 
   fileFromUrl: function(url){
