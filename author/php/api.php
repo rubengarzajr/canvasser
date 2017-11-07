@@ -16,8 +16,13 @@ $soundFiles = array('mp3','wav');
 
 $url   = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
 $path  = explode("/",$url);
+$path  = array_filter($path, create_function('$value', 'return $value !== "";'));
 $api   = array();
 $isApi = false;
+
+// foreach ($path as $key => $value){
+//     error_log($value, 0);
+// }
 
 foreach ($path as $value) {
   if ($isApi) {array_push($api, $value);}
@@ -94,7 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     arrayToJSON(dirToJSON($contentPath), $contentPath, $contentUrl, $filterArray );
   }
   if ($api[0] == 'projects'){
-    if (count($api) == 1) {die('{"error":"No files specified."}');}
+    if (count($api) == 1) {
+      die (dirList($contentPath));
+    }
     if($api[2] == 'files'){
       if ($api[1] == '') {die('{"error":"No project specified."}');}
       arrayToJSON(dirToJSON($contentPath . DIRECTORY_SEPARATOR . $api[1]), $contentPath, $contentUrl, $filterArray);
@@ -129,6 +136,27 @@ function arrayToJSON($array, $path, $url,  $filterArray){
   echo ']';
 }
 
+
+function dirList($dir) {
+  $result = array();
+  $cdir   = scandir($dir);
+  foreach ($cdir as $key => $value){
+    if (in_array($value, array(".",".."))){continue;}
+    if (is_dir($dir . DIRECTORY_SEPARATOR . $value)){
+        array_push($result, $value);
+      }
+  }
+
+  $output = "[";
+  for ($counter=0; $counter < count($result); $counter++) {
+    $output .= '"' . $result[$counter] . '"';
+    if ($counter < count($result) -1) {
+      $output .= ',';
+    }
+  }
+  $output .= "]";
+  echo $output;
+}
 
 function dirToJSON($dir) {
   $result = array();

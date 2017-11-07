@@ -1,53 +1,53 @@
 authorLibs.windows = {
   build: function(){
-    var parent = document.getElementById("canvasser_authoring");
-    parent.addEventListener('mousedown',    function(){authorLibs.gui.parentMouseDown = true;})
-    parent.addEventListener('mouseup',      function(){authorLibs.gui.parentMouseDown = false;})
-    parent.addEventListener('onmouseleave', function(){authorLibs.gui.parentMouseDown = false;})
+    authorLibs.dom.parent = document.getElementById("canvasser_authoring");
+    authorLibs.dom.parent.addEventListener('mousedown',    function(){authorLibs.gui.parentMouseDown = true;})
+    authorLibs.dom.parent.addEventListener('mouseup',      function(){authorLibs.gui.parentMouseDown = false;})
+    authorLibs.dom.parent.addEventListener('onmouseleave', function(){authorLibs.gui.parentMouseDown = false;})
 
-    var head   = authorLibs.windows.makeDiv({parent:parent, classes:'header'});
-    var projectHolder  = authorLibs.windows.makeDiv({parent:parent, id:'projectholder'});
+    var head   = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, classes:'header'});
+    var projectHolder  = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'projectholder'});
 
-    var uploadForm = authorLibs.windows.makeElement({parent:parent, type:'form', id:'fileUploadForm', style:'display:none;'});
+    var uploadForm = authorLibs.windows.makeElement({parent:authorLibs.dom.parent, type:'form', id:'fileUploadForm', style:'display:none;'});
     var fileUpload = authorLibs.windows.makeElement({parent:uploadForm, type:'input', subtype:'file', id:'fileUpload', style:'display:none;'});
     authorLibs.windows.makeElement({parent:uploadForm, type:'input', subtype:'submit', id:'fileUpload', style:'display:none;'});
     fileUpload.addEventListener('change', authorLibs.utils.fileUpload, false);
     fileUpload.multiple = true;
 
-    var alert = authorLibs.windows.makeDiv({parent:parent, id:'alert_box', style:'display:none',  click:function(){authorLibs.menus.menuToggle('alert_box');}});
+    var alert = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'alert_box', style:'display:none',  click:function(){authorLibs.menus.menuToggle('alert_box');}});
     authorLibs.windows.makeDiv({parent:alert, html:"ALERT",   classes:'alert_title'});
     authorLibs.windows.makeDiv({parent:alert, id:"alertdata", classes:'alert_content'});
 
-    var deleteB = authorLibs.windows.makeDiv({parent:parent, id:'delete_box', style:'display:none'});
+    var deleteB = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'delete_box', style:'display:none'});
     authorLibs.windows.makeDiv({parent:deleteB, id:"delete_title", classes:'notice_title'});
     authorLibs.windows.makeDiv({parent:deleteB, id:"delete_content",  classes:'notice_content'});
     authorLibs.windows.makeDiv({parent:deleteB, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('delete_box');}});
     authorLibs.windows.makeDiv({parent:deleteB, html:"DELETE", classes:'button_load',  click:function(){authorLibs.utils.fileDeleteGo('fileManager');}});
 
-    var load = authorLibs.windows.makeDiv({parent:parent, id:'loadbox', style:'display:none'});
+    var load = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'loadbox', style:'display:none'});
     authorLibs.windows.makeDiv({parent:load, html:"LOAD FILE", classes:'title_load'});
     authorLibs.windows.makeDiv({parent:load, id:"loaddata", classes:'content_load'});
-    authorLibs.windows.makeDiv({parent:load, html:"LOAD",   classes:'button_load',  click:function(){authorLibs.utils.loadfile()}});
     authorLibs.windows.makeDiv({parent:load, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('loadbox')}});
 
-    var notice = authorLibs.windows.makeDiv({parent:parent, id:'notice_box', style:'display:none'});
+    var notice = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'notice_box', style:'display:none'});
     authorLibs.windows.makeDiv({parent:notice, id:"notice_title", classes:'notice_title'});
     authorLibs.windows.makeDiv({parent:notice, id:"notice_content",  classes:'notice_content'});
     authorLibs.windows.makeDiv({parent:notice, html:"CLOSE", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('notice_box');}});
 
-    var save = authorLibs.windows.makeDiv({parent:parent, id:'savebox', style:'display:none'});
+    var save = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'savebox', style:'display:none'});
     authorLibs.windows.makeDiv({parent:save, html:"SAVE FILE", classes:'title_save'});
     var divP = authorLibs.windows.makeDiv({parent:save, classes:'saveblock'});
     authorLibs.windows.makeDiv({parent:divP, html:'Project:',  classes:"savelabel"});
-    authorLibs.windows.makeElement({parent:divP, type:'input', subtype:'text', classes:'savetextbox', id:'project'});
+    authorLibs.windows.makeElement({parent:divP, type:'input', subtype:'text', classes:'savetextbox', id:'saveproject', list:'datalist_saveproject'});
     var divF = authorLibs.windows.makeDiv({parent:save, classes:'saveblock'});
     authorLibs.windows.makeDiv({parent:divF, html:'File:',  classes:"savelabel"});
-    authorLibs.windows.makeElement({parent:divF, type:'input', subtype:'text', classes:'savetextbox', id:'file'});
+    authorLibs.windows.makeElement({parent:divF, type:'input', subtype:'text', classes:'savetextbox', id:'savefile'});
     var divC = authorLibs.windows.makeDiv({parent:save, classes:'saveblock'});
     authorLibs.windows.makeDiv({parent:save, html:"SAVE", classes:'button_load',  click:function(){authorLibs.utils.saveJson()}});
     authorLibs.windows.makeDiv({parent:save, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('savebox')}});
+    authorLibs.windows.makeElement({parent:divP, type:'datalist', id:'datalist_saveproject'});
 
-    var upload = authorLibs.windows.makeDiv({parent:parent, id:'uploadbox', style:'display:none'});
+    var upload = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'uploadbox', style:'display:none'});
     authorLibs.windows.makeDiv({parent:upload, html:"UPLOAD FILES", classes:'title_save'});
     var uDivP = authorLibs.windows.makeDiv({parent:upload, classes:'saveblock'});
     authorLibs.windows.makeDiv({parent:uDivP, html:'Select Project:',  classes:"savelabel"});
@@ -78,8 +78,11 @@ authorLibs.windows = {
     var menuFile = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_file',    classes:'menu_items', html:'File', click:function(){authorLibs.menus.menuToggle('menu_file_dropdown')}});
     var dropFile = authorLibs.windows.makeDiv({parent:menuFile, id:'menu_file_dropdown',  classes:"menu_dropdown", style:'display:none;'});
     authorLibs.windows.makeDiv({parent:dropFile, html:'New',     classes:'drop_items', click:function(){authorLibs.author.loadDefault()}});
-    authorLibs.windows.makeDiv({parent:dropFile, id:'loader',    classes:'drop_items', html:'Load File',  click:function(){authorLibs.utils.loadFromPhp('loadFile', false)}});
-    authorLibs.windows.makeDiv({parent:dropFile, id:'saver',     classes:'drop_items', html:'Save File',  click:function(){authorLibs.menus.menuToggle('savebox')}});
+    authorLibs.windows.makeDiv({parent:dropFile, id:'loader',    classes:'drop_items', html:'Load File',  click:function(){authorLibs.utils.loadFromPhp('loadFilePHP', false)}});
+    authorLibs.windows.makeDiv({parent:dropFile, id:'saver',     classes:'drop_items', html:'Save File',  click:function(){
+      authorLibs.utils.projectsList('saveproject'),
+      authorLibs.menus.menuToggle('savebox')}
+    });
     authorLibs.windows.makeDiv({parent:dropFile, id:'uploader',  classes:'drop_items', html:'Upload Files',  click:function(){authorLibs.utils.selectProject();}});
     authorLibs.windows.makeDiv({parent:dropFile,   classes:'drop_items', html:'Restart', click:function(){authorLibs.author.reload()}});
 
@@ -103,15 +106,15 @@ authorLibs.windows = {
 
     authorLibs.windows.makeDiv({parent:projectHolder,  classes:"projectspacer"});
 
-    var upload_json = authorLibs.windows.makeElement({type:'input', subtype:'file', parent:parent, id:'upload_json', style:'display:none'});
+    var upload_json = authorLibs.windows.makeElement({type:'input', subtype:'file', parent:authorLibs.dom.parent, id:'upload_json', style:'display:none'});
     upload_json.addEventListener('change', authorLibs.menus.loadFile, false);
-    var upload_image = authorLibs.windows.makeElement({type:'input', subtype:'file', parent:parent, id:'upload_image', style:'display:none'});
+    var upload_image = authorLibs.windows.makeElement({type:'input', subtype:'file', parent:authorLibs.dom.parent, id:'upload_image', style:'display:none'});
     upload_image.addEventListener('change', authorLibs.menus.loadImage, false);
     authorLibs.windows.makeDiv({parent:head, id:'titlelabel', classes:'titlecenter'});
 
     winList.forEach(function(win){
       var show      = win.hide ? "display:none" : "display:block";
-      var bank      = authorLibs.windows.makeDiv({parent:parent,  id:win.id + 'bank', classes:'window_movable',style:'left:'+win.position.x+'px; top:'+win.position.y+'px;'+show});
+      var bank      = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent,  id:win.id + 'bank', classes:'window_movable',style:'left:'+win.position.x+'px; top:'+win.position.y+'px;'+show});
       var title     = authorLibs.windows.makeDiv({parent:bank,  id:win.id + 'mover', classes:'titlebar'});
       var winTitle  = authorLibs.windows.makeDiv({parent:title,  classes:'wintitle', html:win.id.charAt(0).toUpperCase() +  win.id.slice(1) + 's'});
       authorLibs.windows.makeDiv({parent:title,  classes:'button_righter', html:'<img src="' + authorLibs.externalsPath +'image/icon_close_g.png"/>', click:function(){authorLibs.menus.menuToggle(win.id+'bank')}});
@@ -194,19 +197,20 @@ authorLibs.windows = {
 
   makeElement: function(settings){
     var element = document.createElement(settings.type);
-    if (settings.checked   !== undefined) element.checked     = true;
-    if (settings.classes   !== undefined) element.className   = settings.classes;
-    if (settings.click     !== undefined) element.onclick     = settings.click;
-    if (settings.html      !== undefined) element.innerHTML   = settings.html;
-    if (settings.id        !== undefined) element.id          = settings.id;
-    if (settings.mousedown !== undefined) element.onmousedown = settings.mousedown;
-    if (settings.mouseenter   !== undefined) element.onmouseenter   = settings.mouseenter;
-    if (settings.mousemove !== undefined) element.onmousemove = settings.mousemove;
-    if (settings.mouseout  !== undefined) element.onmouseout  = settings.mouseout;
-    if (settings.mouseover !== undefined) element.onmouseover = settings.mouseover;
-    if (settings.multiple  !== undefined) element.multiple    = true;
-    if (settings.style     !== undefined) element.style       = settings.style;
-    if (settings.subtype   !== undefined) element.type        = settings.subtype;
+    if (settings.checked    !== undefined) element.checked      = true;
+    if (settings.classes    !== undefined) element.className    = settings.classes;
+    if (settings.click      !== undefined) element.onclick      = settings.click;
+    if (settings.html       !== undefined) element.innerHTML    = settings.html;
+    if (settings.id         !== undefined) element.id           = settings.id;
+    if (settings.list       !== undefined) element.setAttribute('list', settings.list);
+    if (settings.mousedown  !== undefined) element.onmousedown  = settings.mousedown;
+    if (settings.mouseenter !== undefined) element.onmouseenter = settings.mouseenter;
+    if (settings.mousemove  !== undefined) element.onmousemove  = settings.mousemove;
+    if (settings.mouseout   !== undefined) element.onmouseout   = settings.mouseout;
+    if (settings.mouseover  !== undefined) element.onmouseover  = settings.mouseover;
+    if (settings.multiple   !== undefined) element.multiple     = true;
+    if (settings.style      !== undefined) element.style        = settings.style;
+    if (settings.subtype    !== undefined) element.type         = settings.subtype;
     settings.parent.appendChild(element);
     return element;
   },

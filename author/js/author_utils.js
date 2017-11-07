@@ -36,7 +36,7 @@ authorLibs.utils = {
     return url.replace(/^.*[\\\/]/, '');
   },
 
-  loadFile: function(files){
+  loadFilePHP: function(files){
     var fileList = [];
     if (files.length === 0) return;
     document.getElementById('loadbox').style.display = 'block';
@@ -58,7 +58,7 @@ authorLibs.utils = {
     fileList.forEach(function(item){
       authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
       item.files.forEach(function(file){
-        authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file', click:function(){authorLibs.utils.loadJson(file.url)}});
+        authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file', click:function(){authorLibs.utils.loadJson(file.url,item.project, file.id.substring(0, file.id.length - 5))}});
       });
     });
   },
@@ -67,12 +67,51 @@ authorLibs.utils = {
     var xhr = new XMLHttpRequest();
     var url = authorLibs.endpoints.projects;
     if (all) url = authorLibs.endpoints.files;
-    if (funct === 'loadFile') url = authorLibs.endpoints.files + '?type=json';
+    if (funct === 'loadFilePHP') url = authorLibs.endpoints.files + '?type=json';
     xhr.open("GET", url, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
     if(xhr.readyState == 4 && xhr.status == 200) {
         authorLibs.utils[funct](JSON.parse(xhr.responseText));
+      }
+    }
+    xhr.send();
+  },
+
+  projectsList(listId){
+    authorLibs.utils.getProjects(authorLibs.utils.fillInSaveProject);
+
+  },
+
+  fillInSaveProject: function(data){
+    var list = document.getElementById('datalist_saveproject');
+    list.innerHTML = '';
+
+    data.forEach(function(item){
+      list.innerHTML += ('<option>' + item + '</option>');
+    });
+    //authorLibs.dom.parent
+    // out = '<input type:"text" id="prop_'+obj.path+'" class="sellist" value="'+obj.defaultId+'" list="datalist_'+obj.path+'"';
+    // out += authorLibs.utils.buildFnString(obj.fn, [obj.object, obj.type, obj.path], true) + '>';
+    // out += '<datalist id="datalist_'+obj.path+'">';
+    // var newList = obj.list.slice();
+    // newList.unshift("---NONE---");
+    // newList.forEach(function(listObject){
+    //   out += '<option>' + listObject + '</option>';
+    // });
+    // out += "</datalist>";
+    // return out;
+  },
+
+   getProjects: function(returnFunction){
+    var url = authorLibs.endpoints.projects;
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+      if(xhr.readyState == 4 && xhr.status == 200) {
+        returnFunction(JSON.parse(xhr.responseText));
       }
     }
     xhr.send();
@@ -131,8 +170,8 @@ authorLibs.utils = {
   },
 
   saveJson:function(){
-    var projectElement = document.getElementById('project');
-    var fileElement    = document.getElementById('file');
+    var projectElement = document.getElementById('saveproject');
+    var fileElement    = document.getElementById('savefile');
     var alertBox       = document.getElementById('alert_box');
     var aData          = document.getElementById('alertdata');
     authorLibs.saved        = {};
@@ -183,7 +222,6 @@ authorLibs.utils = {
   },
 
   fileUpload: function(list){
-    console.log(list.srcElement.files);
     document.getElementById('notice_box').style.display = 'block';
     document.getElementById('notice_title').innerHTML   = 'Upload Status';
     document.getElementById('notice_content').innerHTML = '';
@@ -264,7 +302,9 @@ authorLibs.utils = {
     }
   },
 
-  loadJson: function(url){
+  loadJson: function(url, project, file){
+    document.getElementById('saveproject').value = project;
+    document.getElementById('savefile').value = file;
     document.getElementById('loadbox').style.display = 'none';
     authorLibs.utils.requestFile(
       url + '?v="' + Date.now() + '"',

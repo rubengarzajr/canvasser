@@ -2,6 +2,7 @@ var authorLibs = {
   externalsPath:  './',
   defaultJSONobj: false,
   defaultJSON:    "./json/default.json",
+  dom:{},
   contentPath: '../../canvasser_content',
   gui: {
     mousedown: false,

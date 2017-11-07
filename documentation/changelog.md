@@ -1,5 +1,10 @@
 ## Changelog:
 
+- 2017-11-07 Loading a file populates save dialog with that project/file.
+- 2017-11-07 Added autocomplete to Projects in save dialog.
+- 2017-11-07 Added list all projects to API.
+- 2017-11-06 Added delete confirmation dialog.
+- 2017-11-06 Fixed authorLibs.lists.fileManager not being cleared after delete.
 - 2017-11-02 Text shape (solid, line) now fully implemented.
 - 2017-11-02 SVG file format now accepted.
 - 2017-10-31 Can now override color in shape with object color.

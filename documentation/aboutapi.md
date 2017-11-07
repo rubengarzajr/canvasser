@@ -21,6 +21,19 @@ Sample response:
 ]
 ```
 
+## Get all Projects
+```
+GET SERVER/api/v1/projects
+```
+Sample response:
+```
+[
+  "kitty",
+  "rub",
+  "test"
+]
+```
+
 ## Get all of a type in all Projects
 To get all image files, use ?type=image  
 To get all sound files, use ?type=sound

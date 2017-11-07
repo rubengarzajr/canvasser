@@ -64,6 +64,7 @@ function apiDelete(action){
 
 function apiGet(action){
   var url = '';
+  if (action === 'allProjects') url = apiData.projectsPath;
   if (action === 'allFilesInAllProjects') url = apiData.filesPath;
   if (action === 'allFilesOfATypeInAllProjects') {
     var type = document.getElementById('getalloftype').value
@@ -84,6 +85,7 @@ function apiGet(action){
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.onreadystatechange = function() {
   if(xhr.readyState == 4 && xhr.status == 200) {
+    console.log(xhr.responseText)
       var data = JSON.parse(xhr.responseText);
       document.getElementById('results').innerHTML = JSON.stringify(data, null, 4);
     }
