@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2017-11-07 Added UTLogin authentication with sandbox for non .users.
 - 2017-11-07 Loading a file populates save dialog with that project/file.
 - 2017-11-07 Added autocomplete to Projects in save dialog.
 - 2017-11-07 Added list all projects to API.

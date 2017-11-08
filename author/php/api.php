@@ -1,14 +1,31 @@
 <?php
 
+$authControl = getenv('AUTH_CONTROL');
+
+if ($authControl !== FALSE){
+  include $authControl;
+}
+
+
 $contentPath = getenv('CONTENT_PATH');
 if (empty($contentPath)){
   $contentPath = '/var/www/html/canvasser_content';
+}
+
+$contentPath .= $contentModifier;
+
+if ($eid !== FALSE){
+  if (!file_exists($contentPath)) {
+    mkdir($contentPath, 0744);
+  }
 }
 
 $contentUrl = getenv('CONTENT_URL');
 if (empty($contentUrl)){
   $contentUrl = (($_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . '/canvasser_content';
 }
+
+$contentUrl .= $contentModifier;
 
 $supportedFiles = array('gif','html','jpg','json','mp3','png','svg','wav');
 $imageFiles = array('gif','jpg','svg','png');
@@ -19,10 +36,6 @@ $path  = explode("/",$url);
 $path  = array_filter($path, create_function('$value', 'return $value !== "";'));
 $api   = array();
 $isApi = false;
-
-// foreach ($path as $key => $value){
-//     error_log($value, 0);
-// }
 
 foreach ($path as $value) {
   if ($isApi) {array_push($api, $value);}
@@ -161,6 +174,7 @@ function dirList($dir) {
 function dirToJSON($dir) {
   $result = array();
   $cdir   = scandir($dir);
+
   foreach ($cdir as $key => $value){
     if (in_array($value, array(".",".."))){continue;}
     if (is_dir($dir . DIRECTORY_SEPARATOR . $value)){
