@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2017-11-13 Added bounds initial implementation for image objects.
+- 2017-11-13 Slideobject now supports groups.
 - 2017-11-07 Added UTLogin authentication with sandbox for non .users.
 - 2017-11-07 Loading a file populates save dialog with that project/file.
 - 2017-11-07 Added autocomplete to Projects in save dialog.

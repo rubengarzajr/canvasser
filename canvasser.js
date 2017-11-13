@@ -1062,17 +1062,25 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           });
         }
         if (action.type === "slideobject"){
+          var filter = "object";
+          if (action.filter!== undefined) filter = action.filter;
           act.data.objects.forEach(function(obj){
-            if (obj.id === undefined) return;
-            if (act.dragging !== null && obj.id !== act.dragging.id) return;
-
-            if (obj.id !== action.id) return;
+            if (action.id === undefined) return;
+            if (filter !== 'group'){
+              if (obj.id === undefined) return;
+              if (act.dragging !== null && obj.id !== act.dragging.id) return;
+              if (obj.id !== action.id) return;
+              act.dragging = obj;
+            }
+            if (filter === 'group'){
+              if (obj.groups.find(function(e){return e.id === action.id}) === undefined) return;
+            }
             if (obj.parent !== undefined){
               if (obj.position.offset === undefined) obj.position.offset = {x:obj.position.current.x,y:obj.position.current.y};
 
               if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
               if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
-            }else{
+            } else {
               if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
               if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
             }
@@ -1080,13 +1088,25 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             if (action.limitx){
               if (obj.position.current.x < action.minx) obj.position.current.x = action.minx;
               if (obj.position.current.x > action.maxx) obj.position.current.x = action.maxx;
+              if (action.usebounds){
+                if (obj.type === 'image'){
+                  var dimX = act.imageList[obj.image].canvas.width * obj.scale.current;
+                  if (obj.position.current.x + dimX > action.maxx)
+                    obj.position.current.x = action.maxx - dimX;
+                }
+              }
             }
             if (action.limity){
               if (obj.position.current.y < action.miny) obj.position.current.y = action.miny;
               if (obj.position.current.y > action.maxy) obj.position.current.y = action.maxy;
+              if (action.usebounds){
+                if (obj.type === 'image'){
+                  var dimY = act.imageList[obj.image].canvas.height * obj.scale.current;
+                  if (obj.position.current.y + dimY > action.maxy)
+                    obj.position.current.y = action.maxy - dimY;
+                }
+              }
             }
-
-            act.dragging = obj;
 
           });
         }

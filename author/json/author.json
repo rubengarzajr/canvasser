@@ -2,8 +2,16 @@
   "actions":[
     {"type":"cleardown",    "widgets":[]},
     {"type":"console",      "widgets":[{"field":"text",       "type":"text"}]},
-    {"type":"conditional",  "widgets":[{"field":"check",      "type":"select", "id":"conditionaltype", "display":"Condition"}, {"type":"linkedcontent", "link":"check", "sourcelist":"conditionals"}]},
-    {"type":"copyelement",  "widgets":[{"field":"source",       "type":"text"}, {"field":"target",       "type":"text"}]},
+    {"type":"conditional",  "widgets":[
+        {"field":"check",      "type":"select", "id":"conditionaltype", "display":"Condition"},
+        {"type":"linkedcontent", "link":"check", "sourcelist":"conditionals"}
+      ]
+    },
+    {"type":"copyelement",  "widgets":[
+        {"field":"source",     "type":"text"},
+        {"field":"target",     "type":"text"}
+      ]
+    },
     {"type":"function",     "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"function",   "type":"text"}]},
     {"type":"groupcolor",   "widgets":[{"field":"id",         "type":"text"},                           {"field":"source",     "type":"text"}]},
     {"type":"increment",    "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"},      {"field":"id",         "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}, {"field":"rangemin",   "type":"number"}, {"field":"rangemax",   "type":"number"}]},
@@ -14,11 +22,35 @@
     {"type":"pauseanim",    "widgets":[{"field":"animation",  "type":"anmlist"},  {"field":"toggle",      "type":"bool"}]},
     {"type":"playanim",     "widgets":[{"field":"animation",  "type":"anmlist"}]},
     {"type":"pstart",       "widgets":[{"field":"id",         "type":"parlist"}]},
-    {"type":"set",          "widgets":[{"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type"},      {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}]},
-    {"type":"slideobject",  "widgets":[{"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type"},      {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"constrainx", "type":"bool"},  {"field":"constrainy",     "type":"bool"}, {"field":"limitx", "type":"bool"}, {"field":"minx",   "type":"number"},  {"field":"maxx",   "type":"number"}, {"field":"limity",     "type":"bool"}, {"field":"miny",   "type":"number"},  {"field":"maxy",   "type":"number"}]},
+    {"type":"set",          "widgets":[
+        {"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type"},
+        {"field":"id",         "type":"filterlink", "link":"filter"},
+        {"field":"prop",       "type":"text"},
+        {"field":"newvalue",   "type":"text"}
+      ]
+    },
+    {"type":"slideobject",  "widgets":[
+        {"field":"filter",     "type":"select",     "id":"filtertype", "display":"Select Type"},
+        {"field":"id",         "type":"filterlink", "link":"filter"},
+        {"field":"constrainx", "type":"bool"},
+        {"field":"constrainy", "type":"bool"},
+        {"field":"usebounds",  "type":"bool"},
+        {"field":"limitx",     "type":"bool"},
+        {"field":"minx",       "type":"number"},
+        {"field":"maxx",       "type":"number"},
+        {"field":"limity",     "type":"bool"},
+        {"field":"miny",       "type":"number"},
+        {"field":"maxy",       "type":"number"}
+      ]
+    },
     {"type":"sound",        "widgets":[{"field":"id",         "type":"sndlist"}]},
     {"type":"soundstop",    "widgets":[{"field":"id",         "type":"sndlist"}]},
-    {"type":"testpset",     "widgets":[{"field":"testp",      "type":"bool"},                           {"field":"filter",  "type":"select", "id":"filtertype"},      {"field":"id", "type":"filterlink", "link":"filter"}]},
+    {"type":"testpset",     "widgets":[
+        {"field":"testp",      "type":"bool"},
+        {"field":"filter",  "type":"select", "id":"filtertype"},
+        {"field":"id", "type":"filterlink", "link":"filter"}
+      ]
+    },
     {"type":"url",          "widgets":[{"field":"url",        "type":"filename"},                       {"field":"target",     "type":"text"}]},
     {"type":"vis",          "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"filter",     "type":"select", "id":"filtertype"},   {"field":"show",         "type":"bool"}]}
   ],

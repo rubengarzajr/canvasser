@@ -191,13 +191,14 @@
 }
 
 .load_project{
-  background-color: rgb(99, 99, 99);
+  background-color: rgb(169, 169, 169);
+  border-bottom: 2px rgb(121, 121, 121) solid;
   color: white;
   cursor: default;
   font-family: button;
   margin-bottom: 3px;
-  margin-top: 10px;
   padding: 2px 0px 2px 5px;
+  text-shadow: 2px 2px #4a4a4a;
 }
 
 .load_file{
