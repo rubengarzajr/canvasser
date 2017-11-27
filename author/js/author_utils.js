@@ -90,17 +90,6 @@ authorLibs.utils = {
     data.forEach(function(item){
       list.innerHTML += ('<option>' + item + '</option>');
     });
-    //authorLibs.dom.parent
-    // out = '<input type:"text" id="prop_'+obj.path+'" class="sellist" value="'+obj.defaultId+'" list="datalist_'+obj.path+'"';
-    // out += authorLibs.utils.buildFnString(obj.fn, [obj.object, obj.type, obj.path], true) + '>';
-    // out += '<datalist id="datalist_'+obj.path+'">';
-    // var newList = obj.list.slice();
-    // newList.unshift("---NONE---");
-    // newList.forEach(function(listObject){
-    //   out += '<option>' + listObject + '</option>';
-    // });
-    // out += "</datalist>";
-    // return out;
   },
 
    getProjects: function(returnFunction){
@@ -126,6 +115,7 @@ authorLibs.utils = {
   },
 
   refreshfiles: function(files){
+    authorLibs.lists.fileManager = [];
     var fileList = [];
     files.forEach(function(file){
       var found = fileList.filter(function(test){return test.project === file.project;});
@@ -253,43 +243,6 @@ authorLibs.utils = {
     xhr.send(formData);
   },
 
-  // postFile: function(file){
-  //   var reader = new FileReader();
-  //   if (file.type.indexOf('image') !== -1 || file.type.indexOf('audio') !== -1)  reader.readAsDataURL(file);
-  //   else reader.readAsText(file, "UTF-8");
-  //
-  //   reader.onload = function (evt) {
-  //
-  //     var projectName = document.getElementById('uploadproject').value;
-  //     if (projectName === '') return;
-  //
-  //     var url = authorLibs.endpoints.projects + '/' + projectName + '/files/' + file.name;
-  //
-  //     var xhr = new XMLHttpRequest();
-  //     xhr.open("POST", url, true);
-  //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  //     xhr.onreadystatechange = function() {
-  //     if(xhr.readyState == 4 && xhr.status == 200) {
-  //         var res = JSON.parse(xhr.responseText);
-  //         res.forEach(function(item){
-  //           document.getElementById('notice_content').innerHTML += item.project + ': ' + item.url + '<br>';
-  //         });
-  //         authorLibs.utils.loadFromPhp('refreshfiles', true);
-  //       }
-  //     }
-  //
-  //     if (evt.target.result !== undefined){
-  //       var data =  evt.target.result;
-  //       if (file.type.indexOf("image") !== -1 || file.type.indexOf("sound") !== -1); data = data.substring(data.indexOf(",") + 1);
-  //       xhr.send("data="+encodeURIComponent(data));
-  //     } else xhr.send();
-  //   }
-  //   reader.onerror = function (evt) {
-  //     console.log('error', evt);
-  //   }
-  //
-  // },
-
   updateList:function(element, list, item){
     var finder = list.findIndex(function(check){return check.id === item.id && check.project === item.project && check.url === item.url;});
 
@@ -314,7 +267,6 @@ authorLibs.utils = {
       }
     );
   },
-
 
   setSubProp: function(obj, desc, val){
     var arr = desc.split(".");
@@ -439,23 +391,23 @@ authorLibs.utils = {
               if (defaultId){
                 authorLibs.rules[subWidget.sourcelist][defaultId].widgets.forEach(function(subsub, idxSub){
                   var subWidgetPath =  widget.field + '.' +  idx + '.' + subsub.field;
-                  if (subsub.type === 'objlist') str += authorLibs.utils.handleTypeList('objects',  item, type, subsub, subWidgetPath);
-                  if (subsub.type === 'varlist') str += authorLibs.utils.handleTypeList('vars', item, type, subsub, subWidgetPath);
-                  if (subsub.type === 'number')  str += authorLibs.utils.handleNumber(item, type, subsub, subWidgetPath);
+                  if (subsub.type === 'objlist')    str += authorLibs.utils.handleTypeList('objects',  item, type, subsub, subWidgetPath);
+                  if (subsub.type === 'varlist')    str += authorLibs.utils.handleTypeList('vars', item, type, subsub, subWidgetPath);
+                  if (subsub.type === 'number')     str += authorLibs.utils.handleNumber(item, type, subsub, subWidgetPath);
                   if (subsub.type === "filterlink") str += authorLibs.utils.handleSelectLink(item, type, subsub, subWidgetPath);
-                  if (subsub.type === 'select')  str += authorLibs.utils.handleSelect(item, type, subsub, subWidgetPath);
+                  if (subsub.type === 'select')     str += authorLibs.utils.handleSelect(item, type, subsub, subWidgetPath);
                 });
               }
             }
-            if (subWidget.type === 'number')  str += authorLibs.utils.handleNumber(item, type, subWidget, widgetPath);
-            if (subWidget.type === 'objlist') str += authorLibs.utils.handleTypeList('objects', item,   type,  subWidget, widgetPath);
-            if (subWidget.type === 'varlist') str += authorLibs.utils.handleTypeList('vars', item,   type,  subWidget, widgetPath);
-            if (subWidget.type === 'parlist') str += authorLibs.utils.handleTypeList('particles', item,   type,  subWidget, widgetPath);
-            if (subWidget.type === 'posxy')   str += authorLibs.utils.handlePosition(item, type, subWidget, widgetPath);
+            if (subWidget.type === 'number')     str += authorLibs.utils.handleNumber(item, type, subWidget, widgetPath);
+            if (subWidget.type === 'objlist')    str += authorLibs.utils.handleTypeList('objects', item,   type,  subWidget, widgetPath);
+            if (subWidget.type === 'varlist')    str += authorLibs.utils.handleTypeList('vars', item,   type,  subWidget, widgetPath);
+            if (subWidget.type === 'parlist')    str += authorLibs.utils.handleTypeList('particles', item,   type,  subWidget, widgetPath);
+            if (subWidget.type === 'posxy')      str += authorLibs.utils.handlePosition(item, type, subWidget, widgetPath);
             if (subWidget.type === "filterlink") str += authorLibs.utils.handleSelectLink(item, type, subWidget, widgetPath);
-            if (subWidget.type === 'select')  str += authorLibs.utils.handleSelect(item, type, subWidget, widgetPath);
-            if (subWidget.type === 'sndlist') str += authorLibs.utils.handleTypeList('sounds', item,   type,  subWidget, widgetPath);
-            if (subWidget.type === "text")    str += authorLibs.utils.handleText(item, type, subWidget, widgetPath, 'w100');
+            if (subWidget.type === 'select')     str += authorLibs.utils.handleSelect(item, type, subWidget, widgetPath);
+            if (subWidget.type === 'sndlist')    str += authorLibs.utils.handleTypeList('sounds', item,   type,  subWidget, widgetPath);
+            if (subWidget.type === "text")       str += authorLibs.utils.handleText(item, type, subWidget, widgetPath, 'w100');
           });
           str += '</div>';
         });
@@ -581,10 +533,10 @@ authorLibs.utils = {
   },
 
   handleSelect: function(object, type, widget, path, list,){
-    var str = '';
-    var selOp = (list === undefined ? authorLibs.rules.select[widget.id].list : list);
+    var str       = '';
+    var selOp     = (list === undefined ? authorLibs.rules.select[widget.id].list : list);
     var defaultId = authorLibs.utils.getSubProp(object, path);
-    var display = widget.display ? widget.display : widget.field;
+    var display   = widget.display ? widget.display : widget.field;
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
     str += authorLibs.utils.buildSelect(
       {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:selOp, defaultId:defaultId, path:path}

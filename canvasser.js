@@ -1129,7 +1129,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (action.type === 'vis'){
           act.data.objects.forEach(function(obj){
             if (!checkAction(action, obj)) return;
-            obj.show = action.show
+            obj.show = action.show;
           });
         }
       });
@@ -1140,8 +1140,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   function checkAction(action, obj){
     if (action.filter === undefined) return false;
     if (action.filter === "group"){
-      if (obj.group === undefined) return false;
-      if (obj.group.indexOf(action.id) < 0) return false;
+      if (obj.groups === undefined) return false;
+      if (obj.groups.find(function(item){return item.id ===action.id}) === undefined) return false;
     }
     if (action.filter === "object"){
       if (obj.id !== action.id) return false;

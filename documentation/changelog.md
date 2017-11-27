@@ -1,5 +1,8 @@
 ## Changelog:
 
+- 2017-11-27 Fixed group viz event not using groups.
+- 2017-11-14 Upload dialog for project now has autocomplete.
+- 2017-11-14 Fixed bug in Files Window that had selected object not highlighted.
 - 2017-11-13 Added bounds initial implementation for image objects.
 - 2017-11-13 Slideobject now supports groups.
 - 2017-11-07 Added UTLogin authentication with sandbox for non .users.

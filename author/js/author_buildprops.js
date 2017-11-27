@@ -205,7 +205,6 @@ authorLibs.buildProp = {
   particles: function(particle){
     var output = '<div class="propbody">' ;
     authorLibs.rules.particle.widgets.forEach(function(widget, idx, source){
-
       if (widget.type === "bool")       output += authorLibs.utils.handleBoolean(particle, 'particle', widget, widget.field);
       if (widget.type === "imagedata")  output += authorLibs.utils.handleImage(particle, 'particle', widget, widget.field);
       if (widget.type === "number")     output += authorLibs.utils.handleNumber(particle, 'particle', widget, widget.field);

@@ -11,6 +11,7 @@ authorLibs.windows = {
     var uploadForm = authorLibs.windows.makeElement({parent:authorLibs.dom.parent, type:'form', id:'fileUploadForm', style:'display:none;'});
     var fileUpload = authorLibs.windows.makeElement({parent:uploadForm, type:'input', subtype:'file', id:'fileUpload', style:'display:none;'});
     authorLibs.windows.makeElement({parent:uploadForm, type:'input', subtype:'submit', id:'fileUpload', style:'display:none;'});
+
     fileUpload.addEventListener('change', authorLibs.utils.fileUpload, false);
     fileUpload.multiple = true;
 
@@ -51,7 +52,9 @@ authorLibs.windows = {
     authorLibs.windows.makeDiv({parent:upload, html:"UPLOAD FILES", classes:'title_save'});
     var uDivP = authorLibs.windows.makeDiv({parent:upload, classes:'saveblock'});
     authorLibs.windows.makeDiv({parent:uDivP, html:'Select Project:',  classes:"savelabel"});
-    authorLibs.windows.makeElement({parent:uDivP, type:'input', subtype:'text', classes:'savetextbox', id:'uploadproject'});
+    //authorLibs.windows.makeElement({parent:uDivP, type:'input', subtype:'text', classes:'savetextbox', id:'uploadproject'});
+    authorLibs.windows.makeElement({parent:uDivP, type:'input', subtype:'text', classes:'savetextbox', id:'uploadproject', list:'datalist_saveproject'});
+
     authorLibs.windows.makeDiv({parent:upload, html:"SELECT", classes:'button_load',  click:function(){authorLibs.utils.fileUploadPre()}});
     authorLibs.windows.makeDiv({parent:upload, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('uploadbox')}});
     var winList = [
@@ -140,7 +143,7 @@ authorLibs.windows = {
       var holder = authorLibs.windows.makeDiv({parent:contents,  id:win.id + 'holder', classes:'padholder'});
 
       if (win.menu.refresh)      authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Refresh', click:function(){authorLibs.utils.loadFromPhp('refreshfiles', true)}});
-      if (win.menu.uploadfile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Upload',  click:function(){authorLibs.utils.selectProject();}});
+      if (win.menu.uploadfile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Upload',  click:function(){authorLibs.utils.projectsList('saveproject'); authorLibs.utils.selectProject();}});
       if (win.menu.addtoproject) authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Link',    click:function(){authorLibs.menus.addToProject( win.id +'s')}});
       if (win.menu.renamefile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Rename',  click:function(){authorLibs.utils.fileRename(win.id +'s')}});
       if (win.menu.copyfile)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.utils.fileCopy(win.id +'s')}});
