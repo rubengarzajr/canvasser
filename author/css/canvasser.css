@@ -832,3 +832,11 @@ a{
   display: inline;
   padding: 10px;
 }
+
+.outwin{
+  width: 600px;
+  border: 1px black solid;
+  margin: 10px;
+  overflow-y: scroll;
+  height: calc(100% - 80px);
+}

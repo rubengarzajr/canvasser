@@ -1,24 +1,23 @@
 <?php
-
+$contentModifier = '';
 $authControl = getenv('AUTH_CONTROL');
-
-if ($authControl !== FALSE){
-  include $authControl;
-}
-
 
 $contentPath = getenv('CONTENT_PATH');
 if (empty($contentPath)){
   $contentPath = '/var/www/html/canvasser_content';
 }
 
+$contentDeleted = getenv('CONTENT_DELETED');
+if (empty($contentDeleted)){
+  $contentDeleted = '/var/www/html/canvasser_content_deleted';
+}
+
+if ($authControl !== FALSE){
+  include $authControl;
+}
+
 $contentPath .= $contentModifier;
 
-if ($eid !== FALSE){
-  if (!file_exists($contentPath)) {
-    mkdir($contentPath, 0744);
-  }
-}
 
 $contentUrl = getenv('CONTENT_URL');
 if (empty($contentUrl)){
@@ -28,8 +27,8 @@ if (empty($contentUrl)){
 $contentUrl .= $contentModifier;
 
 $supportedFiles = array('gif','html','jpg','json','mp3','png','svg','wav');
-$imageFiles = array('gif','jpg','svg','png');
-$soundFiles = array('mp3','wav');
+$imageFiles     = array('gif','jpg','svg','png');
+$soundFiles     = array('mp3','wav');
 
 $url   = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
 $path  = explode("/",$url);
@@ -56,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
   if (count($api) == 2){
     echo '[{"status":"successful"}]';
-  }else if($api[2] == 'files'){
+  } else if ($api[2] == 'files'){
     $fileNameFull  = strtolower(clean(basename($_FILES["fileToUpload"]["name"])));
     $pathParts     = pathinfo($fileNameFull);
     $fileName      = $pathParts['filename'];
@@ -64,11 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $data          = $_POST['data'];
     $outType       = $extension;
 
-    //die('[{"fileNameFull":"' . $fileNameFull . '", "fileName": "' . $fileName . '", "extension":"' . $extension . '"}]');
-
     if (!in_array($extension,$supportedFiles)){die('{"error":"File type not supported: ' . $fileNameFull . ' ' . $extension . '."}');}
     if (in_array($extension,$imageFiles)){$outType = 'image';}
     if (in_array($extension,$soundFiles)){$outType = 'sound';}
+
+    $returnOut = array();
 
     if ($extension == 'json') {
       $html = '<html>' . "\r\n";
@@ -84,14 +83,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
       $html .= '  </body>' . "\r\n";
       $html .= '</html>' . "\r\n";
       file_put_contents($projectPath . "/" . $fileName . ".html", $html);
-      echo '[{"project": "' . $project . '", "url":"' . $contentUrl . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileName .  '.html", "type":"html"}]';
+      array_push($returnOut, '{"project": "' . $project . '", "url":"' . $contentUrl . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileName .  '.html", "type":"html"}');
+    }
+
+    error_log($contentPath . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileNameFull);
+    if (file_exists( $contentPath . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileNameFull)) {
+      deleteFileBk($contentPath, $contentDeleted, $project, $fileNameFull);
     }
 
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $projectPath . DIRECTORY_SEPARATOR . $fileNameFull)) {
-      echo '[{"project": "' . $project . '", "url":"' . $contentUrl . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileNameFull .  '", "type":"' . $outType . '"}]';
+      array_push($returnOut, '{"project": "' . $project . '", "url":"' . $contentUrl . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileNameFull .  '", "type":"' . $outType . '"}');
     } else {
-        echo '{"error":"' . $_FILES["fileToUpload"]["tmp_name"] . ' not saved!"}';
+      array_push($returnOut, '{"error":"' . $_FILES["fileToUpload"]["tmp_name"] . ' not saved!"}');
     }
+    echo '[';
+    for ($cnt = 0; $cnt < count($returnOut); $cnt++) {
+        echo($returnOut[$cnt]);
+        if ($cnt <  count($returnOut)-1){
+          echo ',';
+        }
+    }
+    echo ']';
   }
 }
 
@@ -125,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 function arrayToJSON($array, $path, $url,  $filterArray){
   global $supportedFiles, $imageFiles, $soundFiles;
   echo '[';
-  $cnt = count($array);
+  $cnt   = count($array);
   $first = True;
   foreach ($array as $value){
     $replaced  = str_replace($path, $url, $value);
@@ -205,28 +217,56 @@ function dirToArray($dir) {
 }
 
 
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   if ($api[0] == 'projects'){
     if (count($api) == 2){
       delTree($contentPath . '/' . clean($api[1]));
       echo '[{"status":"delete command received"}]';
     }else if($api[2] == 'files'){
-      deleteFile($contentPath, $contentUrl, clean($api[3]));
-      echo '[{"status":"delete command received"}]';
+      $result = deleteFileBk($contentPath, $contentDeleted, clean($api[1]), clean($api[3]));
+      echo '[{"status":"delete "' . $result . '"}]';
     }
   }
 }
 
 function delTree($dir) {
-   $files = array_diff(scandir($dir), array('.','..'));
+  $files = array_diff(scandir($dir), array('.','..'));
     foreach ($files as $file) {
       (is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file");
     }
-    return rmdir($dir);
-  }
+  return rmdir($dir);
+}
 
+function deleteFileBk($contentPath, $contentDeleted, $project, $file) {
+  $path_parts = pathinfo($file);
+  $fileName   = $path_parts['filename' ];
+  $extension  = $path_parts['extension'];
+  $cnt        = 0;
+  $old        = $contentPath    . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $file;
+  $new        = $contentDeleted . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileName . '.' . sprintf("%'.05d", $cnt) . '.' .$extension;
+
+  if (!file_exists($contentDeleted . DIRECTORY_SEPARATOR . $project)) {
+    mkdir($contentDeleted . DIRECTORY_SEPARATOR . $project, 0744);
+  }
+  while (file_exists($new)) {
+    $cnt ++;
+    $new       = $contentDeleted . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileName . '.' . sprintf("%'.05d", $cnt) . '.' .$extension;
+  }
+  return rename($old,$new);
+}
+
+function deleteFile($contentPath, $contentUrl, $file) {
+  $start     = $contentPath;
+  $len       = strlen($start) + 1;
+  $Directory = new RecursiveDirectoryIterator($start);
+  $Iterator  = new RecursiveIteratorIterator($Directory);
+  $fileList  = new RecursiveIteratorIterator($Directory, RecursiveIteratorIterator::SELF_FIRST);
+
+  foreach($fileList as $testFile){
+    $path_parts = pathinfo($testFile);
+    if ( $path_parts['basename'] == $file) {unlink($testFile);}
+  }
+}
 
 function clean($string) {
   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
@@ -270,19 +310,6 @@ function finderFile($contentPath, $contentUrl, $file) {
   foreach($fileList as $testFile){
     $path_parts = pathinfo($testFile);
     if ( $path_parts['basename'] == $file) {echo '[{"url":"'.$testFile.'"}]'  . ' </br>';}
-  }
-}
-
-function deleteFile($contentPath, $contentUrl, $file) {
-  $start     = $contentPath;
-  $len       = strlen($start) + 1;
-  $Directory = new RecursiveDirectoryIterator($start);
-  $Iterator  = new RecursiveIteratorIterator($Directory);
-  $fileList  = new RecursiveIteratorIterator($Directory, RecursiveIteratorIterator::SELF_FIRST);
-
-  foreach($fileList as $testFile){
-    $path_parts = pathinfo($testFile);
-    if ( $path_parts['basename'] == $file) {unlink($testFile);}
   }
 }
 

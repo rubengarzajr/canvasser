@@ -294,11 +294,17 @@ function authorcanvasser(dataFile, dataForm){
     restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
+  this.updateSettingBool = function(domElement, setting){
+    authorLibs.authorData.settings[setting] = domElement.checked;
+    authorLibs.menus.update('settings');
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  }
+
   this.updateItem = function(domElement, objectId, type, paramPath){
     var newVal = domElement.value.toString();
     if (domElement.type === 'checkbox') newVal = domElement.checked;
     if (newVal === '---NONE---')        newVal = undefined;
-    var   objGet = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
+    var objGet = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
     authorLibs.utils.setSubProp(objGet, paramPath, newVal);
     authorLibs.buildProp.getProps(type+'s', objGet.id);
     authorLibs.menus.update(type);

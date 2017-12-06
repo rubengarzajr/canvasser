@@ -237,7 +237,7 @@ authorLibs.buildProp = {
   settings: function(id){
     var output = '<div class="propbody">';
     var type   = authorLibs.rules.settings[id].type;
-    if (type === "bool") output += authorLibs.utils.handleBoolean(authorLibs.authorData.settings, 'setting', {field:"usecache"}, id);
+    if (type === "bool") output += authorLibs.utils.handleBooleanSetting({field:"usecache"}, id);
     else {
       output += '<div class="entrylabel c_entrytitle_text w200">'+id+'</div>';
       output += '<input class="auth_text w200" type="'+ type +'" ';

@@ -187,7 +187,7 @@ authorLibs.utils = {
     xhr.open("POST", url, true);
     xhr.onload = function() {
     if (xhr.status === 200) {
-        authorLibs.saved.report += xhr.responseText + '<br>';
+        authorLibs.saved.report += xhr.responseText;
         authorLibs.saved.count --;
         if (authorLibs.saved.count === 0) authorLibs.utils.saveReport();
       }
@@ -199,7 +199,16 @@ authorLibs.utils = {
   saveReport:function(){
     document.getElementById('notice_box').style.display = 'block';
     document.getElementById('notice_title').innerHTML = "Save Status"
-    document.getElementById('notice_content').innerHTML = authorLibs.saved.report;
+    var report = JSON.parse(authorLibs.saved.report);
+    var reportOut = '';
+    report.forEach(function(subport){
+      for (var key in subport) {
+        var obj = subport[key];
+          reportOut += key + ": " + obj + '<br>';
+      }
+      reportOut += '<br>';
+    });
+    document.getElementById('notice_content').innerHTML = reportOut;
   },
 
   selectProject: function(){
@@ -425,6 +434,16 @@ authorLibs.utils = {
     str += '<div class="entrylabel c_entrytitle_text w100">' + display;
     str += '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
     str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path], true) + '><br>';
+    return str;
+  },
+
+  handleBooleanSetting: function( widget, path){
+    var display = widget.display === undefined ? widget.field : widget.display;
+    var str = '';
+    var defaultId = authorLibs.utils.getSubProp('authorLibs.authorData.settings', path);
+    str += '<div class="entrylabel c_entrytitle_text w100">' + display;
+    str += '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
+    str += authorLibs.utils.buildFnString('authorLibs.author.updateSettingBool', [path], true) + '><br>';
     return str;
   },
 

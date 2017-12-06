@@ -1,5 +1,10 @@
 ## Changelog:
 
+- 2017-12-04 Deleted and overwritten files are now moved to a deleted folder and can be recovered.
+- 2017-12-04 Fixed group testpset.
+- 2017-12-04 Fixed group animation scale.
+- 2017-12-01 Fixed usecache checkbox.
+- 2017-11-30 Fixed formatting on save status dialog.
 - 2017-11-27 Fixed group viz event not using groups.
 - 2017-11-14 Upload dialog for project now has autocomplete.
 - 2017-11-14 Fixed bug in Files Window that had selected object not highlighted.

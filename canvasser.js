@@ -472,9 +472,14 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           anim.delete = true;
         }
         if (anim.type === "testpset"){
+          if (anim.filter === 'group') {
+            var groupObjs = findInGroup(anim.id);
+            groupObjs.forEach(function(animSubOb){animSubOb.testp = anim.testp});
+          } else {
             var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
             animOb.testp = anim.testp
-            anim.delete = true;
+          }
+          anim.delete = true;
         }
         if (anim.type === "vis"){
           if (anim.filter === 'group') {
@@ -579,10 +584,20 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           } else animOb.position.current = {x:Math.round(posDiff.x), y:Math.round(posDiff.y)};
         }
         if (anim.type === "scale") {
-          if (anim.startscale === undefined || anim.fromcurrent) anim.startscale = animOb.scale.current;
-          var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
-          var scaleDiff = (anim.endscale - anim.startscale) * percent + anim.startscale;
-          animOb.scale.current = scaleDiff;
+          if (anim.filter === 'group') {
+            var groupObjs = findInGroup(animOb.id)
+            groupObjs.forEach(function(animSubOb){
+              if (anim.startscale === undefined || anim.fromcurrent) anim.startscale = animSubOb.scale.current;
+              var percent   = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
+              var scaleDiff = (anim.endscale - anim.startscale) * percent + anim.startscale;
+              animSubOb.scale.current = scaleDiff;
+            });
+          } else {
+            if (anim.startscale === undefined || anim.fromcurrent) anim.startscale = animOb.scale.current;
+            var percent   = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
+            var scaleDiff = (anim.endscale - anim.startscale) * percent + anim.startscale;
+            animOb.scale.current = scaleDiff;
+          }
         }
         if (anim.type === "turn") {
           var startrot = 0;
@@ -1117,8 +1132,17 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           act.soundList[action.id].play();
         }
         if (action.type === "testpset"){
-          var actObj = act.data.objects.filter(function(obj){return obj.id === action.id})[0];
-          actObj.testp = action.testp
+          var filter = "object";
+          if (action.filter!== undefined) filter = action.filter;
+          if (filter === 'group'){
+            act.data.objects.forEach(function(obj){
+              if (obj.groups.find(function(e){return e.id === action.id}) === undefined) return;
+              actObj.testp = action.testp;
+            });
+          } else {
+            var actObj = act.data.objects.filter(function(obj){return obj.id === action.id})[0];
+            actObj.testp = action.testp;
+          }
         }
         if (action.type === 'url'){
           var target = document.getElementById(action.target);
