@@ -22,7 +22,7 @@ authorLibs.menus = {
       if (authorLibs.authorData[type].length === 1) document.getElementById('objectholder').style.height = "35px";
     }
     if (type === 'particles')   authorLibs.authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}},
-    emitRate:10, pParams:{fade: {in:0, out:100}, scale: {min:1, max:1}, life: {min:1000, max:1000},
+    emitRate:10, pParams:{fade: {in:0, out:100, inrandom:0, outrandom:0}, scale: {min:1, max:1}, life: {min:1000, max:1000},
     speed:{position:{min:1, max:1}, rotation:{min:0.1, max:0.1}}}, genType:"burst", emitCounter:1000, emitDirEnd:360, emitDirStart:0});
     if (type === 'paths')       authorLibs.authorData[type].push({id:itemName, url:authorLibs.externalsPath});
     if (type === 'shapes')      authorLibs.authorData[type].push({id:itemName});
@@ -237,10 +237,17 @@ authorLibs.menus = {
       if (type === 'images'){
         var url = authorLibs.utils.prePath(menuItem);
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
-        menu +='<td class="imageid"><div class="imagetext">' + menuItem.id + '</div></td>';
+        menu +='<td class="imageid"><div class="imagetext" id="imagetext-'+menuItem.id+'">' + menuItem.id + '</div></td>';
         if (menuItem.local) menu +='<td width="50px"><img src="' + menuItem.data + '" alt="' + menuItem.id + '"></td>';
         else menu +='<td width="50px"><img src="' + url + '" alt="' + menuItem.id + '"></td>';
         menu += '</tr>';
+        var img = new Image();
+        img.onload = function() {
+          var img = document.getElementById('imagetext-'+ menuItem.id);
+          if (img !== undefined) img.innerHTML =  menuItem.id + '<br>' + this.width + 'x' + this.height;
+        }
+        img.src = url;
+
       }
       if (type === 'objects'){
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';

@@ -156,7 +156,6 @@ authorLibs.windows = {
       }
       if (win.id === 'file'){
         var filelistDiv = authorLibs.windows.makeDiv({parent:contents, classes:'content_load_all', id:'filelist'});
-
       }
       if (win.id === 'json'){
         var txt  = document.createElement('textarea');

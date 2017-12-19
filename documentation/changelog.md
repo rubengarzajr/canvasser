@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2017-12-19 Display image dimensions in image list.
+- 2017-12-19 Fixed originxy when used with scale.
 - 2017-12-04 Deleted and overwritten files are now moved to a deleted folder and can be recovered.
 - 2017-12-04 Fixed group testpset.
 - 2017-12-04 Fixed group animation scale.

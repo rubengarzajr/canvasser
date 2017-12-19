@@ -227,6 +227,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
         if (pSystem.info.blend) act.context.globalCompositeOperation = pSystem.info.blend;
 
+        // TODO: MAKE USE ACTUAL TIMESTAMP
         pSystem.pList.forEach(function(p){
           if (!pSystem.info.keepalive) p.life.current --;
 
@@ -661,13 +662,23 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           obj.scale.current = 0.01;
         }
         if (obj.originxy === undefined) obj.originxy = {current:{x:0, y:0}};
+        var oxy = {x:obj.originxy.current.x, y:obj.originxy.current.y};
         if (obj.origin === "center") {
           if (atlas){
-              obj.originxy.current ={"x":-Math.floor((atlas.cellwidth/2*obj.scale.current)), "y":-Math.floor((atlas.cellheight/2*obj.scale.current))};
+              oxy ={"x":-Math.floor((atlas.cellwidth/2*obj.scale.current)), "y":-Math.floor((atlas.cellheight/2*obj.scale.current))};
           } else {
-            obj.originxy.current = {
+            oxy = {
               "x":-(Math.floor(act.imageList[obj.image].imageData.naturalWidth  / 2 * obj.scale.current * obj.parentTransform.scale)),
               "y":-(Math.floor(act.imageList[obj.image].imageData.naturalHeight / 2 * obj.scale.current * obj.parentTransform.scale))
+            };
+          }
+        } else {
+          if (atlas){
+              oxy ={"x":-Math.floor((obj.originxy.current.x*obj.scale.current)), "y":-Math.floor((obj.originxy.current.y*obj.scale.current))};
+          } else {
+            oxy = {
+              "x":-(Math.floor(obj.originxy.current.x * obj.scale.current)),
+              "y":-(Math.floor(obj.originxy.current.y * obj.scale.current))
             };
           }
         }
@@ -681,7 +692,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (obj.blend) act.context.globalCompositeOperation = obj.blend;
           act.context.translate(pos.x, pos.y);
           act.context.rotate(obj.rotation);
-          act.context.translate(obj.originxy.current.x, obj.originxy.current.y);
+          act.context.translate(oxy.x, oxy.y);
           act.context.scale(obj.scale.current * obj.parentTransform.scale, obj.scale.current * obj.parentTransform.scale);
           if (atlas){
             if (obj.atlascell === undefined) obj.atlascell = {x:0,y:0};
