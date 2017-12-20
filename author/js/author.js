@@ -126,8 +126,15 @@ function authorcanvasser(dataFile, dataForm){
 
       if (authorLibs.gui.mousePos.x - authorLibs.gui.offset.x < 5) authorLibs.gui.moveElement.style.left = '5px';
       if (authorLibs.gui.mousePos.y - authorLibs.gui.offset.y < 5) authorLibs.gui.moveElement.style.top  = '5px';
-      if (win.right  > ext.x-5)  authorLibs.gui.moveElement.style.left = (ext.x-5-win.width)  +'px';
-      if (win.bottom > ext.y-10) authorLibs.gui.moveElement.style.top  = (ext.y-10-win.height)+'px';
+      var maxX = ext.x-5-win.width > 5 ? ext.x-5-win.width : 5;
+      var maxY = ext.y-10-win.height > 5 ? ext.y-10-win.height : 5;
+      if (win.right  > ext.x-5)  authorLibs.gui.moveElement.style.left = maxX +'px';
+      if (win.bottom > ext.y-10) {
+        authorLibs.gui.moveElement.style.top  = maxY +'px';
+        if (authorLibs.gui.moveElement.id === 'objectbank'){
+          document.getElementById('objectholder').style.height = '200px';
+        }
+      }
     }
     window.requestAnimationFrame(loop);
   }

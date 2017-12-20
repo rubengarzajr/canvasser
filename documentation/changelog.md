@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2017-12-20 Temp fix for top of long objects list going off top of screen.
+- 2017-12-20 Fixed fromcurrent when turning an object.
 - 2017-12-19 Display image dimensions in image list.
 - 2017-12-19 Fixed originxy when used with scale.
 - 2017-12-04 Deleted and overwritten files are now moved to a deleted folder and can be recovered.

@@ -179,10 +179,8 @@ authorLibs.windows = {
         authorLibs.windows.makeDiv({parent:contents, id:'authorspace'});
         winTitle.innerHTML = "Properties";
       }
-
       contents.addEventListener("mousedown", function(){authorLibs.windows.focusObjD(win.id+"bank")}, false);
       title.addEventListener("mousedown",    function(){authorLibs.windows.moveObjD(win.id+"bank")},  false);
-
     });
   },
 
@@ -226,7 +224,7 @@ authorLibs.windows = {
     var off = {x:0, y:0};
     if (authorLibs.gui.moveElement.style.left !== "") off.x = authorLibs.gui.mousePos.x - parseInt(authorLibs.gui.moveElement.style.left.slice(0,-2));
     if (authorLibs.gui.moveElement.style.top  !== "") off.y = authorLibs.gui.mousePos.y - parseInt(authorLibs.gui.moveElement.style.top.slice(0,-2));
-    authorLibs.gui.offset      = {x:off.x, y:off.y};
+    authorLibs.gui.offset = {x:off.x, y:off.y};
   },
 
   theme: function(theme){

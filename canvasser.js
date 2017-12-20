@@ -437,7 +437,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       play.playing.forEach(function(anim){
         if (anim.type === "flipbook"){
           var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
-          if (anim.atlascell === undefined) anim.atlascell = {x:0, y:0};
+          if (anim.atlascell   === undefined) anim.atlascell = {x:0, y:0};
           if (anim.atlascell.x === undefined) anim.atlascell.x = 0;
           if (anim.atlascell.y === undefined) anim.atlascell.y = 0;
           if (animOb) animOb.atlascell = {x:anim.atlascell.x, y:anim.atlascell.y};
@@ -523,6 +523,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           }
           if (anim.type === "turn") {
             animOb.rotation = radians(anim.endrot);
+            anim.fromCurrentStart = undefined;
           }
           anim.delete = true;
         }
@@ -601,12 +602,19 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           }
         }
         if (anim.type === "turn") {
+          if (animOb.rotation === undefined) animOb.rotation = 0;
           var startrot = 0;
           var endrot   = radians(anim.endrot);
-          if (anim.startrot === undefined || anim.fromcurrent) startrot = animOb.rotation;
-          else startrot = radians(anim.startrot);
+          if (anim.fromcurrent) {
+            if (anim.fromCurrentStart == undefined){
+              startrot = animOb.rotation;
+              anim.fromCurrentStart = startrot;
+            } else {
+              startrot = anim.fromCurrentStart;
+            }
+          } else if (anim.startrot !== undefined) startrot = radians(anim.startrot);
           var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
-          var rotDiff =(endrot - startrot) * percent + startrot;
+          var rotDiff = (endrot - startrot) * percent + startrot;
           animOb.rotation = rotDiff;
         }
 
