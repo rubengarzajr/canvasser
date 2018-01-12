@@ -5,32 +5,61 @@ authorLibs.menus = {
     var itemCnt   = 0;
     var tryAgain  = true;
     while (tryAgain){
-      if (authorLibs.authorData[type].filter(function(item){return item.id === itemName}).length > 0){
+      if (authorLibs.authorData[type].filter(function(item){return item.name === itemName}).length > 0){
         itemCnt ++;
         itemName = type.slice(0, -1) + itemCnt;
       } else tryAgain = false;
     }
-    if (type === 'anims')       authorLibs.authorData[type].push({id:itemName, autostart:false, length:1000, timelist:[]});
-    if (type === 'constraints') authorLibs.authorData[type].push({id:itemName, active:true, driverlist:[]});
-    if (type === 'groups')      authorLibs.authorData[type].push({id:itemName});
+    if (type === 'anims')       authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, autostart:false, length:1000, timelist:[]});
+    if (type === 'constraints') authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, active:true, driverlist:[]});
+    if (type === 'groups')      authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName});
     if (type === 'images')      {
-      authorLibs.authorData[type].push({id:itemName, path:"author",  url:"no_image.png"});
+      authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, path:"author",  url:"no_image.png"});
+      if (authorLibs.authorData[type].length === 1) document.getElementById('imageholder').style.height = "65px";
+    }
+    if (type === 'layers')      {
+      authorLibs.authorData[type].push({name:itemName, list:[]});
       if (authorLibs.authorData[type].length === 1) document.getElementById('imageholder').style.height = "65px";
     }
     if (type === 'objects')     {
-      authorLibs.authorData[type].push({id:itemName, type:"image",  shape:"", show:true, position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}}, scale:{current:1}});
+      var objectId = authorLibs.utils.uuid();
+      authorLibs.authorData[type].push({
+        id:objectId,
+        name:itemName,
+        type:"image",
+        shape:"",
+        show:true,
+        position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}},
+        scale:{current:1}
+      });
+      authorLibs.authorData.layers[authorLibs.authorData.layers.length-1].list.push({id:objectId, type:'objects', name:itemName});
       if (authorLibs.authorData[type].length === 1) document.getElementById('objectholder').style.height = "35px";
     }
-    if (type === 'particles')   authorLibs.authorData[type].push({id:itemName, position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}},
-    emitRate:10, pParams:{fade: {in:0, out:100, inrandom:0, outrandom:0}, scale: {min:1, max:1}, life: {min:1000, max:1000},
-    speed:{position:{min:1, max:1}, rotation:{min:0.1, max:0.1}}}, genType:"burst", emitCounter:1000, emitDirEnd:360, emitDirStart:0});
-    if (type === 'paths')       authorLibs.authorData[type].push({id:itemName, url:authorLibs.externalsPath});
-    if (type === 'shapes')      authorLibs.authorData[type].push({id:itemName});
-    if (type === 'sounds')      authorLibs.authorData[type].push({id:itemName, url:authorLibs.externalsPath});
-    if (type === 'tests')       authorLibs.authorData[type].push({id:itemName, active:true});
-    if (type === 'vars')        authorLibs.authorData[type].push({id:itemName, value:0});
+    if (type === 'particles') {
+      var particleId = authorLibs.utils.uuid();
+      authorLibs.authorData[type].push({
+      id:particleId,
+      name:itemName,
+      position:{current:{x:Math.floor(authorLibs.authorData.settings.canvaswidth/2), y:Math.floor(authorLibs.authorData.settings.canvasheight/2)}},
+      emitRate:10, pParams:{fade: {in:0, out:100, inrandom:0, outrandom:0},
+      scale: {min:1, max:1},
+      life: {min:1000, max:1000},
+      speed:{position:{min:1, max:1},
+      rotation:{min:0.1, max:0.1}}},
+      genType:"burst",
+      emitCounter:1000,
+      emitDirEnd:360,
+      emitDirStart:0});
+      authorLibs.authorData.layers[authorLibs.authorData.layers.length-1].list.push({id:particleId, type:'particles', name:itemName});
+    }
+    if (type === 'paths')       authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, url:authorLibs.externalsPath});
+    if (type === 'shapes')      authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName});
+    if (type === 'sounds')      authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, url:authorLibs.externalsPath});
+    if (type === 'tests')       authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, active:true});
+    if (type === 'vars')        authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, value:0});
 
-    authorLibs.menus.updateMenu(type)
+    authorLibs.menus.updateMenu(type);
+    if (type === 'objects' || type === 'particles') authorLibs.menus.updateMenu('layers');
     initCanvasser("sample", JSON.stringify(authorLibs.authorData), "string");
     authorLibs.menus.updateSelectionWindow(type, itemName);
     authorLibs.author.view();
@@ -203,6 +232,7 @@ authorLibs.menus = {
     if (!toUp || toUp === 'files')       authorLibs.menus.updateMenu('files');
     if (!toUp || toUp === 'groups')      authorLibs.menus.updateMenu('groups');
     if (!toUp || toUp === 'images')      authorLibs.menus.updateMenu('images');
+    if (!toUp || toUp === 'layers')      authorLibs.menus.updateMenu('layers');
     if (!toUp || toUp === 'objects')     authorLibs.menus.updateMenu('objects');
     if (!toUp || toUp === 'particles')   authorLibs.menus.updateMenu('particles');
     if (!toUp || toUp === 'paths')       authorLibs.menus.updateMenu('paths');
@@ -228,12 +258,31 @@ authorLibs.menus = {
       menuHolder.innerHTML = menu;
       return;
     }
-    authorLibs.authorData[type].forEach(function(menuItem){
-      if (type === 'anims' || type === 'constraints' || type === 'groups' ||type === 'particles' || type === 'shapes' || type === 'sounds' || type === 'tests' || type === 'vars'){
+    authorLibs.authorData[type].forEach(function(menuItem, idx){
+      if (type === 'anims'  || type === 'constraints' || type === 'groups' || type === 'particles'
+       || type === 'shapes' || type === 'sounds'      || type === 'tests'  || type === 'vars'){
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
-        menu +='<td width="100%">' + menuItem.id + '</td>';
+        menu +='<td width="100%">' + menuItem.name + '</td>';
         menu += '</tr>';
       }
+
+      if (type === 'layers'){
+        menu += '<tr class="clicktr" id="'+type+'_'+idx+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ idx + '\')">';
+        menu +='<td width="100%">' + menuItem.name + '</td>';
+        menu += '</tr>';
+        authorLibs.authorData.layers[idx].list.forEach(function(layer, layerIdx){
+          var type = layer.type;
+          if (type === 'objects') type = authorLibs.authorData.objects.filter(function(object){ return object.id === layer.id})[0].type;
+          menu += '<tr class="clicktr" id="'+type+'_'+layerIdx+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ layerIdx + '\')">';
+          menu +='<td width="100%">';
+          menu +='<img style="vertical-align:top" src="./image/icon_layers_' + (layerIdx === authorLibs.authorData.layers[idx].list.length-1 ? 'l' :  't' ) + '.png">';
+          menu +='<img class="layer_icons" src="./image/icon_layer_' + type + '.png">';
+          menu +='<div class="layers_t">' + layer.name + '</div>';
+          menu += '</td>';
+          menu += '</tr>';
+        });
+      }
+
       if (type === 'images'){
         var url = authorLibs.utils.prePath(menuItem);
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
@@ -244,14 +293,14 @@ authorLibs.menus = {
         var img = new Image();
         img.onload = function() {
           var img = document.getElementById('imagetext-'+ menuItem.id);
-          if (img !== undefined) img.innerHTML =  menuItem.id + '<br>' + this.width + 'x' + this.height;
+          if (img !== undefined) img.innerHTML =  menuItem.name + '<br>' + this.width + 'x' + this.height;
         }
         img.src = url;
 
       }
       if (type === 'objects'){
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
-        menu +='<td width="75%" style="font-size:1.3em;">' + menuItem.id + '</td>';
+        menu +='<td width="75%" style="font-size:1.3em;">' + menuItem.name + '</td>';
         menu +='<td width="25%">' + menuItem.type + '</td>';
         menu += '</tr>';
       }
@@ -264,6 +313,7 @@ authorLibs.menus = {
     });
     menu +='</table>';
     menuHolder.innerHTML = menu;
+    if (type === 'objects') authorLibs.menus.updateMenu('layers');
   },
 
   updateSelectionWindow: function(type,id){

@@ -1,314 +1,10 @@
 authorLibs.utils = {
 
-  fileDelete: function(item){
-    var url = authorLibs.endpoints.projects + '/' + item.project + '/files/' + item.id;
-    var xhr = new XMLHttpRequest();
-    xhr.open("DELETE", url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() {
-    if(xhr.readyState == 4 && xhr.status == 200) {
-        authorLibs.utils.loadFromPhp('refreshfiles', true);
-      }
-    }
-    xhr.send();
-  },
-
-  fileDeleteWin: function(listName){
-    document.getElementById('delete_box').style.display = "block";
-    var content = document.getElementById('delete_content');
-
-    var output = "Confirm delete:<br>";
-    authorLibs.lists[listName].forEach(function(item){
-      output += item.id + '<br>';
-    });
-    content.innerHTML = output;
-  },
-
-  fileDeleteGo: function(listName){
-    authorLibs.lists[listName].forEach(function(item){
-      authorLibs.utils.fileDelete(item);
-    });
-    authorLibs.lists[listName] = [];
-    document.getElementById('delete_box').style.display = "none";
-  },
-
-  fileFromUrl: function(url){
-    return url.replace(/^.*[\\\/]/, '');
-  },
-
-  loadFilePHP: function(files){
-    var fileList = [];
-    if (files.length === 0) return;
-    document.getElementById('loadbox').style.display = 'block';
-
-    files.forEach(function(file){
-      var found = fileList.filter(function(test){return test.project === file.project;});
-      var name = authorLibs.utils.fileFromUrl(file.url);
-      if (found.length) {
-        var foundIdx = fileList.indexOf(found[0]);
-        fileList[foundIdx].files.push({id:name,url:file.url});
-      } else {
-        fileList.push({project:file.project, files:[{id:name,url:file.url}]});
-      }
-    });
-
-    fileList.sort(function(a,b) {return (a.project > b.project) ? 1 : ((b.project > a.project) ? -1 : 0);} );
-    var filebox = document.getElementById('loaddata');
-    filebox.innerHTML = '';
-    fileList.forEach(function(item){
-      authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
-      item.files.forEach(function(file){
-        authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file', click:function(){authorLibs.utils.loadJson(file.url,item.project, file.id.substring(0, file.id.length - 5))}});
-      });
-    });
-  },
-
-  loadFromPhp:function(funct, all){
-    var xhr = new XMLHttpRequest();
-    var url = authorLibs.endpoints.projects;
-    if (all) url = authorLibs.endpoints.files;
-    if (funct === 'loadFilePHP') url = authorLibs.endpoints.files + '?type=json';
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() {
-    if(xhr.readyState == 4 && xhr.status == 200) {
-        authorLibs.utils[funct](JSON.parse(xhr.responseText));
-      }
-    }
-    xhr.send();
-  },
-
-  projectsList(listId){
-    authorLibs.utils.getProjects(authorLibs.utils.fillInSaveProject);
-
-  },
-
-  fillInSaveProject: function(data){
-    var list = document.getElementById('datalist_saveproject');
-    list.innerHTML = '';
-
-    data.forEach(function(item){
-      list.innerHTML += ('<option>' + item + '</option>');
-    });
-  },
-
-   getProjects: function(returnFunction){
-    var url = authorLibs.endpoints.projects;
-    var xhr = new XMLHttpRequest();
-
-    xhr.open("GET", url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onreadystatechange = function() {
-      if(xhr.readyState == 4 && xhr.status == 200) {
-        returnFunction(JSON.parse(xhr.responseText));
-      }
-    }
-    xhr.send();
-  },
-
-  prePath: function(item){
-    var url = item.url;
-    if (!item.path) return url;
-    preUrl  = authorLibs.authorData.paths.filter(function(selected){return selected.id === item.path;})[0];
-    if (!preUrl) return url;
-    return preUrl.url + '/' + item.url;
-  },
-
-  refreshfiles: function(files){
-    authorLibs.lists.fileManager = [];
-    var fileList = [];
-    files.forEach(function(file){
-      var found = fileList.filter(function(test){return test.project === file.project;});
-      var filename = file.url.replace(/^.*[\\\/]/, '');
-      if (found.length > 0) {
-        var foundIdx = fileList.indexOf(found[0]);
-        if (fileList[foundIdx][file.type] === undefined) fileList[foundIdx][file.type] = [];
-        fileList[foundIdx][file.type].push({id:filename, url:file.url});
-      } else {
-        var newList = {project:file.project};
-        if (newList[file.type] === undefined) newList[file.type] = [];
-        newList[file.type].push({id:filename, url:file.url});
-        fileList.push(newList);
-      }
-
-    });
-    fileList.sort(function(a,b) {return (a.project > b.project) ? 1 : ((b.project > a.project) ? -1 : 0);} );
-    document.getElementById('filelist').style.display = 'block';
-    var filebox = document.getElementById('filelist');
-    filebox.innerHTML = '';
-    fileList.forEach(function(item){
-      authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
-      var subs = ['json','image','sound','html'];
-      subs.forEach(function(sub){
-        if (item[sub] === undefined) return;
-        if (item[sub].length === 0) return;
-        authorLibs.windows.makeDiv({parent:filebox, html:sub, classes:'load_filefolder'});
-
-        item[sub].forEach(function(file){
-          authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file',
-            mousedown:function(){
-              authorLibs.utils.updateList(this, authorLibs.lists.fileManager, {id:file.id, project:item.project, type:sub, url:file.url})
-            },
-            mouseenter:function(){
-              if (!authorLibs.gui.parentMouseDown) return;
-              authorLibs.utils.updateList(this, authorLibs.lists.fileManager, {id:file.id, project:item.project, type:sub, url:file.url})
-            }
-          });
-        });
-      });
-    });
-  },
-
-  saveJson:function(){
-    var projectElement = document.getElementById('saveproject');
-    var fileElement    = document.getElementById('savefile');
-    var alertBox       = document.getElementById('alert_box');
-    var aData          = document.getElementById('alertdata');
-    authorLibs.saved        = {};
-    authorLibs.saved.count  = 1;
-    authorLibs.saved.report = '';
-
-    if (projectElement.value === '' || fileElement.value === ''){
-      alertBox.style.display = 'block';
-      aData.innerHTML = 'Please enter a project and file name.'
-      return;
-    }
-    document.getElementById('savebox').style.display = 'none';
-
-    var projectName  = projectElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
-    var fileName     = fileElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-') + '.json';
-    var data         = JSON.stringify(authorLibs.authorData);
-    var url          = authorLibs.endpoints.projects + '/' + projectName + '/files';
-    var file         = new File([data], fileName);
-    var formData = new FormData();
-    formData.append('fileToUpload', file, fileName);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-    xhr.onload = function() {
-    if (xhr.status === 200) {
-        authorLibs.saved.report += xhr.responseText;
-        authorLibs.saved.count --;
-        if (authorLibs.saved.count === 0) authorLibs.utils.saveReport();
-      }
-    }
-    xhr.send(formData);
-
-  },
-
-  saveReport:function(){
-    document.getElementById('notice_box').style.display = 'block';
-    document.getElementById('notice_title').innerHTML = "Save Status"
-    var report = JSON.parse(authorLibs.saved.report);
-    var reportOut = '';
-    report.forEach(function(subport){
-      for (var key in subport) {
-        var obj = subport[key];
-          reportOut += key + ": " + obj + '<br>';
-      }
-      reportOut += '<br>';
-    });
-    document.getElementById('notice_content').innerHTML = reportOut;
-  },
-
-  selectProject: function(){
-    document.getElementById('uploadbox').style.display = 'block';
-  },
-
-  fileUploadPre: function(){
-    document.getElementById('uploadbox').style.display = 'none';
-    document.getElementById("fileUpload").click();
-  },
-
-  fileUpload: function(list){
-    document.getElementById('notice_box').style.display = 'block';
-    document.getElementById('notice_title').innerHTML   = 'Upload Status';
-    document.getElementById('notice_content').innerHTML = '';
-    Array.from(list.srcElement.files).forEach(function(file){
-      authorLibs.utils.postFile(file);
-    });
-  },
-
-  postFile: function(file){
-    var projectName = document.getElementById('uploadproject').value;
-    if (projectName === '') return;
-    var projectName = projectName.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
-    var url         = authorLibs.endpoints.projects + '/' + projectName + '/files';
-
-    var formData    = new FormData();
-    formData.append('fileToUpload', file, file.name);
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', url, true);
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        var res = JSON.parse(xhr.responseText);
-        res.forEach(function(item){
-          document.getElementById('notice_content').innerHTML += item.project + ': ' + item.url + '<br>';
-        });
-        authorLibs.utils.loadFromPhp('refreshfiles', true);
-      }
-    }
-    xhr.send(formData);
-  },
-
-  updateList:function(element, list, item){
-    var finder = list.findIndex(function(check){return check.id === item.id && check.project === item.project && check.url === item.url;});
-
-    if (finder === -1) {
-      list.push(item);
-      element.style.backgroundColor = 'rgb(97, 255, 55)';
-    } else {
-      list.splice(finder,1);
-      element.style.backgroundColor = 'white';
-    }
-  },
-
-  loadJson: function(url, project, file){
-    document.getElementById('saveproject').value = project;
-    document.getElementById('savefile').value = file;
-    document.getElementById('loadbox').style.display = 'none';
-    authorLibs.utils.requestFile(
-      url + '?v="' + Date.now() + '"',
-      function(data){
-        json = JSON.parse(decodeURIComponent(data));
-        restartCanvasser("sample", json, 'string');
-      }
-    );
-  },
-
-  setSubProp: function(obj, desc, val){
-    var arr = desc.split(".");
-    while(arr.length > 1){
-      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
-      obj = obj[arr.shift()];
-    }
-    obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
-  },
-
-  getSubProp: function(obj, desc){
-    var arr = desc.split(".");
-    while(arr.length > 1){
-      var isnum = /^\d+$/.test(arr[0]);
-      if (isnum) arr[0] = parseInt(arr[0]);
-      obj = obj[arr[0]];
-      if (obj === undefined) return undefined;
-      arr.shift();
-    }
-    return obj[arr[0]];
-  },
-
-  copyObj: function(object, newObj){
-    for (var key in object) {
-      if (object.hasOwnProperty(key)) {
-        if (typeof(object[key]) === 'object') {
-          if (Array.isArray(object[key])){
-            newObj[key] = authorLibs.utils.appendToArray(object[key])
-          } else newObj[key] = authorLibs.utils.copyObj(object[key], {});
-        } else newObj[key] = object[key] ;
-      }
-    }
-    return newObj
+  addColor: function(id, widget){
+    var obj = authorLibs.authorData.objects.filter(function(object){ return object.id === id})[0];
+    if (obj.color === undefined) obj.color = {current:["rgba(0,0,0,1)"]};
+    obj.color.current.push("rgba(0,0,0,1)");
+    authorLibs.author.getProps('objects',id);
   },
 
   appendToArray: function(inArray){
@@ -360,13 +56,129 @@ authorLibs.utils = {
     } else {
       out = '<select id="prop_'+obj.path+'" class="sellist"';
       out += authorLibs.utils.buildFnString(obj.fn, [obj.object, obj.type, obj.path], true) + '>';
-      var newList = obj.list.slice();
-      newList.unshift("---NONE---");
-      newList.forEach(function(listObject){
-        out += '<option value="'+ listObject + '"'+ (listObject === obj.defaultId ? " selected" : "" )+ '>' + listObject + '</option>';
+      var objList  = obj.list.slice();
+      objList.unshift({id:"---NONE---", name:"---NONE---"} );
+      objList.forEach(function(listObject){
+        out += '<option value="'+ listObject.id + '"'+ (listObject.id === obj.defaultId ? " selected" : "" )+ '>' + listObject.name + '</option>';
       });
       out += "</select>";
       return out;
+    }
+  },
+
+  copyObj: function(object, newObj){
+    for (var key in object) {
+      if (object.hasOwnProperty(key)) {
+        if (typeof(object[key]) === 'object') {
+          if (Array.isArray(object[key])){
+            newObj[key] = authorLibs.utils.appendToArray(object[key])
+          } else newObj[key] = authorLibs.utils.copyObj(object[key], {});
+        } else newObj[key] = object[key] ;
+      }
+    }
+    return newObj
+  },
+
+  fileDelete: function(item){
+    var url = authorLibs.endpoints.projects + '/' + item.project + '/files/' + item.id;
+    var xhr = new XMLHttpRequest();
+    xhr.open("DELETE", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+    if(xhr.readyState == 4 && xhr.status == 200) {
+        authorLibs.utils.loadFromPhp('refreshfiles', true);
+      }
+    }
+    xhr.send();
+  },
+
+  fileDeleteGo: function(listName){
+    authorLibs.lists[listName].forEach(function(item){
+      authorLibs.utils.fileDelete(item);
+    });
+    authorLibs.lists[listName] = [];
+    document.getElementById('delete_box').style.display = "none";
+  },
+
+  fileDeleteWin: function(listName){
+    document.getElementById('delete_box').style.display = "block";
+    var content = document.getElementById('delete_content');
+
+    var output = "Confirm delete:<br>";
+    authorLibs.lists[listName].forEach(function(item){
+      output += item.id + '<br>';
+    });
+    content.innerHTML = output;
+  },
+
+  fileFromUrl: function(url){
+    return url.replace(/^.*[\\\/]/, '');
+  },
+
+  fileUploadPre: function(){
+    document.getElementById('uploadbox').style.display = 'none';
+    document.getElementById("fileUpload").click();
+  },
+
+  fileUpload: function(list){
+    document.getElementById('notice_box').style.display = 'block';
+    document.getElementById('notice_title').innerHTML   = 'Upload Status';
+    document.getElementById('notice_content').innerHTML = '';
+    Array.from(list.srcElement.files).forEach(function(file){
+      authorLibs.utils.postFile(file);
+    });
+  },
+
+  fillInSaveProject: function(data){
+    var list = document.getElementById('datalist_saveproject');
+    list.innerHTML = '';
+
+    data.forEach(function(item){
+      list.innerHTML += ('<option>' + item + '</option>');
+    });
+  },
+
+  findInGroup: function(item, groupName){
+    var index = -1;
+    if (item.groups === undefined) return index;
+    item.groups.forEach(function(subObj, idx){
+      if (subObj.id === groupName) {
+        index = idx;
+      }
+    });
+    return index;
+  },
+
+  getProjects: function(returnFunction){
+    var url = authorLibs.endpoints.projects;
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+      if(xhr.readyState == 4 && xhr.status == 200) {
+        returnFunction(JSON.parse(xhr.responseText));
+      }
+    }
+    xhr.send();
+  },
+
+  getSubProp: function(obj, desc){
+    var arr = desc.split(".");
+    while(arr.length > 1){
+      var isnum = /^\d+$/.test(arr[0]);
+      if (isnum) arr[0] = parseInt(arr[0]);
+      obj = obj[arr[0]];
+      if (obj === undefined) return undefined;
+      arr.shift();
+    }
+    return obj[arr[0]];
+  },
+
+  getVisibleArea: function(){
+    return {
+      x:window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth||0,
+      y:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight||0
     }
   },
 
@@ -377,54 +189,54 @@ authorLibs.utils = {
     var str = '';
     var type = types.slice(0, -1);
     var actionsList = [];
-      authorLibs.rules.actions.forEach(function(template){actionsList.push(template.type)});
-      str += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
-      if (item[widget.field] !== undefined){
-        item[widget.field].forEach(function(itemAct, idx){
-          var actionWidgets = authorLibs.rules.actions.filter(function(rType){ return rType.type === itemAct.type});
-          if (actionWidgets.length === 0) return;
-          actionWidgets = actionWidgets[0].widgets;
-          str += '<div class="actionblock">';
-          str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-          str += authorLibs.utils.buildSelect(
-            {fn:'authorLibs.author.updateActionList', object:item.id, type:types, list:actionsList, defaultId:itemAct.type, path:widget.field+'.'+idx+'.type'}
-          );
-          str += '<div class="rightx" onclick="authorLibs.author.deleteitem('+"'objects'"+','+"'"+item.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
-          actionWidgets.forEach(function(subWidget, idxPart){
-            var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
-            if (subWidget.type === 'anmlist') str += authorLibs.utils.handleTypeList('anims', item, type, subWidget, widgetPath);
-            if (subWidget.type === 'bool')    str += authorLibs.utils.handleBoolean(item,  type, subWidget, widgetPath);
-            if (subWidget.type === "linkedcontent") {
-              var filterPath = widgetPath.substr(0, widgetPath.lastIndexOf(".")) + '.' + subWidget['link'] ;
-              var defaultId = authorLibs.utils.getSubProp(item, filterPath);
-              if (defaultId){
-                authorLibs.rules[subWidget.sourcelist][defaultId].widgets.forEach(function(subsub, idxSub){
-                  var subWidgetPath =  widget.field + '.' +  idx + '.' + subsub.field;
-                  if (subsub.type === 'objlist')    str += authorLibs.utils.handleTypeList('objects',  item, type, subsub, subWidgetPath);
-                  if (subsub.type === 'varlist')    str += authorLibs.utils.handleTypeList('vars', item, type, subsub, subWidgetPath);
-                  if (subsub.type === 'number')     str += authorLibs.utils.handleNumber(item, type, subsub, subWidgetPath);
-                  if (subsub.type === "filterlink") str += authorLibs.utils.handleSelectLink(item, type, subsub, subWidgetPath);
-                  if (subsub.type === 'select')     str += authorLibs.utils.handleSelect(item, type, subsub, subWidgetPath);
-                });
-              }
+    authorLibs.rules.actions.forEach(function(template){actionsList.push({id:template.type, name:template.type})});
+    str += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
+    if (item[widget.field] !== undefined){
+      item[widget.field].forEach(function(itemAct, idx){
+        var actionWidgets = authorLibs.rules.actions.filter(function(rType){ return rType.type === itemAct.type});
+        if (actionWidgets.length === 0) return;
+        actionWidgets = actionWidgets[0].widgets;
+        str += '<div class="actionblock">';
+        str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
+        str += authorLibs.utils.buildSelect(
+          {fn:'authorLibs.author.updateActionList', object:item.id, type:types, list:actionsList, defaultId:itemAct.type, path:widget.field+'.'+idx+'.type'}
+        );
+        str += '<div class="rightx" onclick="authorLibs.author.deleteitem('+"'objects'"+','+"'"+item.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
+        actionWidgets.forEach(function(subWidget, idxPart){
+          var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
+          if (subWidget.type === 'anmlist') str += authorLibs.utils.handleTypeList('anims', item, type, subWidget, widgetPath);
+          if (subWidget.type === 'bool')    str += authorLibs.utils.handleBoolean(item,  type, subWidget, widgetPath);
+          if (subWidget.type === "linkedcontent") {
+            var filterPath = widgetPath.substr(0, widgetPath.lastIndexOf(".")) + '.' + subWidget['link'] ;
+            var defaultId = authorLibs.utils.getSubProp(item, filterPath);
+            if (defaultId){
+              authorLibs.rules[subWidget.sourcelist][defaultId].widgets.forEach(function(subsub, idxSub){
+                var subWidgetPath =  widget.field + '.' +  idx + '.' + subsub.field;
+                if (subsub.type === 'objlist')    str += authorLibs.utils.handleTypeList('objects',  item, type, subsub, subWidgetPath);
+                if (subsub.type === 'varlist')    str += authorLibs.utils.handleTypeList('vars', item, type, subsub, subWidgetPath);
+                if (subsub.type === 'number')     str += authorLibs.utils.handleNumber(item, type, subsub, subWidgetPath);
+                if (subsub.type === "filterlink") str += authorLibs.utils.handleSelectLink(item, type, subsub, subWidgetPath);
+                if (subsub.type === 'select')     str += authorLibs.utils.handleSelect(item, type, subsub, subWidgetPath);
+              });
             }
-            if (subWidget.type === 'number')     str += authorLibs.utils.handleNumber(item, type, subWidget, widgetPath);
-            if (subWidget.type === 'objlist')    str += authorLibs.utils.handleTypeList('objects', item,   type,  subWidget, widgetPath);
-            if (subWidget.type === 'varlist')    str += authorLibs.utils.handleTypeList('vars', item,   type,  subWidget, widgetPath);
-            if (subWidget.type === 'parlist')    str += authorLibs.utils.handleTypeList('particles', item,   type,  subWidget, widgetPath);
-            if (subWidget.type === 'posxy')      str += authorLibs.utils.handlePosition(item, type, subWidget, widgetPath);
-            if (subWidget.type === "filterlink") str += authorLibs.utils.handleSelectLink(item, type, subWidget, widgetPath);
-            if (subWidget.type === 'select')     str += authorLibs.utils.handleSelect(item, type, subWidget, widgetPath);
-            if (subWidget.type === 'sndlist')    str += authorLibs.utils.handleTypeList('sounds', item,   type,  subWidget, widgetPath);
-            if (subWidget.type === "text")       str += authorLibs.utils.handleText(item, type, subWidget, widgetPath, 'w100');
-          });
-          str += '</div>';
+          }
+          if (subWidget.type === 'number')     str += authorLibs.utils.handleNumber(item, type, subWidget, widgetPath);
+          if (subWidget.type === 'objlist')    str += authorLibs.utils.handleTypeList('objects', item,   type,  subWidget, widgetPath);
+          if (subWidget.type === 'varlist')    str += authorLibs.utils.handleTypeList('vars', item,   type,  subWidget, widgetPath);
+          if (subWidget.type === 'parlist')    str += authorLibs.utils.handleTypeList('particles', item,   type,  subWidget, widgetPath);
+          if (subWidget.type === 'posxy')      str += authorLibs.utils.handlePosition(item, type, subWidget, widgetPath);
+          if (subWidget.type === "filterlink") str += authorLibs.utils.handleSelectLink(item, type, subWidget, widgetPath);
+          if (subWidget.type === 'select')     str += authorLibs.utils.handleSelect(item, type, subWidget, widgetPath);
+          if (subWidget.type === 'sndlist')    str += authorLibs.utils.handleTypeList('sounds', item,   type,  subWidget, widgetPath);
+          if (subWidget.type === "text")       str += authorLibs.utils.handleText(item, type, subWidget, widgetPath, 'w100');
         });
-        str += '<br>';
-      }
-      str += authorLibs.utils.buildDiv('divbutton', 'Add Action', 'authorLibs.author.addaction', [item.id, types, widget.field]);
-      str += '</div>';
-      return str;
+        str += '</div>';
+      });
+      str += '<br>';
+    }
+    str += authorLibs.utils.buildDiv('divbutton', 'Add Action', 'authorLibs.author.addaction', [item.id, types, widget.field]);
+    str += '</div>';
+    return str;
   },
 
   handleBoolean: function(object, type, widget, path){
@@ -462,41 +274,23 @@ authorLibs.utils = {
     return str;
   },
 
-  addColor: function(id, widget){
-    var obj = authorLibs.authorData.objects.filter(function(object){ return object.id === id})[0];
-    if (obj.color === undefined) obj.color = {current:["rgba(0,0,0,1)"]};
-    obj.color.current.push("rgba(0,0,0,1)");
-    authorLibs.author.getProps('objects',id);
-  },
-
   handleGroup: function(object, type, widget, path){
-    var groupList = authorLibs.utils.objPartToArr(authorLibs.authorData.groups, "id");
+    var groupList = authorLibs.utils.listIdsNames('groups');
     if (object.groups === undefined) object.groups = [];
     var display = widget.display === undefined ? widget.field : widget.display;
     var str = '<div class="grouper"> <div class="grouptitle">Groups:</div>';
     groupList.forEach(function(grp, idx){
-      var defaultId = authorLibs.utils.findInGroup(object, grp);
-      str += '<div class="nosplit"><div class="entrylabel c_entrytitle_text w100">' + grp;
+      var defaultId = authorLibs.utils.findInGroup(object, grp.id);
+      str += '<div class="nosplit"><div class="entrylabel c_entrytitle_text w100">' + grp.name;
       str += '</div><input class="checkbox" type="checkbox" ' + (defaultId > -1 ? "checked " : "");
-      str += authorLibs.utils.buildFnString('authorLibs.author.togglegroup', [object.id, type, path, grp], true) + '></div>';
+      str += authorLibs.utils.buildFnString('authorLibs.author.togglegroup', [object.id, type, path, grp.id], true) + '></div>';
     });
     return str+'</div>';
   },
 
-  findInGroup: function(item, groupName){
-    var index = -1;
-    if (item.groups === undefined) return index;
-    item.groups.forEach(function(subObj, idx){
-      if (subObj.id === groupName) {
-        index = idx;
-      }
-    });
-    return index;
-  },
-
   handleImage: function(item, type, widget, path){
     str = '';
-    var imageList = authorLibs.utils.objPartToArr(authorLibs.authorData.images, "id");
+    var imageList = authorLibs.utils.listIdsNames('images');
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += authorLibs.utils.buildSelect(
       {fn:'authorLibs.author.updateItem', object:item.id, type:type, list:imageList, defaultId:item[widget.field], path:widget.field}
@@ -541,6 +335,22 @@ authorLibs.utils = {
     return str;
   },
 
+  handleSelect: function(object, type, widget, path, list,){
+    var str   = '';
+    var selOp = (list === undefined ? authorLibs.rules.select[widget.id].list : list);
+    var list  = [];
+    selOp.forEach(function(item){
+      list.push({id:item, name:item});
+    });
+    var defaultId = authorLibs.utils.getSubProp(object, path);
+    var display   = widget.display ? widget.display : widget.field;
+    str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
+    str += authorLibs.utils.buildSelect(
+      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:list, defaultId:defaultId, path:path}
+    ) + '<br>';
+    return str;
+  },
+
   handleSelectLink: function(object, type, widget, path){
     var str = '';
     var filterPath = path.substr(0, path.lastIndexOf(".")) + '.' + widget['link'] ;
@@ -551,26 +361,18 @@ authorLibs.utils = {
     return str;
   },
 
-  handleSelect: function(object, type, widget, path, list,){
-    var str       = '';
-    var selOp     = (list === undefined ? authorLibs.rules.select[widget.id].list : list);
-    var defaultId = authorLibs.utils.getSubProp(object, path);
-    var display   = widget.display ? widget.display : widget.field;
-    str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
-    str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:selOp, defaultId:defaultId, path:path}
-    ) + '<br>';
-    return str;
-  },
-
   handleSelectText: function(object, type, widget, path, list){
     var str = '';
     var selOp = (list === undefined ? authorLibs.rules.select[widget.id].list : list);
+    var list  = [];
+    selOp.forEach(function(item){
+      list.push({id:item, name:item});
+    });
     var defaultId = authorLibs.utils.getSubProp(object, path);
     var display = widget.display ? widget.display : widget.field;
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
     str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:selOp, defaultId:defaultId, path:path, text:true}
+      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:list, defaultId:defaultId, path:path, text:true}
     ) + '<br>';
     return str;
   },
@@ -578,6 +380,10 @@ authorLibs.utils = {
   handleTest: function(test, types, widget){
     var str = '';
     var testsList = Object.keys(authorLibs.rules.conditionals);
+    var list  = [];
+    testsList.forEach(function(item){
+      list.push({id:item, name:item});
+    });
     str += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
     if (test[widget.field] !== undefined){
       test[widget.field].forEach(function(actobject, idx){
@@ -586,7 +392,7 @@ authorLibs.utils = {
         str += '<div class="actionblock">';
         str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
         str += authorLibs.utils.buildSelect(
-          {fn:'authorLibs.author.updateActionList', object:test.id, type:"tests", list:testsList, defaultId:actobject.type, path:widget.field+'.'+idx+'.type'}
+          {fn:'authorLibs.author.updateActionList', object:test.id, type:"tests", list:list, defaultId:actobject.type, path:widget.field+'.'+idx+'.type'}
         );
         str += '<div class="rightx" onclick="authorLibs.author.deleteitem('+"'tests'," +"'"+test.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
         actionWidgets.forEach(function(subWidget, idxPart){
@@ -635,14 +441,80 @@ authorLibs.utils = {
   },
 
   handleTypeList: function(filter, object, type, widget, path){
-    var str = '';
-    var objectList = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "id");
+    var str       = '';
+    var list      = authorLibs.utils.listIdsNames(filter);
     var defaultId = authorLibs.utils.getSubProp(object, path);
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:objectList, defaultId:defaultId, path:path}
+      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:list,  defaultId:defaultId, path:path}
     ) + '<br>';
     return str;
+  },
+
+  listIdsNames: function(filter){
+    var idList    = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "id");
+    var nameList  = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "name");
+    var comboList = [];
+    for (var i = 0; i < idList.length; i++ ) {
+      if (nameList[i] === undefined) nameList[i] = idList[i];
+      comboList.push( {id: idList[i], name:nameList[i]});
+    }
+    return comboList;
+  },
+
+  loadFilePHP: function(files){
+    var fileList = [];
+    if (files.length === 0) return;
+    document.getElementById('loadbox').style.display = 'block';
+
+    files.forEach(function(file){
+      var found = fileList.filter(function(test){return test.project === file.project;});
+      var name = authorLibs.utils.fileFromUrl(file.url);
+      if (found.length) {
+        var foundIdx = fileList.indexOf(found[0]);
+        fileList[foundIdx].files.push({id:name,url:file.url});
+      } else {
+        fileList.push({project:file.project, files:[{id:name,url:file.url}]});
+      }
+    });
+
+    fileList.sort(function(a,b) {return (a.project > b.project) ? 1 : ((b.project > a.project) ? -1 : 0);} );
+    var filebox = document.getElementById('loaddata');
+    filebox.innerHTML = '';
+    fileList.forEach(function(item){
+      authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
+      item.files.forEach(function(file){
+        authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file', click:function(){authorLibs.utils.loadJson(file.url,item.project, file.id.substring(0, file.id.length - 5))}});
+      });
+    });
+  },
+
+  loadFromPhp:function(funct, all){
+    var xhr = new XMLHttpRequest();
+    var url = authorLibs.endpoints.projects;
+    if (all) url = authorLibs.endpoints.files;
+    if (funct === 'loadFilePHP') url = authorLibs.endpoints.files + '?type=json';
+    xhr.open("GET", url, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+    if(xhr.readyState == 4 && xhr.status == 200) {
+        authorLibs.utils[funct](JSON.parse(xhr.responseText));
+      }
+    }
+    xhr.send();
+  },
+
+  loadJson: function(url, project, file){
+    document.getElementById('saveproject').value     = project;
+    document.getElementById('savefile').value        = file;
+    document.getElementById('loadbox').style.display = 'none';
+    authorLibs.utils.requestFile(
+      url + '?v="' + Date.now() + '"',
+      function(data){
+        var json = authorLibs.utils.prepJson(JSON.parse(decodeURIComponent(data)));
+        restartCanvasser("sample", json, 'string');
+      }
+    );
   },
 
   objPartToArr: function(obj, part){
@@ -651,6 +523,123 @@ authorLibs.utils = {
       out.push(obj[prop][part]);
     }
     return out;
+  },
+
+  postFile: function(file){
+    var projectName = document.getElementById('uploadproject').value;
+    if (projectName === '') return;
+    var projectName = projectName.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
+    var url         = authorLibs.endpoints.projects + '/' + projectName + '/files';
+
+    var formData    = new FormData();
+    formData.append('fileToUpload', file, file.name);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        var res = JSON.parse(xhr.responseText);
+        res.forEach(function(item){
+          document.getElementById('notice_content').innerHTML += item.project + ': ' + item.url + '<br>';
+        });
+        authorLibs.utils.loadFromPhp('refreshfiles', true);
+      }
+    }
+    xhr.send(formData);
+  },
+
+  prePath: function(item){
+    var url = item.url;
+    if (!item.path) return url;
+    preUrl  = authorLibs.authorData.paths.filter(function(selected){return selected.id === item.path;})[0];
+    if (!preUrl) return url;
+    return preUrl.url + '/' + item.url;
+  },
+
+  prepJson: function(json){
+    var needNames = ['anims','constraints','groups','images','objects','particles','paths','shapes','sounds','tests','vars'];
+    needNames.forEach(function(type){
+      if (json[type] === undefined) return;
+        json[type].forEach(function(item){
+          if (item.name === undefined) item.name = item.id;
+        });
+    });
+
+    if (json.layers === undefined){
+      json.layers = [{name:'layer0', list:[]}];
+      var needOrder = ['objects','particles'];
+      needOrder.forEach(function(type){
+        if (json[type] === undefined) return;
+        json[type].forEach(function(item){
+          json.layers[0].list.push({id:item.id, type:type, name:item.name });
+        });
+      });
+    }
+
+    console.log(json.layers)
+
+
+    return json;
+  },
+
+  projectsList: function(listId){
+    authorLibs.utils.getProjects(authorLibs.utils.fillInSaveProject);
+  },
+
+  refreshfiles: function(files){
+    authorLibs.lists.fileManager = [];
+    var fileList = [];
+    files.forEach(function(file){
+      var found = fileList.filter(function(test){return test.project === file.project;});
+      var filename = file.url.replace(/^.*[\\\/]/, '');
+      if (found.length > 0) {
+        var foundIdx = fileList.indexOf(found[0]);
+        if (fileList[foundIdx][file.type] === undefined) fileList[foundIdx][file.type] = [];
+        fileList[foundIdx][file.type].push({id:filename, url:file.url});
+      } else {
+        var newList = {project:file.project};
+        if (newList[file.type] === undefined) newList[file.type] = [];
+        newList[file.type].push({id:filename, url:file.url});
+        fileList.push(newList);
+      }
+    });
+    fileList.sort(function(a,b) {return (a.project > b.project) ? 1 : ((b.project > a.project) ? -1 : 0);} );
+    document.getElementById('filelist').style.display = 'block';
+    var filebox = document.getElementById('filelist');
+    filebox.innerHTML = '';
+    fileList.forEach(function(item){
+      authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
+      var subs = ['json','image','sound','html'];
+      subs.forEach(function(sub){
+        if (item[sub] === undefined) return;
+        if (item[sub].length === 0) return;
+        authorLibs.windows.makeDiv({parent:filebox, html:sub, classes:'load_filefolder'});
+
+        item[sub].forEach(function(file){
+          authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file',
+            mousedown:function(){
+              authorLibs.utils.updateList(this, authorLibs.lists.fileManager, {id:file.id, project:item.project, type:sub, url:file.url})
+            },
+            mouseenter:function(){
+              if (!authorLibs.gui.parentMouseDown) return;
+              authorLibs.utils.updateList(this, authorLibs.lists.fileManager, {id:file.id, project:item.project, type:sub, url:file.url})
+            }
+          });
+        });
+      });
+    });
+  },
+
+  requestFile: function(fileNamePath, returnFunction){
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          returnFunction(xhr.responseText);
+        }
+        if (xhr.status == 404) console.error("File Load Error: " + xhr.statusText + " " + xhr.readyState);
+      }
+      xhr.open('GET', fileNamePath, true);
+    xhr.send(null);
   },
 
   requestJSON: function(fileNamePath, returnFunction){
@@ -666,23 +655,84 @@ authorLibs.utils = {
     xhr.send(null);
   },
 
-  requestFile: function(fileNamePath, returnFunction){
-      var xhr = new XMLHttpRequest();
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4) {
-          returnFunction(xhr.responseText);
-        }
-        if (xhr.status == 404) console.error("File Load Error: " + xhr.statusText + " " + xhr.readyState);
+  saveJson:function(){
+    var projectElement = document.getElementById('saveproject');
+    var fileElement    = document.getElementById('savefile');
+    var alertBox       = document.getElementById('alert_box');
+    var aData          = document.getElementById('alertdata');
+    authorLibs.saved        = {};
+    authorLibs.saved.count  = 1;
+    authorLibs.saved.report = '';
+
+    if (projectElement.value === '' || fileElement.value === ''){
+      alertBox.style.display = 'block';
+      aData.innerHTML = 'Please enter a project and file name.'
+      return;
+    }
+    document.getElementById('savebox').style.display = 'none';
+
+    var projectName  = projectElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-');
+    var fileName     = fileElement.value.toLowerCase().replace(/[^0-9a-z_-]/gi, '-') + '.json';
+    var data         = JSON.stringify(authorLibs.authorData);
+    var url          = authorLibs.endpoints.projects + '/' + projectName + '/files';
+    var file         = new File([data], fileName);
+    var formData = new FormData();
+    formData.append('fileToUpload', file, fileName);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.onload = function() {
+    if (xhr.status === 200) {
+        authorLibs.saved.report += xhr.responseText;
+        authorLibs.saved.count --;
+        if (authorLibs.saved.count === 0) authorLibs.utils.saveReport();
       }
-      xhr.open('GET', fileNamePath, true);
-    xhr.send(null);
+    }
+    xhr.send(formData);
   },
 
-  getVisibleArea: function(){
-    return {
-      x:window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth||0,
-      y:window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight||0
-    }
-  }
+  saveReport:function(){
+    document.getElementById('notice_box').style.display = 'block';
+    document.getElementById('notice_title').innerHTML = "Save Status"
+    var report = JSON.parse(authorLibs.saved.report);
+    var reportOut = '';
+    report.forEach(function(subport){
+      for (var key in subport) {
+        var obj = subport[key];
+          reportOut += key + ": " + obj + '<br>';
+      }
+      reportOut += '<br>';
+    });
+    document.getElementById('notice_content').innerHTML = reportOut;
+  },
 
+  selectProject: function(){
+    document.getElementById('uploadbox').style.display = 'block';
+  },
+
+  setSubProp: function(obj, desc, val){
+    var arr = desc.split(".");
+    while(arr.length > 1){
+      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
+      obj = obj[arr.shift()];
+    }
+    obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
+  },
+
+  updateList:function(element, list, item){
+    var finder = list.findIndex(function(check){return check.id === item.id && check.project === item.project && check.url === item.url;});
+    if (finder === -1) {
+      list.push(item);
+      element.style.backgroundColor = 'rgb(97, 255, 55)';
+    } else {
+      list.splice(finder,1);
+      element.style.backgroundColor = 'white';
+    }
+  },
+
+  uuid: function(){
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+   )
+ }
 }

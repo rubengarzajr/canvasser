@@ -66,7 +66,7 @@
   "anim":{
     "animdata":{
       "widgets":[
-        {"field":"id",        "type":"text", "css":"w100"},
+        {"field":"name",      "type":"text", "css":"w100"},
         {"field":"autostart", "type":"bool"},
         {"field":"loop",      "type":"bool"},
         {"field":"pause",     "type":"bool"},
@@ -159,7 +159,7 @@
   "image":{
     "imagedata":{
       "widgets":[
-        {"field":"id",         "type":"text",   "css":"w100"},
+        {"field":"name",         "type":"text",   "css":"w100"},
         {"field":"path",       "type":"select", "id":"pathdata"},
         {"field":"url",        "type":"text"},
         {"field":"atlas",      "type":"bool"},
@@ -171,7 +171,7 @@
   "object":{
     "image":{
       "widgets":[
-        {"field":"id",        "type":"text"},
+        {"field":"name",      "type":"text"},
         {"field":"type",      "type":"select",  "id":"objecttype"},
         {"field":"image",     "type":"imagedata"},
         {"field":"order",     "type":"number"},
@@ -194,7 +194,7 @@
     },
     "shape":{
       "widgets":[
-        {"field":"id",        "type":"text"},
+        {"field":"name",        "type":"text"},
         {"field":"type",      "type":"select",  "id":"objecttype"},
         {"field":"shape",     "type":"shapelist"},
         {"field":"order",     "type":"number"},
@@ -211,7 +211,7 @@
   },
   "particle":{
     "widgets":[
-      {"field":"id",                         "type":"text"},
+      {"field":"name",                       "type":"text"},
       {"field":"order",                      "type":"number"},
       {"field":"parent.id",                  "type":"objlist"},
       {"field":"keepalive",                  "type":"bool", "display":"Keep Alive"},
@@ -276,7 +276,7 @@
   },
   "shape":{
     "widgets":[
-      {"field":"id",           "type":"text"}
+      {"field":"name",           "type":"text"}
     ]
   },
   "sound":{
@@ -287,7 +287,7 @@
     ]
   },
   "tests":[
-    {"field":"id",        "type":"text"},
+    {"field":"name",      "type":"text"},
     {"field":"active",    "type":"bool"},
     {"field":"trueoff",   "type":"bool",    "display":"Disable if True"},
     {"field":"falseoff",  "type":"bool",    "display":"Disable if False"},

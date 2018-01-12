@@ -5,35 +5,12 @@ authorLibs.buildProp = {
     if (Array.isArray(authorLibs.authorData[type])) thisProp = authorLibs.authorData[type].filter(function(selected){return selected.id === id;})[0];
     else thisProp = id;
     if (thisProp === undefined) return;
+    if (thisProp.name === undefined) thisProp.name = thisProp.id;
     var titleText = '<div class="proptitle">' + type.charAt(0).toUpperCase() + type.slice(1, -1);
-    document.getElementById("propertiestitle").innerHTML = titleText + ' : ' + id + '</div>';
+    document.getElementById("propertiestitle").innerHTML = titleText + ' : ' + thisProp.name + '</div>';
     var propUI = document.getElementById("properties");
     propUI.innerHTML = authorLibs.buildProp[type](thisProp);
     authorLibs.menus.updateSelectionWindow(type,id);
-  },
-
-  build: function(type, id){
-    var output   = '<div class="propbody">';
-    var pathList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
-    var defaultId = authorLibs.utils.getSubProp(group, 'path');
-    authorLibs.rules.groups.widgets.forEach(function(widget, idx, source){
-      if (widget.type === "text"){
-        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += '<input class="auth_text w200" type="text" value="'+ group[widget.field] + '" ';
-        output += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [group.id, 'group', widget.field], true);
-        output += '><br>';
-      }
-      if (widget.type === "select"){
-        output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
-        output += authorLibs.utils.buildSelect(
-          {fn:'authorLibs.author.updateItem', object:group.id, type:'group', list:pathList, defaultId:defaultId, path:'path'}
-        ) + '<br>';
-      }
-      if (widget.type === "number")       output += authorLibs.utils.handleNumber(group, 'group', widget, widget.field);
-      if (widget.type === "bool")         output += authorLibs.utils.handleBoolean(group, 'group', widget, widget.field);
-    });
-    authorLibs.menus.update('groups');
-    return output + '</div>';
   },
 
   anims: function(animation){
@@ -50,7 +27,7 @@ authorLibs.buildProp = {
       if (widget.type === "bool")     output += authorLibs.utils.handleBoolean(animation, 'anim', widget, widget.field);
       if (widget.type === "timelist"){
         var timeList = [];
-        authorLibs.rules.anims.forEach(function(template){timeList.push(template.type)});
+        authorLibs.rules.anims.forEach(function(template){timeList.push({id:template.type, name:template.type})});
         output += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
         if (animation[widget.field] !== undefined){
           animation[widget.field].forEach(function(actobject, idx){
@@ -107,7 +84,7 @@ authorLibs.buildProp = {
       if (widget.type === "bool")     output += authorLibs.utils.handleBoolean(constraint, 'constraint', widget, widget.field);
       if (widget.type === "driverlist"){
         var timeList = [];
-        authorLibs.rules.constraint.drivers.forEach(function(template){timeList.push(template.type)});
+        authorLibs.rules.constraint.drivers.forEach(function(template){timeList.push({id:template.type, name:template.type})});
         output += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
         if (constraint[widget.field] !== undefined){
           constraint[widget.field].forEach(function(actobject, idx){
@@ -149,10 +126,10 @@ authorLibs.buildProp = {
 
   groups: function(group){
     var prop = '<div class="propbody">' ;
-    prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
+    prop += '<div class="entrylabel c_entrytitle_text w50">name</div>';
     prop += '<input class="auth_text w200" type="text" ';
-    prop += 'value="'+ group.id + '" ';
-    prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [group.id, 'group', 'id'], true);
+    prop += 'value="'+ group.name + '" ';
+    prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [group.id, 'group', 'name'], true);
     authorLibs.menus.update('groups');
     return prop + '</div>';
   },
@@ -160,6 +137,10 @@ authorLibs.buildProp = {
   images: function(image){
     var output = '<div class="propbody">';
     var pathList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
+    var list  = [];
+    pathList.forEach(function(item){
+      list.push({id:item, name:item});
+    });
     var defaultId = authorLibs.utils.getSubProp(image, 'path');
     authorLibs.rules.image.imagedata.widgets.forEach(function(widget, idx, source){
       if (widget.type === "text"){
@@ -171,7 +152,7 @@ authorLibs.buildProp = {
       if (widget.type === "select"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += authorLibs.utils.buildSelect(
-          {fn:'authorLibs.author.updateItem', object:image.id, type:'image', list:pathList, defaultId:defaultId, path:'path'}
+          {fn:'authorLibs.author.updateItem', object:image.id, type:'image', list:list, defaultId:defaultId, path:'path'}
         ) + '<br>';
       }
       if (widget.type === "number")       output += authorLibs.utils.handleNumber(image, 'image', widget, widget.field);
@@ -197,7 +178,6 @@ authorLibs.buildProp = {
       if (widget.type === "scale")      output += authorLibs.utils.handleNumber(object, 'object', widget, widget.field+'.current');
       if (widget.type === "select")     output += authorLibs.utils.handleSelect(object, 'object', widget, widget.field);
       if (widget.type === "text")       output += authorLibs.utils.handleText(object, 'object', widget, widget.field, 'w100');
-
     });
     return output + '</div>';
   },
@@ -250,6 +230,11 @@ authorLibs.buildProp = {
 
 
   shapes: function(shape){
+    var pathList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
+    var list  = [];
+    pathList.forEach(function(item){
+      list.push({id:item, name:item});
+    });
     var prop = '<div class="propbody">' ;
     authorLibs.rules.shape.widgets.forEach(function(widget, idx, source){
       if (widget.type === "text"){
@@ -261,7 +246,7 @@ authorLibs.buildProp = {
       if (widget.type === "select"){
         prop += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         prop += authorLibs.utils.buildSelect(
-          {fn:'authorLibs.author.updateItem', object:shape.id, type:'shape', list:pathList, defaultId:defaultId, path:'path'}
+          {fn:'authorLibs.author.updateItem', object:shape.id, type:'shape', list:list, defaultId:defaultId, path:'path'}
         ) + '<br>';
       }
 
@@ -316,6 +301,10 @@ authorLibs.buildProp = {
   sounds: function(sound){
     var output = '<div class="propbody">';
     var pathList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
+    var list  = [];
+    pathList.forEach(function(item){
+      list.push({id:item, name:item});
+    });
     var defaultId = authorLibs.utils.getSubProp(sound, 'path');
     authorLibs.rules.sound.widgets.forEach(function(widget, idx, source){
       if (widget.type === "text"){
@@ -327,7 +316,7 @@ authorLibs.buildProp = {
       if (widget.type === "select"){
         output += '<div class="entrylabel c_entrytitle_text w50">'+widget.field+'</div>';
         output += authorLibs.utils.buildSelect(
-          {fn:'authorLibs.author.updateItem', object:sound.id, type:'sound', list:pathList, defailtId:defaultId, path:'path'}
+          {fn:'authorLibs.author.updateItem', object:sound.id, type:'sound', list:list, defailtId:defaultId, path:'path'}
         ) + '<br>';
       }
       if (widget.type === "number")       output += authorLibs.utils.handleNumber(sound, 'sound', widget, widget.field);
@@ -352,8 +341,8 @@ authorLibs.buildProp = {
     var prop = '<div class="propbody">' ;
     prop += '<div class="entrylabel c_entrytitle_text w50">id</div>';
     prop += '<input class="auth_text w200" type="text" ';
-    prop += 'value="'+ thisVar.id + '" ';
-    prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [thisVar.id, 'var', 'id'], true);
+    prop += 'value="'+ thisVar.name + '" ';
+    prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [thisVar.id, 'var', 'name'], true);
     prop += '><br>';
     prop += '<div class="entrylabel c_entrytitle_text w50">value</div>';
     prop += '<input class="auth_text w200" type="number" ';

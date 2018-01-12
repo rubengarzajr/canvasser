@@ -571,6 +571,16 @@ a{
   border-bottom: 1px rgb(212, 218, 226) solid;
 }
 
+.layers_t{
+  vertical-align: top;
+  display: inline-block;
+  margin-top: 7px;
+}
+.layer_icons{
+  vertical-align:top;
+  margin-right: 5px;
+}
+
 .auth_rate{
   width:50px;
   background:rgb(191, 212, 211);

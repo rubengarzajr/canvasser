@@ -75,8 +75,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.data.images.forEach(function(image){
       var imageObj = new Image();
       imageObj.crossOrigin = "Anonymous";
-
-
       imageObj.onload = function(){
         act.imageList[image.id] = {};
         act.imageList[image.id].imageData     = this;
@@ -717,6 +715,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (!obj.testp) return;
           var pixelData_img = [0,0,0,0];
           if (obj.scale.current>.001){
+            if (obj.origin === 'center'){
+              obj.originxy.current.x = -Math.floor(act.imageList[obj.image].imageData.naturalWidth/2);
+              obj.originxy.current.y = -Math.floor(act.imageList[obj.image].imageData.naturalHeight/2)
+            }
+
             pixelData_img = act.imageList[obj.image].context.getImageData(
               Math.floor((act.position.x-pos.x-obj.originxy.current.x)/obj.scale.current),
               Math.floor((act.position.y-pos.y-obj.originxy.current.y)/obj.scale.current), 1, 1
@@ -954,11 +957,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (action.check === 'position'){
             var item  = act.data.objects.filter(function(obj){return obj.id === action.itemtocheck})[0];
             var testp = act.data.objects.filter(function(obj){return obj.id === action.position})[0];
-            var pos = {"x":item.position.current.x, "y":item.position.current.y};
+            var pos = {x:item.position.current.x, y:item.position.current.y};
+
             if (item.origin === "center") {
-              //TODO: Not working
-              var oPos = item.position.current
-              pos={"x":Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current), "y":Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
+              //TODO: Need scale and numberic offset even if not centered
+              var oPos = {x:item.position.current.x, y:item.position.current.y};
+              pos={x:Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current), y:Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
             }
 
             var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;

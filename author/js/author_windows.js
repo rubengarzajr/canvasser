@@ -65,6 +65,7 @@ authorLibs.windows = {
       {id:"group",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
       {id:"image",      position:{x:675, y: 52}, menu:{add:true, delete:true}, min:true},
       {id:"json",       position:{x:  5, y: 52}, menu:{load:true, view:true, execute:true, format:true},min:false, hide:true},
+      {id:"layer",      position:{x: 23, y: 78}, menu:{add:true, delete:true}, min:true, hide:false},
       {id:"object",     position:{x:512, y: 52}, menu:{add:true, delete:true, copy:true, reorder:true}, min:true},
       {id:"particle",   position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false,  hide:true},
       {id:"path",       position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
@@ -148,7 +149,6 @@ authorLibs.windows = {
       if (win.menu.renamefile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Rename',  click:function(){authorLibs.utils.fileRename(win.id +'s')}});
       if (win.menu.copyfile)     authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Copy',    click:function(){authorLibs.utils.fileCopy(win.id +'s')}});
       if (win.menu.deletefile)   authorLibs.windows.makeDiv({parent:menu, classes:'divmenu', html:'Delete',  click:function(){authorLibs.utils.fileDeleteWin('fileManager')}});
-
 
       if (win.id === 'canvas'){
         authorLibs.windows.makeDiv({parent:title, id:'outputtitle', classes:'wintitle right', html:'X, Y'});

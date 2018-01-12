@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2017-01-11 Added UUIDs and names and old files are updated to use names.
+- 2017-01-09 Fix for dragging centered objects.
 - 2017-12-20 Temp fix for top of long objects list going off top of screen.
 - 2017-12-20 Fixed fromcurrent when turning an object.
 - 2017-12-19 Display image dimensions in image list.
