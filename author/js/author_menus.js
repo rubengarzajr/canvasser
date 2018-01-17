@@ -275,9 +275,11 @@ authorLibs.menus = {
           if (type === 'objects') type = authorLibs.authorData.objects.filter(function(object){ return object.id === layer.id})[0].type;
           menu += '<tr class="clicktr" id="'+type+'_'+layerIdx+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ layerIdx + '\')">';
           menu +='<td width="100%">';
+          menu +='<div ondrop="authorLibs.utils.dropMenuItem(event)" ondragover="authorLibs.utils.dropMenuItemAllow(event)">'
           menu +='<img style="vertical-align:top" src="./image/icon_layers_' + (layerIdx === authorLibs.authorData.layers[idx].list.length-1 ? 'l' :  't' ) + '.png">';
           menu +='<img class="layer_icons" src="./image/icon_layer_' + type + '.png">';
-          menu +='<div class="layers_t">' + layer.name + '</div>';
+          menu +='<div class="layers_t" draggable="true" ondragstart="authorLibs.utils.dragMenuItem(event)" >' + layer.name + '</div>';
+          menu += '</div>';
           menu += '</td>';
           menu += '</tr>';
         });

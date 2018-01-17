@@ -79,6 +79,22 @@ authorLibs.utils = {
     return newObj
   },
 
+  dragMenuItem: function(event){
+    console.log(event);
+    event.dataTransfer.setData("text", event.target.id);
+  },
+
+  dropMenuItem: function(event){
+    event.preventDefault();
+    var data = event.dataTransfer.getData("text");
+    console.log(document.getElementById(data));
+    //event.target.appendChild(document.getElementById(data));
+  },
+
+  dropMenuItemAllow: function(event){
+    event.preventDefault();
+  },
+
   fileDelete: function(item){
     var url = authorLibs.endpoints.projects + '/' + item.project + '/files/' + item.id;
     var xhr = new XMLHttpRequest();
