@@ -5,12 +5,13 @@ var authorLibs = {
   dom:{},
   contentPath: '../../canvasser_content',
   gui: {
-    mousedown: false,
+    currentLayer:    0,
+    mousedown:       false,
     parentMouseDown: false,
-    moveElement: null,
-    mousePos: {x:0,y:0},
-    offset: {x:0,y:0},
-    zidx: 25
+    moveElement:     null,
+    mousePos:        {x:0,y:0},
+    offset:          {x:0,y:0},
+    zidx:            25
   },
   lists:{
     fileManager:[]
@@ -46,18 +47,16 @@ function learning(action, page){
     authorLibs.utils.requestFile(authorLibs.externalsPath + "learning/html/"+window.learningHistory.pages[ window.learningHistory.idx]+".html", popLearn);
   }
 }
+
 function popLearn(contents){
   var newContent = contents.split('"./').join('"' + authorLibs.externalsPath);
   document.getElementById("learning").innerHTML = newContent;
 }
 
-
-
 function pickWin(win, toggle, size, bank){
   document.getElementById(bank).style.zIndex = authorLibs.author.zPlus();
   authorLibs.author.toggleminmax(win, toggle, size);
 }
-
 
 function initAuthorCanvasser(vari, datafile, dataForm){
   authorLibs.windows.build();
@@ -315,6 +314,7 @@ function authorcanvasser(dataFile, dataForm){
     authorLibs.utils.setSubProp(objGet, paramPath, newVal);
     authorLibs.buildProp.getProps(type+'s', objGet.id);
     authorLibs.menus.update(type);
+    authorLibs.menus.update('layers');
     restartCanvasser("sample", authorLibs.authorData, "string");
   };
 

@@ -80,15 +80,20 @@ authorLibs.utils = {
   },
 
   dragMenuItem: function(event){
-    console.log(event);
-    event.dataTransfer.setData("text", event.target.id);
+    event.dataTransfer.setData("mover", event.target.dataset.type + '_'+ event.target.dataset.layer +'_'+event.target.dataset.idx);
   },
 
   dropMenuItem: function(event){
     event.preventDefault();
-    var data = event.dataTransfer.getData("text");
-    console.log(document.getElementById(data));
-    //event.target.appendChild(document.getElementById(data));
+    var mover = event.dataTransfer.getData("mover").split('_');
+    var moveTo  = [event.target.dataset.type, event.target.dataset.layer, event.target.dataset.idx];
+
+    if (mover[0] === 'layer' && moveTo[0] === 'layer'){
+      var moveData = authorLibs.authorData.layers[mover[1]].list.splice(mover[2], 1)[0];
+      authorLibs.authorData.layers[moveTo[1]].list.splice(moveTo[2], 0, moveData);
+      authorLibs.menus.update('layers');
+    }
+
   },
 
   dropMenuItemAllow: function(event){
@@ -467,6 +472,15 @@ authorLibs.utils = {
     return str;
   },
 
+  layerToggle: function(id, type, prop){
+    var item = authorLibs.authorData.layers[id];
+    if (prop !== 'expanded'){
+      item = authorLibs.authorData[type].filter(function(object){ return object.id === id})[0];
+    }
+    if (item[prop] !== undefined) item[prop] = !item[prop];
+    authorLibs.menus.update('layers');
+  },
+
   listIdsNames: function(filter){
     var idList    = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "id");
     var nameList  = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "name");
@@ -582,7 +596,7 @@ authorLibs.utils = {
     });
 
     if (json.layers === undefined){
-      json.layers = [{name:'layer0', list:[]}];
+      json.layers = [{name:'layer0', list:[], show:true}];
       var needOrder = ['objects','particles'];
       needOrder.forEach(function(type){
         if (json[type] === undefined) return;

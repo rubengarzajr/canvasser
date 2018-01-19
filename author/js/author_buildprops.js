@@ -2,8 +2,11 @@ authorLibs.buildProp = {
 
   getProps: function(type, id){
     var thisProp = undefined;
-    if (Array.isArray(authorLibs.authorData[type])) thisProp = authorLibs.authorData[type].filter(function(selected){return selected.id === id;})[0];
-    else thisProp = id;
+    if (type === 'layers') thisProp = id;
+    else{
+      if (Array.isArray(authorLibs.authorData[type])) thisProp = authorLibs.authorData[type].filter(function(selected){return selected.id === id;})[0];
+      else thisProp = id;
+    }
     if (thisProp === undefined) return;
     if (thisProp.name === undefined) thisProp.name = thisProp.id;
     var titleText = '<div class="proptitle">' + type.charAt(0).toUpperCase() + type.slice(1, -1);
@@ -160,6 +163,20 @@ authorLibs.buildProp = {
     });
     authorLibs.menus.update('images');
     return output + '</div>';
+  },
+
+  layers: function(idx){
+    authorLibs.gui.currentLayer = idx;
+    var layer = authorLibs.authorData.layers[idx];
+    console.log(layer)
+    var prop = '<div class="propbody">' ;
+    prop += '<div class="entrylabel c_entrytitle_text w50">name</div>';
+    prop += '<input class="auth_text w200" type="text" ';
+    prop += 'value="'+ layer.name + '" ';
+    prop += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [layer.id, 'layer', 'name'], true);
+    prop += authorLibs.utils.handleBoolean(layer, 'layer', 'show', 'show');
+    authorLibs.menus.update('layers');
+    return prop + '</div>';
   },
 
   objects: function(object){

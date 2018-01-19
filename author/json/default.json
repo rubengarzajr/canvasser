@@ -8,7 +8,9 @@
 "layers":[
   {
     "name":"Layer 0",
-    "list":[]
+    "list":[],
+    "show":true,
+    "expanded":true
   }
 ],
 "sounds":[
