@@ -62,7 +62,7 @@ authorLibs.menus = {
     if (type === 'objects' || type === 'particles') authorLibs.menus.updateMenu('layers');
     initCanvasser("sample", JSON.stringify(authorLibs.authorData), "string");
     authorLibs.menus.updateSelectionWindow(type, itemName);
-    authorLibs.author.view();
+    authorLibs.utils.view();
   },
 
   addToProject: function(winId){
@@ -185,6 +185,10 @@ authorLibs.menus = {
     });
   },
 
+  loadSample: function(url){
+    authorLibs.utils.requestJSON(authorLibs.externalsPath + 'sample/json/' + url + '?' + new Date().getTime(), function(data){restartCanvasser("sample", data, 'string');});
+  },
+
   menuToggle:function(toggle){
   var toggler = document.getElementById(toggle);
   if (toggler.style.display === "none") {
@@ -250,7 +254,7 @@ authorLibs.menus = {
     if (authorLibs.authorData[type] === undefined) authorLibs.authorData[type] = [];
     if (type === 'samples'){
       authorLibs.rules.samples.forEach(function(sampy){
-        menu += '<tr class="clicktr" id="'+type+'_'+sampy.id+'" onclick="authorLibs.author.loadSample(\''+ sampy.url + '\')">';
+        menu += '<tr class="clicktr" id="'+type+'_'+sampy.id+'" onclick="authorLibs.menus.loadSample(\''+ sampy.url + '\')">';
         menu +='<td class="shapeid"><div>' + sampy.id + '</div></td>';
         menu += '</tr>';
       });
@@ -268,10 +272,10 @@ authorLibs.menus = {
 
       if (type === 'layers'){
         menu += '<tr class="clicktr" id="'+type+'_'+idx+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ idx + '\')">';
-        menu +='<td width="100%" class="layers_title" onclick="authorLibs.author.getProps(\'layers\',\''+idx+'\')" ondrop="authorLibs.utils.dropMenuItem(event)" ondragover="authorLibs.utils.dropMenuItemAllow(event)"  data-type="layer" data-layer="'+idx+'" data-idx="-1">';
+        menu +='<td width="100%" class="layers_title" onclick="authorLibs.author.getProps(\'layers\',\''+idx+'\')" ondrop="authorLibs.utils.dropMenuItem(event)" draggable="true" ondragover="authorLibs.utils.dropMenuItemAllow(event)"  ondragstart="authorLibs.utils.dragMenuItem(event)" data-type="layer" data-layer="'+idx+'" data-idx="-1">';
         menu +='<img class="layerexp" onclick="authorLibs.utils.layerToggle(\''+idx+'\',\'layer\',\'expanded\')" data-type="layer" data-layer="'+idx+'" data-idx="-1" src="./image/icon_layers_' + (  authorLibs.authorData.layers[idx].expanded ? 'e' :  'c' ) + '.png">';
         menu +='<div class="layer_title_text" onclick="authorLibs.author.getProps(\'layers\',\''+idx+'\')" ondrop="authorLibs.utils.dropMenuItem(event)" ondragover="authorLibs.utils.dropMenuItemAllow(event)"  data-type="layer" data-layer="'+idx+'" data-idx="-1">' + menuItem.name + '</div>';
-        menu +='<img class="layershow" onclick="authorLibs.utils.layerToggle(\''+idx+'\',\'layer\',\'show\')" data-type="layer" data-layer="'+idx+'" data-idx="-1" src="./image/icon_layers_' + (  authorLibs.authorData.layers[idx].show ? 'show' :  'hide' ) + '.png">';
+        menu +='<img class="layershow" onclick="authorLibs.utils.layerUpdate(this,\''+idx+'\',\'show\',\'btoggle\')" data-type="layer" data-layer="'+idx+'" data-idx="-1" src="./image/icon_layers_' + (  authorLibs.authorData.layers[idx].show ? 'show' :  'hide' ) + '.png">';
         menu += '</td>';
         menu += '</tr>';
         if (authorLibs.authorData.layers[idx].expanded){

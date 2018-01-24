@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2017-01-24 Added Layers to UI.
+- 2017-01-24 Reorganized some functions.
 - 2017-01-11 Added UUIDs and names and old files are updated to use names.
 - 2017-01-09 Fix for dragging centered objects.
 - 2017-12-20 Temp fix for top of long objects list going off top of screen.

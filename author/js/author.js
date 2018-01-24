@@ -29,7 +29,6 @@ document.onreadystatechange = function(){
      }
 }
 
-
 function learning(action, page){
   if (window.learningHistory === undefined) window.learningHistory = {idx:-1, pages:[]};
 
@@ -54,8 +53,8 @@ function popLearn(contents){
 }
 
 function pickWin(win, toggle, size, bank){
-  document.getElementById(bank).style.zIndex = authorLibs.author.zPlus();
-  authorLibs.author.toggleminmax(win, toggle, size);
+  document.getElementById(bank).style.zIndex = authorLibs.utils.zPlus();
+  authorLibs.windows.toggleminmax(win, toggle, size);
 }
 
 function initAuthorCanvasser(vari, datafile, dataForm){
@@ -105,15 +104,12 @@ function restartCanvasser(name, data, type){
 
 function authorcanvasser(dataFile, dataForm){
   this.getProps = authorLibs.buildProp.getProps;
-  this.zPlus    = function(){ authorLibs.gui.zidx ++; return  authorLibs.gui.zidx;}
 
   authorLibs.authorData = dataFile;
-
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);
   restartCanvasser("sample", authorLibs.authorData, "string");
   authorLibs.menus.update();
-
   loop();
 
   function loop(){
@@ -154,184 +150,10 @@ function authorcanvasser(dataFile, dataForm){
     authorLibs.gui.mousedown = false;
     authorLibs.gui.moveElement = null;
   }
-  this.loadSample = function(url){
-    authorLibs.utils.requestJSON(authorLibs.externalsPath + 'sample/json/' + url + '?' + new Date().getTime(), function(data){restartCanvasser("sample", data, 'string');});
-  }
-  this.loadDefault = function(){
-    if (!authorLibs.defaultJSONobj)  authorLibs.utils.requestJSON(authorLibs.defaultJSON, function(data){restartCanvasser("sample", data, 'string');});
-  }
-  this.reload = function(){
-    restartCanvasser("sample", authorLibs.authorData, "string");
-    authorLibs.author.view()
-  }
-
-  this.view = function(){
-    document.getElementById("paste").value = JSON.stringify(authorLibs.authorData);
-  }
-  this.paste = function(){
-    var pasteData = document.getElementById("paste").value;
-    authorLibs.menus.update();
-    restartCanvasser("sample", JSON.parse(pasteData), "string");
-  }
-  this.format = function(){
-    var pasteData = document.getElementById("paste").value;
-    document.getElementById("paste").value = JSON.stringify(authorLibs.authorData, null, 4);
-  }
-  this.toggleminmax= function(element, minmax, maxsize){
-    var d = document.getElementById(element);
-    var b = document.getElementById(minmax);
-    if (d.style.display === "block"){
-      d.style.display="none";
-      b.src=authorLibs.externalsPath + "image/icon_max_g.png";
-    }
-    else {
-      d.style.display = "block";
-      b.src=authorLibs.externalsPath +"image/icon_min_g.png";
-    }
-  }
-
-  this.adddrawcode = function(id){
-    var shape = authorLibs.authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
-    shape.drawcode.push({type:'fill'});
-    authorLibs.buildProp.getProps('shapes', id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.moveprop = function(type,id,path,moveto){
-    var obj = authorLibs.authorData[type].filter(function(test){return test.id === id})[0];
-    var arr = path.split(".");
-    while(arr.length > 1){
-      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
-      obj = obj[arr.shift()];
-    }
-    obj.splice(moveto, 0, obj.splice(arr[0], 1)[0]);
-    authorLibs.buildProp.getProps(type, id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.deleteprop = function(type,id,path){
-    var obj = authorLibs.authorData[type].filter(function(test){return test.id === id})[0];
-    var arr = path.split(".");
-    while(arr.length > 1){
-      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
-      obj = obj[arr.shift()];
-    }
-    obj.splice(arr[0],1);
-    authorLibs.buildProp.getProps(type, id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
 
   function outText(label, value, cmd){
     '<div class="entrylabel c_entrytitle_text w100">' + label + '</div><input class="auth_text" type="text" value="'+ value +'"><br>';
     return output;
-  }
-
-  this.createPosXY = function(objectId, paramPath){
-    var objGet = authorLibs.authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
-    this.createItem("0", objectId, 'position.'+paramPath+'.x');
-    this.createItem("0", objectId, 'position.'+paramPath+'.y');
-    authorLibs.buildProp.getProps("objects",objGet.id);
-  };
-
-  this.createScale = function(objectId, paramPath){
-    var objGet = authorLibs.authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
-    this.createItem("1", objectId, 'scale.'+paramPath);
-    authorLibs.buildProp.getProps("objects",objGet.id);
-  };
-
-  this.createItem = function(newVal, objectId, paramPath){
-    var objGet = authorLibs.authorData.objects.filter(function(finder){return (finder.id === objectId);})[0];
-    authorLibs.utils.setSubProp(objGet, paramPath, newVal);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  };
-
-
-
-  this.updateSelect = function(domElement, objectId, positionId, axisId){
-    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);})[0];
-    var newRule = authorLibs.rules.actions.filter(function(ruleName){
-      return ruleName.elementType === domElement.value}
-    )[0];
-    if (listIndex === "none"){
-      objGet[prop] = domElement.value;
-    } else {
-      objGet[prop][listIndex] = {type:domElement.value};
-      newRule.widgets.forEach(function(rule){
-        var keys = Object.keys(rule);
-        keys.forEach(function(key){
-          objGet[prop][listIndex][key] = rule[key];
-        });
-      });
-    }
-    authorLibs.menus.update(type);
-    authorLibs.buildProp.getProps(type, id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.updateActionList = function(domElement, objectId, type, paramPath){
-    var item = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
-    var prop = authorLibs.utils.getSubProp(item, paramPath);
-    this.updateItem(domElement, objectId, type.slice(0, -1), paramPath);
-    var newRule = authorLibs.rules.actions.filter(function(ruleName){
-      return ruleName.elementType === domElement.value}
-    )[0];
-
-    authorLibs.menus.update('objects');
-    authorLibs.buildProp.getProps('objects', objectId);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.updateTimeline = function(domElement, objectId, type, paramPath){
-    var objGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === objectId);})[0];
-    var prop = authorLibs.utils.getSubProp(objGet, paramPath);
-    this.updateItem(domElement, objectId, 'anim', paramPath);
-    var newRule = authorLibs.rules.actions.filter(function(ruleName){
-      return ruleName.elementType === domElement.value}
-    )[0];
-
-    authorLibs.menus.update('objects');
-    authorLibs.buildProp.getProps('objects', objectId);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.updateSetting = function(domElement, setting){
-    authorLibs.authorData.settings[setting] = domElement.value;
-    authorLibs.menus.update('settings');
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.updateSettingBool = function(domElement, setting){
-    authorLibs.authorData.settings[setting] = domElement.checked;
-    authorLibs.menus.update('settings');
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.updateItem = function(domElement, objectId, type, paramPath){
-    var newVal = domElement.value.toString();
-    if (domElement.type === 'checkbox') newVal = domElement.checked;
-    if (newVal === '---NONE---')        newVal = undefined;
-    var objGet = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
-    authorLibs.utils.setSubProp(objGet, paramPath, newVal);
-    authorLibs.buildProp.getProps(type+'s', objGet.id);
-    authorLibs.menus.update(type);
-    authorLibs.menus.update('layers');
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  };
-
-  this.togglegroup = function(domElement, objectId, type, paramPath, groupName){
-    var element = domElement.checked;
-    var objGet  = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
-    if (objGet.groups === undefined) objGet.groups = [];
-
-    if (element){
-      if (findInGroup(objGet, groupName) === -1) objGet.groups.push({id:groupName});
-    } else {
-      var splicer = findInGroup(objGet, groupName);
-      if (splicer > -1) objGet.groups.splice(splicer, 1);
-    }
-
-    authorLibs.menus.update(type);
-    restartCanvasser("sample", authorLibs.authorData, "string");
   }
 
   function findInGroup(item, groupName){
@@ -343,82 +165,6 @@ function authorcanvasser(dataFile, dataForm){
       }
     });
     return index;
-  }
-
-  this.addaction = function(id, type, listType){
-    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
-    if (objGet.length === 0) return;
-    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
-    objGet[0][listType].push({"type":"cleardown"});
-    authorLibs.buildProp.getProps(type,objGet[0].id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.addtest = function(id, type, listType){
-    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
-    if (objGet.length === 0) return;
-    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
-    objGet[0][listType].push({"type":"var"});
-    authorLibs.buildProp.getProps(type,objGet[0].id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.deleteitem = function(type, objName, listType, index){
-    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === objName);});
-    if (objGet.length === 0) return;
-    objGet[0][listType].splice(index,1);
-    authorLibs.buildProp.getProps(type,objGet[0].id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.deletetimeline = function(animName, index){
-    var animGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === animName);});
-    if (animGet.length === 0) return;
-    animGet[0].timelist.splice(index,1);
-    authorLibs.buildProp.getProps("anims",animName);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  }
-
-  this.addAnimCommand = function(animName, timelist){
-    var animGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === animName);});
-    if (animGet.length === 0) return;
-    animGet[0][timelist].push({"type":"console"});
-    authorLibs.buildProp.getProps("anims",animName);
-  }
-
-  this.addConstraint = function(constraintName, driverlist){
-    var driver = authorLibs.authorData.constraints.filter(function(finder){return (finder.id === constraintName);});
-    if (driver.length === 0) return;
-    driver[0][driverlist].push({"type":"position"});
-    authorLibs.buildProp.getProps("constraints", constraintName);
-  }
-
-  function printRecusiveObj(output, element, indent){
-    var indnt = "<br>";
-    for (var i = 0; i < indent; i++){
-      indnt +="&nbsp;&nbsp;&nbsp;"
-    }
-
-    if (get_type(element) === "[object Object]"){
-      for(var prop in element){
-        output += printRecusiveObj(indnt + prop, element[prop], indent+1);
-      }
-      return output;
-    }
-
-    if (get_type(element) === "[object Array]"){
-      element.forEach(function(arrayElement){
-        output += printRecusiveObj(indnt, arrayElement, indent+1);
-      });
-      return output;
-    }
-    output += " " + element;
-    return output;
-  }
-
-  function get_type(thing){
-    if(thing===null)return "[object Null]"; // special case
-    return Object.prototype.toString.call(thing);
   }
 
   function init(data){

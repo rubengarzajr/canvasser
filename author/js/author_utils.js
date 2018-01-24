@@ -1,10 +1,49 @@
 authorLibs.utils = {
 
+  addaction: function(id, type, listType){
+    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
+    if (objGet.length === 0) return;
+    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
+    objGet[0][listType].push({"type":"cleardown"});
+    authorLibs.buildProp.getProps(type,objGet[0].id);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
+  addAnimCommand: function(animName, timelist){
+    var animGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === animName);});
+    if (animGet.length === 0) return;
+    animGet[0][timelist].push({"type":"console"});
+    authorLibs.buildProp.getProps("anims",animName);
+  },
+
   addColor: function(id, widget){
     var obj = authorLibs.authorData.objects.filter(function(object){ return object.id === id})[0];
     if (obj.color === undefined) obj.color = {current:["rgba(0,0,0,1)"]};
     obj.color.current.push("rgba(0,0,0,1)");
     authorLibs.author.getProps('objects',id);
+  },
+
+  addConstraint: function(constraintName, driverlist){
+    var driver = authorLibs.authorData.constraints.filter(function(finder){return (finder.id === constraintName);});
+    if (driver.length === 0) return;
+    driver[0][driverlist].push({"type":"position"});
+    authorLibs.buildProp.getProps("constraints", constraintName);
+  },
+
+  addDrawcode: function(id){
+    var shape = authorLibs.authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
+    shape.drawcode.push({type:'fill'});
+    authorLibs.buildProp.getProps('shapes', id);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
+  addtest: function(id, type, listType){
+    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
+    if (objGet.length === 0) return;
+    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
+    objGet[0][listType].push({"type":"var"});
+    authorLibs.buildProp.getProps(type,objGet[0].id);
+    restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
   appendToArray: function(inArray){
@@ -79,6 +118,22 @@ authorLibs.utils = {
     return newObj
   },
 
+  deleteitem: function(type, objName, listType, index){
+    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === objName);});
+    if (objGet.length === 0) return;
+    objGet[0][listType].splice(index,1);
+    authorLibs.buildProp.getProps(type,objGet[0].id);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
+  deletetimeline: function(animName, index){
+    var animGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === animName);});
+    if (animGet.length === 0) return;
+    animGet[0].timelist.splice(index,1);
+    authorLibs.buildProp.getProps("anims",animName);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
   dragMenuItem: function(event){
     event.dataTransfer.setData("mover", event.target.dataset.type + '_'+ event.target.dataset.layer +'_'+event.target.dataset.idx);
   },
@@ -87,13 +142,17 @@ authorLibs.utils = {
     event.preventDefault();
     var mover = event.dataTransfer.getData("mover").split('_');
     var moveTo  = [event.target.dataset.type, event.target.dataset.layer, event.target.dataset.idx];
-
     if (mover[0] === 'layer' && moveTo[0] === 'layer'){
-      var moveData = authorLibs.authorData.layers[mover[1]].list.splice(mover[2], 1)[0];
-      authorLibs.authorData.layers[moveTo[1]].list.splice(moveTo[2], 0, moveData);
-      authorLibs.menus.update('layers');
+      if (mover[2] > -1){
+        var moveData = authorLibs.authorData.layers[mover[1]].list.splice(mover[2], 1)[0];
+        authorLibs.authorData.layers[moveTo[1]].list.splice(moveTo[2], 0, moveData);
+        authorLibs.menus.update('layers');
+      } else {
+        var moveData = authorLibs.authorData.layers.splice(mover[1], 1)[0];
+        authorLibs.authorData.layers.splice(moveTo[1], 0, moveData);
+        authorLibs.menus.update('layers');
+      }
     }
-
   },
 
   dropMenuItemAllow: function(event){
@@ -220,9 +279,9 @@ authorLibs.utils = {
         str += '<div class="actionblock">';
         str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
         str += authorLibs.utils.buildSelect(
-          {fn:'authorLibs.author.updateActionList', object:item.id, type:types, list:actionsList, defaultId:itemAct.type, path:widget.field+'.'+idx+'.type'}
+          {fn:'authorLibs.utils.updateActionList', object:item.id, type:types, list:actionsList, defaultId:itemAct.type, path:widget.field+'.'+idx+'.type'}
         );
-        str += '<div class="rightx" onclick="authorLibs.author.deleteitem('+"'objects'"+','+"'"+item.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
+        str += '<div class="rightx" onclick="authorLibs.utils.deleteitem('+"'objects'"+','+"'"+item.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
         actionWidgets.forEach(function(subWidget, idxPart){
           var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
           if (subWidget.type === 'anmlist') str += authorLibs.utils.handleTypeList('anims', item, type, subWidget, widgetPath);
@@ -255,7 +314,7 @@ authorLibs.utils = {
       });
       str += '<br>';
     }
-    str += authorLibs.utils.buildDiv('divbutton', 'Add Action', 'authorLibs.author.addaction', [item.id, types, widget.field]);
+    str += authorLibs.utils.buildDiv('divbutton', 'Add Action', 'authorLibs.utils.addaction', [item.id, types, widget.field]);
     str += '</div>';
     return str;
   },
@@ -266,7 +325,7 @@ authorLibs.utils = {
     var defaultId = authorLibs.utils.getSubProp(object, path);
     str += '<div class="entrylabel c_entrytitle_text w100">' + display;
     str += '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
-    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path], true) + '><br>';
+    str += authorLibs.utils.buildFnString('authorLibs.utils.updateItem', [object.id, type, path], true) + '><br>';
     return str;
   },
 
@@ -276,7 +335,7 @@ authorLibs.utils = {
     var defaultId = authorLibs.utils.getSubProp('authorLibs.authorData.settings', path);
     str += '<div class="entrylabel c_entrytitle_text w100">' + display;
     str += '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
-    str += authorLibs.utils.buildFnString('authorLibs.author.updateSettingBool', [path], true) + '><br>';
+    str += authorLibs.utils.buildFnString('authorLibs.utils.updateSettingBool', [path], true) + '><br>';
     return str;
   },
 
@@ -304,7 +363,7 @@ authorLibs.utils = {
       var defaultId = authorLibs.utils.findInGroup(object, grp.id);
       str += '<div class="nosplit"><div class="entrylabel c_entrytitle_text w100">' + grp.name;
       str += '</div><input class="checkbox" type="checkbox" ' + (defaultId > -1 ? "checked " : "");
-      str += authorLibs.utils.buildFnString('authorLibs.author.togglegroup', [object.id, type, path, grp.id], true) + '></div>';
+      str += authorLibs.utils.buildFnString('authorLibs.utils.togglegroup', [object.id, type, path, grp.id], true) + '></div>';
     });
     return str+'</div>';
   },
@@ -314,7 +373,7 @@ authorLibs.utils = {
     var imageList = authorLibs.utils.listIdsNames('images');
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.author.updateItem', object:item.id, type:type, list:imageList, defaultId:item[widget.field], path:widget.field}
+      {fn:'authorLibs.utils.updateItem', object:item.id, type:type, list:imageList, defaultId:item[widget.field], path:widget.field}
     ) + '<br>';
     var flipTest = authorLibs.authorData.images.filter(function(img){ return img.id === item.image})[0];
     if (flipTest){
@@ -332,7 +391,7 @@ authorLibs.utils = {
     if (num === undefined) num = 0;
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', (widget.display ? widget.display : widget.field) );
     str += '<input class="auth_xy" type="number" value="'+ num + '" ';
-    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path], true);
+    str += authorLibs.utils.buildFnString('authorLibs.utils.updateItem', [object.id, type, path], true);
     str +=   '>'  + "<br>";
     return str;
   },
@@ -347,11 +406,11 @@ authorLibs.utils = {
     str += '<span>';
     str += '<span class="entrytitle c_entrylabel_pos">X</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.x + '" ';
-    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path+'.x'], true);
+    str += authorLibs.utils.buildFnString('authorLibs.utils.updateItem', [object.id, type, path+'.x'], true);
     str +=   '>';
     str += '<span class="entrytitle c_entrylabel_pos">Y</span>'
     str += '<input class="auth_xy" type="number" value="'+ pos.y + '" ';
-    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path+'.y'], true);
+    str += authorLibs.utils.buildFnString('authorLibs.utils.updateItem', [object.id, type, path+'.y'], true);
     str +=   '>'  + "</span><br>";
     return str;
   },
@@ -367,7 +426,7 @@ authorLibs.utils = {
     var display   = widget.display ? widget.display : widget.field;
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
     str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:list, defaultId:defaultId, path:path}
+      {fn:'authorLibs.utils.updateItem', object:object.id, type:type, list:list, defaultId:defaultId, path:path}
     ) + '<br>';
     return str;
   },
@@ -393,7 +452,7 @@ authorLibs.utils = {
     var display = widget.display ? widget.display : widget.field;
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
     str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:list, defaultId:defaultId, path:path, text:true}
+      {fn:'authorLibs.utils.updateItem', object:object.id, type:type, list:list, defaultId:defaultId, path:path, text:true}
     ) + '<br>';
     return str;
   },
@@ -413,9 +472,9 @@ authorLibs.utils = {
         str += '<div class="actionblock">';
         str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
         str += authorLibs.utils.buildSelect(
-          {fn:'authorLibs.author.updateActionList', object:test.id, type:"tests", list:list, defaultId:actobject.type, path:widget.field+'.'+idx+'.type'}
+          {fn:'authorLibs.utils.updateActionList', object:test.id, type:"tests", list:list, defaultId:actobject.type, path:widget.field+'.'+idx+'.type'}
         );
-        str += '<div class="rightx" onclick="authorLibs.author.deleteitem('+"'tests'," +"'"+test.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
+        str += '<div class="rightx" onclick="authorLibs.utils.deleteitem('+"'tests'," +"'"+test.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
         actionWidgets.forEach(function(subWidget, idxPart){
           var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
           if (subWidget.type === 'anmlist') str += authorLibs.utils.handleTypeList('anims', test,       'test', subWidget, widgetPath);
@@ -446,7 +505,7 @@ authorLibs.utils = {
       });
       str += '<br>';
     }
-    str += authorLibs.utils.buildDiv('divbutton', 'Add Test', 'authorLibs.author.addtest', [test.id, 'tests', widget.field]);
+    str += authorLibs.utils.buildDiv('divbutton', 'Add Test', 'authorLibs.utils.addtest', [test.id, 'tests', widget.field]);
     str += '</div>';
     return str;
   },
@@ -456,7 +515,7 @@ authorLibs.utils = {
     var defaultId = authorLibs.utils.getSubProp(object, path);
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text ' + widthClass, widget.field );
     str += '<input class="auth_text" type="text" value="'+ defaultId + '" ';
-    str += authorLibs.utils.buildFnString('authorLibs.author.updateItem', [object.id, type, path], true);
+    str += authorLibs.utils.buildFnString('authorLibs.utils.updateItem', [object.id, type, path], true);
     str +=   '>'  + "<br>";
     return str;
   },
@@ -467,7 +526,7 @@ authorLibs.utils = {
     var defaultId = authorLibs.utils.getSubProp(object, path);
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.author.updateItem', object:object.id, type:type, list:list,  defaultId:defaultId, path:path}
+      {fn:'authorLibs.utils.updateItem', object:object.id, type:type, list:list,  defaultId:defaultId, path:path}
     ) + '<br>';
     return str;
   },
@@ -481,6 +540,16 @@ authorLibs.utils = {
     authorLibs.menus.update('layers');
   },
 
+  layerUpdate: function(domElement, idx, prop, type){
+    var newVal = 0;
+    if (type === 'boolean') newVal = domElement.checked;
+    if (type === 'btoggle') newVal = !authorLibs.authorData.layers[idx][prop];
+    if (type === 'value')   newVal = domElement.value.toString();
+    authorLibs.authorData.layers[idx][prop] = newVal;
+    authorLibs.menus.update('layers');
+    authorLibs.buildProp.getProps('layers', idx);
+  },
+
   listIdsNames: function(filter){
     var idList    = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "id");
     var nameList  = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "name");
@@ -490,6 +559,10 @@ authorLibs.utils = {
       comboList.push( {id: idList[i], name:nameList[i]});
     }
     return comboList;
+  },
+
+  loadDefault: function(){
+    if (!authorLibs.defaultJSONobj)  authorLibs.utils.requestJSON(authorLibs.defaultJSON, function(data){restartCanvasser("sample", data, 'string');});
   },
 
   loadFilePHP: function(files){
@@ -605,15 +678,7 @@ authorLibs.utils = {
         });
       });
     }
-
-    console.log(json.layers)
-
-
     return json;
-  },
-
-  projectsList: function(listId){
-    authorLibs.utils.getProjects(authorLibs.utils.fillInSaveProject);
   },
 
   refreshfiles: function(files){
@@ -749,6 +814,47 @@ authorLibs.utils = {
     obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
   },
 
+  togglegroup: function(domElement, objectId, type, paramPath, groupName){
+    var element = domElement.checked;
+    var objGet  = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
+    if (objGet.groups === undefined) objGet.groups = [];
+
+    if (element){
+      if (findInGroup(objGet, groupName) === -1) objGet.groups.push({id:groupName});
+    } else {
+      var splicer = findInGroup(objGet, groupName);
+      if (splicer > -1) objGet.groups.splice(splicer, 1);
+    }
+
+    authorLibs.menus.update(type);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
+  updateActionList: function(domElement, objectId, type, paramPath){
+    var item = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
+    var prop = authorLibs.utils.getSubProp(item, paramPath);
+    authorLibs.utils.updateItem(domElement, objectId, type.slice(0, -1), paramPath);
+    var newRule = authorLibs.rules.actions.filter(function(ruleName){
+      return ruleName.elementType === domElement.value}
+    )[0];
+
+    authorLibs.menus.update('objects');
+    authorLibs.buildProp.getProps('objects', objectId);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
+  updateItem: function(domElement, objectId, type, paramPath){
+    var newVal = domElement.value.toString();
+    if (domElement.type === 'checkbox') newVal = domElement.checked;
+    if (newVal === '---NONE---')        newVal = undefined;
+    var objGet = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
+    authorLibs.utils.setSubProp(objGet, paramPath, newVal);
+    authorLibs.buildProp.getProps(type+'s', objGet.id);
+    authorLibs.menus.update(type);
+    authorLibs.menus.update('layers');
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
   updateList:function(element, list, item){
     var finder = list.findIndex(function(check){return check.id === item.id && check.project === item.project && check.url === item.url;});
     if (finder === -1) {
@@ -760,9 +866,43 @@ authorLibs.utils = {
     }
   },
 
+  updateSetting: function(domElement, setting){
+    authorLibs.authorData.settings[setting] = domElement.value;
+    authorLibs.menus.update('settings');
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
+  updateSettingBool: function(domElement, setting){
+    authorLibs.authorData.settings[setting] = domElement.checked;
+    authorLibs.menus.update('settings');
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
+  updateTimeline: function(domElement, objectId, type, paramPath){
+    var objGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === objectId);})[0];
+    var prop = authorLibs.utils.getSubProp(objGet, paramPath);
+    authorLibs.utils.updateItem(domElement, objectId, 'anim', paramPath);
+    var newRule = authorLibs.rules.actions.filter(function(ruleName){
+      return ruleName.elementType === domElement.value}
+    )[0];
+
+    authorLibs.menus.update('objects');
+    authorLibs.buildProp.getProps('objects', objectId);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
   uuid: function(){
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
    )
- }
+ },
+
+  view: function(){
+   document.getElementById("paste").value = JSON.stringify(authorLibs.authorData);
+ },
+
+  zPlus: function(){
+    authorLibs.gui.zidx ++; return  authorLibs.gui.zidx;
+  }
+
 }
