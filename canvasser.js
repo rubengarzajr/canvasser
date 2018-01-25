@@ -11,9 +11,127 @@ function initCanvasser(vari, datafile, dataForm, overrides){
 
 function canvasser(vari, interactiveData, dataForm, overrides){
   this.version  = '1.2.0';
-  var act      = new interaction();
+  var act       = {
+    loop         : true,
+    position     : {x:0, y:0},
+    prevPosition : {x:0, y:0},
+    applyAction  : [],
+    mouseDown    : false,
+    mouseDownCnt : 0,
+    external     : false,
+    mode         : "none",
+    dragging     : null,
+    touch        : [],
+    paused       : false
+  };
   this.act     = act;
-  var pManager = new particleManager();
+  var pManager = {
+    pSystemList : [],
+    create: function(obj){
+      var pExist = pManager.pSystemList.filter(function(parTest){return parTest.id === obj.id})[0];
+      if (pExist === undefined) {
+        var newPSystem = {
+          pList: [],
+          time: {start:Date.now(), now:Date.now(), prev:Date.now(), diff:0, total:0}
+        };
+        newPSystem.id               = obj.id;
+        newPSystem.info             = copyObj(obj, {});
+        newPSystem.info.position    = undefined;
+        newPSystem.position         = {current:{x:obj.position.current.x, y:obj.position.current.y}};
+        pManager.pSystemList.push(newPSystem);
+      }
+      else{
+        pExist.time             = {start:Date.now(), now:Date.now(), prev:Date.now(), diff:0, total:0};
+        pExist.info             = copyObj(obj, {});
+        pExist.position         = {current:{x:obj.position.current.x, y:obj.position.current.y}};
+      }
+    },
+    draw(id){
+      var pSystem  = pManager.pSystemList.filter(function(obj){return obj.id === id})[0];
+      if (act.imageList[pSystem.info.image] == undefined) return;
+      var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
+      if (pSystem.info.blend) act.context.globalCompositeOperation = pSystem.info.blend;
+
+      // TODO: MAKE USE ACTUAL TIMESTAMP
+      pSystem.pList.forEach(function(p){
+        if (!pSystem.info.keepalive) p.life.current --;
+
+        p.position  = {x:p.position.x+p.dirNorm.x*p.speed.position, y: p.position.y+p.dirNorm.y*p.speed.position}
+        var scale   = p.scale;
+        var lifeCnt = p.life.max - p.life.current;
+        var pcent   = lifeCnt / p.life.max;
+
+        var alpha = 1;
+        if (pcent*100 < pSystem.info.pParams.fade.in)  alpha = lifeCnt / (p.life.max*(pSystem.info.pParams.fade.in*0.01));
+        if (pcent*100 > pSystem.info.pParams.fade.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.info.pParams.fade.out*0.01));
+
+        var pos     = {"x":parseInt(p.position.x), "y":parseInt(p.position.y)};
+        p.rotation += p.speed.rotation;
+        act.context.save();
+        act.context.translate(pos.x, pos.y);
+        act.context.globalAlpha = alpha;
+        act.context.rotate(p.rotation);
+        act.context.drawImage(act.imageList[pSystem.info.image].imageData, -imgDim.x*scale, -imgDim.y*scale, act.imageList[pSystem.info.image].imageData.naturalWidth*scale, act.imageList[pSystem.info.image].imageData.naturalHeight*scale);
+        act.context.restore();
+        act.context.globalAlpha = 1;
+      });
+      pSystem.pList = pSystem.pList.filter(function(p){return p.life.current > 0});
+      act.context.globalCompositeOperation = 'source-over';
+    },
+    getSystem: function(id){
+      return pManager.pSystemList.filter(function(item){return item.id === id})[0];
+    },
+    update: function(){
+      pManager.pSystemList.forEach(function(pSystem, index, particleSystemList){
+        findParent(pSystem.info);
+        pSystem.time.now   = Date.now();
+        pSystem.time.diff  = pSystem.time.now - pSystem.time.prev;
+        pSystem.time.total = pSystem.time.now - pSystem.time.start;
+
+        if (pSystem.time.diff > 1000/pSystem.info.emitRate && pSystem.info.emitCounter > pSystem.time.total){
+          var spawnCount = 1;
+          if (pSystem.info.genType === 'burst') spawnCount = pSystem.info.emitRate;
+          pSystem.time.prev = pSystem.time.now;
+          for (cnt=0; cnt < spawnCount; cnt ++){
+            var partPos = {x:pSystem.position.current.x, y:pSystem.position.current.y};
+            if (pSystem.info.emitterSize > 1){
+              t  = 2 * Math.PI * randInterval(0,1);
+              u  = randInterval(0,1) + randInterval(0,1);
+              r  = u > 1 ? 2-u : u
+              r *= pSystem.info.emitterSize;
+              partPos = {x:r*Math.cos(t) + partPos.x, y:r*Math.sin(t) + partPos.y};
+            }
+            if (isNaN(pSystem.info.emitDirStart)) pSystem.info.emitDirStart = 0;
+            if (isNaN(pSystem.info.emitDirEnd))   pSystem.info.emitDirEnd = 0;
+            var rot      = 0;
+            var dirgrees = randInterval(pSystem.info.emitDirStart-90, pSystem.info.emitDirEnd-90);
+            var dir      = radians(dirgrees);
+
+            if (pSystem.info.faceMotion){
+              rot = dir;
+              if (pSystem.info.faceAngle) rot += radians(pSystem.info.faceAngle);
+            }
+            var rndDir   = {x:Math.cos(dir),y:Math.sin(dir)};
+            var scale    = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
+            var rndLife  = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
+            var speed    = {position:randInterval(pSystem.info.pParams.speed.position.min,pSystem.info.pParams.speed.position.max),rotation:randInterval(pSystem.info.pParams.speed.rotation.min,pSystem.info.pParams.speed.rotation.max)}
+            var unit     = getUnit(rndDir);
+            var parentTransform = {position:{x:0,y:0}, scale:1, rotation:0};
+
+            if (pSystem.info.parent !== undefined){
+              if (pSystem.info.parent.object !== undefined) parentTransform.position = {x:pSystem.info.parent.object.position.current.x,y:pSystem.info.parent.object.position.current.y};
+            }
+            partPos = {x:partPos.x + parentTransform.position.x, y:partPos.y + parentTransform.position.y};
+            pSystem.pList.push({position:partPos, rotation:rot,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
+          }
+        }
+        if (pSystem.time.total > pSystem.info.emitCounter && !pSystem.info.keepalive && pSystem.pList.length === 0) {
+          particleSystemList.splice(index, 1);
+        }
+      });
+    }
+  }
+
   var ease     = new Ease();
   if (dataForm == "file") requestJSON(interactiveData, init);
   else if (dataForm == "string") init(JSON.parse(interactiveData));
@@ -36,6 +154,17 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     overrides.forEach(function(override){
       setSubProp(data, Object.keys(override)[0], Object.values(override)[0]);
     });
+
+    if (data.layers === undefined){
+      data.layers = [{list:[], show:true}];
+      var needOrder = ['objects','particles'];
+      needOrder.forEach(function(type){
+        if (data[type] === undefined) return;
+        data[type].forEach(function(item){
+          data.layers[0].list.push({id:item.id, type:type, name:item.name });
+        });
+      });
+    }
 
     act.canvas        = document.createElement('canvas');
     act.context       = act.canvas.getContext('2d');
@@ -132,132 +261,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     loop();
   }
 
-  function interaction(){
-    this.loop         = true;
-    this.position     = {x:0, y:0};
-    this.prevPosition = {x:0, y:0};
-    this.applyAction  = [];
-    this.mouseDown    = false;
-    this.mouseDownCnt = 0;
-    this.external     = false;
-    this.mode         = "none";
-    this.dragging     = null;
-    this.touch        = [];
-    this.paused       = false;
-  }
-
-  function particleManager(){
-    var pSystemList = [];
-
-    this.getSystem = function(id){
-      return pSystemList.filter(function(item){return item.id === id})[0];
-    }
-
-    this.create = function(obj){
-      var pExist = pSystemList.filter(function(parTest){return parTest.id === obj.id})[0];
-      if (pExist === undefined) {
-        var newPSystem              = new pSystem();
-        newPSystem.id               = obj.id;
-        newPSystem.info             = copyObj(obj, {});
-        newPSystem.info.position    = undefined;
-        newPSystem.position         = {current:{x:obj.position.current.x, y:obj.position.current.y}};
-        pSystemList.push(newPSystem);
-      }
-      else{
-        pExist.time             = {start:Date.now(), now:Date.now(), prev:Date.now(), diff:0, total:0};
-        pExist.info             = copyObj(obj, {});
-        pExist.position         = {current:{x:obj.position.current.x, y:obj.position.current.y}};
-      }
-    }
-
-    function pSystem(){
-      this.pList = [];
-      this.time = {start:Date.now(), now:Date.now(), prev:Date.now(), diff:0, total:0};
-    }
-
-    this.update = function(){
-      pSystemList.forEach(function(pSystem, index, particleSystemList){
-        findParent(pSystem.info);
-        pSystem.time.now   = Date.now();
-        pSystem.time.diff  = pSystem.time.now - pSystem.time.prev;
-        pSystem.time.total = pSystem.time.now - pSystem.time.start;
-
-        if (pSystem.time.diff > 1000/pSystem.info.emitRate && pSystem.info.emitCounter > pSystem.time.total){
-          var spawnCount = 1;
-          if (pSystem.info.genType === 'burst') spawnCount = pSystem.info.emitRate;
-          pSystem.time.prev = pSystem.time.now;
-          for (cnt=0; cnt < spawnCount; cnt ++){
-            var partPos = {x:pSystem.position.current.x, y:pSystem.position.current.y};
-            if (pSystem.info.emitterSize > 1){
-              t  = 2 * Math.PI * randInterval(0,1);
-              u  = randInterval(0,1) + randInterval(0,1);
-              r  = u > 1 ? 2-u : u
-              r *= pSystem.info.emitterSize;
-              partPos = {x:r*Math.cos(t) + partPos.x, y:r*Math.sin(t) + partPos.y};
-            }
-            if (isNaN(pSystem.info.emitDirStart)) pSystem.info.emitDirStart = 0;
-            if (isNaN(pSystem.info.emitDirEnd))   pSystem.info.emitDirEnd = 0;
-            var rot      = 0;
-            var dirgrees = randInterval(pSystem.info.emitDirStart-90, pSystem.info.emitDirEnd-90);
-            var dir      = radians(dirgrees);
-
-            if (pSystem.info.faceMotion){
-              rot = dir;
-              if (pSystem.info.faceAngle) rot += radians(pSystem.info.faceAngle);
-            }
-
-            var rndDir   = {x:Math.cos(dir),y:Math.sin(dir)};
-            var scale    = randInterval(pSystem.info.pParams.scale.min,pSystem.info.pParams.scale.max);
-            var rndLife  = randIntervalInt(pSystem.info.pParams.life.min,pSystem.info.pParams.life.max);
-            var speed    = {position:randInterval(pSystem.info.pParams.speed.position.min,pSystem.info.pParams.speed.position.max),rotation:randInterval(pSystem.info.pParams.speed.rotation.min,pSystem.info.pParams.speed.rotation.max)}
-            var unit     = getUnit(rndDir);
-            var parentTransform = {position:{x:0,y:0}, scale:1, rotation:0};
-
-            if (pSystem.info.parent !== undefined){
-              if (pSystem.info.parent.object !== undefined) parentTransform.position = {x:pSystem.info.parent.object.position.current.x,y:pSystem.info.parent.object.position.current.y};
-            }
-            partPos = {x:partPos.x + parentTransform.position.x, y:partPos.y + parentTransform.position.y};
-            pSystem.pList.push({position:partPos, rotation:rot,  dirNorm:unit, scale:scale, speed:speed, life:{max:rndLife, current:rndLife}});
-          }
-        }
-
-        if (act.imageList[pSystem.info.image] == undefined) return;
-        var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
-        if (pSystem.info.blend) act.context.globalCompositeOperation = pSystem.info.blend;
-
-        // TODO: MAKE USE ACTUAL TIMESTAMP
-        pSystem.pList.forEach(function(p){
-          if (!pSystem.info.keepalive) p.life.current --;
-
-          p.position  = {x:p.position.x+p.dirNorm.x*p.speed.position, y: p.position.y+p.dirNorm.y*p.speed.position}
-          var scale   = p.scale;
-          var lifeCnt = p.life.max - p.life.current;
-          var pcent   = lifeCnt / p.life.max;
-
-          var alpha = 1;
-          if (pcent*100 < pSystem.info.pParams.fade.in)  alpha = lifeCnt / (p.life.max*(pSystem.info.pParams.fade.in*0.01));
-          if (pcent*100 > pSystem.info.pParams.fade.out) alpha = p.life.current / (p.life.max - p.life.max*(pSystem.info.pParams.fade.out*0.01));
-
-          var pos     = {"x":parseInt(p.position.x), "y":parseInt(p.position.y)};
-          p.rotation += p.speed.rotation;
-          act.context.save();
-          act.context.translate(pos.x, pos.y);
-          act.context.globalAlpha = alpha;
-          act.context.rotate(p.rotation);
-          act.context.drawImage(act.imageList[pSystem.info.image].imageData, -imgDim.x*scale, -imgDim.y*scale, act.imageList[pSystem.info.image].imageData.naturalWidth*scale, act.imageList[pSystem.info.image].imageData.naturalHeight*scale);
-          act.context.restore();
-          act.context.globalAlpha = 1;
-        });
-        pSystem.pList = pSystem.pList.filter(function(p){return p.life.current > 0});
-        act.context.globalCompositeOperation = 'source-over';
-        if (pSystem.time.total > pSystem.info.emitCounter && !pSystem.info.keepalive && pSystem.pList.length === 0) {
-          particleSystemList.splice(index, 1);
-        }
-      });
-
-    };
-  }
-
   this.external = function(cList){
     act.external = true;
     cList.forEach(function(cmd){
@@ -339,11 +342,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
   function loop(){
     //if (act.paused && act.loop) window.requestAnimationFrame(loop);
-
     act.data.tests.forEach(function(test){
       if (!test.active) return;
       tests(test);
-
     });
     act.canvas.scale = act.canvas.scrollWidth / act.canvas.width;
 
@@ -394,13 +395,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         }
       });
     });
-
-    function modVal(operation, startVal, val){
-      if (operation === "add") return startVal + val;
-      if (operation === "subtract") return startVal - val;
-      if (operation === "multiply") return startVal * val;
-      if (operation === "divide") return startVal / val;
-    }
 
 
     act.player.forEach(function(play){
@@ -633,7 +627,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.context.clearRect(0,0,act.canvas.width,act.canvas.height);
     if (!act.external) act.applyAction = [];
 
-    act.data.objects.forEach(function(obj){
+    function updateObject(obj){
       findParent(obj);
       if (obj.type === "shape" && obj.show){
         var objParent = obj.parent != undefined ? obj.parent.object : undefined;
@@ -733,52 +727,28 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             }
           }
         }
+      }
     }
-  });
 
     pManager.update();
+    act.data.layers.forEach(function(layer){
+      if (!layer.show) return;
+      layer.list.forEach(function(item){
+        if (item.type === 'particles'){
+          pManager.draw(item.id);
+        }
+        if (item.type === 'objects'){
+          var obj = act.data.objects.filter(function(obj){return obj.id === item.id })[0];
+          updateObject(obj)
+        }
+      });
+    });
+
     act.prevPosition = {x:act.position.x, y:act.position.y};
     if (act.loop) window.requestAnimationFrame(loop);
   }
 
-  function radians(degrees) {
-    return degrees * 0.01745329251994;
-  };
-
-  function Ease(t, b, c, d){
-    this.linear = function(t, b, c, d){
-     return c*t/d + b;
-    };
-    this.inExp = function(t, b, c, d){
-      return c * Math.pow( 2, 10 * (t/d - 1) ) + b;
-    }
-    this.outExp = function(t, b, c, d){
-      return c * ( -Math.pow( 2, -10 * t/d ) + 1 ) + b;
-    }
-    this.inOutExp = function(t, b, c, d){
-      t /= d/2;
-      if (t < 1) return c/2 * Math.pow( 2, 10 * (t - 1) ) + b;
-      t--;
-      return c/2 * ( -Math.pow( 2, -10 * t) + 2 ) + b;
-    }
-    this.inQuad = function(t, b, c, d){
-      t /= d;
-      return c*t*t + b;
-    };
-    this.outQuad = function(t, b, c, d) {
-      t /= d;
-      return -c * t*(t-2) + b;
-    };
-    this.inOutQuad = function(t, b, c, d) {
-      t /= d/2;
-      if (t < 1) return c/2*t*t + b;
-      t--;
-      return -c/2 * (t*(t-2) - 1) + b;
-    };
-  }
-
   function drawShapes(act, parent, pos, shapeData, color, doTest, testP, scale, usecolor){
-
     if (color.current === undefined) color.current = ['rgb(0,0,0,1)'];
     if (shapeData === undefined) return;
     var ctx        = act.context;
@@ -865,9 +835,48 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     return test;
   }
 
+  function Ease(t, b, c, d){
+    this.linear = function(t, b, c, d){
+     return c*t/d + b;
+    };
+    this.inExp = function(t, b, c, d){
+      return c * Math.pow( 2, 10 * (t/d - 1) ) + b;
+    }
+    this.outExp = function(t, b, c, d){
+      return c * ( -Math.pow( 2, -10 * t/d ) + 1 ) + b;
+    }
+    this.inOutExp = function(t, b, c, d){
+      t /= d/2;
+      if (t < 1) return c/2 * Math.pow( 2, 10 * (t - 1) ) + b;
+      t--;
+      return c/2 * ( -Math.pow( 2, -10 * t) + 2 ) + b;
+    }
+    this.inQuad = function(t, b, c, d){
+      t /= d;
+      return c*t*t + b;
+    };
+    this.outQuad = function(t, b, c, d) {
+      t /= d;
+      return -c * t*(t-2) + b;
+    };
+    this.inOutQuad = function(t, b, c, d) {
+      t /= d/2;
+      if (t < 1) return c/2*t*t + b;
+      t--;
+      return -c/2 * (t*(t-2) - 1) + b;
+    };
+  }
+
   function getMousePos(event) {
     var rect = act.canvas.getBoundingClientRect();
     act.position = {x:(event.clientX-rect.left)/act.canvas.scale, y:(event.clientY-rect.top)/act.canvas.scale};
+  }
+
+  function modVal(operation, startVal, val){
+    if (operation === "add") return startVal + val;
+    if (operation === "subtract") return startVal - val;
+    if (operation === "multiply") return startVal * val;
+    if (operation === "divide") return startVal / val;
   }
 
   function mouseUp(){
@@ -880,6 +889,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       act.dragging    = null;
       actions();
     }
+  }
+
+  mouseHandler = {
+
   }
 
   function mouseEnter(){
@@ -901,6 +914,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.mouseDown    = true;
     act.mouseDownCnt = 0;
   }
+
+  function radians(degrees) {
+    return degrees * 0.01745329251994;
+  };
 
   function touchDown(event){
     event.preventDefault();

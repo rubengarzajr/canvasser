@@ -548,6 +548,7 @@ authorLibs.utils = {
     authorLibs.authorData.layers[idx][prop] = newVal;
     authorLibs.menus.update('layers');
     authorLibs.buildProp.getProps('layers', idx);
+    restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
   listIdsNames: function(filter){
