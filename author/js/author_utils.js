@@ -153,6 +153,7 @@ authorLibs.utils = {
         authorLibs.menus.update('layers');
       }
     }
+    restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
   dropMenuItemAllow: function(event){
