@@ -18,7 +18,7 @@ authorLibs.menus = {
       if (authorLibs.authorData[type].length === 1) document.getElementById('imageholder').style.height = "65px";
     }
     if (type === 'layers')      {
-      authorLibs.authorData[type].push({name:itemName, list:[], show:true, expanded:true});
+      authorLibs.authorData[type].push({name:itemName, id:authorLibs.utils.uuid(), list:[], show:true, expanded:true});
       if (authorLibs.authorData[type].length === 1) document.getElementById('imageholder').style.height = "65px";
     }
     if (type === 'objects')     {

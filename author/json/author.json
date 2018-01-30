@@ -76,19 +76,107 @@
     }
   },
   "anims":[
-    {"type":"console",      "widgets":[{"field":"starttime",   "type":"number"}, {"field":"text",      "type":"text"}]},
-    {"type":"fade",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"},{"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startalpha",  "type":"number"}, {"field":"endalpha",  "type":"number"}]},
-    {"type":"flipbook",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"filter",    "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"atlascell.x",  "type":"number"}, {"field":"atlascell.y",  "type":"number"}]},
-    {"type":"loadinto",     "widgets":[{"field":"starttime",   "type":"number"}, {"field":"url",       "type":"text"},   {"field":"vari",    "type":"text"}]},
-    {"type":"move",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startpos",  "type":"posxy", "display":"Start Position"}, {"field":"endpos",  "type":"posxy",  "display":"End Position"}, {"field":"ease",  "type":"select", "id":"easetype", "display":"Ease"}]},
-    {"type":"pause",        "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"animlist"},  {"field":"toggle",      "type":"bool"}]},
-    {"type":"play",         "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"animlist"}]},
-    {"type":"pstart",       "widgets":[{"field":"starttime",   "type":"number"}, {"field":"id",        "type":"parlist"}]},
-    {"type":"scale",        "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype", "display":"Select Type"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startscale",  "type":"number"}, {"field":"endscale",  "type":"number"}]},
-    {"type":"sound",        "widgets":[{"field":"starttime",  "type":"number"},  {"field":"id",        "type":"sndlist"}]},
-    {"type":"soundstop",    "widgets":[{"field":"starttime",  "type":"number"},  {"field":"id",        "type":"sndlist"}]},
-    {"type":"testpset",     "widgets":[{"field":"testp",       "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}]},
-    {"type":"turn",         "widgets":[{"field":"fromcurrent", "type":"bool"},   {"field":"starttime", "type":"number"}, {"field":"endtime", "type":"number"}, {"field":"filter",  "type":"select", "id":"filtertype"}, {"field":"id", "type":"filterlink", "link":"filter"}, {"field":"startrot",  "type":"number"}, {"field":"endrot",  "type":"number"}]},
+    {"type":"console",      "widgets":[
+        {"field":"starttime", "type":"number"},
+        {"field":"text",      "type":"text"}
+      ]
+    },
+    {"type":"fade",         "widgets":[
+        {"field":"fromcurrent", "type":"bool"},
+        {"field":"starttime",   "type":"number"},
+        {"field":"endtime",     "type":"number"},
+        {"field":"filter",      "type":"select",     "id":"filtertype"},
+        {"field":"id",          "type":"filterlink", "link":"filter"},
+        {"field":"startalpha",  "type":"number"},
+        {"field":"endalpha",    "type":"number"}
+      ]
+    },
+    {"type":"flipbook",     "widgets":[
+        {"field":"starttime",   "type":"number"},
+        {"field":"filter",      "type":"select",     "id":"filtertype"},
+        {"field":"id",          "type":"filterlink", "link":"filter"},
+        {"field":"atlascell.x", "type":"number"},
+        {"field":"atlascell.y", "type":"number"}
+      ]
+    },
+    {"type":"layerassign",  "widgets":[
+        {"field":"starttime",   "type":"number"},
+        {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type"},
+        {"field":"id",          "type":"filterlink", "link":"filter"},
+        {"field":"tolayer",     "type":"laylist",    "display":"To Layer Type"},
+        {"field":"layerpos",    "type":"select",     "id":"layerpos", "display":"Where in Layer"}
+      ]
+    },
+    {"type":"loadinto",     "widgets":[
+        {"field":"starttime",   "type":"number"},
+        {"field":"url",         "type":"text"},
+        {"field":"vari",        "type":"text"}
+      ]
+    },
+    {"type":"move",         "widgets":[
+        {"field":"fromcurrent", "type":"bool"},
+        {"field":"starttime",   "type":"number"},
+        {"field":"endtime",     "type":"number"},
+        {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type"},
+        {"field":"id",          "type":"filterlink", "link":"filter"},
+        {"field":"startpos",    "type":"posxy",      "display":"Start Position"},
+        {"field":"endpos",      "type":"posxy",      "display":"End Position"},
+        {"field":"ease",        "type":"select",     "id":"easetype", "display":"Ease"}
+      ]
+    },
+    {"type":"pause",        "widgets":[
+        {"field":"starttime", "type":"number"},
+        {"field":"id",        "type":"animlist"},
+        {"field":"toggle",    "type":"bool"}
+      ]
+    },
+    {"type":"play",         "widgets":[
+        {"field":"starttime", "type":"number"},
+        {"field":"id",        "type":"animlist"}
+      ]
+    },
+    {"type":"pstart",       "widgets":[
+        {"field":"starttime", "type":"number"},
+        {"field":"id",        "type":"parlist"}
+      ]
+    },
+    {"type":"scale",        "widgets":[
+        {"field":"fromcurrent", "type":"bool"},
+        {"field":"starttime",   "type":"number"},
+        {"field":"endtime",     "type":"number"},
+        {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type"},
+        {"field":"id",          "type":"filterlink", "link":"filter"},
+        {"field":"startscale",  "type":"number"},
+        {"field":"endscale",    "type":"number"}
+      ]
+    },
+    {"type":"sound",        "widgets":[
+        {"field":"starttime", "type":"number"},
+        {"field":"id",        "type":"sndlist"}
+      ]
+    },
+    {"type":"soundstop",    "widgets":[
+        {"field":"starttime", "type":"number"},
+        {"field":"id",        "type":"sndlist"}
+      ]
+    },
+    {"type":"testpset",     "widgets":[
+        {"field":"testp",     "type":"bool"},
+        {"field":"starttime", "type":"number"},
+        {"field":"filter",    "type":"select",     "id":"filtertype"},
+        {"field":"id",        "type":"filterlink", "link":"filter"}
+      ]
+    },
+    {"type":"turn",         "widgets":[
+        {"field":"fromcurrent", "type":"bool"},
+        {"field":"starttime",   "type":"number"},
+        {"field":"endtime",     "type":"number"},
+        {"field":"filter",      "type":"select",     "id":"filtertype"},
+        {"field":"id",          "type":"filterlink", "link":"filter"},
+        {"field":"startrot",    "type":"number"},
+        {"field":"endrot",      "type":"number"}
+      ]
+    },
     {"type":"vis",          "widgets":[
         {"field":"starttime", "type":"number"},
         {"field":"filter",    "type":"select", "id":"filtertype", "display":"Select Type"},
@@ -259,6 +347,7 @@
     "easetype":{"list":["linear","inExp","outExp","inOutExp","inQuad", "outQuad", "inOutQuad"]},
     "filtertype":{"list":["object", "group","particle"]},
     "fontlist":{"list":["Arial","Arial Black", "Courier New", "Impact","Lucida Console","Lucida Sans Unicode","Tahoma","Trebuchet MS","Verdana"]},
+    "layerpos":{"list":["top", "bottom"]},
     "objectorigin":{"list":["upper_left", "center"]},
     "objecttype":{"list":["image", "shape"]},
     "operationtype":{"list":["add", "sub","set"]},

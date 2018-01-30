@@ -10,7 +10,7 @@ authorLibs.buildProp = {
     else{
       if (Array.isArray(authorLibs.authorData[type])) {
         thisProp = authorLibs.authorData[type].filter(function(selected){return selected.id === id;})[0];
-        propName = thisProp.id;
+        if (thisProp !== undefined) propName = thisProp.id;
       }
       else thisProp = id;
     }
@@ -59,16 +59,17 @@ authorLibs.buildProp = {
               if (subWidget.type === 'number')  {
                 output += authorLibs.utils.handleNumber(animation,   'anim', subWidget, widgetPath);
               }
-              if (subWidget.type === 'objlist')    output += authorLibs.utils.handleTypeList('objects',   animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'animlist')   output += authorLibs.utils.handleTypeList('anims',     animation, 'anim', subWidget, widgetPath);
-              if (subWidget.type === 'grplist')    output += authorLibs.utils.handleTypeList('groups',    animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'anmlist')    output += authorLibs.utils.handleTypeList('anims',     animation, 'anim', subWidget, widgetPath);
+              if (subWidget.type === "filterlink") output += authorLibs.utils.handleSelectLink(animation, 'anim',    subWidget, widgetPath);
+              if (subWidget.type === 'grplist')    output += authorLibs.utils.handleTypeList('groups',    animation, 'anim', subWidget, widgetPath);
+              if (subWidget.type === 'laylist')    output += authorLibs.utils.handleTypeList('layers',    animation, 'anim', subWidget, widgetPath);
+              if (subWidget.type === 'objlist')    output += authorLibs.utils.handleTypeList('objects',   animation, 'anim', subWidget, widgetPath);
               if (subWidget.type === 'parlist')    output += authorLibs.utils.handleTypeList('particles', animation, 'anim', subWidget, widgetPath);
-              if (subWidget.type === "filterlink") output += authorLibs.utils.handleSelectLink(animation, 'anim', subWidget, widgetPath);
-              if (subWidget.type === 'sndlist')    output += authorLibs.utils.handleTypeList('sounds', animation,      'anim', subWidget, widgetPath);
-              if (subWidget.type === 'posxy')      output += authorLibs.utils.handlePosition(animation, 'anim', subWidget, widgetPath);
-              if (subWidget.type === 'select')     output += authorLibs.utils.handleSelect(animation,   'anim', subWidget, widgetPath);
-              if (subWidget.type === "text")       output += authorLibs.utils.handleText(animation,     'anim', subWidget, widgetPath, 'w100');
+              if (subWidget.type === 'posxy')      output += authorLibs.utils.handlePosition(animation,   'anim',    subWidget, widgetPath);
+              if (subWidget.type === 'select')     output += authorLibs.utils.handleSelect(animation,     'anim',    subWidget, widgetPath);
+              if (subWidget.type === 'sndlist')    output += authorLibs.utils.handleTypeList('sounds',    animation, 'anim', subWidget, widgetPath);
+              if (subWidget.type === "text")       output += authorLibs.utils.handleText(animation,      'anim',     subWidget, widgetPath, 'w100');
             });
             output += '</div>';
           });

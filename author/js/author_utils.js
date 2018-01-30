@@ -522,13 +522,19 @@ authorLibs.utils = {
   },
 
   handleTypeList: function(filter, object, type, widget, path){
-    var str       = '';
-    var list      = authorLibs.utils.listIdsNames(filter);
+    var str  = '';
+    var list = [];
     var defaultId = authorLibs.utils.getSubProp(object, path);
+    if (filter === 'layers'){
+      authorLibs.authorData.layers.forEach(function(layer, idx){ list.push({name:layer.name, id:layer.id})});
+    } else {
+      list = authorLibs.utils.listIdsNames(filter);
+    }
     str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
     str += authorLibs.utils.buildSelect(
       {fn:'authorLibs.utils.updateItem', object:object.id, type:type, list:list,  defaultId:defaultId, path:path}
     ) + '<br>';
+
     return str;
   },
 
@@ -671,7 +677,7 @@ authorLibs.utils = {
     });
 
     if (json.layers === undefined){
-      json.layers = [{name:'layer0', list:[], show:true}];
+      json.layers = [{name:'layer0', id:authorLibs.utils.uuid(), list:[], show:true}];
       var needOrder = ['objects','particles'];
       needOrder.forEach(function(type){
         if (json[type] === undefined) return;

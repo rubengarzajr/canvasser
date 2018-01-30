@@ -10,7 +10,7 @@ function initCanvasser(vari, datafile, dataForm, overrides){
 }
 
 function canvasser(vari, interactiveData, dataForm, overrides){
-  this.version  = '1.2.0';
+  this.version  = '1.3.0';
   var act       = {
     loop         : true,
     position     : {x:0, y:0},
@@ -433,6 +433,25 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (anim.atlascell.x === undefined) anim.atlascell.x = 0;
           if (anim.atlascell.y === undefined) anim.atlascell.y = 0;
           if (animOb) animOb.atlascell = {x:anim.atlascell.x, y:anim.atlascell.y};
+          anim.delete = true;
+        }
+        if (anim.type === 'layerassign'){
+          var layerNumber = -1;
+          act.data.layers.forEach(function(layer, layerIdx){
+            if (layer.id === anim.tolayer) layerNumber = layerIdx;
+          });
+          var found = false;
+          act.data.layers.forEach(function(layer, layerIdx){
+            layer.list.forEach(function(item, itemIdx){
+              if (found) return;
+              if (item.id === anim.id){
+                found = true;
+                var toMove = act.data.layers[layerIdx].list.splice(itemIdx, 1)[0];
+                act.data.layers[layerNumber].list.splice(itemIdx, 0, toMove);
+              }
+            });
+
+          });
           anim.delete = true;
         }
         if (anim.type === 'loadinto'){
