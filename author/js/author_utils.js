@@ -545,6 +545,7 @@ authorLibs.utils = {
     }
     if (item[prop] !== undefined) item[prop] = !item[prop];
     authorLibs.menus.update('layers');
+    restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
   layerUpdate: function(domElement, idx, prop, type){
@@ -677,7 +678,7 @@ authorLibs.utils = {
     });
 
     if (json.layers === undefined){
-      json.layers = [{name:'layer0', id:authorLibs.utils.uuid(), list:[], show:true}];
+      json.layers = [{name:'layer0', id:authorLibs.utils.uuid(), list:[], show:true, expanded:true}];
       var needOrder = ['objects','particles'];
       needOrder.forEach(function(type){
         if (json[type] === undefined) return;

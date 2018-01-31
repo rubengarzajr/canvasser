@@ -1,5 +1,9 @@
 ## Changelog:
 
+- 2018-01-31 Auto sort objects and images.
+- 2018-01-31 Added filter to object list.
+- 2018-01-31 Now knows if the tab switches, but doesn't do anything with that yet.
+- 2018-01-31 Use old time in animation if the delta time is greater than 2 seconds.
 - 2018-01-30 Added layerassign animation command.
 - 2018-01-29 **Version 1.3.0**
 - 2018-01-29 Fixed Layers UI Bugs.

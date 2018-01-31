@@ -25,6 +25,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     paused       : false
   };
   this.act     = act;
+  document.addEventListener('visibilitychange', handleVisibilityChange, false);
+  function handleVisibilityChange(){
+    if (document.visibilityState == "hidden") act.paused = true;
+    else act.paused = false;
+  }
+
   var pManager = {
     pSystemList : [],
     create: function(obj){
@@ -181,9 +187,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.canvas.addEventListener("touchstart",   touchDown,   false);
     act.canvas.addEventListener("touchmove",    touchMove,   false);
     act.canvas.addEventListener("touchend",     touchUp,     false);
-    // Trying to handle tab going out of focus
-    //window.addEventListener("focus", function(event){act.paused = true});
-    //window.addEventListener("blur", function(event){act.paused  = false});
 
     act.pathList = {};
     if (act.data.paths){act.data.paths.forEach(function(path){
@@ -341,7 +344,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   }
 
   function loop(){
-    //if (act.paused && act.loop) window.requestAnimationFrame(loop);
     act.data.tests.forEach(function(test){
       if (!test.active) return;
       tests(test);
@@ -406,7 +408,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       play.prevTime      = play.time;
       play.nowStamp      = Date.now();
       if (play.pause) return;
-      play.time         += play.nowStamp - play.prevStamp;
+      if (play.nowStamp-play.prevStamp < 2000) play.time += play.nowStamp - play.prevStamp;
 
       if (play.time >= play.length) {
         play.delete = true;
@@ -447,7 +449,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
               if (item.id === anim.id){
                 found = true;
                 var toMove = act.data.layers[layerIdx].list.splice(itemIdx, 1)[0];
-                act.data.layers[layerNumber].list.splice(itemIdx, 0, toMove);
+                if (anim.layerpos === 'bottom') act.data.layers[layerNumber].list.splice(itemIdx, 0, toMove);
+                if (anim.layerpos === 'top') act.data.layers[layerNumber].list.push(toMove);
               }
             });
 

@@ -146,6 +146,10 @@ authorLibs.menus = {
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
+  filterList: function(id, type){
+    authorLibs.menus.updateMenu(type);
+  },
+
   import: function(type){
     if (type === 'images') document.getElementById("upload_image").click();
   },
@@ -199,37 +203,6 @@ authorLibs.menus = {
     else toggler.style.display = "none";
   },
 
-  reorder: function(type, direction){
-    var table   = document.getElementById(type + "table");
-    var swapRow = undefined;
-    var swapId  = undefined;
-    var select  = undefined;
-    for (var i = 0, row; row = table.rows[i]; i++) {
-      if (row.style[0] === "background-color") {
-        swapRow = i;
-        swapId  = row.id;
-      }
-    };
-
-    if (direction === "up" && swapRow > 0){
-      var b = authorLibs.utils.copyObj(authorLibs.authorData[type][swapRow], {});
-      authorLibs.authorData[type][swapRow] = authorLibs.authorData[type][swapRow-1];
-      authorLibs.authorData[type][swapRow-1] = b;
-      select = b.id;
-    }
-    if (direction === "down" && swapRow < authorLibs.authorData[type].length-1){
-      var b = authorLibs.utils.copyObj(authorLibs.authorData[type][swapRow], {});
-      authorLibs.authorData[type][swapRow] = authorLibs.authorData[type][swapRow+1];
-      authorLibs.authorData[type][swapRow+1] = b;
-      select = b.id;
-    }
-
-    authorLibs.menus.update(type);
-    authorLibs.buildProp.getProps(type, swapId.substring(swapId.indexOf("_") + 1));
-    restartCanvasser("sample", authorLibs.authorData, "string");
-    if (select !== undefined) authorLibs.menus.updateSelectionWindow(type, select);
-  },
-
   update: function(toUp){
     if (!toUp || toUp === 'anims')       authorLibs.menus.updateMenu('anims');
     if (!toUp || toUp === 'constraints') authorLibs.menus.updateMenu('constraints');
@@ -252,6 +225,7 @@ authorLibs.menus = {
     var menuHolder = document.getElementById(type.slice(0, -1) + "holder");
     var menu       = '<table class="objtable" id="' + type + 'table" width="100%">';
     if (authorLibs.authorData[type] === undefined) authorLibs.authorData[type] = [];
+
     if (type === 'samples'){
       authorLibs.rules.samples.forEach(function(sampy){
         menu += '<tr class="clicktr" id="'+type+'_'+sampy.id+'" onclick="authorLibs.menus.loadSample(\''+ sampy.url + '\')">';
@@ -262,6 +236,7 @@ authorLibs.menus = {
       menuHolder.innerHTML = menu;
       return;
     }
+
     if (type === 'layers'){
       authorLibs.authorData[type].slice().reverse().forEach(function(menuItem, idxR){
         var idx = authorLibs.authorData[type].length -1 - idxR;
@@ -300,6 +275,20 @@ authorLibs.menus = {
       menuHolder.innerHTML = menu;
       return;
     }
+
+    var sorter = ['objects','images', 'anims'];
+    sorter.forEach(function(testType){
+      if (type === testType){
+        authorLibs.authorData[testType].sort(function(a, b){
+          if(a.name < b.name) return -1;
+          if(a.name > b.name) return 1;
+          return 0;
+        });
+      }
+    });
+
+    var objectFilter = document.getElementById('objectfilter').value;
+
     authorLibs.authorData[type].forEach(function(menuItem, idx){
       if (type === 'anims'  || type === 'constraints' || type === 'groups' || type === 'particles'
        || type === 'shapes' || type === 'sounds'      || type === 'tests'  || type === 'vars'){
@@ -324,11 +313,13 @@ authorLibs.menus = {
 
       }
       if (type === 'objects'){
+        if (menuItem.name.indexOf(objectFilter) === -1) return;
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td width="75%" style="font-size:1.3em;">' + menuItem.name + '</td>';
         menu +='<td width="25%">' + menuItem.type + '</td>';
         menu += '</tr>';
       }
+
       if (type === 'paths'){
         menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
         menu +='<td width="50%">' + menuItem.id + '</td>';

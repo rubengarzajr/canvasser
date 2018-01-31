@@ -223,21 +223,6 @@ a{
   user-select: none;
 }
 
-.divmenu{
-  color: rgb(220,220,220);
-  cursor: pointer;
-  display: table-cell;
-  font-family: button;
-  font-size: .85em;
-  margin: 2px;
-  padding: 2px;
-  user-select: none;
-}
-
-.divmenu:hover{
-  color: white;
-}
-
 .divspace{
   padding-bottom: 25px;
 }
@@ -473,6 +458,21 @@ a{
   text-align: center;
 }
 
+.menu-div{
+  color: rgb(220,220,220);
+  cursor: pointer;
+  display: table-cell;
+  font-family: button;
+  font-size: .85em;
+  margin: 2px;
+  padding: 2px;
+  user-select: none;
+}
+
+.menu-div:hover{
+  color: white;
+}
+
 .menu_dropdown{
   position: absolute;
   background-color: var(--menu-dropdown-bg);
@@ -480,6 +480,17 @@ a{
   padding: 1px 10px 1px 5px;
   opacity: .95;
   box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.menu-filter{
+  color: rgb(0,0,0);
+  cursor: pointer;
+  display: table-cell;
+  font-family: button;
+  font-size: .85em;
+  margin: 2px;
+  padding: 2px;
+  user-select: none;
 }
 
 .menu_items{
