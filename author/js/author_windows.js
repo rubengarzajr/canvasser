@@ -27,7 +27,7 @@ authorLibs.windows = {
 
     var load = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'loadbox', style:'display:none'});
     authorLibs.windows.makeDiv({parent:load, html:"LOAD FILE", classes:'title_load'});
-    authorLibs.windows.makeElement({id:'loaddatafilter', parent:load, placeholder:'filter', type:'input', subtype:'text', classes:'load_filter', keyup:function(){authorLibs.menus.filterList('loaddatafilter', 'loaddatafilter')}});
+    authorLibs.windows.makeElement({id:'loaddatafilter', parent:load, placeholder:'filter projects', type:'input', subtype:'text', classes:'load_filter', keyup:function(){authorLibs.menus.filterList('loaddatafilter', 'loaddatafilter')}});
     authorLibs.windows.makeDiv({parent:load, id:"loaddata", classes:'content_load'});
     authorLibs.windows.makeDiv({parent:load, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('loadbox')}});
 
@@ -53,7 +53,6 @@ authorLibs.windows = {
     authorLibs.windows.makeDiv({parent:upload, html:"UPLOAD FILES", classes:'title_save'});
     var uDivP = authorLibs.windows.makeDiv({parent:upload, classes:'saveblock'});
     authorLibs.windows.makeDiv({parent:uDivP, html:'Select Project:',  classes:"savelabel"});
-    //authorLibs.windows.makeElement({parent:uDivP, type:'input', subtype:'text', classes:'savetextbox', id:'uploadproject'});
     authorLibs.windows.makeElement({parent:uDivP, type:'input', subtype:'text', classes:'savetextbox', id:'uploadproject', list:'datalist_saveproject'});
 
     authorLibs.windows.makeDiv({parent:upload, html:"SELECT", classes:'button_load',  click:function(){authorLibs.utils.fileUploadPre()}});
@@ -62,7 +61,7 @@ authorLibs.windows = {
       {id:"anim",       position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
       {id:"canvas",     position:{x: 10, y:174}, menu:{reload:true}},
       {id:"constraint", position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
-      {id:"file",       position:{x: 23, y: 52}, menu:{refresh:true, uploadfile:true, renamefile:true, addtoproject:true, copyfile:true, deletefile:true}, min:true, hide:false},
+      {id:"file",       position:{x: 23, y: 52}, menu:{refresh:true, uploadfile:true, renamefile:true, addtoproject:true, copyfile:true, deletefile:true, filter:true}, min:true, hide:false},
       {id:"group",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
       {id:"image",      position:{x:675, y: 52}, menu:{add:true, delete:true}, min:true},
       {id:"json",       position:{x:  5, y: 52}, menu:{load:true, view:true, execute:true, format:true},min:false, hide:true},
@@ -135,9 +134,7 @@ authorLibs.windows = {
       if (win.menu.format)     authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Format',  click:function(){authorLibs.windows.format()}});
       if (win.menu.load)       authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Load',    click:function(){authorLibs.menus.load_click()}});
       if (win.menu.reload)     authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Restart', click:function(){authorLibs.windows.reload()}});
-      if (win.menu.filter){
-         authorLibs.windows.makeElement({id:win.id + 'filter', parent:menu, placeholder:'filter', type:'input', subtype:'text', classes:'menu-filter', keyup:function(){authorLibs.menus.filterList(win.id + 'filter', win.id +'s')}});
-      }
+
       if (win.menu.sample) authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Load',   click:function(){authorLibs.menus.loadSample()}});
       if (win.menu.import) authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Import', click:function(){authorLibs.menus.import(win.id +'s')}});
       if (win.menu.view) authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'View', click:function(){authorLibs.utils.view()}});
@@ -149,12 +146,23 @@ authorLibs.windows = {
       if (win.menu.renamefile)   authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Rename',  click:function(){authorLibs.utils.fileRename(win.id +'s')}});
       if (win.menu.copyfile)     authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Copy',    click:function(){authorLibs.utils.fileCopy(win.id +'s')}});
       if (win.menu.deletefile)   authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Delete',  click:function(){authorLibs.utils.fileDeleteWin('fileManager')}});
-
+      if (win.menu.filter){
+         authorLibs.windows.makeElement({id:win.id + 'filter', parent:menu, placeholder:'filter', type:'input', subtype:'text', classes:'menu-filter', keyup:function(){authorLibs.menus.filterList(win.id + 'filter', win.id +'s')}});
+      }
       if (win.id === 'canvas'){
         authorLibs.windows.makeDiv({parent:title, id:'outputtitle', classes:'wintitle right', html:'X, Y'});
         winTitle.innerHTML = 'Output';
       }
       if (win.id === 'file'){
+        var fileMenu = document.getElementById('filemenu');
+        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_json', style:'display: table-cell;', checked:true,  click:function(){authorLibs.utils.refreshfiles()}});
+        authorLibs.windows.makeDiv({parent:fileMenu, classes:'menu-check', html:'JSON'});
+        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_image', style:'display: table-cell;', checked:true, click:function(){authorLibs.utils.refreshfiles()}});
+        authorLibs.windows.makeDiv({parent:fileMenu, classes:'menu-check', html:'IMAGE'});
+        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_html', style:'display: table-cell;', checked:true, click:function(){authorLibs.utils.refreshfiles()}});
+        authorLibs.windows.makeDiv({parent:fileMenu, classes:'menu-check', html:'HTML'});
+        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_sound', style:'display: table-cell;', checked:true, click:function(){authorLibs.utils.refreshfiles()}});
+        authorLibs.windows.makeDiv({parent:fileMenu, classes:'menu-check', html:'SOUND'});
         var filelistDiv = authorLibs.windows.makeDiv({parent:contents, classes:'content_load_all', id:'filelist'});
       }
       if (win.id === 'json'){

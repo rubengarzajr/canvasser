@@ -114,18 +114,23 @@ authorLibs.menus = {
     var objList = authorLibs.authorData[type].filter(function(test){ return(type+'_'+test.id === copyRow)});
     if (objList.length === 0 || objList === undefined) return;
     newObj       = authorLibs.utils.copyObj(objList[0], {});
-    var itemName = newObj.id.replace(/\d+$/, "");
+    var itemName = newObj.name.replace(/\d+$/, "");
     var itemCnt  = 0;
     var tryAgain = true;
     while (tryAgain){
-      if (authorLibs.authorData[type].filter(function(item){return item.id === itemName}).length > 0){
+      if (authorLibs.authorData[type].filter(function(item){return item.name === itemName}).length > 0){
         itemCnt ++;
-        itemName = newObj.id.replace(/\d+$/, "") + itemCnt;
+        itemName = newObj.name.replace(/\d+$/, "") + itemCnt;
       } else tryAgain = false;
     }
-    newObj.id = itemName;
+    newObj.id = authorLibs.utils.uuid();
+    newObj.name = itemName;
     authorLibs.authorData[type].push(newObj);
     authorLibs.menus.update(type);
+    if (type === 'objects' || type === 'particles'){
+      authorLibs.authorData.layers[authorLibs.gui.currentLayer].list.push({id:newObj.id, type:type, name:itemName});
+      authorLibs.menus.updateMenu('layers');
+    }
     restartCanvasser("sample", authorLibs.authorData, "string");
     authorLibs.menus.updateSelectionWindow(type, newObj.id);
     authorLibs.buildProp.getProps(type,  newObj.id);
@@ -143,16 +148,20 @@ authorLibs.menus = {
     document.getElementById("propertiestitle").innerHTML = '';
     document.getElementById("properties").innerHTML      = '';
     authorLibs.menus.updateMenu(type);
+    if (type === 'objects' || type === 'particles') authorLibs.menus.updateMenu('layers');
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
   filterList: function(id, type){
     if (id==='loaddatafilter'){
       authorLibs.utils.loadDataUpdate();
-    } else {
-      authorLibs.menus.updateMenu(type);
+      return;
     }
-
+    if (id==='filefilter'){
+      authorLibs.utils.refreshfiles(authorLibs.lists.fileList);
+      return;
+    }
+    authorLibs.menus.updateMenu(type);
   },
 
   import: function(type){
@@ -256,10 +265,16 @@ authorLibs.menus = {
         menu +='<img class="layershow" onclick="authorLibs.utils.layerUpdate(this,\''+idx+'\',\'show\',\'btoggle\')" data-type="layer" data-layer="'+idx+'" data-idx="-1" src="./image/icon_layers_' + (  authorLibs.authorData.layers[idx].show ? 'show' :  'hide' ) + '.png">';
         menu += '</td>';
         menu += '</tr>';
+        var err = -1;
         if (authorLibs.authorData.layers[idx].expanded){
           authorLibs.authorData.layers[idx].list.slice().reverse().forEach(function(layer, layerIdxR){
-            var layerIdx =authorLibs.authorData.layers[idx].list.length -1 - layerIdxR;
+            if (err > -1) return;
+            var layerIdx = authorLibs.authorData.layers[idx].list.length -1 - layerIdxR;
             var item = authorLibs.authorData[layer.type].filter(function(object){ return object.id === layer.id})[0];
+            if (item === undefined) {
+              err = layerIdx
+              return;
+            }
             var type = layer.type;
             var dataTxt = ' data-layer="'+idx+'" data-idx="'+layerIdx+'" ';
             if (type === 'objects') type = item.type;
@@ -274,6 +289,13 @@ authorLibs.menus = {
             menu += '</td>';
             menu += '</tr>';
           });
+          if (err > -1) {
+            console.log(err)
+            console.log(authorLibs.authorData.layers[idx].list[err])
+            authorLibs.authorData.layers[idx].list.splice(err, 1);
+            console.log(authorLibs.authorData.layers[idx].list)
+            restartCanvasser("sample", authorLibs.authorData, "string");
+          }
         }
       });
       menu +='</table>';

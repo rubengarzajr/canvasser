@@ -52,7 +52,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         pExist.position         = {current:{x:obj.position.current.x, y:obj.position.current.y}};
       }
     },
-    draw(id){
+    draw: function(id){
       var pSystem  = pManager.pSystemList.filter(function(obj){return obj.id === id})[0];
       if (act.imageList[pSystem.info.image] == undefined) return;
       var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};

@@ -617,6 +617,7 @@ authorLibs.utils = {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onreadystatechange = function() {
     if(xhr.readyState == 4 && xhr.status == 200) {
+        authorLibs.lists.fileListRaw = JSON.parse(xhr.responseText);
         authorLibs.utils[funct](JSON.parse(xhr.responseText));
       }
     }
@@ -697,7 +698,12 @@ authorLibs.utils = {
     return json;
   },
 
-  refreshfiles: function(files){
+  refreshfiles: function(){
+    var files = authorLibs.lists.fileListRaw;
+    if (files === undefined) {
+      authorLibs.utils.loadFromPhp('refreshfiles', true);
+      return;
+    }
     authorLibs.lists.fileManager = [];
     var fileList = [];
     files.forEach(function(file){
@@ -718,12 +724,18 @@ authorLibs.utils = {
     document.getElementById('filelist').style.display = 'block';
     var filebox = document.getElementById('filelist');
     filebox.innerHTML = '';
+    var fileFilter = document.getElementById('filefilter').value;
     fileList.forEach(function(item){
+      if (fileFilter !== '') {
+        if (item.project.indexOf(fileFilter) === -1) return;
+      }
       authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
       var subs = ['json','image','sound','html'];
       subs.forEach(function(sub){
         if (item[sub] === undefined) return;
         if (item[sub].length === 0) return;
+        if (!document.getElementById('filemanager_check_'+sub).checked) return;
+        console.log()
         authorLibs.windows.makeDiv({parent:filebox, html:sub, classes:'load_filefolder'});
 
         item[sub].forEach(function(file){

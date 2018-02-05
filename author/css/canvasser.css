@@ -176,7 +176,7 @@ a{
   background-color: white;
   height: 205px;
   margin-bottom: 5px;
-  min-width: 250px;
+  min-width: 397px;
   overflow-y: scroll;
   padding: 10px;
   resize: both;
@@ -473,6 +473,17 @@ a{
   margin-top: 5px;
   margin-bottom: 5px;
   text-align: center;
+}
+
+.menu-check{
+  color: rgb(220,220,220);
+  cursor: pointer;
+  display: inline;
+  font-family: button;
+  font-size: .85em;
+  margin: 2px;
+  padding: 2px;
+  user-select: none;
 }
 
 .menu-div{
