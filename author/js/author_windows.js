@@ -27,6 +27,7 @@ authorLibs.windows = {
 
     var load = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'loadbox', style:'display:none'});
     authorLibs.windows.makeDiv({parent:load, html:"LOAD FILE", classes:'title_load'});
+    authorLibs.windows.makeElement({id:'loaddatafilter', parent:load, placeholder:'filter', type:'input', subtype:'text', classes:'load_filter', keyup:function(){authorLibs.menus.filterList('loaddatafilter', 'loaddatafilter')}});
     authorLibs.windows.makeDiv({parent:load, id:"loaddata", classes:'content_load'});
     authorLibs.windows.makeDiv({parent:load, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('loadbox')}});
 
@@ -81,9 +82,9 @@ authorLibs.windows = {
 
     var menuFile = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_file',    classes:'menu_items', html:'File', click:function(){authorLibs.menus.menuToggle('menu_file_dropdown')}});
     var dropFile = authorLibs.windows.makeDiv({parent:menuFile, id:'menu_file_dropdown',  classes:"menu_dropdown", style:'display:none;'});
-    authorLibs.windows.makeDiv({parent:dropFile, html:'New',     classes:'drop_items', click:function(){authorLibs.utils.loadDefault()}});
-    authorLibs.windows.makeDiv({parent:dropFile, id:'loader',    classes:'drop_items', html:'Load File',  click:function(){authorLibs.utils.loadFromPhp('loadFilePHP', false)}});
-    authorLibs.windows.makeDiv({parent:dropFile, id:'saver',     classes:'drop_items', html:'Save File',  click:function(){
+    authorLibs.windows.makeDiv({parent:dropFile, html:'New',                    classes:'drop_items', click:function(){authorLibs.utils.loadDefault()}});
+    authorLibs.windows.makeDiv({parent:dropFile, html:'Load File', id:'loader', classes:'drop_items', click:function(){authorLibs.utils.loadFromPhp('loadFilePHP', false)}});
+    authorLibs.windows.makeDiv({parent:dropFile, html:'Save File', id:'saver',  classes:'drop_items', click:function(){
       authorLibs.windows.projectsList('saveproject'),
       authorLibs.menus.menuToggle('savebox')}
     });

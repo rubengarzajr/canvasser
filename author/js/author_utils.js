@@ -570,6 +570,19 @@ authorLibs.utils = {
     return comboList;
   },
 
+  loadDataUpdate: function(){
+    var filter = document.getElementById('loaddatafilter').value;
+    var filebox = document.getElementById('loaddata');
+    filebox.innerHTML = '';
+    authorLibs.lists.fileList.forEach(function(item){
+      if (item.project.indexOf(filter) < 0) return;
+      authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
+      item.files.forEach(function(file){
+        authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file', click:function(){authorLibs.utils.loadJson(file.url,item.project, file.id.substring(0, file.id.length - 5))}});
+      });
+    });
+  },
+
   loadDefault: function(){
     if (!authorLibs.defaultJSONobj)  authorLibs.utils.requestJSON(authorLibs.defaultJSON, function(data){restartCanvasser("sample", data, 'string');});
   },
@@ -591,14 +604,8 @@ authorLibs.utils = {
     });
 
     fileList.sort(function(a,b) {return (a.project > b.project) ? 1 : ((b.project > a.project) ? -1 : 0);} );
-    var filebox = document.getElementById('loaddata');
-    filebox.innerHTML = '';
-    fileList.forEach(function(item){
-      authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
-      item.files.forEach(function(file){
-        authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file', click:function(){authorLibs.utils.loadJson(file.url,item.project, file.id.substring(0, file.id.length - 5))}});
-      });
-    });
+    authorLibs.lists.fileList = fileList;
+    authorLibs.utils.loadDataUpdate();
   },
 
   loadFromPhp:function(funct, all){

@@ -147,7 +147,12 @@ authorLibs.menus = {
   },
 
   filterList: function(id, type){
-    authorLibs.menus.updateMenu(type);
+    if (id==='loaddatafilter'){
+      authorLibs.utils.loadDataUpdate();
+    } else {
+      authorLibs.menus.updateMenu(type);
+    }
+
   },
 
   import: function(type){

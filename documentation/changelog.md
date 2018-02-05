@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2018-02-05 Added filter to load list.
 - 2018-01-31 Auto sort objects and images.
 - 2018-01-31 Added filter to object list.
 - 2018-01-31 Now knows if the tab switches, but doesn't do anything with that yet.

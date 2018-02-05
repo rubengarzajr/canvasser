@@ -165,7 +165,7 @@ a{
 
 .content_load{
   background-color: white;
-  height: 420px;
+  height: 390px;
   min-width: 250px;
   margin-bottom: 5px;
   overflow-y: scroll;
@@ -250,6 +250,11 @@ a{
   margin-left: 3px;
   margin-right: 0px;
   font-family:button;
+}
+
+.filterholder {
+  width: 100%;
+  text-align: center;
 }
 
 @font-face {
@@ -422,6 +427,18 @@ a{
   font-family: button;
   margin-bottom: 2px;
   margin-left: 20px;
+}
+
+.load_filter {
+  margin: 0px 0px 5px 0px;
+  width: 392px;
+  color: rgb(0,0,0);
+  cursor: pointer;
+  display: table-cell;
+  font-family: button;
+  font-size: .85em;
+  padding: 2px;
+  user-select: none;
 }
 
 .load_filefolder{

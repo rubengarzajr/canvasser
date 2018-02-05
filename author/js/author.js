@@ -14,7 +14,8 @@ var authorLibs = {
     zidx:            25
   },
   lists:{
-    fileManager:[]
+    fileManager:[],
+    fileList:undefined
   },
   uploadList:[],
   endpoints:{
