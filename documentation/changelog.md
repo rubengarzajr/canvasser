@@ -1,7 +1,8 @@
 ## Changelog:
 
-- Fixed bugs in copy and delete objects relating to layers.
-- Added filters to File manager.
+- 2018-02-06 Fixed bug with linking image.
+- 2018-02-05 Fixed bugs in copy and delete objects relating to layers.
+- 2018-02-05 Added filters to File manager.
 - 2018-02-05 Added filter to load list.
 - 2018-01-31 Auto sort objects and images.
 - 2018-01-31 Added filter to object list.

@@ -81,12 +81,14 @@ authorLibs.menus = {
       var justName = itemToAdd.id.replace(/\.[^/.]+$/, "");
       if (itemToAdd.type === 'image'){
         var existingImage = authorLibs.authorData.images.filter(function(image){
-          return image.id === justName;
+          return image.name === justName;
         });
 
         if (existingImage.length === 0){
-          authorLibs.authorData.images.push({id:justName, path:itemToAdd.project, url:itemToAdd.id});
-        } else existingPath[0].url = pathOnly;
+          authorLibs.authorData.images.push({id:authorLibs.utils.uuid(), name:justName, path:itemToAdd.project, url:itemToAdd.id});
+        } else {
+          existingPath[0].url = pathOnly;
+        }
         authorLibs.menus.update('images');
       }
       if (itemToAdd.type === 'sound'){
@@ -290,10 +292,7 @@ authorLibs.menus = {
             menu += '</tr>';
           });
           if (err > -1) {
-            console.log(err)
-            console.log(authorLibs.authorData.layers[idx].list[err])
             authorLibs.authorData.layers[idx].list.splice(err, 1);
-            console.log(authorLibs.authorData.layers[idx].list)
             restartCanvasser("sample", authorLibs.authorData, "string");
           }
         }
