@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2018-02-08 Fixed Objects should now stay in groups.
+- 2018-02-08 Fixed Missing objects should now appear in Layers list.
 - 2018-02-06 Fixed bug with linking image.
 - 2018-02-05 Fixed bugs in copy and delete objects relating to layers.
 - 2018-02-05 Added filters to File manager.

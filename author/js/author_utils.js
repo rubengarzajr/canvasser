@@ -848,9 +848,9 @@ authorLibs.utils = {
     if (objGet.groups === undefined) objGet.groups = [];
 
     if (element){
-      if (findInGroup(objGet, groupName) === -1) objGet.groups.push({id:groupName});
+      if (authorLibs.utils.findInGroup(objGet, groupName) === -1) objGet.groups.push({id:groupName});
     } else {
-      var splicer = findInGroup(objGet, groupName);
+      var splicer = authorLibs.utils.findInGroup(objGet, groupName);
       if (splicer > -1) objGet.groups.splice(splicer, 1);
     }
 

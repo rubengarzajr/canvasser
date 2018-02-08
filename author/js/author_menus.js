@@ -254,6 +254,24 @@ authorLibs.menus = {
     }
 
     if (type === 'layers'){
+      var idsInLayers = [];
+      authorLibs.authorData.layers.forEach(function(layer){
+        layer.list.forEach(function(item){
+          idsInLayers.push(item.id);
+        });
+      });
+
+      var checklist = ['objects','particles'];
+      checklist.forEach(function(testType){
+        if (authorLibs.authorData[testType] === undefined) return;
+        authorLibs.authorData[testType].forEach(function(item){
+          if (idsInLayers.indexOf(item.id) < 0){
+            authorLibs.authorData.layers[authorLibs.gui.currentLayer].list.push({id:item.id, type:testType, name:item.name});
+          }
+        });
+      });
+
+
       authorLibs.authorData[type].slice().reverse().forEach(function(menuItem, idxR){
         var idx = authorLibs.authorData[type].length -1 - idxR;
         var dropTxt = ' draggable="true" ';

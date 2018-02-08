@@ -157,17 +157,6 @@ function authorcanvasser(dataFile, dataForm){
     return output;
   }
 
-  function findInGroup(item, groupName){
-    var index = -1;
-    if (item.groups === undefined) return index;
-    item.groups.forEach(function(subObj, idx){
-      if (subObj.id === groupName) {
-        index = idx;
-      }
-    });
-    return index;
-  }
-
   function init(data){
     act.canvas        = document.createElement('canvas');
     act.context       = act.canvas.getContext('2d');
