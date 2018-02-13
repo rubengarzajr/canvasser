@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2018-02-13 Fixed duplicated layer entries.
 - 2018-02-08 Fixed Objects should now stay in groups.
 - 2018-02-08 Fixed Missing objects should now appear in Layers list.
 - 2018-02-06 Fixed bug with linking image.

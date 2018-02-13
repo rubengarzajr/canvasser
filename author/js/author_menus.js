@@ -256,8 +256,17 @@ authorLibs.menus = {
     if (type === 'layers'){
       var idsInLayers = [];
       authorLibs.authorData.layers.forEach(function(layer){
+        var inTooManyTimes = [];
         layer.list.forEach(function(item){
-          idsInLayers.push(item.id);
+          if (idsInLayers.indexOf(item.id) < 0){
+            idsInLayers.push(item.id);
+          } else {
+            inTooManyTimes.push(item.id);
+          }
+        });
+        inTooManyTimes.forEach(function(tooMany){
+          var idx = layer.list.findIndex(function(el){return el.id === tooMany;});
+          layer.list.splice(idx, 1);
         });
       });
 

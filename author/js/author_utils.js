@@ -685,6 +685,7 @@ authorLibs.utils = {
         });
     });
 
+    if (typeof json.layers !== 'undefined' && json.layers.length === 0) json.layers = undefined;
     if (json.layers === undefined){
       json.layers = [{name:'layer0', id:authorLibs.utils.uuid(), list:[], show:true, expanded:true}];
       var needOrder = ['objects','particles'];
