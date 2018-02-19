@@ -650,6 +650,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     if (!act.external) act.applyAction = [];
 
     function updateObject(obj){
+      if (obj === undefined) return;
       findParent(obj);
       if (obj.type === "shape" && obj.show){
         var objParent = obj.parent != undefined ? obj.parent.object : undefined;
