@@ -1200,10 +1200,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (filter === 'group'){
             var groupObjs = findInGroup(action.id);
             groupObjs.forEach(function(obj){obj.testp = action.testp});
-            // act.data.objects.forEach(function(obj){
-            //   if (obj.groups.find(function(e){return e.id === action.id}) === undefined) return;
-            //   actObj.testp = action.testp;
-            // });
           } else {
             var actObj = act.data.objects.filter(function(obj){return obj.id === action.id})[0];
             actObj.testp = action.testp;

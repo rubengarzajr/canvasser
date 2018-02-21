@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2018-02-21 Fixed deleted objects not being removed from layers.
+- 2018-02-21 Stripped names from layer lists.
 - 2018-02-13 Fixed duplicated layer entries.
 - 2018-02-08 Fixed Objects should now stay in groups.
 - 2018-02-08 Fixed Missing objects should now appear in Layers list.

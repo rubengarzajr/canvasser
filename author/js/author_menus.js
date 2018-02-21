@@ -271,21 +271,27 @@ authorLibs.menus = {
       });
 
       var checklist = ['objects','particles'];
+      var validIDs = [];
       checklist.forEach(function(testType){
         if (authorLibs.authorData[testType] === undefined) return;
         authorLibs.authorData[testType].forEach(function(item){
+          validIDs.push(item.id);
           if (idsInLayers.indexOf(item.id) < 0){
-            authorLibs.authorData.layers[authorLibs.gui.currentLayer].list.push({id:item.id, type:testType, name:item.name});
+            authorLibs.authorData.layers[authorLibs.gui.currentLayer].list.push({id:item.id, type:testType});
           }
         });
       });
 
+      authorLibs.authorData.layers.forEach(function(layer, idxR){
+        layer.list = layer.list.filter(function(e){return this.indexOf(e.id)!=-1;},validIDs);
+        layer.list.forEach(function(item){delete item.name});
+      });
 
       authorLibs.authorData[type].slice().reverse().forEach(function(menuItem, idxR){
         var idx = authorLibs.authorData[type].length -1 - idxR;
         var dropTxt = ' draggable="true" ';
-        dropTxt +=    'ondragover="authorLibs.utils.dropMenuItemAllow(event)" ';
-        dropTxt +=    'ondragstart="authorLibs.utils.dragMenuItem(event)" data-type="layer"';
+        dropTxt    += 'ondragover="authorLibs.utils.dropMenuItemAllow(event)" ';
+        dropTxt    += 'ondragstart="authorLibs.utils.dragMenuItem(event)" data-type="layer"';
 
         menu += '<tr class="clicktr">';
         menu +='<td width="100%" class="layers_title" onclick="authorLibs.author.getProps(\'layers\',\''+idx+'\')" ondrop="authorLibs.utils.dropMenuItem(event)" '+ dropTxt + '  data-layer="'+idx+'" data-idx="-1">';
