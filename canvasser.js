@@ -1197,10 +1197,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           var filter = "object";
           if (action.filter!== undefined) filter = action.filter;
           if (filter === 'group'){
-            act.data.objects.forEach(function(obj){
-              if (obj.groups.find(function(e){return e.id === action.id}) === undefined) return;
-              actObj.testp = action.testp;
-            });
+            var groupObjs = findInGroup(action.id);
+            groupObjs.forEach(function(obj){obj.testp = action.testp});
+            // act.data.objects.forEach(function(obj){
+            //   if (obj.groups.find(function(e){return e.id === action.id}) === undefined) return;
+            //   actObj.testp = action.testp;
+            // });
           } else {
             var actObj = act.data.objects.filter(function(obj){return obj.id === action.id})[0];
             actObj.testp = action.testp;
