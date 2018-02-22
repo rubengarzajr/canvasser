@@ -204,8 +204,27 @@ authorLibs.windows = {
 
   makeDiv: function(settings){
     settings.type = 'div';
-    var div = authorLibs.windows.makeElement(settings);
-    return div;
+    return authorLibs.windows.makeElement(settings);
+  },
+
+  makeImg: function(settings){
+    settings.type = 'img';
+    return authorLibs.windows.makeElement(settings);
+  },
+
+  makeTr: function(settings){
+    settings.type = 'tr';
+    return authorLibs.windows.makeElement(settings);
+  },
+
+  makeTable: function(settings){
+    settings.type = 'table';
+    return authorLibs.windows.makeElement(settings);
+  },
+
+  makeTd: function(settings){
+    settings.type = 'td';
+    return authorLibs.windows.makeElement(settings);
   },
 
   makeElement: function(settings){
@@ -214,6 +233,14 @@ authorLibs.windows = {
     if (settings.checked     !== undefined) element.checked      = true;
     if (settings.classes     !== undefined) element.className    = settings.classes;
     if (settings.click       !== undefined) element.onclick      = settings.click;
+    // if (settings.click    !== undefined) element.addEventListener("click",settings.click);
+    if (settings.data        !== undefined){
+      settings.data.forEach(function(subD){element.dataset[subD.id] = subD.val;})
+    }
+    if (settings.drag        !== undefined) element.draggable    = settings.drag;
+    if (settings.dragover    !== undefined) element.ondragover   = settings.dragover;
+    if (settings.dragstart   !== undefined) element.ondragstart  = settings.dragstart;
+    if (settings.drop        !== undefined) element.ondrop       = settings.drop;
     if (settings.html        !== undefined) element.innerHTML    = settings.html;
     if (settings.id          !== undefined) element.id           = settings.id;
     if (settings.keydown     !== undefined) element.onkeydown    = settings.keydown;
@@ -226,8 +253,10 @@ authorLibs.windows = {
     if (settings.mouseover   !== undefined) element.onmouseover  = settings.mouseover;
     if (settings.multiple    !== undefined) element.multiple     = true;
     if (settings.placeholder !== undefined) element.placeholder  = settings.placeholder;
+    if (settings.src         !== undefined) element.src          = settings.src;
     if (settings.style       !== undefined) element.style        = settings.style;
     if (settings.subtype     !== undefined) element.type         = settings.subtype;
+    if (settings.width       !== undefined) element.width        = settings.width;
     settings.parent.appendChild(element);
     return element;
   },

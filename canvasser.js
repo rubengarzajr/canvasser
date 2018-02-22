@@ -53,7 +53,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       }
     },
     draw: function(id){
-      var pSystem  = pManager.pSystemList.filter(function(obj){return obj.id === id})[0];
+      var pSystem = pManager.pSystemList.filter(function(obj){return obj.id === id})[0];
+      if (pSystem === undefined) return;
       if (act.imageList[pSystem.info.image] == undefined) return;
       var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
       if (pSystem.info.blend) act.context.globalCompositeOperation = pSystem.info.blend;
@@ -139,11 +140,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   }
 
   var ease     = new Ease();
-  if (dataForm == "file") requestJSON(interactiveData, init);
+  if (dataForm == "file") requestJson(interactiveData, init);
   else if (dataForm == "string") init(JSON.parse(interactiveData));
   else init(interactiveData);
 
-  function requestJSON(fileNamePath, returnFunction){
+  function requestJson(fileNamePath, returnFunction){
     var fileToDl = fileNamePath;
     fileToDl += '?' + new Date().getTime();
     var xhr = new XMLHttpRequest();

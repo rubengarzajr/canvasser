@@ -206,7 +206,7 @@ authorLibs.menus = {
   },
 
   loadSample: function(url){
-    authorLibs.utils.requestJSON(authorLibs.externalsPath + 'sample/json/' + url + '?' + new Date().getTime(), function(data){restartCanvasser("sample", data, 'string');});
+    authorLibs.utils.requestJson(authorLibs.externalsPath + 'sample/json/' + url + '?' + new Date().getTime(), function(data){restartCanvasser("sample", data, 'string');});
   },
 
   menuToggle:function(toggle){
@@ -238,100 +238,60 @@ authorLibs.menus = {
   },
 
   updateMenu: function(type){
-    var menuHolder = document.getElementById(type.slice(0, -1) + "holder");
-    var menu       = '<table class="objtable" id="' + type + 'table" width="100%">';
     if (authorLibs.authorData[type] === undefined) authorLibs.authorData[type] = [];
+
+    var menuHolder       = document.getElementById(type.slice(0, -1) + "holder");
+    menuHolder.innerHTML = '';
+    var menuTable        = authorLibs.windows.makeTable({parent:menuHolder, classes:'objtable', id:type+'table', width:'100%'});
 
     if (type === 'samples'){
       authorLibs.rules.samples.forEach(function(sampy){
-        menu += '<tr class="clicktr" id="'+type+'_'+sampy.id+'" onclick="authorLibs.menus.loadSample(\''+ sampy.url + '\')">';
-        menu +='<td class="shapeid"><div>' + sampy.id + '</div></td>';
-        menu += '</tr>';
+        var tr = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+sampy.id, click:function(){authorLibs.menus.loadSample(sampy.url)}});
+        var td = authorLibs.windows.makeTd({parent:tr, classes:'shapeid'});
+        authorLibs.windows.makeDiv({parent:td, html:sampy.id});
       });
-      menu +='</table>';
-      menuHolder.innerHTML = menu;
       return;
     }
 
     if (type === 'layers'){
-      var idsInLayers = [];
-      authorLibs.authorData.layers.forEach(function(layer){
-        var inTooManyTimes = [];
-        layer.list.forEach(function(item){
-          if (idsInLayers.indexOf(item.id) < 0){
-            idsInLayers.push(item.id);
-          } else {
-            inTooManyTimes.push(item.id);
-          }
-        });
-        inTooManyTimes.forEach(function(tooMany){
-          var idx = layer.list.findIndex(function(el){return el.id === tooMany;});
-          layer.list.splice(idx, 1);
-        });
-      });
-
-      var checklist = ['objects','particles'];
-      var validIDs = [];
-      checklist.forEach(function(testType){
-        if (authorLibs.authorData[testType] === undefined) return;
-        authorLibs.authorData[testType].forEach(function(item){
-          validIDs.push(item.id);
-          if (idsInLayers.indexOf(item.id) < 0){
-            authorLibs.authorData.layers[authorLibs.gui.currentLayer].list.push({id:item.id, type:testType});
-          }
-        });
-      });
-
-      authorLibs.authorData.layers.forEach(function(layer, idxR){
-        layer.list = layer.list.filter(function(e){return this.indexOf(e.id)!=-1;},validIDs);
-        layer.list.forEach(function(item){delete item.name});
-      });
-
+      authorLibs.utils.layersClean();
       authorLibs.authorData[type].slice().reverse().forEach(function(menuItem, idxR){
         var idx = authorLibs.authorData[type].length -1 - idxR;
-        var dropTxt = ' draggable="true" ';
-        dropTxt    += 'ondragover="authorLibs.utils.dropMenuItemAllow(event)" ';
-        dropTxt    += 'ondragstart="authorLibs.utils.dragMenuItem(event)" data-type="layer"';
+        var dataLayer =[{id:'type', val:'layer'}, {id:'layer', val:idx}, {id:'idx', val:-1}];
+        var tr = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr'});
+        var td = authorLibs.windows.makeTd({parent:tr, width:'100%', classes:'layers_title', click:function(){authorLibs.buildProp.getProps('layers',idx);},
+          drop:function(){authorLibs.utils.dropMenuItem(event)}, drag:true, dragover:function(){authorLibs.utils.dropMenuItemAllow(event)},
+          dragstart:function(){authorLibs.utils.dragMenuItem(event)}, data:dataLayer});
+        authorLibs.windows.makeImg({parent:td,  classes:'layerexp', click:function(){authorLibs.utils.layerToggle(idx,'layer','expanded')},
+          data:dataLayer, src:'./image/icon_layers_'+(authorLibs.authorData.layers[idx].expanded ? 'e' : 'c')+'.png'});
+        authorLibs.windows.makeDiv({parent:td,  classes:'layer_title_text', click:function(){authorLibs.author.getProps('layers',idx)}, data:dataLayer, html:menuItem.name});
+        authorLibs.windows.makeImg({parent:td,  classes:'layershow', click:function(){authorLibs.utils.layerUpdate(this, idx, 'show', 'btoggle')},
+          data:dataLayer, src:'./image/icon_layers_'+(authorLibs.authorData.layers[idx].show ? 'show' : 'hide')+'.png'});
 
-        menu += '<tr class="clicktr">';
-        menu +='<td width="100%" class="layers_title" onclick="authorLibs.author.getProps(\'layers\',\''+idx+'\')" ondrop="authorLibs.utils.dropMenuItem(event)" '+ dropTxt + '  data-layer="'+idx+'" data-idx="-1">';
-        menu +='<img class="layerexp" onclick="authorLibs.utils.layerToggle(\''+idx+'\',\'layer\',\'expanded\')" data-type="layer" data-layer="'+idx+'" data-idx="-1" src="./image/icon_layers_' + (  authorLibs.authorData.layers[idx].expanded ? 'e' :  'c' ) + '.png">';
-        menu +='<div class="layer_title_text" onclick="authorLibs.author.getProps(\'layers\',\''+idx+'\')" data-type="layer" data-layer="'+idx+'" data-idx="-1">' + menuItem.name + '</div>';
-        menu +='<img class="layershow" onclick="authorLibs.utils.layerUpdate(this,\''+idx+'\',\'show\',\'btoggle\')" data-type="layer" data-layer="'+idx+'" data-idx="-1" src="./image/icon_layers_' + (  authorLibs.authorData.layers[idx].show ? 'show' :  'hide' ) + '.png">';
-        menu += '</td>';
-        menu += '</tr>';
-        var err = -1;
         if (authorLibs.authorData.layers[idx].expanded){
           authorLibs.authorData.layers[idx].list.slice().reverse().forEach(function(layer, layerIdxR){
-            if (err > -1) return;
-            var layerIdx = authorLibs.authorData.layers[idx].list.length -1 - layerIdxR;
-            var item = authorLibs.authorData[layer.type].filter(function(object){ return object.id === layer.id})[0];
-            if (item === undefined) {
-              err = layerIdx
-              return;
-            }
-            var type = layer.type;
-            var dataTxt = ' data-layer="'+idx+'" data-idx="'+layerIdx+'" ';
+            var layerIdx  = authorLibs.authorData.layers[idx].list.length -1 - layerIdxR;
+            var item      = authorLibs.authorData[layer.type].filter(function(object){ return object.id === layer.id})[0];
+            var type      = layer.type;
+            var dataLayer = [{id:'type', val:'layer'}, {id:'layer', val:idx}, {id:'idx', val:layerIdx}];
             if (type === 'objects') type = item.type;
-            menu += '<tr id="'+type+'_'+layerIdx+'" onclick="authorLibs.author.getProps(\''+layer.type+'\',\''+ layer.id + '\')">';
-            menu +='<td width="100%" class="layername" ondrop="authorLibs.utils.dropMenuItem(event)">';
-            menu +='<div '+ dropTxt + ' ' + dataTxt + '>';
-            menu +='<img style="vertical-align:top" data-type="layer" ' + dataTxt + ' src="./image/icon_layers_' + (layerIdx === authorLibs.authorData.layers[idx].list.length-1 ? 'l' :  't' ) + '.png">';
-            menu +='<img class="layer_icons" ' + dropTxt + ' ' + dataTxt + ' src="./image/icon_layer_' + type + '.png">';
-            menu +='<div class="layers_t" ' + dropTxt + ' ' + dataTxt + '>' + item.name + '</div>';
-            if (item.show !== undefined) menu +='<img class="layershow" onclick="authorLibs.utils.layerToggle(\''+item.id+'\',\''+layer.type+'\',\'show\')" data-type="layer" data-layer="'+idx+'" data-idx="'+layerIdx+'" src="./image/icon_layer_' + (item.show ? 'show' :  'hide' ) + '.png">';
-            menu += '</div>';
-            menu += '</td>';
-            menu += '</tr>';
+            var tr  = authorLibs.windows.makeTr({parent:menuTable, id:type+'_'+layerIdx, click:function(){authorLibs.author.getProps(layer.type,layer.id)}});
+            var td  = authorLibs.windows.makeTd({parent:tr, width:'100%', classes:'layername', drop:function(){authorLibs.utils.dropMenuItem(event)}});
+            var div = authorLibs.windows.makeDiv({parent:td, drag:true,  dragover:function(){authorLibs.utils.dropMenuItemAllow(event)},
+            dragstart:function(){authorLibs.utils.dragMenuItem(event)}, data:dataLayer});
+            authorLibs.windows.makeImg({parent:div, style:'vertical-align:top', data:dataLayer,
+              src:'./image/icon_layers_' + (layerIdx === authorLibs.authorData.layers[idx].list.length-1 ? 'l' :  't' ) + '.png'});
+            authorLibs.windows.makeImg({parent:div, classes:'layer_icons', drag:true, dragover:function(){authorLibs.utils.dropMenuItemAllow(event)},
+              dragstart:function(){authorLibs.utils.dragMenuItem(event)}, data:dataLayer, src:'./image/icon_layer_' + type + '.png'});
+            authorLibs.windows.makeDiv({parent:div, classes:'layers_t',drag:true, dragover:function(){authorLibs.utils.dropMenuItemAllow(event)},
+              dragstart:function(){authorLibs.utils.dragMenuItem(event)}, data:dataLayer, html:item.name});
+            if (item.show !== undefined){
+              authorLibs.windows.makeImg({parent:div, classes:'layershow', click:function(){authorLibs.utils.layerToggle(item.id,layer.type,'show')},
+                data:dataLayer, src:'./image/icon_layer_' + (item.show ? 'show' :  'hide' ) + '.png'});
+            }
           });
-          if (err > -1) {
-            authorLibs.authorData.layers[idx].list.splice(err, 1);
-            restartCanvasser("sample", authorLibs.authorData, "string");
-          }
         }
       });
-      menu +='</table>';
-      menuHolder.innerHTML = menu;
       return;
     }
 
@@ -351,43 +311,41 @@ authorLibs.menus = {
     authorLibs.authorData[type].forEach(function(menuItem, idx){
       if (type === 'anims'  || type === 'constraints' || type === 'groups' || type === 'particles'
        || type === 'shapes' || type === 'sounds'      || type === 'tests'  || type === 'vars'){
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
-        menu +='<td width="100%">' + menuItem.name + '</td>';
-        menu += '</tr>';
+        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.author.getProps(type, menuItem.id)}});
+        var td  = authorLibs.windows.makeTd({parent:tr, width:'100%', html:menuItem.name });
       }
 
       if (type === 'images'){
         var url = authorLibs.utils.prePath(menuItem);
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
-        menu +='<td class="imageid"><div class="imagetext" id="imagetext-'+menuItem.id+'">' + menuItem.id + '</div></td>';
-        if (menuItem.local) menu +='<td width="50px"><img src="' + menuItem.data + '" alt="' + menuItem.id + '"></td>';
-        else menu +='<td width="50px"><img src="' + url + '" alt="' + menuItem.id + '"></td>';
-        menu += '</tr>';
+        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.author.getProps(type, menuItem.id)}});
+        var td  = authorLibs.windows.makeTd({parent:tr, classes:'imageid'});
+        authorLibs.windows.makeDiv({parent:td, classes:'imagetext', id:'imagetext-'+menuItem.id, html:menuItem.id});
+        var sourceImg = url;
+        if (menuItem.local)  sourceImg =  menuItem.data ;
+
+        var tda = authorLibs.windows.makeTd({parent:tr, width:'50px'});
+        authorLibs.windows.makeImg({parent:tda, src:sourceImg});
         var img = new Image();
         img.onload = function() {
           var img = document.getElementById('imagetext-'+ menuItem.id);
           if (img !== undefined) img.innerHTML =  menuItem.name + '<br>' + this.width + 'x' + this.height;
         }
         img.src = url;
-
       }
+
       if (type === 'objects'){
         if (menuItem.name.indexOf(objectFilter) === -1) return;
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
-        menu +='<td width="75%" style="font-size:1.3em;">' + menuItem.name + '</td>';
-        menu +='<td width="25%">' + menuItem.type + '</td>';
-        menu += '</tr>';
+        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.author.getProps(type, menuItem.id)}});
+        authorLibs.windows.makeTd({parent:tr, style:'font-size:1.3em;', width:'75%', html:menuItem.name});
+        authorLibs.windows.makeTd({parent:tr, width:'25%', html:menuItem.type});
       }
 
       if (type === 'paths'){
-        menu += '<tr class="clicktr" id="'+type+'_'+menuItem.id+'" onclick="authorLibs.author.getProps(\''+type+'\',\''+ menuItem.id + '\')">';
-        menu +='<td width="50%">' + menuItem.id + '</td>';
-        menu +='<td width="50%">' +menuItem.url + '</td>';
-        menu += '</tr>';
+        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.author.getProps(type, menuItem.id)}});
+        authorLibs.windows.makeTd({parent:tr, style:'font-size:1.3em;', width:'50%', html:menuItem.id});
+        authorLibs.windows.makeTd({parent:tr, width:'50%', html:menuItem.url});
       }
     });
-    menu +='</table>';
-    menuHolder.innerHTML = menu;
     if (type === 'objects') authorLibs.menus.updateMenu('layers');
   },
 
@@ -401,17 +359,14 @@ authorLibs.menus = {
   },
 
   updateSettings: function(){
-    var settingHolder = document.getElementById("settingholder");
-    var settings = '<table class="objtable" id="settingstable" width="100%">';
-
+    var holder        = document.getElementById("settingholder");
+    holder.innerHTML  = '';
+    var settingsTable = authorLibs.windows.makeTable({parent:holder, classes:'objtable', id:'settingstable', width:'100%'});
     Object.keys(authorLibs.authorData.settings).forEach(function(setting){
-      settings += '<tr class="clicktr" id="settings_'+setting+'" onclick="authorLibs.author.getProps(\'settings\',\''+ setting + '\')">';
-      settings +='<td width="50%">' + setting + '</td>';
-      settings +='<td width="50%">' + authorLibs.authorData.settings[setting] + '</td>';
-      settings += '</tr>';
+      var tr = authorLibs.windows.makeTr({parent:settingsTable, classes:'clicktr', id:'settings_'+setting, click:function(){authorLibs.author.getProps('settings', setting)}});
+      authorLibs.windows.makeTd({parent:tr, width:'50%', html:setting});
+      authorLibs.windows.makeTd({parent:tr, width:'50%', html: authorLibs.authorData.settings[setting]});
     });
-    settings +='</table>';
-    settingHolder.innerHTML = settings;
   }
 
 }

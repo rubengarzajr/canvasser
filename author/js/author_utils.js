@@ -538,6 +538,39 @@ authorLibs.utils = {
     return str;
   },
 
+  layersClean: function(){
+    var idsInLayers = [];
+    authorLibs.authorData.layers.forEach(function(layer){
+      var inTooManyTimes = [];
+      layer.list.forEach(function(item){
+        if (idsInLayers.indexOf(item.id) < 0){
+          idsInLayers.push(item.id);
+        } else {
+          inTooManyTimes.push(item.id);
+        }
+      });
+      inTooManyTimes.forEach(function(tooMany){
+        var idx = layer.list.findIndex(function(el){return el.id === tooMany;});
+        layer.list.splice(idx, 1);
+      });
+    });
+    var checklist = ['objects','particles'];
+    var validIDs = [];
+    checklist.forEach(function(testType){
+      if (authorLibs.authorData[testType] === undefined) return;
+      authorLibs.authorData[testType].forEach(function(item){
+        validIDs.push(item.id);
+        if (idsInLayers.indexOf(item.id) < 0){
+          authorLibs.authorData.layers[authorLibs.gui.currentLayer].list.push({id:item.id, type:testType});
+        }
+      });
+    });
+    authorLibs.authorData.layers.forEach(function(layer, idxR){
+      layer.list = layer.list.filter(function(e){return this.indexOf(e.id)!=-1;},validIDs);
+      layer.list.forEach(function(item){delete item.name});
+    });
+  },
+
   layerToggle: function(id, type, prop){
     var item = authorLibs.authorData.layers[id];
     if (prop !== 'expanded'){
@@ -571,20 +604,26 @@ authorLibs.utils = {
   },
 
   loadDataUpdate: function(){
-    var filter = document.getElementById('loaddatafilter').value;
+    var filter  = document.getElementById('loaddatafilter').value;
     var filebox = document.getElementById('loaddata');
     filebox.innerHTML = '';
     authorLibs.lists.fileList.forEach(function(item){
       if (item.project.indexOf(filter) < 0) return;
       authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
       item.files.forEach(function(file){
-        authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file', click:function(){authorLibs.utils.loadJson(file.url,item.project, file.id.substring(0, file.id.length - 5))}});
+        authorLibs.windows.makeDiv({parent:filebox, html:file.id, classes:'load_file', click:function(){
+            document.getElementById('saveproject').value     = item.project;
+            document.getElementById('savefile').value        = file.id.substring(0, file.id.length - 5);
+            document.getElementById('loadbox').style.display = 'none';
+            authorLibs.utils.requestJson(file.url, function(data){restartCanvasser("sample", data, 'string');});
+          }
+        });
       });
     });
   },
 
   loadDefault: function(){
-    if (!authorLibs.defaultJSONobj)  authorLibs.utils.requestJSON(authorLibs.defaultJSON, function(data){restartCanvasser("sample", data, 'string');});
+    if (!authorLibs.defaultJSONobj)  authorLibs.utils.requestJson(authorLibs.defaultJSON, function(data){restartCanvasser("sample", data, 'string');});
   },
 
   loadFilePHP: function(files){
@@ -622,19 +661,6 @@ authorLibs.utils = {
       }
     }
     xhr.send();
-  },
-
-  loadJson: function(url, project, file){
-    document.getElementById('saveproject').value     = project;
-    document.getElementById('savefile').value        = file;
-    document.getElementById('loadbox').style.display = 'none';
-    authorLibs.utils.requestFile(
-      url + '?v="' + Date.now() + '"',
-      function(data){
-        var json = authorLibs.utils.prepJson(JSON.parse(decodeURIComponent(data)));
-        restartCanvasser("sample", json, 'string');
-      }
-    );
   },
 
   objPartToArr: function(obj, part){
@@ -766,16 +792,16 @@ authorLibs.utils = {
     xhr.send(null);
   },
 
-  requestJSON: function(fileNamePath, returnFunction){
+  requestJson: function(fileNamePath, returnFunction){
       var xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
-          returnFunction(JSON.parse(xhr.responseText));
+          returnFunction(authorLibs.utils.prepJson(JSON.parse(xhr.responseText)));
         }
         if (xhr.status == 404) console.error("JSON File Load Error: " + xhr.statusText + " " + xhr.readyState);
       }
       xhr.overrideMimeType('application/json');
-      xhr.open('GET', fileNamePath, true);
+      xhr.open('GET', fileNamePath + '?v="' + Date.now() + '"', true);
     xhr.send(null);
   },
 
