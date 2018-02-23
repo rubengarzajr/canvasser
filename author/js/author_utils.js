@@ -5,7 +5,7 @@ authorLibs.utils = {
     if (objGet.length === 0) return;
     if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
     objGet[0][listType].push({"type":"cleardown"});
-    authorLibs.buildProp.getProps(type,objGet[0].id);
+    authorLibs.buildProp.get(type,objGet[0].id);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
@@ -13,27 +13,27 @@ authorLibs.utils = {
     var animGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === animName);});
     if (animGet.length === 0) return;
     animGet[0][timelist].push({"type":"console"});
-    authorLibs.buildProp.getProps("anims",animName);
+    authorLibs.buildProp.get("anims",animName);
   },
 
   addColor: function(id, widget){
     var obj = authorLibs.authorData.objects.filter(function(object){ return object.id === id})[0];
     if (obj.color === undefined) obj.color = {current:["rgba(0,0,0,1)"]};
     obj.color.current.push("rgba(0,0,0,1)");
-    authorLibs.author.getProps('objects',id);
+    authorLibs.buildProp.get('objects',id);
   },
 
   addConstraint: function(constraintName, driverlist){
     var driver = authorLibs.authorData.constraints.filter(function(finder){return (finder.id === constraintName);});
     if (driver.length === 0) return;
     driver[0][driverlist].push({"type":"position"});
-    authorLibs.buildProp.getProps("constraints", constraintName);
+    authorLibs.buildProp.get("constraints", constraintName);
   },
 
   addDrawcode: function(id){
     var shape = authorLibs.authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
     shape.drawcode.push({type:'fill'});
-    authorLibs.buildProp.getProps('shapes', id);
+    authorLibs.buildProp.get('shapes', id);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
@@ -42,7 +42,7 @@ authorLibs.utils = {
     if (objGet.length === 0) return;
     if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
     objGet[0][listType].push({"type":"var"});
-    authorLibs.buildProp.getProps(type,objGet[0].id);
+    authorLibs.buildProp.get(type,objGet[0].id);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
@@ -122,7 +122,7 @@ authorLibs.utils = {
     var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === objName);});
     if (objGet.length === 0) return;
     objGet[0][listType].splice(index,1);
-    authorLibs.buildProp.getProps(type,objGet[0].id);
+    authorLibs.buildProp.get(type,objGet[0].id);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
@@ -130,7 +130,7 @@ authorLibs.utils = {
     var animGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === animName);});
     if (animGet.length === 0) return;
     animGet[0].timelist.splice(index,1);
-    authorLibs.buildProp.getProps("anims",animName);
+    authorLibs.buildProp.get("anims",animName);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
@@ -263,281 +263,6 @@ authorLibs.utils = {
     }
   },
 
-  handleAction: function(item, types, widget){
-    var go = true;
-    if (widget.dependson != undefined) go = item[widget.dependson];
-    if (go === undefined || go === false) return '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div></div>';
-    var str = '';
-    var type = types.slice(0, -1);
-    var actionsList = [];
-    authorLibs.rules.actions.forEach(function(template){actionsList.push({id:template.type, name:template.type})});
-    str += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
-    if (item[widget.field] !== undefined){
-      item[widget.field].forEach(function(itemAct, idx){
-        var actionWidgets = authorLibs.rules.actions.filter(function(rType){ return rType.type === itemAct.type});
-        if (actionWidgets.length === 0) return;
-        actionWidgets = actionWidgets[0].widgets;
-        str += '<div class="actionblock">';
-        str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-        str += authorLibs.utils.buildSelect(
-          {fn:'authorLibs.utils.updateActionList', object:item.id, type:types, list:actionsList, defaultId:itemAct.type, path:widget.field+'.'+idx+'.type'}
-        );
-        str += '<div class="rightx" onclick="authorLibs.utils.deleteitem('+"'objects'"+','+"'"+item.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
-        actionWidgets.forEach(function(subWidget, idxPart){
-          var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
-          if (subWidget.type === 'anmlist') str += authorLibs.utils.handleTypeList('anims', item, type, subWidget, widgetPath);
-          if (subWidget.type === 'bool')    str += authorLibs.utils.handleBoolean(item,  type, subWidget, widgetPath);
-          if (subWidget.type === "linkedcontent") {
-            var filterPath = widgetPath.substr(0, widgetPath.lastIndexOf(".")) + '.' + subWidget['link'] ;
-            var defaultId = authorLibs.utils.getSubProp(item, filterPath);
-            if (defaultId){
-              authorLibs.rules[subWidget.sourcelist][defaultId].widgets.forEach(function(subsub, idxSub){
-                var subWidgetPath =  widget.field + '.' +  idx + '.' + subsub.field;
-                if (subsub.type === 'objlist')    str += authorLibs.utils.handleTypeList('objects',  item, type, subsub, subWidgetPath);
-                if (subsub.type === 'varlist')    str += authorLibs.utils.handleTypeList('vars', item, type, subsub, subWidgetPath);
-                if (subsub.type === 'number')     str += authorLibs.utils.handleNumber(item, type, subsub, subWidgetPath);
-                if (subsub.type === "filterlink") str += authorLibs.utils.handleSelectLink(item, type, subsub, subWidgetPath);
-                if (subsub.type === 'select')     str += authorLibs.utils.handleSelect(item, type, subsub, subWidgetPath);
-              });
-            }
-          }
-          if (subWidget.type === 'number')     str += authorLibs.utils.handleNumber(item, type, subWidget, widgetPath);
-          if (subWidget.type === 'objlist')    str += authorLibs.utils.handleTypeList('objects', item,   type,  subWidget, widgetPath);
-          if (subWidget.type === 'varlist')    str += authorLibs.utils.handleTypeList('vars', item,   type,  subWidget, widgetPath);
-          if (subWidget.type === 'parlist')    str += authorLibs.utils.handleTypeList('particles', item,   type,  subWidget, widgetPath);
-          if (subWidget.type === 'posxy')      str += authorLibs.utils.handlePosition(item, type, subWidget, widgetPath);
-          if (subWidget.type === "filterlink") str += authorLibs.utils.handleSelectLink(item, type, subWidget, widgetPath);
-          if (subWidget.type === 'select')     str += authorLibs.utils.handleSelect(item, type, subWidget, widgetPath);
-          if (subWidget.type === 'sndlist')    str += authorLibs.utils.handleTypeList('sounds', item,   type,  subWidget, widgetPath);
-          if (subWidget.type === "text")       str += authorLibs.utils.handleText(item, type, subWidget, widgetPath, 'w100');
-        });
-        str += '</div>';
-      });
-      str += '<br>';
-    }
-    str += authorLibs.utils.buildDiv('divbutton', 'Add Action', 'authorLibs.utils.addaction', [item.id, types, widget.field]);
-    str += '</div>';
-    return str;
-  },
-
-  handleBoolean: function(object, type, widget, path){
-    var display = widget.display === undefined ? widget.field : widget.display;
-    var str = '';
-    var defaultId = authorLibs.utils.getSubProp(object, path);
-    str += '<div class="entrylabel c_entrytitle_text w100">' + display;
-    str += '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
-    str += authorLibs.utils.buildFnString('authorLibs.utils.updateItem', [object.id, type, path], true) + '><br>';
-    return str;
-  },
-
-  handleBooleanSetting: function( widget, path){
-    var display = widget.display === undefined ? widget.field : widget.display;
-    var str = '';
-    var defaultId = authorLibs.utils.getSubProp('authorLibs.authorData.settings', path);
-    str += '<div class="entrylabel c_entrytitle_text w100">' + display;
-    str += '</div><input class="checkbox" type="checkbox" ' + (defaultId ? "checked " : "");
-    str += authorLibs.utils.buildFnString('authorLibs.utils.updateSettingBool', [path], true) + '><br>';
-    return str;
-  },
-
-  handleColor: function(object, type, widget, path){
-    var str = '';
-    if (object[widget.field] === undefined || object[widget.field] === {})object[widget.field] = {current:["rgba(0,0,0,1)"]};
-    str += '<div class="pos_holder"><div class="pos_title">' + widget.field + '</div>';
-    Object.keys(object[widget.field]).forEach(function(colorList){
-        object.color[colorList].forEach(function(color,idx){
-        str += authorLibs.utils.handleText(object, 'object', {field:idx}, widget.field+'.'+colorList+'.'+idx, 'w20');
-      })
-    });
-    str += '</div><br>';
-    str += authorLibs.utils.buildDiv('divbutton', 'Add Color', 'authorLibs.utils.addColor', [object.id, widget.field]);
-    str += '<br>';
-    return str;
-  },
-
-  handleGroup: function(object, type, widget, path){
-    var groupList = authorLibs.utils.listIdsNames('groups');
-    if (object.groups === undefined) object.groups = [];
-    var display = widget.display === undefined ? widget.field : widget.display;
-    var str = '<div class="grouper"> <div class="grouptitle">Groups:</div>';
-    groupList.forEach(function(grp, idx){
-      var defaultId = authorLibs.utils.findInGroup(object, grp.id);
-      str += '<div class="nosplit"><div class="entrylabel c_entrytitle_text w100">' + grp.name;
-      str += '</div><input class="checkbox" type="checkbox" ' + (defaultId > -1 ? "checked " : "");
-      str += authorLibs.utils.buildFnString('authorLibs.utils.togglegroup', [object.id, type, path, grp.id], true) + '></div>';
-    });
-    return str+'</div>';
-  },
-
-  handleImage: function(item, type, widget, path){
-    str = '';
-    var imageList = authorLibs.utils.listIdsNames('images');
-    str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.utils.updateItem', object:item.id, type:type, list:imageList, defaultId:item[widget.field], path:widget.field}
-    ) + '<br>';
-    var flipTest = authorLibs.authorData.images.filter(function(img){ return img.id === item.image})[0];
-    if (flipTest){
-      if(flipTest.atlas){
-        str += authorLibs.utils.handleNumber(item, type, {field:'atlascell.x'}, 'atlascell.x');
-        str += authorLibs.utils.handleNumber(item, type, {field:'atlascell.y'}, 'atlascell.y');
-      }
-    }
-    return str;
-  },
-
-  handleNumber: function(object, type, widget, path){
-    var str = '';
-    var num = authorLibs.utils.getSubProp(object, path);
-    if (num === undefined) num = 0;
-    str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', (widget.display ? widget.display : widget.field) );
-    str += '<input class="auth_xy" type="number" value="'+ num + '" ';
-    str += authorLibs.utils.buildFnString('authorLibs.utils.updateItem', [object.id, type, path], true);
-    str +=   '>'  + "<br>";
-    return str;
-  },
-
-  handlePosition: function(object, type, widget, path){
-    var str = '';
-    var pos = {x:authorLibs.utils.getSubProp(object, path+'.x'), y:authorLibs.utils.getSubProp(object, path+'.y')};
-    if (pos.x === undefined) pos.x = 0;
-    if (pos.y === undefined) pos.y = 0;
-    var display = widget.display ? widget.display : widget.field;
-    str += authorLibs.utils.buildDiv('entrylabel c_entrylabel_pos w100', display);
-    str += '<span>';
-    str += '<span class="entrytitle c_entrylabel_pos">X</span>'
-    str += '<input class="auth_xy" type="number" value="'+ pos.x + '" ';
-    str += authorLibs.utils.buildFnString('authorLibs.utils.updateItem', [object.id, type, path+'.x'], true);
-    str +=   '>';
-    str += '<span class="entrytitle c_entrylabel_pos">Y</span>'
-    str += '<input class="auth_xy" type="number" value="'+ pos.y + '" ';
-    str += authorLibs.utils.buildFnString('authorLibs.utils.updateItem', [object.id, type, path+'.y'], true);
-    str +=   '>'  + "</span><br>";
-    return str;
-  },
-
-  handleSelect: function(object, type, widget, path, list,){
-    var str   = '';
-    var selOp = (list === undefined ? authorLibs.rules.select[widget.id].list : list);
-    var list  = [];
-    selOp.forEach(function(item){
-      list.push({id:item, name:item});
-    });
-    var defaultId = authorLibs.utils.getSubProp(object, path);
-    var display   = widget.display ? widget.display : widget.field;
-    str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
-    str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.utils.updateItem', object:object.id, type:type, list:list, defaultId:defaultId, path:path}
-    ) + '<br>';
-    return str;
-  },
-
-  handleSelectLink: function(object, type, widget, path){
-    var str = '';
-    var filterPath = path.substr(0, path.lastIndexOf(".")) + '.' + widget['link'] ;
-    var defaultId = authorLibs.utils.getSubProp(object, filterPath);
-    if (defaultId === "object")   str += authorLibs.utils.handleTypeList('objects',   object,  type, widget, path);
-    if (defaultId === "group")    str += authorLibs.utils.handleTypeList('groups',    object,  type, widget, path);
-    if (defaultId === "particle") str += authorLibs.utils.handleTypeList('particles', object,  type, widget, path);
-    return str;
-  },
-
-  handleSelectText: function(object, type, widget, path, list){
-    var str = '';
-    var selOp = (list === undefined ? authorLibs.rules.select[widget.id].list : list);
-    var list  = [];
-    selOp.forEach(function(item){
-      list.push({id:item, name:item});
-    });
-    var defaultId = authorLibs.utils.getSubProp(object, path);
-    var display = widget.display ? widget.display : widget.field;
-    str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100',  display);
-    str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.utils.updateItem', object:object.id, type:type, list:list, defaultId:defaultId, path:path, text:true}
-    ) + '<br>';
-    return str;
-  },
-
-  handleTest: function(test, types, widget){
-    var str = '';
-    var testsList = Object.keys(authorLibs.rules.conditionals);
-    var list  = [];
-    testsList.forEach(function(item){
-      list.push({id:item, name:item});
-    });
-    str += '<div><div class="pos_holder w95p"><div class="pos_title">' + widget.display + '</div>';
-    if (test[widget.field] !== undefined){
-      test[widget.field].forEach(function(actobject, idx){
-        var actionWidgets = authorLibs.rules.conditionals[actobject.type].widgets;
-        if (actionWidgets.length === 0) return;
-        str += '<div class="actionblock">';
-        str += '<div class="entrylabel c_entrytitle_text w100">' + idx + '</div>';
-        str += authorLibs.utils.buildSelect(
-          {fn:'authorLibs.utils.updateActionList', object:test.id, type:"tests", list:list, defaultId:actobject.type, path:widget.field+'.'+idx+'.type'}
-        );
-        str += '<div class="rightx" onclick="authorLibs.utils.deleteitem('+"'tests'," +"'"+test.id+"'"+','+"'"+widget.field+"',"+idx+')">X</div>' + '<br>';
-        actionWidgets.forEach(function(subWidget, idxPart){
-          var widgetPath =  widget.field + '.' +  idx + '.' + actionWidgets[idxPart].field;
-          if (subWidget.type === 'anmlist') str += authorLibs.utils.handleTypeList('anims', test,       'test', subWidget, widgetPath);
-          if (subWidget.type === 'bool')    str += authorLibs.utils.handleBoolean(test,  'test', subWidget, widgetPath);
-          if (subWidget.type === "linkedcontent") {
-            var filterPath = widgetPath.substr(0, widgetPath.lastIndexOf(".")) + '.' + subWidget['link'] ;
-            var defaultId = authorLibs.utils.getSubProp(test, filterPath);
-            if (defaultId){
-              authorLibs.rules[subWidget.sourcelist][defaultId].widgets.forEach(function(subsub, idxSub){
-                var subWidgetPath =  widget.field + '.' +  idx + '.' + subsub.field;
-                if (subsub.type === 'objlist') str += authorLibs.utils.handleTypeList('tests', test, 'test',  subsub, subWidgetPath);
-                if (subsub.type === 'varlist') str += authorLibs.utils.handleTypeList('vars',  test, 'test',  subsub, subWidgetPath);
-                if (subsub.type === 'number')  str += authorLibs.utils.handleNumber(  test,   'test', subsub, subWidgetPath);
-                if (subsub.type === 'select')  str += authorLibs.utils.handleSelect(  test,   'test', subsub, subWidgetPath);
-              });
-            }
-          }
-          if (subWidget.type === 'number')  str += authorLibs.utils.handleNumber(test,   'test', subWidget, widgetPath);
-          if (subWidget.type === 'objlist') str += authorLibs.utils.handleTypeList('tests',    test,   'test',  subWidget, widgetPath);
-          if (subWidget.type === 'varlist') str += authorLibs.utils.handleTypeList('vars',    test,   'test',  subWidget, widgetPath);
-          if (subWidget.type === 'parlist') str += authorLibs.utils.handleTypeList('particles',  test,   'test',  subWidget, widgetPath);
-          if (subWidget.type === 'posxy')   str += authorLibs.utils.handlePosition(test, 'test', subWidget, widgetPath);
-          if (subWidget.type === 'select')  str += authorLibs.utils.handleSelect(test,   'test', subWidget, widgetPath);
-          if (subWidget.type === 'sndlist') str += authorLibs.utils.handleTypeList('sounds',     test,   'test',  subWidget, widgetPath);
-          if (subWidget.type === "text")    str += authorLibs.utils.handleText(test,           'test', subWidget, widgetPath, 'w100');
-        });
-        str += '</div>';
-      });
-      str += '<br>';
-    }
-    str += authorLibs.utils.buildDiv('divbutton', 'Add Test', 'authorLibs.utils.addtest', [test.id, 'tests', widget.field]);
-    str += '</div>';
-    return str;
-  },
-
-  handleText: function(object, type, widget, path, widthClass){
-    var str = '';
-    var defaultId = authorLibs.utils.getSubProp(object, path);
-    str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text ' + widthClass, widget.field );
-    str += '<input class="auth_text" type="text" value="'+ defaultId + '" ';
-    str += authorLibs.utils.buildFnString('authorLibs.utils.updateItem', [object.id, type, path], true);
-    str +=   '>'  + "<br>";
-    return str;
-  },
-
-  handleTypeList: function(filter, object, type, widget, path){
-    var str  = '';
-    var list = [];
-    var defaultId = authorLibs.utils.getSubProp(object, path);
-    if (filter === 'layers'){
-      authorLibs.authorData.layers.forEach(function(layer, idx){ list.push({name:layer.name, id:layer.id})});
-    } else {
-      list = authorLibs.utils.listIdsNames(filter);
-    }
-    str += authorLibs.utils.buildDiv('entrylabel c_entrytitle_text w100', widget.field );
-    str += authorLibs.utils.buildSelect(
-      {fn:'authorLibs.utils.updateItem', object:object.id, type:type, list:list,  defaultId:defaultId, path:path}
-    ) + '<br>';
-
-    return str;
-  },
-
   layersClean: function(){
     var idsInLayers = [];
     authorLibs.authorData.layers.forEach(function(layer){
@@ -588,7 +313,7 @@ authorLibs.utils = {
     if (type === 'value')   newVal = domElement.value.toString();
     authorLibs.authorData.layers[idx][prop] = newVal;
     authorLibs.menus.update('layers');
-    authorLibs.buildProp.getProps('layers', idx);
+    authorLibs.buildProp.get('layers', idx);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
@@ -894,7 +619,7 @@ authorLibs.utils = {
     )[0];
 
     authorLibs.menus.update('objects');
-    authorLibs.buildProp.getProps('objects', objectId);
+    authorLibs.buildProp.get('objects', objectId);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
@@ -904,7 +629,7 @@ authorLibs.utils = {
     if (newVal === '---NONE---')        newVal = undefined;
     var objGet = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
     authorLibs.utils.setSubProp(objGet, paramPath, newVal);
-    authorLibs.buildProp.getProps(type+'s', objGet.id);
+    authorLibs.buildProp.get(type+'s', objGet.id);
     authorLibs.menus.update(type);
     authorLibs.menus.update('layers');
     restartCanvasser("sample", authorLibs.authorData, "string");
@@ -942,7 +667,7 @@ authorLibs.utils = {
     )[0];
 
     authorLibs.menus.update('objects');
-    authorLibs.buildProp.getProps('objects', objectId);
+    authorLibs.buildProp.get('objects', objectId);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 

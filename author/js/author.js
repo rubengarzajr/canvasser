@@ -104,8 +104,6 @@ function restartCanvasser(name, data, type){
 }
 
 function authorcanvasser(dataFile, dataForm){
-  this.getProps = authorLibs.buildProp.getProps;
-
   authorLibs.authorData = dataFile;
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);

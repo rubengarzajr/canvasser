@@ -192,6 +192,11 @@ authorLibs.windows = {
     });
   },
 
+  clearElement(name){
+    var element = document.getElementById(name);
+    if (element !== undefined) element.innerHTML ='';
+  },
+
   focusObjD: function(element){
     authorLibs.gui.zidx ++;
     document.getElementById(element).style.zIndex = authorLibs.gui.zidx;
@@ -257,6 +262,7 @@ authorLibs.windows = {
     if (settings.style       !== undefined) element.style        = settings.style;
     if (settings.subtype     !== undefined) element.type         = settings.subtype;
     if (settings.width       !== undefined) element.width        = settings.width;
+    if (settings.clearparent === true) settings.parent.innerHTML = '';
     settings.parent.appendChild(element);
     return element;
   },

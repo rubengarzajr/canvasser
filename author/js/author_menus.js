@@ -135,7 +135,7 @@ authorLibs.menus = {
     }
     restartCanvasser("sample", authorLibs.authorData, "string");
     authorLibs.menus.updateSelectionWindow(type, newObj.id);
-    authorLibs.buildProp.getProps(type,  newObj.id);
+    authorLibs.buildProp.get(type,  newObj.id);
   },
 
   deleteItem: function(type){
@@ -259,12 +259,12 @@ authorLibs.menus = {
         var idx = authorLibs.authorData[type].length -1 - idxR;
         var dataLayer =[{id:'type', val:'layer'}, {id:'layer', val:idx}, {id:'idx', val:-1}];
         var tr = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr'});
-        var td = authorLibs.windows.makeTd({parent:tr, width:'100%', classes:'layers_title', click:function(){authorLibs.buildProp.getProps('layers',idx);},
+        var td = authorLibs.windows.makeTd({parent:tr, width:'100%', classes:'layers_title', click:function(){authorLibs.buildProp.get('layers',idx);},
           drop:function(){authorLibs.utils.dropMenuItem(event)}, drag:true, dragover:function(){authorLibs.utils.dropMenuItemAllow(event)},
           dragstart:function(){authorLibs.utils.dragMenuItem(event)}, data:dataLayer});
         authorLibs.windows.makeImg({parent:td,  classes:'layerexp', click:function(){authorLibs.utils.layerToggle(idx,'layer','expanded')},
           data:dataLayer, src:'./image/icon_layers_'+(authorLibs.authorData.layers[idx].expanded ? 'e' : 'c')+'.png'});
-        authorLibs.windows.makeDiv({parent:td,  classes:'layer_title_text', click:function(){authorLibs.author.getProps('layers',idx)}, data:dataLayer, html:menuItem.name});
+        authorLibs.windows.makeDiv({parent:td,  classes:'layer_title_text', click:function(){authorLibs.buildProp.get('layers',idx)}, data:dataLayer, html:menuItem.name});
         authorLibs.windows.makeImg({parent:td,  classes:'layershow', click:function(){authorLibs.utils.layerUpdate(this, idx, 'show', 'btoggle')},
           data:dataLayer, src:'./image/icon_layers_'+(authorLibs.authorData.layers[idx].show ? 'show' : 'hide')+'.png'});
 
@@ -275,7 +275,7 @@ authorLibs.menus = {
             var type      = layer.type;
             var dataLayer = [{id:'type', val:'layer'}, {id:'layer', val:idx}, {id:'idx', val:layerIdx}];
             if (type === 'objects') type = item.type;
-            var tr  = authorLibs.windows.makeTr({parent:menuTable, id:type+'_'+layerIdx, click:function(){authorLibs.author.getProps(layer.type,layer.id)}});
+            var tr  = authorLibs.windows.makeTr({parent:menuTable, id:type+'_'+layerIdx, click:function(){authorLibs.buildProp.get(layer.type,layer.id)}});
             var td  = authorLibs.windows.makeTd({parent:tr, width:'100%', classes:'layername', drop:function(){authorLibs.utils.dropMenuItem(event)}});
             var div = authorLibs.windows.makeDiv({parent:td, drag:true,  dragover:function(){authorLibs.utils.dropMenuItemAllow(event)},
             dragstart:function(){authorLibs.utils.dragMenuItem(event)}, data:dataLayer});
@@ -311,13 +311,13 @@ authorLibs.menus = {
     authorLibs.authorData[type].forEach(function(menuItem, idx){
       if (type === 'anims'  || type === 'constraints' || type === 'groups' || type === 'particles'
        || type === 'shapes' || type === 'sounds'      || type === 'tests'  || type === 'vars'){
-        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.author.getProps(type, menuItem.id)}});
+        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.buildProp.get(type, menuItem.id)}});
         var td  = authorLibs.windows.makeTd({parent:tr, width:'100%', html:menuItem.name });
       }
 
       if (type === 'images'){
         var url = authorLibs.utils.prePath(menuItem);
-        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.author.getProps(type, menuItem.id)}});
+        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.buildProp.get(type, menuItem.id)}});
         var td  = authorLibs.windows.makeTd({parent:tr, classes:'imageid'});
         authorLibs.windows.makeDiv({parent:td, classes:'imagetext', id:'imagetext-'+menuItem.id, html:menuItem.id});
         var sourceImg = url;
@@ -335,13 +335,13 @@ authorLibs.menus = {
 
       if (type === 'objects'){
         if (menuItem.name.indexOf(objectFilter) === -1) return;
-        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.author.getProps(type, menuItem.id)}});
+        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.buildProp.get(type, menuItem.id)}});
         authorLibs.windows.makeTd({parent:tr, style:'font-size:1.3em;', width:'75%', html:menuItem.name});
         authorLibs.windows.makeTd({parent:tr, width:'25%', html:menuItem.type});
       }
 
       if (type === 'paths'){
-        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.author.getProps(type, menuItem.id)}});
+        var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.buildProp.get(type, menuItem.id)}});
         authorLibs.windows.makeTd({parent:tr, style:'font-size:1.3em;', width:'50%', html:menuItem.id});
         authorLibs.windows.makeTd({parent:tr, width:'50%', html:menuItem.url});
       }
@@ -363,7 +363,7 @@ authorLibs.menus = {
     holder.innerHTML  = '';
     var settingsTable = authorLibs.windows.makeTable({parent:holder, classes:'objtable', id:'settingstable', width:'100%'});
     Object.keys(authorLibs.authorData.settings).forEach(function(setting){
-      var tr = authorLibs.windows.makeTr({parent:settingsTable, classes:'clicktr', id:'settings_'+setting, click:function(){authorLibs.author.getProps('settings', setting)}});
+      var tr = authorLibs.windows.makeTr({parent:settingsTable, classes:'clicktr', id:'settings_'+setting, click:function(){authorLibs.buildProp.get('settings', setting)}});
       authorLibs.windows.makeTd({parent:tr, width:'50%', html:setting});
       authorLibs.windows.makeTd({parent:tr, width:'50%', html: authorLibs.authorData.settings[setting]});
     });
