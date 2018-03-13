@@ -217,6 +217,11 @@ authorLibs.windows = {
     return authorLibs.windows.makeElement(settings);
   },
 
+  makeSpan: function(settings){
+    settings.type = 'span';
+    return authorLibs.windows.makeElement(settings);
+  },
+
   makeTr: function(settings){
     settings.type = 'tr';
     return authorLibs.windows.makeElement(settings);
@@ -261,6 +266,7 @@ authorLibs.windows = {
     if (settings.src         !== undefined) element.src          = settings.src;
     if (settings.style       !== undefined) element.style        = settings.style;
     if (settings.subtype     !== undefined) element.type         = settings.subtype;
+    if (settings.value       !== undefined) element.value        = settings.value;
     if (settings.width       !== undefined) element.width        = settings.width;
     if (settings.clearparent === true) settings.parent.innerHTML = '';
     settings.parent.appendChild(element);

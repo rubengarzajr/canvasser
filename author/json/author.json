@@ -103,8 +103,8 @@
         {"field":"starttime",   "type":"number"},
         {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type"},
         {"field":"id",          "type":"filterlink", "link":"filter"},
-        {"field":"tolayer",     "type":"laylist",    "display":"To Layer Type"},
-        {"field":"layerpos",    "type":"select",     "id":"layerpos", "display":"Where in Layer"}
+        {"field":"tolayer",     "type":"laylist",    "display":"To Layer"},
+        {"field":"layerpos",    "type":"select",     "id":"layerpos", "display":"Layer Order"}
       ]
     },
     {"type":"loadinto",     "widgets":[
@@ -193,7 +193,7 @@
   },
   "constraint":{
       "widgets":[
-        {"field":"id",          "type":"text", "css":"w100"},
+        {"field":"name",        "type":"text", "css":"w100"},
         {"field":"active",      "type":"bool"},
         {"field":"driverlist",  "type":"driverlist", "display":"Drivers"}
       ],
@@ -282,7 +282,7 @@
     },
     "shape":{
       "widgets":[
-        {"field":"name",        "type":"text"},
+        {"field":"name",      "type":"text"},
         {"field":"type",      "type":"select",  "id":"objecttype"},
         {"field":"shape",     "type":"shapelist"},
         {"field":"order",     "type":"number"},

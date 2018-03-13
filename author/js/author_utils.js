@@ -1,21 +1,5 @@
 authorLibs.utils = {
 
-  addaction: function(id, type, listType){
-    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
-    if (objGet.length === 0) return;
-    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
-    objGet[0][listType].push({"type":"cleardown"});
-    authorLibs.buildProp.get(type,objGet[0].id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
-  addAnimCommand: function(animName, timelist){
-    var animGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === animName);});
-    if (animGet.length === 0) return;
-    animGet[0][timelist].push({"type":"console"});
-    authorLibs.buildProp.get("anims",animName);
-  },
-
   addColor: function(id, widget){
     var obj = authorLibs.authorData.objects.filter(function(object){ return object.id === id})[0];
     if (obj.color === undefined) obj.color = {current:["rgba(0,0,0,1)"]};
@@ -37,15 +21,6 @@ authorLibs.utils = {
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
-  addtest: function(id, type, listType){
-    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
-    if (objGet.length === 0) return;
-    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
-    objGet[0][listType].push({"type":"var"});
-    authorLibs.buildProp.get(type,objGet[0].id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
   appendToArray: function(inArray){
     var newArr = []
     inArray.forEach(function(element){
@@ -58,6 +33,7 @@ authorLibs.utils = {
     return newArr;
   },
 
+  //DEPRICATE!
   buildDiv: function (classes, content, clicker, params){
     var click = ''
     if (clicker !== undefined) {
@@ -71,38 +47,13 @@ authorLibs.utils = {
     return '<div class="' + classes + '"' + click + '>' + content + '</div>';
   },
 
+  //DEPRICATE!
   buildFnString: function(fn, params, change){
     var str = (change ? 'onchange=' : '') + '"' + fn + '(this';
     params.forEach(function(pName){
       str += ", '" + pName + "'";
     });
     return str + ')" ';
-  },
-
-  buildSelect: function(obj){
-    var out = '';
-    if (obj.text){
-      out = '<input type:"text" id="prop_'+obj.path+'" class="sellist" value="'+obj.defaultId+'" list="datalist_'+obj.path+'"';
-      out += authorLibs.utils.buildFnString(obj.fn, [obj.object, obj.type, obj.path], true) + '>';
-      out += '<datalist id="datalist_'+obj.path+'">';
-      var newList = obj.list.slice();
-      newList.unshift("---NONE---");
-      newList.forEach(function(listObject){
-        out += '<option>' + listObject + '</option>';
-      });
-      out += "</datalist>";
-      return out;
-    } else {
-      out = '<select id="prop_'+obj.path+'" class="sellist"';
-      out += authorLibs.utils.buildFnString(obj.fn, [obj.object, obj.type, obj.path], true) + '>';
-      var objList  = obj.list.slice();
-      objList.unshift({id:"---NONE---", name:"---NONE---"} );
-      objList.forEach(function(listObject){
-        out += '<option value="'+ listObject.id + '"'+ (listObject.id === obj.defaultId ? " selected" : "" )+ '>' + listObject.name + '</option>';
-      });
-      out += "</select>";
-      return out;
-    }
   },
 
   copyObj: function(object, newObj){
@@ -315,17 +266,6 @@ authorLibs.utils = {
     authorLibs.menus.update('layers');
     authorLibs.buildProp.get('layers', idx);
     restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
-  listIdsNames: function(filter){
-    var idList    = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "id");
-    var nameList  = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "name");
-    var comboList = [];
-    for (var i = 0; i < idList.length; i++ ) {
-      if (nameList[i] === undefined) nameList[i] = idList[i];
-      comboList.push( {id: idList[i], name:nameList[i]});
-    }
-    return comboList;
   },
 
   loadDataUpdate: function(){
@@ -610,31 +550,6 @@ authorLibs.utils = {
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
-  updateActionList: function(domElement, objectId, type, paramPath){
-    var item = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
-    var prop = authorLibs.utils.getSubProp(item, paramPath);
-    authorLibs.utils.updateItem(domElement, objectId, type.slice(0, -1), paramPath);
-    var newRule = authorLibs.rules.actions.filter(function(ruleName){
-      return ruleName.elementType === domElement.value}
-    )[0];
-
-    authorLibs.menus.update('objects');
-    authorLibs.buildProp.get('objects', objectId);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
-  updateItem: function(domElement, objectId, type, paramPath){
-    var newVal = domElement.value.toString();
-    if (domElement.type === 'checkbox') newVal = domElement.checked;
-    if (newVal === '---NONE---')        newVal = undefined;
-    var objGet = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
-    authorLibs.utils.setSubProp(objGet, paramPath, newVal);
-    authorLibs.buildProp.get(type+'s', objGet.id);
-    authorLibs.menus.update(type);
-    authorLibs.menus.update('layers');
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
   updateList:function(element, list, item){
     var finder = list.findIndex(function(check){return check.id === item.id && check.project === item.project && check.url === item.url;});
     if (finder === -1) {
@@ -644,31 +559,6 @@ authorLibs.utils = {
       list.splice(finder,1);
       element.style.backgroundColor = 'white';
     }
-  },
-
-  updateSetting: function(domElement, setting){
-    authorLibs.authorData.settings[setting] = domElement.value;
-    authorLibs.menus.update('settings');
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
-  updateSettingBool: function(domElement, setting){
-    authorLibs.authorData.settings[setting] = domElement.checked;
-    authorLibs.menus.update('settings');
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
-  updateTimeline: function(domElement, objectId, type, paramPath){
-    var objGet = authorLibs.authorData.anims.filter(function(finder){return (finder.id === objectId);})[0];
-    var prop = authorLibs.utils.getSubProp(objGet, paramPath);
-    authorLibs.utils.updateItem(domElement, objectId, 'anim', paramPath);
-    var newRule = authorLibs.rules.actions.filter(function(ruleName){
-      return ruleName.elementType === domElement.value}
-    )[0];
-
-    authorLibs.menus.update('objects');
-    authorLibs.buildProp.get('objects', objectId);
-    restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
   uuid: function(){

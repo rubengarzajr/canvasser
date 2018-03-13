@@ -709,13 +709,8 @@ a{
 }
 
 .rightx{
-  background-color: #960000;
-  border: #b1b1b1 2px solid;
-  color: #ffb566;
   cursor: pointer;
   float: right;
-  font-size: 1.2em;
-  margin: 2px 5px 0px 0px;
   padding: 1px 5px;
 }
 

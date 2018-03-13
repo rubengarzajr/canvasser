@@ -79,27 +79,15 @@ authorLibs.menus = {
       authorLibs.menus.update('paths');
 
       var justName = itemToAdd.id.replace(/\.[^/.]+$/, "");
-      if (itemToAdd.type === 'image'){
-        var existingImage = authorLibs.authorData.images.filter(function(image){
-          return image.name === justName;
+      if (itemToAdd.type === 'image' || itemToAdd.type === 'sound'){
+        var existing = authorLibs.authorData[itemToAdd.type+'s'].filter(function(item){
+          return item.name === justName;
         });
-
-        if (existingImage.length === 0){
-          authorLibs.authorData.images.push({id:authorLibs.utils.uuid(), name:justName, path:itemToAdd.project, url:itemToAdd.id});
-        } else {
-          existingPath[0].url = pathOnly;
-        }
-        authorLibs.menus.update('images');
-      }
-      if (itemToAdd.type === 'sound'){
-        var existingSound = authorLibs.authorData.sounds.filter(function(sound){
-          return sound.id === justName;
-        });
-
-        if (existingSound.length === 0){
-          authorLibs.authorData.sounds.push({id:justName, path:itemToAdd.project, url:itemToAdd.id});
+        if (existing.length === 0){
+          authorLibs.authorData[itemToAdd.type+'s'].push({id:authorLibs.utils.uuid(),
+            name:justName, path:itemToAdd.project, url:itemToAdd.id});
         } else existingPath[0].url = pathOnly;
-        authorLibs.menus.update('sounds');
+        authorLibs.menus.update(itemToAdd.type+'s');
       }
     });
   },
