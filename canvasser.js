@@ -291,27 +291,20 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     var goAll = true;
     if (test.testlist === undefined) return;
     test.testlist.forEach(function(subtest){
-      // if (test.type === 'position'){
-      //   var item  = act.data.objects.filter(function(obj){return obj.id === test.itemtocheck})[0];
-      //   var testp = act.data.objects.filter(function(obj){return obj.id === test.position})[0];
-      //   var pos = {"x":item.position.current.x, "y":item.position.current.y};
-      //   if (item.origin === "center") {
-      //     //TODO: Not working
-      //     var oPos = item.position.current
-      //     pos={"x":Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current), "y":Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
-      //   }
-      //
-      //   var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
-      //   if (pixelData_img[3] != 0) {
-      //     act.applyAction = [testp];
-      //     act.mode = 'true';
-      //     actions();
-      //   } else {
-      //     act.applyAction = [testp];
-      //     act.mode = 'false';
-      //     actions();
-      //   }
-      // }
+      if (subtest.type === 'position'){
+        var item  = act.data.objects.filter(function(obj){return obj.id === subtest.itemtocheck})[0];
+        var testp = act.data.objects.filter(function(obj){return obj.id === subtest.position})[0];
+        if (act.imageList[item.image] === undefined){goAll = false; return;}
+        var pos = {"x":item.position.current.x, "y":item.position.current.y};
+        if (item.origin === "center") {
+          var oPos = {x:item.position.current.x, y:item.position.current.y};
+          pos={x:Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current),
+               y:Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
+        }
+        var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
+        if (pixelData_img[3] === 0) goAll = false;
+
+      }
       if (subtest.type === "var"){
         var thisVar = act.data.vars.filter(function(obj){return obj.id === subtest.itemtocheck})[0];
         if (thisVar !== undefined){
@@ -989,7 +982,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       if (over[act.mode+"list"] === undefined) return;
       over[act.mode+"list"].forEach(function(action){
         if (action.type === 'cleardown'){
-          act.mode    = "none";
+          act.mode = "none";
         }
         if (action.type === 'console'){
           console.log(action.text);

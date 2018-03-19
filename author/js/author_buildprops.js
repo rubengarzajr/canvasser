@@ -443,6 +443,7 @@ authorLibs.buildProp = {
 
     if (obj.obj[obj.widget.field] !== undefined){
       obj.obj[obj.widget.field].forEach(function(actobject, idx){
+        if (actobject.type === undefined) return;
         var actionWidgets = authorLibs.rules.conditionals[actobject.type].widgets;
         if (actionWidgets.length === 0) return;
         var pActB = authorLibs.windows.makeDiv({parent:pDivB, classes:'actionblock'});

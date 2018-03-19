@@ -1,7 +1,8 @@
 ## Changelog:
 
-- 2018-02-22 Refactored menus.  No more raw HTML in code.
-- 2018-02-22 Fixed loading so it always makes json work with latest version.
+- 2018-03-19 Hooked up Test position.
+- 2018-02-22 Re-factored menus.  No more raw HTML in code.
+- 2018-02-22 Fixed loading so it always makes JSON work with latest version.
 - 2018-02-21 Fixed deleted objects not being removed from layers.
 - 2018-02-21 Stripped names from layer lists.
 - 2018-02-13 Fixed duplicated layer entries.

@@ -33,29 +33,6 @@ authorLibs.utils = {
     return newArr;
   },
 
-  //DEPRICATE!
-  buildDiv: function (classes, content, clicker, params){
-    var click = ''
-    if (clicker !== undefined) {
-      click = ' onclick="' + clicker + '(';
-      params.forEach(function(param, index){
-        click += "'" +  param + "'";
-        if (index < params.length-1) click +=',';
-      });
-      click += ') ";'
-    }
-    return '<div class="' + classes + '"' + click + '>' + content + '</div>';
-  },
-
-  //DEPRICATE!
-  buildFnString: function(fn, params, change){
-    var str = (change ? 'onchange=' : '') + '"' + fn + '(this';
-    params.forEach(function(pName){
-      str += ", '" + pName + "'";
-    });
-    return str + ')" ';
-  },
-
   copyObj: function(object, newObj){
     for (var key in object) {
       if (object.hasOwnProperty(key)) {
