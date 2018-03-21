@@ -264,7 +264,7 @@ authorLibs.buildProp = {
       if (subWidget.type === 'sndlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'sounds'}));
       if (subWidget.type === "tests")      authorLibs.buildProp.setTest(defaults);
       if (subWidget.type === "text")       authorLibs.buildProp.setText(Object.assign(defaults, {widthClass:'w100'}));
-      if (subWidget.type === 'varlist')    authorLibs.buildProp.setTypeList(defaults);
+      if (subWidget.type === 'varlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'vars'}));
     });
   },
 
@@ -542,7 +542,7 @@ authorLibs.buildProp = {
       var newList = obj.list.slice();
       newList.unshift("---NONE---");
       newList.forEach(function(listObject){
-      authorLibs.windows.makeElement({parent:dl, type:'option', html:listObject});
+        authorLibs.windows.makeElement({parent:dl, type:'option', html:listObject});
       });
     } else {
       var sel = authorLibs.windows.makeElement({parent:obj.parent, id:'prop_'+obj.path, classes:'sellist', type:'select',

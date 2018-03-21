@@ -15,7 +15,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     loop         : true,
     position     : {x:0, y:0},
     prevPosition : {x:0, y:0},
-    applyAction  : [],
+    actionList   : [],
     mouseDown    : false,
     mouseDownCnt : 0,
     external     : false,
@@ -269,14 +269,15 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.external = true;
     cList.forEach(function(cmd){
       if (cmd.command === "selectonly"){
-        act.applyAction = [];
+        // act.actionList = [];
         act.mode = "click";
-        act.data.objects.forEach(function(obj){
-          if (obj.id === cmd.item) act.applyAction.unshift(obj);
-        });
+        // act.data.objects.forEach(function(obj){
+        //   if (obj.id === cmd.item) act.actionList.unshift(obj);
+        // });
+        if (getObjById(cmd.item) !== undefined) act.actionList.push({mode:'click', obj:getObjById(cmd.item)});
       }
     });
-    actions();
+    //actions();
   }
 
   this.report = function(wat){
@@ -330,9 +331,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
     if (goAll){
       if (test.trueoff) test.active = false;
-      act.applyAction = [{truelist:test.truelist}];
-      act.mode = 'true';
-      actions();
+      //act.actionList = [{truelist:test.truelist}];
+      //act.mode = 'true';
+      //actions();
+      act.actionList.push({mode:'true', obj:{truelist:test.truelist}});
     }
 
   }
@@ -634,14 +636,15 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     if (act.mouseDown){
       act.mouseDownCnt ++;
       if (act.position.x !== act.prevPosition.x && act.position.y !== act.prevPosition.y && act.mouseDownCnt > 2) {
-        act.mode = "drag";
+        act.mode = 'drag';
         act.canvas.style.cursor = "move";
       }
-      actions();
+      //actions();
+
     }
     else act.canvas.style.cursor = "default";
     act.context.clearRect(0,0,act.canvas.width,act.canvas.height);
-    if (!act.external) act.applyAction = [];
+    //if (!act.external) act.actionList = [];
 
     function updateObject(obj){
       if (obj === undefined) return;
@@ -654,7 +657,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current, obj.usecolor);
         act.context.restore();
         if (!obj.testp) return;
-        if (posCheck) act.applyAction.unshift(obj);
+        //if (posCheck) act.actionList.unshift(obj);
+        if (posCheck && act.mode !== 'none') act.actionList.push({mode:act.mode, obj:obj});
       }
 
       if (obj.type === "image"){
@@ -736,11 +740,14 @@ function canvasser(vari, interactiveData, dataForm, overrides){
               Math.floor((act.position.y-pos.y-obj.originxy.current.y)/obj.scale.current), 1, 1
             ).data;
           }
-          if (pixelData_img[3] != 0) {
-            act.applyAction.unshift(obj);
-          } else {
+          if (pixelData_img[3] != 0 && act.mode !== 'none') {
+            act.actionList.push({mode:act.mode, obj:obj});
+          }
+          else {
             if (act.dragging !== null) {
-              if (obj.id === act.dragging.id) act.applyAction.unshift(obj);
+              if (obj.id === act.dragging.id) {
+                act.actionList.push({mode:act.mode, obj:obj});
+              }
             }
           }
         }
@@ -760,7 +767,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         }
       });
     });
-
+    actions();
     act.prevPosition = {x:act.position.x, y:act.position.y};
     if (act.loop) window.requestAnimationFrame(loop);
   }
@@ -809,7 +816,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         }
         if (shape.size !== undefined) size = shape.size;
         if (shape.font) ctx.font = size*sizer + "px " + shape.font;
-        ctx.fillText(shape.text, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
+        var varText=shape.text.replace(/\{{(.+?)\}}/g, replacer)
+        function replacer(match, p1, p2, p3, offset, string) {
+          return act.data.vars.filter(function(obj){return obj.name === p1})[0].value;
+        }
+        ctx.fillText(varText, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       }
       if (shape.type === "textline") {
         if (origin === undefined) origin = {x:0,y:0};
@@ -897,19 +908,13 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   }
 
   function mouseUp(){
-    act.mode         = "none";
+    act.mode         = 'none';
     act.mouseDown    = false;
     act.mouseDownCnt = 0;
     if (act.dragging !== null){
-      act.applyAction = [act.dragging];
-      act.mode        = "drop";
+      act.mode        = 'drop';
       act.dragging    = null;
-      actions();
     }
-  }
-
-  mouseHandler = {
-
   }
 
   function mouseEnter(){
@@ -978,9 +983,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   }
 
   function actions(){
-    act.applyAction.forEach(function(over){
-      if (over[act.mode+"list"] === undefined) return;
-      over[act.mode+"list"].forEach(function(action){
+    act.actionList.forEach(function(over){
+      if (over.obj[over.mode+"list"] === undefined) return;
+      over.obj[over.mode+"list"].forEach(function(action){
         if (action.type === 'cleardown'){
           act.mode = "none";
         }
@@ -1001,13 +1006,15 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
             var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
             if (pixelData_img[3] != 0) {
-              act.applyAction = [testp];
-              act.mode = 'true';
-              actions();
+              //act.actionList = [testp];
+              //act.mode = 'true';
+              //actions();
+              act.actionList.push({mode:'true', obj:testp, next:true});
             } else {
-              act.applyAction = [testp];
-              act.mode = 'false';
-              actions();
+              // act.actionList = [testp];
+              // act.mode = 'false';
+              // actions();
+              act.actionList.push({mode:'false', obj:testp, next:true});
             }
           }
           if (action.check === "var"){
@@ -1024,13 +1031,15 @@ function canvasser(vari, interactiveData, dataForm, overrides){
                 if (thisVar.value < action.value) go = true;
               }
               if (go){
-                act.applyAction = [over];
-                act.mode = 'true';
-                actions();
+                // act.actionList = [over];
+                // act.mode = 'true';
+                // actions();
+                act.actionList.push({mode:'true', obj:over, next:true});
               } else  {
-                act.applyAction = [over];
-                act.mode = 'false';
-                actions();
+                // act.actionList = [over];
+                // act.mode = 'false';
+                // actions();
+                act.actionList.push({mode:'false', obj:over, next:true});
               }
             }
           }
@@ -1149,14 +1158,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             }
             if (obj.parent !== undefined){
               if (obj.position.offset === undefined) obj.position.offset = {x:obj.position.current.x,y:obj.position.current.y};
-
               if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
               if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
             } else {
               if (!action.constrainx) obj.position.current.x += (act.position.x - act.prevPosition.x);
               if (!action.constrainy) obj.position.current.y += (act.position.y - act.prevPosition.y);
             }
-
             if (action.limitx){
               if (obj.position.current.x < action.minx) obj.position.current.x = action.minx;
               if (obj.position.current.x > action.maxx) obj.position.current.x = action.maxx;
@@ -1213,7 +1220,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         }
       });
     });
-    act.applyAction = [];
+
+    act.actionList = act.actionList.filter(function(action){return action.next});
+    act.actionList.forEach(function(action){delete action.next});
   }
 
   function checkAction(action, obj){
@@ -1289,6 +1298,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       }
     }
     return newObj
+  }
+
+  function getObjById(id){
+    return act.data.objects.filter(function(obj){return obj.id === id})[0];
   }
 
   function getAnimItem(anim){

@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2018-03-21 Text uses {{}} to display variable value.
+- 2018-03-21 Actions function called once per frame.
 - 2018-03-19 Hooked up Test position.
 - 2018-02-22 Re-factored menus.  No more raw HTML in code.
 - 2018-02-22 Fixed loading so it always makes JSON work with latest version.
