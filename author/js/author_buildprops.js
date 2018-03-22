@@ -302,7 +302,7 @@ authorLibs.buildProp = {
 
         authorLibs.buildProp.setSelect({parent:divB, fn:function(){authorLibs.buildProp.updateActionList(this, obj.obj.id,  obj.type, obj.widget.field+'.'+idx+'.type');},
         object:obj.obj.id, type: obj.type, list:actionsList, defaultId:itemAct.type, path:obj.widget.field+'.'+idx+'.type'});
-        authorLibs.windows.makeImg({parent:divB, classes:'rightx', click:function(){authorLibs.utils.deleteitem('objects', obj.obj.id, obj.widget.field, idx)},
+        authorLibs.windows.makeImg({parent:divB, classes:'rightx', click:function(){authorLibs.utils.deleteitem(obj.type, obj.obj.id, obj.widget.field, idx)},
           src:authorLibs.externalsPath + "image/icon_remove_g.png"});
 
         authorLibs.buildProp.makeWidgets({list:actionWidgets, idx:idx, widget:obj.widget, set:{parent:divB, obj:obj.obj, type:obj.type}});
@@ -452,7 +452,6 @@ authorLibs.buildProp = {
         object:obj.obj.id, type:'tests', list:list, defaultId:actobject.type, path:obj.widget.field+'.'+idx+'.type'});
         authorLibs.windows.makeImg({parent:pActB, classes:'rightx', click:function(){authorLibs.utils.deleteitem('tests', obj.obj.id, obj.widget.field, idx)},
           src:authorLibs.externalsPath + "image/icon_remove_g.png"});
-
         authorLibs.buildProp.makeWidgets({list:actionWidgets, idx:idx, type:'tests', widget:obj.widget, set:{parent:pActB, obj:obj.obj, type:'tests'}});
       });
 

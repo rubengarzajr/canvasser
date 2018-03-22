@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2018-03-21 Fixed tests true/false lists delete items.
 - 2018-03-21 Text uses {{}} to display variable value.
 - 2018-03-21 Actions function called once per frame.
 - 2018-03-19 Hooked up Test position.

@@ -47,6 +47,8 @@ authorLibs.utils = {
   },
 
   deleteitem: function(type, objName, listType, index){
+    console.log('hello!', type)
+    console.log(authorLibs.authorData[type])
     var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === objName);});
     if (objGet.length === 0) return;
     objGet[0][listType].splice(index,1);
