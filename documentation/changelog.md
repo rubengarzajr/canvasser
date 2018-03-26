@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2018-03-26 Added play speed control and reverse for Animation playback.
 - 2018-03-21 Fixed tests true/false lists delete items.
 - 2018-03-21 Text uses {{}} to display variable value.
 - 2018-03-21 Actions function called once per frame.

@@ -70,7 +70,9 @@
         {"field":"autostart", "type":"bool"},
         {"field":"loop",      "type":"bool"},
         {"field":"pause",     "type":"bool"},
+        {"field":"reverse",   "type":"bool"},
         {"field":"length",    "type":"number"},
+        {"field":"speed",     "type":"number"},
         {"field":"timelist",  "type":"timelist", "display":"Timeline"}
       ]
     }
@@ -351,6 +353,7 @@
     "objectorigin":{"list":["upper_left", "center"]},
     "objecttype":{"list":["image", "shape"]},
     "operationtype":{"list":["add", "sub","set"]},
+    "vartype":{"list":["number", "string", "boolean"]},
     "particletype":{"list":["flow","burst"]},
     "relationtype":{"list":["position.current.x", "position.current.y", "scale.current", "rotation"]},
     "composite":{"list":["source-over", "source-in", "source-out", "source-atop", "destination-over", "destination-in", "destination-out", "destination-atop", "lighter", "copy", "xor", "multiply",

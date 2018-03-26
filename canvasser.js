@@ -396,17 +396,31 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
 
     act.player.forEach(function(play){
-      if (play.playing   === undefined) play.playing   = [];
-      if (play.nowStamp  === undefined) play.nowStamp = Date.now()-30;
-      if (play.time      === undefined) play.time      = 1;
+      if (play.playing    === undefined) play.playing    = [];
+      if (play.nowStamp   === undefined) {
+        if (play.reverse) play.nowStamp = Date.now()+30;
+        else play.nowStamp = Date.now()-30;
+      }
+      if (play.timeActual === undefined) play.timeActual = 1;
+      if (play.time       === undefined) play.time       = 1;
+      if (play.speed      === undefined) play.speed      = 1;
 
       play.prevStamp     = play.nowStamp;
       play.prevTime      = play.time;
       play.nowStamp      = Date.now();
-      if (play.pause) return;
-      if (play.nowStamp-play.prevStamp < 2000) play.time += play.nowStamp - play.prevStamp;
 
-      if (play.time >= play.length) {
+      if (play.pause) return;
+      if (play.nowStamp-play.prevStamp < 2000) {
+        play.timeActual += play.nowStamp - play.prevStamp;
+        if (play.reverse) play.time = (play.length - play.timeActual) * play.speed;
+        else play.time = play.timeActual * play.speed;
+      }
+
+      var deleteAnim = false;
+      if (!play.reverse && play.time >= play.length) deleteAnim = true;
+      if (play.reverse && play.time <= 0) deleteAnim = true;
+
+      if (deleteAnim) {
         play.delete = true;
         if (play.loop){
           var animToPlay = act.data.anims.filter(function(anim){return anim.id === play.id})[0];
@@ -417,12 +431,17 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       if (play.timelist != undefined) {
         play.timelist.forEach(function(animList){
           if (animList.starttime < 1 || animList.starttime === undefined) animList.starttime = 1;
-          if (animList.starttime >= play.prevTime && animList.starttime <= play.time) {
+          var addAnim = false;
+          if (!play.reverse && animList.starttime >= play.prevTime && animList.starttime <= play.time) addAnim = true;
+          if (play.reverse && animList.endtime >= play.time && animList.endtime <= play.prevTime) addAnim = true;
+          if (addAnim){
             var animCopy = copyObj(animList, {})
             play.playing.push(animCopy);
           }
         });
       }
+
+
 
       play.playing.forEach(function(anim){
         if (anim.type === "flipbook"){
@@ -580,7 +599,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if(isNaN(anim.endpos.y))   anim.endpos.y   = 0;
 
           var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
-          var t       = play.time - anim.starttime;
+          var t       = play.time    - anim.starttime;
           var d       = anim.endtime - anim.starttime;
 
           if (anim.ease === undefined) anim.ease = 'linear';

@@ -10,7 +10,7 @@ authorLibs.menus = {
         itemName = type.slice(0, -1) + itemCnt;
       } else tryAgain = false;
     }
-    if (type === 'anims')       authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, autostart:false, length:1000, timelist:[]});
+    if (type === 'anims')       authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, speed:1, autostart:false, length:1000, timelist:[]});
     if (type === 'constraints') authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, active:true, driverlist:[]});
     if (type === 'groups')      authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName});
     if (type === 'images')      {

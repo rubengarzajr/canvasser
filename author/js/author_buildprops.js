@@ -212,12 +212,21 @@ authorLibs.buildProp = {
     }
 
     if (type==='vars'){
-      var thisVar = thisProp;
       var pDiv  = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
-      authorLibs.buildProp.setText({parent:pDiv, widthClass:'w50', obj:thisProp, widget:{field:'id'}, inputClass:'w200',
+      authorLibs.buildProp.setText({parent:pDiv, widthClass:'w50', obj:thisProp, widget:{field:'name'}, inputClass:'w200',
         value:thisProp.name, type:'vars', path:'name'});
+      if (thisProp.type === undefined) thisProp.type = 'number';
+      authorLibs.buildProp.setListSelect({parent:pDiv, widthClass:'w50', obj:thisProp, widget:{field:'type', id:'vartype'},
+        value:thisProp.type, type:'vars', path:'type'});
+      if (thisProp.type === 'number'){
+        if (isNaN(thisProp.value)) thisProp.value = 0;
         authorLibs.buildProp.setNumber({parent:pDiv, obj:thisProp, type:'vars', widget:{field:'value'},
-        path:'value', value:thisProp.value});
+          path:'value', value:thisProp.value});
+      }
+      if (thisProp.type === 'string'){
+        authorLibs.buildProp.setText({parent:pDiv, widthClass:'w50', obj:thisProp, widget:{field:'value'},
+          inputClass:'w200', value:thisProp.value, type:'vars', path:'value'});
+      }
     }
     authorLibs.menus.updateSelectionWindow(type,id);
   },
