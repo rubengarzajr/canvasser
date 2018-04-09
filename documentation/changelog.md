@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2018-04-09 Added deferred image loading for objects and particles.
+- 2018-04-09 Fixed image menu not highlighting on click.
 - 2018-03-26 Added play speed control and reverse for Animation playback.
 - 2018-03-21 Fixed tests true/false lists delete items.
 - 2018-03-21 Text uses {{}} to display variable value.

@@ -55,6 +55,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     draw: function(id){
       var pSystem = pManager.pSystemList.filter(function(obj){return obj.id === id})[0];
       if (pSystem === undefined) return;
+      if (act.imageList[pSystem.info.image].deferred) {
+        delete act.imageList[pSystem.info.image].deferred;
+        var imageLoad = act.data.images.filter(function(im){return im.id === pSystem.info.image})[0];
+        if (imageLoad !== undefined) loadImage(imageLoad);
+      }
+      if (act.imageList[pSystem.info.image].imageData === undefined) return;
       if (act.imageList[pSystem.info.image] == undefined) return;
       var imgDim = {x:act.imageList[pSystem.info.image].imageData.naturalWidth/2, y:act.imageList[pSystem.info.image].imageData.naturalHeight/2};
       if (pSystem.info.blend) act.context.globalCompositeOperation = pSystem.info.blend;
@@ -206,24 +212,29 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
     act.imageList = {};
     act.data.images.forEach(function(image){
-      var imageObj = new Image();
-      imageObj.crossOrigin = "Anonymous";
-      imageObj.onload = function(){
-        act.imageList[image.id] = {};
-        act.imageList[image.id].imageData     = this;
-        act.imageList[image.id].canvas        = document.createElement('canvas');
-        act.imageList[image.id].canvas.width  = this.width;
-        act.imageList[image.id].canvas.height = this.height;
-        act.imageList[image.id].context       = act.imageList[image.id].canvas.getContext('2d');
-        act.imageList[image.id].context.drawImage(this, 0, 0, this.width, this.height);
-        if (image.atlas){
-          act.imageList[image.id].atlas = {};
-          act.imageList[image.id].atlas.cellwidth  = image.cellwidth;
-          act.imageList[image.id].atlas.cellheight = image.cellheight;
-          act.imageList[image.id].atlas.numX       = Math.floor(this.width / image.cellwidth);
-          act.imageList[image.id].atlas.numY       = Math.floor(this.height / image.cellheight);
-        }
-      };
+      if (image.deferred) {
+        act.imageList[image.id] = {deferred:true};
+        return;
+      }
+
+      // var imageObj = new Image();
+      // imageObj.crossOrigin = "Anonymous";
+      // imageObj.onload = function(){
+      //   act.imageList[image.id] = {};
+      //   act.imageList[image.id].imageData     = this;
+      //   act.imageList[image.id].canvas        = document.createElement('canvas');
+      //   act.imageList[image.id].canvas.width  = this.width;
+      //   act.imageList[image.id].canvas.height = this.height;
+      //   act.imageList[image.id].context       = act.imageList[image.id].canvas.getContext('2d');
+      //   act.imageList[image.id].context.drawImage(this, 0, 0, this.width, this.height);
+      //   if (image.atlas){
+      //     act.imageList[image.id].atlas = {};
+      //     act.imageList[image.id].atlas.cellwidth  = image.cellwidth;
+      //     act.imageList[image.id].atlas.cellheight = image.cellheight;
+      //     act.imageList[image.id].atlas.numX       = Math.floor(this.width / image.cellwidth);
+      //     act.imageList[image.id].atlas.numY       = Math.floor(this.height / image.cellheight);
+      //   }
+      // };
       if (image.local){
         var tempImage = document.createElement("img")
         tempImage.src = image.data;
@@ -243,8 +254,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           act.imageList[image.id].atlas.numY       = Math.floor(imageObj.src.height / image.cellheight);
         }
       } else {
-        imageObj.src = image.path != undefined ? act.pathList[image.path] + '/' + image.url : image.url;
-        if (act.data.settings.usecache === false && !image.local) imageObj.src += '?' + new Date().getTime();
+        loadImage(image);
+        //imageObj.src = (image.path != undefined ? act.pathList[image.path] + '/' + image.url : image.url) + (!act.data.settings.usecache ? '?' + new Date().getTime() : '');
       }
     });
 
@@ -676,12 +687,17 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current, obj.usecolor);
         act.context.restore();
         if (!obj.testp) return;
-        //if (posCheck) act.actionList.unshift(obj);
         if (posCheck && act.mode !== 'none') act.actionList.push({mode:act.mode, obj:obj});
       }
 
-      if (obj.type === "image"){
+      if (obj.type === "image" && obj.show){
         if (act.imageList[obj.image] === undefined) return;
+        if (act.imageList[obj.image].deferred) {
+          delete act.imageList[obj.image].deferred;
+          var imageLoad = act.data.images.filter(function(im){return im.id === obj.image})[0];
+          if (imageLoad !== undefined) loadImage(imageLoad);
+        }
+        if (act.imageList[obj.image].imageData === undefined) return;
         obj.parentTransform = {position:{x:0,y:0}, scale:1, rotation:0};
         if (obj.parent !== undefined){
           if (obj.parent.object !== undefined){
@@ -919,6 +935,28 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.position = {x:(event.clientX-rect.left)/act.canvas.scale, y:(event.clientY-rect.top)/act.canvas.scale};
   }
 
+  function loadImage(image){
+    var imageObj = new Image();
+    imageObj.src = (image.path != undefined ? act.pathList[image.path] + '/' + image.url : image.url) + (!act.data.settings.usecache ? '?' + new Date().getTime() : '');
+    imageObj.crossOrigin = "Anonymous";
+    imageObj.onload = function(){
+      act.imageList[image.id] = {};
+      act.imageList[image.id].imageData     = this;
+      act.imageList[image.id].canvas        = document.createElement('canvas');
+      act.imageList[image.id].canvas.width  = this.width;
+      act.imageList[image.id].canvas.height = this.height;
+      act.imageList[image.id].context       = act.imageList[image.id].canvas.getContext('2d');
+      act.imageList[image.id].context.drawImage(this, 0, 0, this.width, this.height);
+      if (image.atlas){
+        act.imageList[image.id].atlas = {};
+        act.imageList[image.id].atlas.cellwidth  = image.cellwidth;
+        act.imageList[image.id].atlas.cellheight = image.cellheight;
+        act.imageList[image.id].atlas.numX       = Math.floor(this.width / image.cellwidth);
+        act.imageList[image.id].atlas.numY       = Math.floor(this.height / image.cellheight);
+      }
+    };
+  }
+
   function modVal(operation, startVal, val){
     if (operation === "add") return startVal + val;
     if (operation === "subtract") return startVal - val;
@@ -1025,14 +1063,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
             var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
             if (pixelData_img[3] != 0) {
-              //act.actionList = [testp];
-              //act.mode = 'true';
-              //actions();
               act.actionList.push({mode:'true', obj:testp, next:true});
             } else {
-              // act.actionList = [testp];
-              // act.mode = 'false';
-              // actions();
               act.actionList.push({mode:'false', obj:testp, next:true});
             }
           }
@@ -1050,14 +1082,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
                 if (thisVar.value < action.value) go = true;
               }
               if (go){
-                // act.actionList = [over];
-                // act.mode = 'true';
-                // actions();
                 act.actionList.push({mode:'true', obj:over, next:true});
               } else  {
-                // act.actionList = [over];
-                // act.mode = 'false';
-                // actions();
                 act.actionList.push({mode:'false', obj:over, next:true});
               }
             }
@@ -1091,7 +1117,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           initCanvasser(action.vari, action.url, 'file');
         }
         if (action.type === 'loadpage'){
-          if (action.newpage) {window.open(action.url);}
+          if (action.newpage) {window.open(action.url, '_blank');}
           else {window.location.href = action.url;}
         }
         if (action.type === 'pauseanim'){

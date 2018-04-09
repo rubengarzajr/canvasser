@@ -106,11 +106,11 @@ authorLibs.buildProp = {
     }
 
     if (type==='images'){
-      var pDiv     = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
-      var pList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
+      var pDiv      = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
+      var pList     = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
       var pathList  = [];
       pList.forEach(function(item){pathList.push(item);});
-      var id = authorLibs.utils.getSubProp(thisProp, 'path');
+      var id = authorLibs.utils.getSubProp(thisProp, 'id');
       authorLibs.buildProp.makeWidgets({list:authorLibs.rules.image.imagedata.widgets,
         set:{list:pathList, parent:pDiv, obj:thisProp, path:'path', type:'images'}});
     }

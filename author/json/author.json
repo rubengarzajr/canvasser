@@ -253,6 +253,7 @@
         {"field":"path",       "type":"select", "id":"pathdata"},
         {"field":"url",        "type":"text"},
         {"field":"atlas",      "type":"bool"},
+        {"field":"deferred",   "type":"bool"},
         {"field":"cellwidth",  "type":"number"},
         {"field":"cellheight", "type":"number"}
       ]

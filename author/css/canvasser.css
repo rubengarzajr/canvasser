@@ -301,6 +301,7 @@ a{
 
 #imageholder{
   min-height: 20px;
+  min-width: 160px;
   width: 150px;
   background-image: url("../sample/image/checker.png");
   border: 2px rgb(165, 165, 165) solid;
