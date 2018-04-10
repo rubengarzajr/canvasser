@@ -10,7 +10,7 @@ function initCanvasser(vari, datafile, dataForm, overrides){
 }
 
 function canvasser(vari, interactiveData, dataForm, overrides){
-  this.version  = '1.3.0';
+  this.version  = '1.4.0';
   var act       = {
     loop         : true,
     position     : {x:0, y:0},

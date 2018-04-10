@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2018-04-10 **Version 1.4.0**
 - 2018-04-09 Added deferred image loading for objects and particles.
 - 2018-04-09 Fixed image menu not highlighting on click.
 - 2018-03-26 Added play speed control and reverse for Animation playback.

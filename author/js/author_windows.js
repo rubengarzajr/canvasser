@@ -5,7 +5,7 @@ authorLibs.windows = {
     authorLibs.dom.parent.addEventListener('mouseup',      function(){authorLibs.gui.parentMouseDown = false;})
     authorLibs.dom.parent.addEventListener('onmouseleave', function(){authorLibs.gui.parentMouseDown = false;})
 
-    var head   = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, classes:'header'});
+    var head           = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, classes:'header'});
     var projectHolder  = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'projectholder'});
 
     var uploadForm = authorLibs.windows.makeElement({parent:authorLibs.dom.parent, type:'form', id:'fileUploadForm', style:'display:none;'});
@@ -122,7 +122,7 @@ authorLibs.windows = {
       var title     = authorLibs.windows.makeDiv({parent:bank,  id:win.id + 'mover', classes:'titlebar'});
       var winTitle  = authorLibs.windows.makeDiv({parent:title,  classes:'wintitle', html:win.id.charAt(0).toUpperCase() +  win.id.slice(1) + 's'});
       authorLibs.windows.makeDiv({parent:title,  classes:'button_righter', html:'<img src="' + authorLibs.externalsPath +'image/icon_close_g.png"/>', click:function(){authorLibs.menus.menuToggle(win.id+'bank')}});
-      authorLibs.windows.makeDiv({parent:title,  classes:'button_righter', html:'<img id="toggle'+win.id+'s" src="' + authorLibs.externalsPath +'image/icon_'+(win.min ? 'max': 'min')+'_g.png"/>', click:function(){authorLibs.windows.toggleminmax(win.id+'contents', 'toggle'+win.id+'s', 664)}});
+      authorLibs.windows.makeDiv({parent:title,  classes:'button_righter', html:'<img id="toggle'+win.id+'s" src="' + authorLibs.externalsPath +'image/icon_'+(win.min ? 'max': 'min')+'_g.png"/>', click:function(){authorLibs.windows.toggleminmax(win.id+'contents', 'toggle'+win.id+'s', 664, win.id)}});
       var display   = win.min ? "display:none" : "display:block";
 
       var contents  = authorLibs.windows.makeDiv({parent:bank,  id:win.id + 'contents', classes:'padlr', style:display});
@@ -320,7 +320,7 @@ authorLibs.windows = {
     colors.forEach(function(color){document.documentElement.style.setProperty('--'+color.id, color[theme]);});
   },
 
-  toggleminmax: function(element, minmax, maxsize){
+  toggleminmax: function(element, minmax, maxsize, id){
     var d = document.getElementById(element);
     var b = document.getElementById(minmax);
     if (d.style.display === "block"){
@@ -330,6 +330,21 @@ authorLibs.windows = {
     else {
       d.style.display = "block";
       b.src=authorLibs.externalsPath +"image/icon_min_g.png";
+      var holder = document.getElementById(id+'holder');
+      var bank   = document.getElementById(id+'bank');
+      var top = parseInt(bank.style.top.slice(0, -2));
+
+      var ext = authorLibs.utils.getVisibleArea();
+      var win = bank.getBoundingClientRect();
+
+      if (win.bottom > ext.y-15) {
+        console.log('WINDOW start top ' + win.top + ' bottom '+ win.bottom)
+        console.log('too long ' + win.bottom + ' for ' + ext.y)
+        holder.style.height = ( win.bottom - ( win.bottom - ext.y) - 20).toString() + 'px';
+        console.log( ext.y,  win.top)
+        console.log(holder.style.height)
+        console.log('WINDOW now top ' + win.top + ' bottom '+ win.bottom)
+      }
     }
   }
 }
