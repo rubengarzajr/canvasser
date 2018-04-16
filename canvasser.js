@@ -971,7 +971,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     //   act.touch.push(copyTouch(event.changedTouches[i]));
     //   act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
     // }
-    act.position = {x:(event.changedTouches[0].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].pageY-rect.top)/act.canvas.scale};
+    act.position = {x:(event.changedTouches[0].clientX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].clientY-rect.top)/act.canvas.scale};
     mouseDown();
   }
 
@@ -985,7 +985,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     //     act.touch.splice(idx, 1, copyTouch(event.changedTouches[i]));  // swap in the new touch record
     //   }
     // }
-    act.position = {x:(event.changedTouches[0].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].pageY-rect.top)/act.canvas.scale};
+    act.position = {x:(event.changedTouches[0].clientX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].clientY-rect.top)/act.canvas.scale};
   }
 
   function touchUp(event){
@@ -998,7 +998,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     //     act.touch.splice(idx, 1);  // swap in the new touch record
     //   }
     // }
-    act.position = {x:(event.changedTouches[0].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].pageY-rect.top)/act.canvas.scale};
+    //act.position = {x:(event.changedTouches[0].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].pageY-rect.top)/act.canvas.scale};
     mouseUp();
   }
 

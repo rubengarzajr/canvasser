@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2018-04-16 Fixed touch when page scaled.
 - 2018-04-13 Fixed initial touch event - multi-touch disabled.
 - 2018-04-12 Fixed touch events.
 - 2018-04-10 **Version 1.4.0**
