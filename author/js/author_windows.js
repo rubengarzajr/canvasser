@@ -326,24 +326,19 @@ authorLibs.windows = {
     if (d.style.display === "block"){
       d.style.display="none";
       b.src=authorLibs.externalsPath + "image/icon_max_g.png";
-    }
-    else {
+    } else {
       d.style.display = "block";
       b.src=authorLibs.externalsPath +"image/icon_min_g.png";
       var holder = document.getElementById(id+'holder');
       var bank   = document.getElementById(id+'bank');
-      var top = parseInt(bank.style.top.slice(0, -2));
+      var ext    = authorLibs.utils.getVisibleArea();
+      var win    = bank.getBoundingClientRect();
 
-      var ext = authorLibs.utils.getVisibleArea();
-      var win = bank.getBoundingClientRect();
-
-      if (win.bottom > ext.y-15) {
-        console.log('WINDOW start top ' + win.top + ' bottom '+ win.bottom)
-        console.log('too long ' + win.bottom + ' for ' + ext.y)
-        holder.style.height = ( win.bottom - ( win.bottom - ext.y) - 20).toString() + 'px';
-        console.log( ext.y,  win.top)
-        console.log(holder.style.height)
-        console.log('WINDOW now top ' + win.top + ' bottom '+ win.bottom)
+      if (win.bottom > ext.y-25) {
+        var offset    =  win.bottom - win.top - holder.offsetHeight;
+        var newHeight = ext.y - win.top - offset - 25;
+        if (newHeight < 20) newHeight = 20;
+        holder.style.height = (newHeight).toString() + 'px';
       }
     }
   }

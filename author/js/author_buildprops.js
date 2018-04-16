@@ -235,7 +235,7 @@ authorLibs.buildProp = {
     obj.list.forEach(function(subWidget){
       var wPath = '';
       if (obj.widget === undefined && obj.idx === undefined) wPath = subWidget.field;
-      else wPath = obj.widget.field + '.' + obj.idx + '.' + subWidget.field;
+      else wPath = obj.widget.field + '.' + obj.idx + (subWidget.field !== undefined ? '.' + subWidget.field : '');
       if (obj.current === true &&
         (subWidget.type === 'number' || subWidget.type === 'posxy'  || subWidget.type === 'scale')) wPath += '.current';
       var val = authorLibs.utils.getSubProp(obj.set.obj, wPath);
@@ -249,10 +249,8 @@ authorLibs.buildProp = {
       if (subWidget.type === 'grplist')    authorLibs.buildProp.setGroup(Object.assign(defaults));
       if (subWidget.type === "imagedata")  authorLibs.buildProp.setImage(defaults);
       if (subWidget.type === "linkedcontent") {
-        var filterPath = obj.Path.substr(0, obj.Path.lastIndexOf(".")) + '.' + subWidget['link'] ;
-        var defaultId  = authorLibs.utils.getSubProp(obj.obj, filterPath);
-        if (defaultId){
-          authorLibs.buildProp.makeWidgets({list:authorLibs.rules[subWidget.sourcelist][defaultId].widgets, idx:obj.idx, type:'tests', widget:obj.widget, set:obj.set});
+        if (val.check !== undefined){
+          authorLibs.buildProp.makeWidgets({list:authorLibs.rules.conditionals[val.check].widgets, idx:obj.idx, type:'tests', widget:obj.widget, set:obj.set});
         }
       }
       if (subWidget.type === 'laylist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'layers'}));

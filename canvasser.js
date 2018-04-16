@@ -3,7 +3,7 @@
 function initCanvasser(vari, datafile, dataForm, overrides){
   if (overrides == undefined) overrides = [];
   if (window[vari]) window[vari].act.loop = false;
-  var oldPos = window[vari] ? {x:window[vari].act.position.x, y:window[vari].act.position.y} : {x:0,y:0};
+  var oldPos = window[vari] ? {x:window[vari].act.position.x, y:window[vari].act.position.y} : {x:-1,y:-1};
   window[vari] = new canvasser(vari, datafile, dataForm, overrides);
   window[vari].act.position = {x:oldPos.x, y:oldPos.y};
   return window[vari];
@@ -145,7 +145,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     }
   }
 
-  var ease     = new Ease();
+  var ease = new Ease();
   if (dataForm == "file") requestJson(interactiveData, init);
   else if (dataForm == "string") init(JSON.parse(interactiveData));
   else init(interactiveData);
@@ -217,24 +217,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         return;
       }
 
-      // var imageObj = new Image();
-      // imageObj.crossOrigin = "Anonymous";
-      // imageObj.onload = function(){
-      //   act.imageList[image.id] = {};
-      //   act.imageList[image.id].imageData     = this;
-      //   act.imageList[image.id].canvas        = document.createElement('canvas');
-      //   act.imageList[image.id].canvas.width  = this.width;
-      //   act.imageList[image.id].canvas.height = this.height;
-      //   act.imageList[image.id].context       = act.imageList[image.id].canvas.getContext('2d');
-      //   act.imageList[image.id].context.drawImage(this, 0, 0, this.width, this.height);
-      //   if (image.atlas){
-      //     act.imageList[image.id].atlas = {};
-      //     act.imageList[image.id].atlas.cellwidth  = image.cellwidth;
-      //     act.imageList[image.id].atlas.cellheight = image.cellheight;
-      //     act.imageList[image.id].atlas.numX       = Math.floor(this.width / image.cellwidth);
-      //     act.imageList[image.id].atlas.numY       = Math.floor(this.height / image.cellheight);
-      //   }
-      // };
       if (image.local){
         var tempImage = document.createElement("img")
         tempImage.src = image.data;
@@ -255,7 +237,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         }
       } else {
         loadImage(image);
-        //imageObj.src = (image.path != undefined ? act.pathList[image.path] + '/' + image.url : image.url) + (!act.data.settings.usecache ? '?' + new Date().getTime() : '');
       }
     });
 
@@ -280,15 +261,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.external = true;
     cList.forEach(function(cmd){
       if (cmd.command === "selectonly"){
-        // act.actionList = [];
         act.mode = "click";
-        // act.data.objects.forEach(function(obj){
-        //   if (obj.id === cmd.item) act.actionList.unshift(obj);
-        // });
         if (getObjById(cmd.item) !== undefined) act.actionList.push({mode:'click', obj:getObjById(cmd.item)});
       }
     });
-    //actions();
   }
 
   this.report = function(wat){
@@ -342,12 +318,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
     if (goAll){
       if (test.trueoff) test.active = false;
-      //act.actionList = [{truelist:test.truelist}];
-      //act.mode = 'true';
-      //actions();
       act.actionList.push({mode:'true', obj:{truelist:test.truelist}});
     }
-
   }
 
   function loop(){
@@ -405,7 +377,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       });
     });
 
-
     act.player.forEach(function(play){
       if (play.playing    === undefined) play.playing    = [];
       if (play.nowStamp   === undefined) {
@@ -451,8 +422,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           }
         });
       }
-
-
 
       play.playing.forEach(function(anim){
         if (anim.type === "flipbook"){
@@ -669,12 +638,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         act.mode = 'drag';
         act.canvas.style.cursor = "move";
       }
-      //actions();
-
     }
     else act.canvas.style.cursor = "default";
     act.context.clearRect(0,0,act.canvas.width,act.canvas.height);
-    //if (!act.external) act.actionList = [];
 
     function updateObject(obj){
       if (obj === undefined) return;
@@ -1001,38 +967,39 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   function touchDown(event){
     event.preventDefault();
     var rect = act.canvas.getBoundingClientRect();
-    for (var i = 0; i < event.changedTouches.length; i++) {
-      act.touch.push(copyTouch(event.changedTouches[i]));
-      act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
-    }
-    act.mode         = "click";
-    act.external     = false;
-    act.mouseDown    = true;
-    act.mouseDownCnt = 0;
+    // for (var i = 0; i < event.changedTouches.length; i++) {
+    //   act.touch.push(copyTouch(event.changedTouches[i]));
+    //   act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
+    // }
+    act.position = {x:(event.changedTouches[0].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].pageY-rect.top)/act.canvas.scale};
+    mouseDown();
   }
 
   function touchMove(event){
     var rect = act.canvas.getBoundingClientRect();
     event.preventDefault();
-    for (var i = 0; i < event.changedTouches.length; i++) {
-      var idx = event.changedTouches[i].identifier;
-      if (idx >= 0) {
-        act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
-        act.touch.splice(idx, 1, copyTouch(event.changedTouches[i]));  // swap in the new touch record
-      }
-    }
+    // for (var i = 0; i < event.changedTouches.length; i++) {
+    //   var idx = event.changedTouches[i].identifier;
+    //   if (idx >= 0) {
+    //     act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
+    //     act.touch.splice(idx, 1, copyTouch(event.changedTouches[i]));  // swap in the new touch record
+    //   }
+    // }
+    act.position = {x:(event.changedTouches[0].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].pageY-rect.top)/act.canvas.scale};
   }
 
   function touchUp(event){
     event.preventDefault();
     var rect = act.canvas.getBoundingClientRect();
-    for (var i = 0; i < event.changedTouches.length; i++) {
-      var idx = event.changedTouches[i].identifier;
-      if (idx >= 0) {
-        act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
-        act.touch.splice(idx, 1);  // swap in the new touch record
-      }
-    }
+    // for (var i = 0; i < event.changedTouches.length; i++) {
+    //   var idx = event.changedTouches[i].identifier;
+    //   if (idx >= 0) {
+    //     act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
+    //     act.touch.splice(idx, 1);  // swap in the new touch record
+    //   }
+    // }
+    act.position = {x:(event.changedTouches[0].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].pageY-rect.top)/act.canvas.scale};
+    mouseUp();
   }
 
   function copyTouch(touch) {

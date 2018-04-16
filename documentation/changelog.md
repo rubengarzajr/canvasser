@@ -1,5 +1,7 @@
 ## Changelog:
 
+- 2018-04-13 Fixed initial touch event - multi-touch disabled.
+- 2018-04-12 Fixed touch events.
 - 2018-04-10 **Version 1.4.0**
 - 2018-04-09 Added deferred image loading for objects and particles.
 - 2018-04-09 Fixed image menu not highlighting on click.
