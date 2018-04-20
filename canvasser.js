@@ -12,24 +12,27 @@ function initCanvasser(vari, datafile, dataForm, overrides){
 function canvasser(vari, interactiveData, dataForm, overrides){
   this.version  = '1.4.0';
   var act       = {
-    loop         : true,
-    position     : {x:0, y:0},
-    prevPosition : {x:0, y:0},
     actionList   : [],
+    dragging     : null,
+    external     : false,
+    imageList    : {},
+    loop         : true,
+    mode         : "none",
     mouseDown    : false,
     mouseDownCnt : 0,
-    external     : false,
-    mode         : "none",
-    dragging     : null,
-    touch        : [],
-    paused       : false
+    pathList     : {},
+    paused       : false,
+    position     : {x:0, y:0},
+    player       : [],
+    prevPosition : {x:0, y:0},
+    soundList    : {},
+    touch        : []
   };
-  this.act     = act;
-  document.addEventListener('visibilitychange', handleVisibilityChange, false);
-  function handleVisibilityChange(){
-    if (document.visibilityState == "hidden") act.paused = true;
-    else act.paused = false;
-  }
+
+  var ease = new Ease();
+  this.act = act;
+
+
 
   var pManager = {
     pSystemList : [],
@@ -55,10 +58,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     draw: function(id){
       var pSystem = pManager.pSystemList.filter(function(obj){return obj.id === id})[0];
       if (pSystem === undefined) return;
-      if (act.imageList[pSystem.info.image].deferred) {
-        delete act.imageList[pSystem.info.image].deferred;
+      if (act.imageList[pSystem.info.image].deferred && !act.imageList[pSystem.info.image].deferredStart) {
+        act.imageList[pSystem.info.image].deferredStart = true;
         var imageLoad = act.data.images.filter(function(im){return im.id === pSystem.info.image})[0];
-        if (imageLoad !== undefined) loadImage(imageLoad);
+        if (imageLoad !== undefined) loadImage(imageLoad, pSystem.info.image, false);
       }
       if (act.imageList[pSystem.info.image].imageData === undefined) return;
       if (act.imageList[pSystem.info.image] == undefined) return;
@@ -145,7 +148,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     }
   }
 
-  var ease = new Ease();
+  document.addEventListener('visibilitychange', handleVisibilityChange, false);
+  function handleVisibilityChange(){
+    if (document.visibilityState == "hidden") act.paused = true;
+    else act.paused = false;
+  }
+
   if (dataForm == "file") requestJson(interactiveData, init);
   else if (dataForm == "string") init(JSON.parse(interactiveData));
   else init(interactiveData);
@@ -165,7 +173,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
   function init(data){
     overrides.forEach(function(override){
-      setSubProp(data, Object.keys(override)[0], Object.values(override)[0]);
+      subPropSet(data, Object.keys(override)[0], Object.values(override)[0]);
     });
 
     if (data.layers === undefined){
@@ -195,12 +203,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.canvas.addEventListener("touchmove",    touchMove,   false);
     act.canvas.addEventListener("touchend",     touchUp,     false);
 
-    act.pathList = {};
     if (act.data.paths){act.data.paths.forEach(function(path){
       act.pathList[path.id] = path.url;});
     }
 
-    act.soundList = {};
     if (act.data.sounds){
       act.data.sounds.forEach(function(sound){
         if (sound.path != undefined) sound.url = act.pathList[sound.path] + '/' + sound.url;
@@ -210,13 +216,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
     if (act.data.tests === undefined) act.data.tests = [];
 
-    act.imageList = {};
     act.data.images.forEach(function(image){
       if (image.deferred) {
         act.imageList[image.id] = {deferred:true};
         return;
       }
-
       if (image.local){
         var tempImage = document.createElement("img")
         tempImage.src = image.data;
@@ -236,17 +240,18 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           act.imageList[image.id].atlas.numY       = Math.floor(imageObj.src.height / image.cellheight);
         }
       } else {
-        loadImage(image);
+        loadImage(image, null, false);
       }
     });
 
-    act.player = [];
+
     if (act.data.anims !== undefined){
       act.data.anims.forEach(function(anim){
         if (!anim.autostart) return;
         act.player.push(copyObj(anim, {}));
       });
     }
+
     if (act.data.constraints === undefined) act.data.constraints = [];
     var externals = Array.from(document.querySelectorAll('[data-canvasser="'+vari+'"]'));
     if (externals.length > 0){
@@ -289,8 +294,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           pos={x:Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current),
                y:Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
         }
-        var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
-        if (pixelData_img[3] === 0) goAll = false;
+        var pix = getPixel({id:item.image, pos:{x:testp.position.current.x-pos.x, y:testp.position.current.y-pos.y}});
+        if (pix[3] === 0) goAll = false;
 
       }
       if (subtest.type === "var"){
@@ -365,14 +370,14 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           var driver      = 0;
           var constrained = 0;
 
-          driver = getSubProp(parent, dr.driverop);
+          driver = subPropGet(parent, dr.driverop);
 
           if (dr.useminmax){
           var percent = (driver -  dr.drivermin) / (dr.drivermax -  dr.drivermin);
           var out =  percent * (dr.constrainmax -  dr.constrainmin) + dr.constrainmin ;
           driver = out;
           }
-          setSubProp(child, dr.constrainop, driver)
+          subPropSet(child, dr.constrainop, driver)
         }
       });
     });
@@ -658,10 +663,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
       if (obj.type === "image" && obj.show){
         if (act.imageList[obj.image] === undefined) return;
-        if (act.imageList[obj.image].deferred) {
-          delete act.imageList[obj.image].deferred;
+        if (act.imageList[obj.image].deferred && !act.imageList[obj.image].deferredStart) {
+          act.imageList[obj.image].deferredStart = true;
           var imageLoad = act.data.images.filter(function(im){return im.id === obj.image})[0];
-          if (imageLoad !== undefined) loadImage(imageLoad);
+          if (imageLoad !== undefined) loadImage(imageLoad, obj.image, false);
         }
         if (act.imageList[obj.image].imageData === undefined) return;
         obj.parentTransform = {position:{x:0,y:0}, scale:1, rotation:0};
@@ -729,19 +734,19 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           }
           act.context.restore();
           if (!obj.testp) return;
-          var pixelData_img = [0,0,0,0];
+          var pix = [0,0,0,0];
           if (obj.scale.current>.001){
             if (obj.origin === 'center'){
               obj.originxy.current.x = -Math.floor(act.imageList[obj.image].imageData.naturalWidth/2);
               obj.originxy.current.y = -Math.floor(act.imageList[obj.image].imageData.naturalHeight/2)
             }
 
-            pixelData_img = act.imageList[obj.image].context.getImageData(
-              Math.floor((act.position.x-pos.x-obj.originxy.current.x)/obj.scale.current),
-              Math.floor((act.position.y-pos.y-obj.originxy.current.y)/obj.scale.current), 1, 1
-            ).data;
+            pix = getPixel({id:obj.image, pos:{
+                            x:Math.floor((act.position.x-pos.x-obj.originxy.current.x)/obj.scale.current),
+                            y:Math.floor((act.position.y-pos.y-obj.originxy.current.y)/obj.scale.current)}
+                          });
           }
-          if (pixelData_img[3] != 0 && act.mode !== 'none') {
+          if (pix[3] != 0 && act.mode !== 'none') {
             act.actionList.push({mode:act.mode, obj:obj});
           }
           else {
@@ -770,6 +775,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     });
     actions();
     act.prevPosition = {x:act.position.x, y:act.position.y};
+    if (act.mode === 'drop') mouseLeave();
     if (act.loop) window.requestAnimationFrame(loop);
   }
 
@@ -896,17 +902,14 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     };
   }
 
-  function getMousePos(event) {
-    var rect = act.canvas.getBoundingClientRect();
-    act.position = {x:(event.clientX-rect.left)/act.canvas.scale, y:(event.clientY-rect.top)/act.canvas.scale};
-  }
-
-  function loadImage(image){
+  function loadImage(image, deferred, loadNew){
+    var forceLoad = !act.data.settings.usecache;
+    if (loadNew) forceLoad = true;
     var imageObj = new Image();
-    imageObj.src = (image.path != undefined ? act.pathList[image.path] + '/' + image.url : image.url) + (!act.data.settings.usecache ? '?' + new Date().getTime() : '');
-    imageObj.crossOrigin = "Anonymous";
+    imageObj.src = (image.path != undefined ? act.pathList[image.path] + '/' + image.url : image.url) + (forceLoad ? '?' + new Date().getTime() : '');
+    imageObj.crossOrigin = 'anonymous';
     imageObj.onload = function(){
-      act.imageList[image.id] = {};
+      act.imageList[image.id]               = {};
       act.imageList[image.id].imageData     = this;
       act.imageList[image.id].canvas        = document.createElement('canvas');
       act.imageList[image.id].canvas.width  = this.width;
@@ -920,90 +923,22 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         act.imageList[image.id].atlas.numX       = Math.floor(this.width / image.cellwidth);
         act.imageList[image.id].atlas.numY       = Math.floor(this.height / image.cellheight);
       }
+
+      try { var tester = act.imageList[image.id].context.getImageData(0, 0, 1, 1).data; }
+      catch(err){ act.imageList[image.id].tainted = true; }
+
+      if (deferred !== null){
+        delete act.imageList[deferred].deferred;
+        delete act.imageList[deferred].deferredStart;
+      }
     };
   }
 
   function modVal(operation, startVal, val){
-    if (operation === "add") return startVal + val;
+    if (operation === "add")      return startVal + val;
     if (operation === "subtract") return startVal - val;
     if (operation === "multiply") return startVal * val;
-    if (operation === "divide") return startVal / val;
-  }
-
-  function mouseUp(){
-    act.mode         = 'none';
-    act.mouseDown    = false;
-    act.mouseDownCnt = 0;
-    if (act.dragging !== null){
-      act.mode        = 'drop';
-      act.dragging    = null;
-    }
-  }
-
-  function mouseEnter(){
-    act.mode         = "none";
-    act.mouseDown    = false;
-    act.mouseDownCnt = 0;
-  }
-
-  function mouseLeave(){
-    act.mode         = "none";
-    act.mouseDown    = false;
-    act.mouseDownCnt = 0;
-    act.dragging     = null;
-  }
-
-  function mouseDown(){
-    act.mode         = "click";
-    act.external     = false;
-    act.mouseDown    = true;
-    act.mouseDownCnt = 0;
-  }
-
-  function radians(degrees) {
-    return degrees * 0.01745329251994;
-  };
-
-  function touchDown(event){
-    event.preventDefault();
-    var rect = act.canvas.getBoundingClientRect();
-    // for (var i = 0; i < event.changedTouches.length; i++) {
-    //   act.touch.push(copyTouch(event.changedTouches[i]));
-    //   act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
-    // }
-    act.position = {x:(event.changedTouches[0].clientX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].clientY-rect.top)/act.canvas.scale};
-    mouseDown();
-  }
-
-  function touchMove(event){
-    var rect = act.canvas.getBoundingClientRect();
-    event.preventDefault();
-    // for (var i = 0; i < event.changedTouches.length; i++) {
-    //   var idx = event.changedTouches[i].identifier;
-    //   if (idx >= 0) {
-    //     act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
-    //     act.touch.splice(idx, 1, copyTouch(event.changedTouches[i]));  // swap in the new touch record
-    //   }
-    // }
-    act.position = {x:(event.changedTouches[0].clientX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].clientY-rect.top)/act.canvas.scale};
-  }
-
-  function touchUp(event){
-    event.preventDefault();
-    var rect = act.canvas.getBoundingClientRect();
-    // for (var i = 0; i < event.changedTouches.length; i++) {
-    //   var idx = event.changedTouches[i].identifier;
-    //   if (idx >= 0) {
-    //     act.position = {x:(event.changedTouches[i].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[i].pageY-rect.top)/act.canvas.scale};
-    //     act.touch.splice(idx, 1);  // swap in the new touch record
-    //   }
-    // }
-    //act.position = {x:(event.changedTouches[0].pageX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].pageY-rect.top)/act.canvas.scale};
-    mouseUp();
-  }
-
-  function copyTouch(touch) {
-    return { identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY };
+    if (operation === "divide")   return startVal / val;
   }
 
   function actions(){
@@ -1027,13 +962,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
               var oPos = {x:item.position.current.x, y:item.position.current.y};
               pos={x:Math.floor(oPos.x-act.imageList[item.image].imageData.naturalWidth/2*item.scale.current), y:Math.floor(oPos.y-act.imageList[item.image].imageData.naturalHeight/2*item.scale.current)};
             }
-
-            var pixelData_img = act.imageList[item.image].context.getImageData(testp.position.current.x-pos.x, testp.position.current.y-pos.y, 1, 1).data;
-            if (pixelData_img[3] != 0) {
-              act.actionList.push({mode:'true', obj:testp, next:true});
-            } else {
-              act.actionList.push({mode:'false', obj:testp, next:true});
-            }
+            var pix = getPixel({id:item.image, pos:{x:testp.position.current.x-pos.x, y:testp.position.current.y-pos.y}});
+            if (pix[3] != 0) act.actionList.push({mode:'true', obj:testp, next:true});
+            else act.actionList.push({mode:'false', obj:testp, next:true});
           }
           if (action.check === "var"){
             var thisVar = act.data.vars.filter(function(obj){return obj.id === action.itemtocheck})[0];
@@ -1072,11 +1003,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (action.type === 'increment'){
           act.data.objects.forEach(function(obj){
             if (!checkAction(action, obj)) return;
-            var amt = Number(getSubProp(obj, action.prop)) + Number(action.newvalue);
+            var amt = Number(subPropGet(obj, action.prop)) + Number(action.newvalue);
 
             if (action.rangemin) {if (amt < Number(action.rangemin)) return;}
             if (action.rangemax) {if (amt > Number(action.rangemax)) return;}
-            setSubProp(obj, action.prop, amt.toString());
+            subPropSet(obj, action.prop, amt.toString());
           });
         }
         if (action.type === 'loadinto'){
@@ -1142,7 +1073,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (action.type === 'set'){
           act.data.objects.forEach(function(obj){
             if (!checkAction(action, obj)) return;
-            setSubProp(obj, action.prop, action.newvalue.toString());
+            subPropSet(obj, action.prop, action.newvalue.toString());
           });
         }
         if (action.type === 'shapecolor'){
@@ -1237,6 +1168,18 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.actionList.forEach(function(action){delete action.next});
   }
 
+  function appendToArray(inArray){
+    var newArr = []
+    inArray.forEach(function(element){
+      if (typeof(element) === 'object') {
+          if (Array.isArray(element)){
+            newArr.push(appendToArray(element))
+          } else newArr.push(copyObj(element, {}));
+        } else newArr.push(element)
+    });
+    return newArr;
+  }
+
   function checkAction(action, obj){
     if (action.filter === undefined) return false;
     if (action.filter === "group"){
@@ -1247,56 +1190,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       if (obj.id !== action.id) return false;
     }
     return true;
-  }
-
-  function loadInPlace(url, place){
-    var fileToDl = url;
-    if (act.data.settings.usecache === false) fileToDl += '?' + new Date().getTime();
-    function reqListener(){
-      place.innerHTML = this.responseText;
-    }
-    var oReq = new XMLHttpRequest();
-    oReq.addEventListener("load", reqListener);
-    oReq.open("GET", fileToDl);
-    oReq.send();
-  }
-
-  function getMagnitude(vector){
-    return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-  }
-
-  function getUnit(vector){
-    var mag = getMagnitude(vector);
-    return {x:vector.x/mag, y:vector.y/mag};
-  }
-
-  function randInterval(min,max){
-    return Math.random()*(max-min)+min;
-  }
-
-  function randIntervalInt(min,max){
-    return Math.floor(Math.random()*(max-min+1)+min);
-  }
-
-  function getSubProp(obj, desc){
-    var arr = desc.split(".");
-    while(arr.length > 1){
-      var isnum = /^\d+$/.test(arr[0]);
-      if (isnum) arr[0] = parseInt(arr[0]);
-      obj = obj[arr[0]];
-      if (obj === undefined) return undefined;
-      arr.shift();
-    }
-    return obj[arr[0]];
-  }
-
-  function setSubProp(obj, desc, val){
-    var arr = desc.split(".");
-    while(arr.length > 1){
-      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
-      obj = obj[arr.shift()];
-    }
-    obj[arr[0]] = val;
   }
 
   function copyObj(object, newObj){
@@ -1310,28 +1203,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       }
     }
     return newObj
-  }
-
-  function getObjById(id){
-    return act.data.objects.filter(function(obj){return obj.id === id})[0];
-  }
-
-  function getAnimItem(anim){
-    if (anim.filter === undefined) anim.filter = 'object';
-    var filter = 'objects';
-    if (anim.filter != undefined) filter = anim.filter+'s';
-    var animOb = act.data[anim.filter+'s'].filter(function(item){return item.id === anim.id})[0];
-    if (filter === 'particles') animOb = pManager.getSystem(anim.id);
-    return animOb;
-  }
-
-  function findParent(item){
-    if (item.parent !== undefined){
-      if (item.parent.object === undefined){
-        var parentObj = act.data.objects.filter(function(parent){return parent.id === item.parent.id})[0];
-        if (parentObj !== undefined) item.parent.object = parentObj;
-      }
-    }
   }
 
   function findInGroup(groupName){
@@ -1348,16 +1219,139 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     });
   }
 
-  function appendToArray(inArray){
-    var newArr = []
-    inArray.forEach(function(element){
-      if (typeof(element) === 'object') {
-          if (Array.isArray(element)){
-            newArr.push(appendToArray(element))
-          } else newArr.push(copyObj(element, {}));
-        } else newArr.push(element)
-    });
-    return newArr;
+  function findParent(item){
+    if (item.parent !== undefined){
+      if (item.parent.object === undefined){
+        var parentObj = act.data.objects.filter(function(parent){return parent.id === item.parent.id})[0];
+        if (parentObj !== undefined) item.parent.object = parentObj;
+      }
+    }
+  }
+
+  function getAnimItem(anim){
+    if (anim.filter === undefined) anim.filter = 'object';
+    var filter = 'objects';
+    if (anim.filter != undefined) filter = anim.filter+'s';
+    var animOb = act.data[anim.filter+'s'].filter(function(item){return item.id === anim.id})[0];
+    if (filter === 'particles') animOb = pManager.getSystem(anim.id);
+    return animOb;
+  }
+
+  function getMagnitude(vector){
+    return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+  }
+
+  function getMousePos(event) {
+    var rect = act.canvas.getBoundingClientRect();
+    act.position = {x:(event.clientX-rect.left)/act.canvas.scale, y:(event.clientY-rect.top)/act.canvas.scale};
+  }
+
+  function getObjById(id){
+    return act.data.objects.filter(function(obj){return obj.id === id})[0];
+  }
+
+  function getPixel(image){
+    if (act.imageList[image.id].tainted) {
+      var imageLoad = act.data.images.filter(function(im){return im.id === image.id})[0];
+      loadImage(imageLoad, null, true);
+      return [0,0,0,0];
+    }
+    return act.imageList[image.id].context.getImageData(image.pos.x, image.pos.y, 1, 1).data;
+  }
+
+  function getUnit(vector){
+    var mag = getMagnitude(vector);
+    return {x:vector.x/mag, y:vector.y/mag};
+  }
+
+  function loadInPlace(url, place){
+    var fileToDl = url;
+    if (act.data.settings.usecache === false) fileToDl += '?' + new Date().getTime();
+    function reqListener(){
+      place.innerHTML = this.responseText;
+    }
+    var oReq = new XMLHttpRequest();
+    oReq.addEventListener("load", reqListener);
+    oReq.open("GET", fileToDl);
+    oReq.send();
+  }
+
+  function mouseDown(){
+    act.mode         = "click";
+    act.external     = false;
+    act.mouseDown    = true;
+    act.mouseDownCnt = 0;
+  }
+
+  function mouseUp(){
+    act.mode         = 'none';
+    act.mouseDown    = false;
+    act.mouseDownCnt = 0;
+    if (act.dragging !== null){
+      act.mode       = 'drop';
+      act.dragging   = null;
+    }
+  }
+
+  function mouseEnter(){
+    act.mode         = "none";
+    act.mouseDown    = false;
+    act.mouseDownCnt = 0;
+  }
+
+  function mouseLeave(){
+    act.mode         = "none";
+    act.mouseDown    = false;
+    act.mouseDownCnt = 0;
+    act.dragging     = null;
+  }
+
+  function radians(degrees){ return degrees * 0.01745329251994; };
+
+  function randInterval(min,max){ return Math.random()*(max-min)+min; }
+
+  function randIntervalInt(min,max){ return Math.floor(Math.random()*(max-min+1)+min); }
+
+  function subPropGet(obj, desc){
+    var arr = desc.split(".");
+    while(arr.length > 1){
+      var isnum = /^\d+$/.test(arr[0]);
+      if (isnum) arr[0] = parseInt(arr[0]);
+      obj = obj[arr[0]];
+      if (obj === undefined) return undefined;
+      arr.shift();
+    }
+    return obj[arr[0]];
+  }
+
+  function subPropSet(obj, desc, val){
+    var arr = desc.split(".");
+    while(arr.length > 1){
+      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
+      obj = obj[arr.shift()];
+    }
+    obj[arr[0]] = val;
+  }
+
+  // TODO: Does not support multi-touch
+  function touchDown(event){
+    event.preventDefault();
+    var rect = act.canvas.getBoundingClientRect();
+    act.position     = {x:(event.changedTouches[0].clientX-rect.left)/act.canvas.scale,
+                        y:(event.changedTouches[0].clientY-rect.top)/act.canvas.scale};
+    mouseDown();
+  }
+
+  function touchMove(event){
+    var rect = act.canvas.getBoundingClientRect();
+    event.preventDefault();
+    act.position = {x:(event.changedTouches[0].clientX-rect.left)/act.canvas.scale, y:(event.changedTouches[0].clientY-rect.top)/act.canvas.scale};
+  }
+
+  function touchUp(event){
+    event.preventDefault();
+    var rect = act.canvas.getBoundingClientRect();
+    mouseUp();
   }
 
 }

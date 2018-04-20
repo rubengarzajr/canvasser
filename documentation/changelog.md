@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2018-04-20 Fixed tainted imagedata on cached images.
 - 2018-04-16 Fixed touch when page scaled.
 - 2018-04-13 Fixed initial touch event - multi-touch disabled.
 - 2018-04-12 Fixed touch events.
