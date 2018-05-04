@@ -515,7 +515,7 @@ authorLibs.utils = {
 
   togglegroup: function(domElement, objectId, type, paramPath, groupName){
     var element = domElement.checked;
-    var objGet  = authorLibs.authorData[type+'s'].filter(function(finder){return (finder.id === objectId);})[0];
+    var objGet  = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
     if (objGet.groups === undefined) objGet.groups = [];
 
     if (element){
