@@ -400,7 +400,7 @@ authorLibs.buildProp = {
     var div = authorLibs.windows.makeDiv({parent:obj.parent});
     authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100', html:obj.widget.field});
     authorLibs.buildProp.setSelect({parent:div, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}, object:obj.obj.id, type:obj.type,
-      list:imageList, defaultId:obj.obj[obj.widget.field], path:obj.widget.field});
+      list:imageList, defaultId:obj.obj[obj.widget.field].toString(), path:obj.widget.field});
 
     var flipTest = authorLibs.authorData.images.filter(function(img){ return img.id === obj.obj.image})[0];
     if (flipTest){
