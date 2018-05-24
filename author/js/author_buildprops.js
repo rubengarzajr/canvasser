@@ -36,8 +36,8 @@ authorLibs.buildProp = {
         if (widget.type === "timelist"){
           var wlist = [];
           authorLibs.rules.anims.forEach(function(template){wlist.push({id:template.type, name:template.type})});
-          paDiv = authorLibs.windows.makeDiv({parent:pDiv});
-          pbDiv = authorLibs.windows.makeDiv({parent:paDiv, classes:'pos_holder w95p'});
+          var paDiv = authorLibs.windows.makeDiv({parent:pDiv});
+          var pbDiv = authorLibs.windows.makeDiv({parent:paDiv, classes:'pos_holder w95p'});
           authorLibs.windows.makeDiv({parent:pbDiv, classes:'pos_title', html:widget.display});
 
           if (thisProp[widget.field] !== undefined){
@@ -45,7 +45,7 @@ authorLibs.buildProp = {
               var actionWidgets = authorLibs.rules.anims.filter(function(type){return type.type === actobject.type});
               if (actionWidgets.length === 0) return;
               actionWidgets = actionWidgets[0].widgets;
-              pcDiv = authorLibs.windows.makeDiv({parent:pbDiv, classes:'actionblock'});
+              var pcDiv = authorLibs.windows.makeDiv({parent:pbDiv, classes:'actionblock'});
               authorLibs.windows.makeImg({parent:pbDiv, classes:'rightx', click:function(){authorLibs.utils.deletetimeline(thisProp.id, idx)},
                 src:authorLibs.externalsPath + "image/icon_remove_g.png"});
               authorLibs.windows.makeDiv({parent:pbDiv, classes:'entrylabel c_entrytitle_text w100', html:idx});
@@ -400,7 +400,7 @@ authorLibs.buildProp = {
     var div = authorLibs.windows.makeDiv({parent:obj.parent});
     authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100', html:obj.widget.field});
     authorLibs.buildProp.setSelect({parent:div, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}, object:obj.obj.id, type:obj.type,
-      list:imageList, defaultId:obj.obj[obj.widget.field].toString(), path:obj.widget.field});
+      list:imageList, defaultId:obj.obj[obj.widget.field], path:obj.widget.field});
 
     var flipTest = authorLibs.authorData.images.filter(function(img){ return img.id === obj.obj.image})[0];
     if (flipTest){

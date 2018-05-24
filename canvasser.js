@@ -32,8 +32,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   var ease = new Ease();
   this.act = act;
 
-
-
   var pManager = {
     pSystemList : [],
     create: function(obj){
@@ -58,6 +56,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     draw: function(id){
       var pSystem = pManager.pSystemList.filter(function(obj){return obj.id === id})[0];
       if (pSystem === undefined) return;
+      if (act.imageList[pSystem.info.image] === undefined) return;
       if (act.imageList[pSystem.info.image].deferred && !act.imageList[pSystem.info.image].deferredStart) {
         act.imageList[pSystem.info.image].deferredStart = true;
         var imageLoad = act.data.images.filter(function(im){return im.id === pSystem.info.image})[0];
@@ -108,12 +107,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           var spawnCount = 1;
           if (pSystem.info.genType === 'burst') spawnCount = pSystem.info.emitRate;
           pSystem.time.prev = pSystem.time.now;
-          for (cnt=0; cnt < spawnCount; cnt ++){
+          for (var cnt=0; cnt < spawnCount; cnt ++){
             var partPos = {x:pSystem.position.current.x, y:pSystem.position.current.y};
             if (pSystem.info.emitterSize > 1){
-              t  = 2 * Math.PI * randInterval(0,1);
-              u  = randInterval(0,1) + randInterval(0,1);
-              r  = u > 1 ? 2-u : u
+              var t  = 2 * Math.PI * randInterval(0,1);
+              var u  = randInterval(0,1) + randInterval(0,1);
+              var r  = u > 1 ? 2-u : u
               r *= pSystem.info.emitterSize;
               partPos = {x:r*Math.cos(t) + partPos.x, y:r*Math.sin(t) + partPos.y};
             }
@@ -733,7 +732,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             act.context.drawImage(act.imageList[obj.image].imageData, 0, 0, act.imageList[obj.image].imageData.naturalWidth, act.imageList[obj.image].imageData.naturalHeight);
           }
           act.context.restore();
-          if (!obj.testp) return;
+          if (!obj.testp || act.mode==='none') return;
           var pix = [0,0,0,0];
           if (obj.scale.current>.001){
             if (obj.origin === 'center'){
@@ -821,6 +820,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         else {
           if (shape.color !== undefined) ctx.fillStyle = shape.color;
         }
+        var size = 1;
         if (shape.size !== undefined) size = shape.size;
         if (shape.font) ctx.font = size*sizer + "px " + shape.font;
         var varText=shape.text.replace(/\{{(.+?)\}}/g, replacer)
@@ -906,8 +906,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     var forceLoad = !act.data.settings.usecache;
     if (loadNew) forceLoad = true;
     var imageObj = new Image();
+    imageObj.setAttribute('crossOrigin', 'anonymous');
     imageObj.src = (image.path != undefined ? act.pathList[image.path] + '/' + image.url : image.url) + (forceLoad ? '?' + new Date().getTime() : '');
-    imageObj.crossOrigin = 'anonymous';
+    //imageObj.crossOrigin = 'anonymous';
     imageObj.onload = function(){
       act.imageList[image.id]               = {};
       act.imageList[image.id].imageData     = this;
@@ -1339,6 +1340,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     var rect = act.canvas.getBoundingClientRect();
     act.position     = {x:(event.changedTouches[0].clientX-rect.left)/act.canvas.scale,
                         y:(event.changedTouches[0].clientY-rect.top)/act.canvas.scale};
+    act.prevPosition = {x:act.position.x, y:act.position.y};
     mouseDown();
   }
 

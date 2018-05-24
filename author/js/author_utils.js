@@ -341,7 +341,7 @@ authorLibs.utils = {
   prePath: function(item){
     var url = item.url;
     if (!item.path) return url;
-    preUrl  = authorLibs.authorData.paths.filter(function(selected){return selected.id === item.path;})[0];
+    var preUrl  = authorLibs.authorData.paths.filter(function(selected){return selected.id === item.path;})[0];
     if (!preUrl) return url;
     return preUrl.url + '/' + item.url;
   },

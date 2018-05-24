@@ -47,10 +47,11 @@ if (empty($contentDeleted)){
   $contentDeleted = '/var/www/html/canvasser_content_deleted';
 }
 
-$contentUrl = getenv('CONTENT_URL');
+$contentUrl = getenv('CONTENT_URL_DEL');
 if (empty($contentUrl)){
   $contentUrl = (($_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . '/canvasser_content_deleted';
 }
+
 
 $path = $contentDeleted;
 $list = array();

@@ -1,5 +1,8 @@
 ## Changelog:
 
+- 2018-05-24 Fixed deferred images in particles.
+- 2018-05-24 Documented External and Minify workflows.
+- 2018-05-24 Fixed tainted imagedata on cached images in Safari.
 - 2018-04-20 Fixed tainted imagedata on cached images.
 - 2018-04-16 Fixed touch when page scaled.
 - 2018-04-13 Fixed initial touch event - multi-touch disabled.
