@@ -687,7 +687,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
           obj.scale.current = 0.01;
         }
-        if (obj.originxy === undefined) obj.originxy = {current:{x:0, y:0}};
+        if (obj.originxy           === undefined) obj.originxy = {current:{x:0, y:0}};
+        if (obj.originxy.current   === undefined) obj.originxy.current = {x:0, y:0};
+        if (obj.originxy.current.x === undefined) obj.originxy.current.x = 0;
+        if (obj.originxy.current.y === undefined) obj.originxy.current.y = 0;
         var oxy = {x:obj.originxy.current.x, y:obj.originxy.current.y};
         if (obj.origin === "center") {
           if (atlas){

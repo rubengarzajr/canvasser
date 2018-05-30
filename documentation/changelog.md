@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2018-05-30 Fixed originxy Safari specific issue.
 - 2018-05-24 Fixed deferred images in particles.
 - 2018-05-24 Documented External and Minify workflows.
 - 2018-05-24 Fixed tainted imagedata on cached images in Safari.
