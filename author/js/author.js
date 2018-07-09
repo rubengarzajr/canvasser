@@ -1,5 +1,6 @@
 var authorLibs = {
   externalsPath:  './',
+  learningPath: './learning/',
   defaultJSONobj: false,
   defaultJSON:    "./json/default.json",
   dom:{},
@@ -49,7 +50,7 @@ function learning(action, page){
 }
 
 function popLearn(contents){
-  var newContent = contents.split('"./').join('"' + authorLibs.externalsPath);
+  var newContent = contents.split('"../').join('"' + authorLibs.learningPath);
   document.getElementById("learning").innerHTML = newContent;
 }
 
