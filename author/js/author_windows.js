@@ -19,6 +19,8 @@ authorLibs.windows = {
     authorLibs.windows.makeDiv({parent:alert, html:"ALERT",   classes:'alert_title'});
     authorLibs.windows.makeDiv({parent:alert, id:"alertdata", classes:'alert_content'});
 
+    var autobk = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'autobk', style:'display:none', html:"Autoback"});
+
     var deleteB = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent, id:'delete_box', style:'display:none'});
     authorLibs.windows.makeDiv({parent:deleteB, id:"delete_title", classes:'notice_title'});
     authorLibs.windows.makeDiv({parent:deleteB, id:"delete_content",  classes:'notice_content'});
@@ -59,14 +61,15 @@ authorLibs.windows = {
     authorLibs.windows.makeDiv({parent:upload, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('uploadbox')}});
     var winList = [
       {id:"anim",       position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
-      {id:"canvas",     position:{x: 10, y:174}, menu:{reload:true}},
       {id:"constraint", position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
       {id:"file",       position:{x: 23, y: 52}, menu:{refresh:true, uploadfile:true, renamefile:true, addtoproject:true, copyfile:true, deletefile:true, filter:true}, min:true, hide:false},
       {id:"group",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
       {id:"image",      position:{x:675, y: 52}, menu:{add:true, delete:true}, min:true},
       {id:"json",       position:{x:  5, y: 52}, menu:{load:true, view:true, execute:true, format:true},min:false, hide:true},
       {id:"layer",      position:{x: 23, y: 78}, menu:{add:true, delete:true}, min:true, hide:false},
+      {id:"learn",      position:{x:502, y:140}, menu:{}},
       {id:"object",     position:{x:512, y: 52}, menu:{add:true, delete:true, copy:true, filter:true}, min:true},
+      {id:"output",     position:{x: 10, y:174}, menu:{reload:true}},
       {id:"particle",   position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false,  hide:true},
       {id:"path",       position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
       {id:"properties", position:{x:838, y: 52}, menu:{add:true, delete:true}},
@@ -75,8 +78,7 @@ authorLibs.windows = {
       {id:"sound",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
       {id:"shape",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
       {id:"test",       position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
-      {id:"var",        position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
-      {id:"learn",      position:{x:502, y:140}, menu:{}}
+      {id:"var",        position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true}
     ]
 
     var menuFile = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_file',    classes:'menu_items', html:'File', click:function(){authorLibs.menus.menuToggle('menu_file_dropdown')}});
@@ -101,6 +103,10 @@ authorLibs.windows = {
       {id:"Blue",    css:"blue"},
       {id:"Green",   css:"green"}
     ];
+
+    var menuAutoBk = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_autobk',  classes:'menu_items', html:'AutoBack', click:function(){authorLibs.menus.menuToggle('menu_autobk_dropdown')}});
+    var dropAutobk = authorLibs.windows.makeDiv({parent:menuAutoBk, id:'menu_autobk_dropdown',  classes:"menu_dropdown", style:'display:none;'});
+
 
     var menuTheme = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_theme',    classes:'menu_items', html:'Theme', click:function(){authorLibs.menus.menuToggle('menu_theme_dropdown')}});
     var dropTheme = authorLibs.windows.makeDiv({parent:menuTheme, id:'menu_theme_dropdown',  classes:"menu_dropdown", style:'display:none;'});
@@ -149,7 +155,7 @@ authorLibs.windows = {
       if (win.menu.filter){
          authorLibs.windows.makeElement({id:win.id + 'filter', parent:menu, placeholder:'filter', type:'input', subtype:'text', classes:'menu-filter', keyup:function(){authorLibs.menus.filterList(win.id + 'filter', win.id +'s')}});
       }
-      if (win.id === 'canvas'){
+      if (win.id === 'output'){
         authorLibs.windows.makeDiv({parent:title, id:'outputtitle', classes:'wintitle right', html:'X, Y'});
         winTitle.innerHTML = 'Output';
       }
@@ -269,7 +275,9 @@ authorLibs.windows = {
     if (settings.value       !== undefined) element.value        = settings.value;
     if (settings.width       !== undefined) element.width        = settings.width;
     if (settings.clearparent === true) settings.parent.innerHTML = '';
-    settings.parent.appendChild(element);
+
+    if (settings.first === true) settings.parent.insertBefore(element, settings.parent.childNodes[0]);
+    else settings.parent.appendChild(element);
     return element;
   },
 

@@ -90,6 +90,16 @@ a{
   font-size: .8em;
 }
 
+#autobk{
+  font-family: button;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background-color: black;
+  color: white;
+  padding: 5px;
+}
+
 .bottomlinks{
   margin-left:auto;
   margin-right:auto;
@@ -154,7 +164,7 @@ a{
 .clicktr{
   cursor: pointer;
   font-family: selecttext;
-  font-size: 1.6em;
+  /* font-size: 1.6em; */
   padding: 0px;
   user-select: none;
 }
@@ -258,18 +268,23 @@ a{
 }
 
 @font-face {
+  font-family: learn;
+  src: url(../font/Exo2-Medium.otf);
+}
+
+@font-face {
   font-family: title;
-  src: url(../font/CharriotDeluxe.woff);
+  src: url(../font/Exo2-Medium.otf);
 }
 
 @font-face {
   font-family: button;
-  src: url(../font/CharriotDeluxe.woff);
+  src: url(../font/Exo2-Medium.otf);
 }
 
 @font-face {
   font-family: selecttext;
-  src: url(../font/alterebro-pixel-font.woff);
+  src: url(../font/Exo2-Medium.otf);
 }
 
 .font-larger{
@@ -321,6 +336,7 @@ a{
 
 .imageblock{
   display: block;
+  margin-bottom: 25px;
 }
 
 .imageid{
@@ -330,7 +346,7 @@ a{
 
 .imagetext{
   font-family: selecttext;
-  font-size: 1.6em;
+  /* font-size: 1.6em; */
   padding-top: 5px;
   padding-bottom: 5px;
   color: rgb(146, 146, 146);
@@ -394,7 +410,8 @@ a{
 }
 
 #learning{
-  font-family: button;
+  font-family: learn;
+  line-height: 1.25;
   background-color: white;
   height: 480px;
   width: 400px;
@@ -405,6 +422,12 @@ a{
 .learnlink{
   color: green;
   cursor: pointer;
+}
+
+.learntitle{
+  font-size: 1.5em;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
 #loadbox{
@@ -478,6 +501,11 @@ a{
   margin-top: 5px;
   margin-bottom: 5px;
   text-align: center;
+}
+
+#menu_autobk_dropdown{
+  width: 220px;
+  padding: 5px;
 }
 
 .menu-check{
@@ -802,13 +830,22 @@ td{
 
 .textblock{
   text-align: justify;
+  margin-bottom: 10px;
 }
 
-.textblock::first-letter {
-  font-size: 145%;
+.textstep{
+  font-size: 1.2em;
+  text-align: justify;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  border-bottom: #a5a5a5 1px solid;
+}
+
+/* .textblock::first-letter {
+  font-size: 130%;
   color: #000000;
   margin-left: 10px;
-}
+} */
 
 .textspacer{
   margin-bottom: 25px;

@@ -46,6 +46,20 @@ authorLibs.utils = {
     return newObj
   },
 
+  dateString: function(){
+    var d = new Date();
+    var ampm = 'AM';
+    var hours = d.getHours();
+    if (hours > 12){
+      hours = hours - 12;
+      ampm = 'PM';
+    }
+    return hours + ":" + d.getMinutes() + ":" + d.getSeconds() +  ampm + ' '
+          + d.getFullYear() + '/' + (d.getMonth()+1)  + '/' + d.getDate();
+
+
+  },
+
   deleteitem: function(type, objName, listType, index){
     console.log('hello!', type)
     console.log(authorLibs.authorData[type])
@@ -101,6 +115,20 @@ authorLibs.utils = {
       }
     }
     xhr.send();
+  },
+
+  fadeElement(element, speed) {
+      var op = 1;
+      var timer = setInterval(function () {
+          if (op <= 0.02){
+              clearInterval(timer);
+              element.style.display = 'none';
+              element.style.opacity = 1;
+          }
+          element.style.opacity = op;
+          element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+          op -= op * 0.1;
+      }, speed);
   },
 
   fileDeleteGo: function(listName){

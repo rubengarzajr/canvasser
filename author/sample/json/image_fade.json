@@ -13,7 +13,7 @@
     {"id":"image1","path":"sample","url":"sample_graphic_1.png"}
   ],
   "shapes":[],
-  "settings":{"canvaswidth":"400","canvasheight":"400","canvasdomname":"activity","canvasparent":"canvasholder"},
+  "settings":{"canvaswidth":"400","canvasheight":"400","canvasdomname":"activity","canvasparent":"outputholder"},
   "anims":[
     {"id":"fadeout","autostart":false,"length":100,"timelist":[{"type":"fade","starttime":1,"endtime":100,"id":"image","filter":"object","startalpha":1,"endalpha":0}],"loop":false},
     {"id":"fadein","autostart":false,"length":100,"timelist":[{"type":"fade","starttime":1,"endtime":100,"id":"image","filter":"object","startalpha":0,"endalpha":1}],"loop":false}

@@ -17,6 +17,6 @@
     "canvaswidth": "400",
     "canvasheight": "200",
     "canvasdomid": "activity",
-    "canvasparent": "canvasholder"
+    "canvasparent": "outputholder"
   }
 }

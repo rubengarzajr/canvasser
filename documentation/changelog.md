@@ -1,5 +1,8 @@
 ## Changelog:
 
+- 2018-07-11 Markdown like format for help docs.
+- 2018-07-11 Windows Menu order fixed.
+- 2018-07-10 Fixed Authoring UI fonts.
 - 2018-05-30 Fixed originxy Safari specific issue.
 - 2018-05-24 Fixed deferred images in particles.
 - 2018-05-24 Documented External and Minify workflows.
