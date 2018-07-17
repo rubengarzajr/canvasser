@@ -3,7 +3,7 @@
 In this tutorial, we will create an animation that plays automatically.
 
 
-{text}Step 1: Create Image:
+{step}Create Image:
 {text}Click on *Add* in the *Images* window.
 {img}../image/images_start.png
 
@@ -22,7 +22,7 @@ In this tutorial, we will create an animation that plays automatically.
 {img}../image/image_cube.png
 
 
-{text}Step 2: Create Object:
+{step} Create Object:
 {text}Click on *Add* in the *Objects* window.
 {img}../image/objects_start.png
 
@@ -34,7 +34,7 @@ In this tutorial, we will create an animation that plays automatically.
 {text}Change the *id* to *cube*.
 {text}Change the *image* to *cube*.
 
-{text}Step 3: Create Animation:
+{step}Create Animation:
 {text}Click on *Add* in the *Animation* window.
 {img}../image/anim_start.png
 
