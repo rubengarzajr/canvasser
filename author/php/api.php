@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
       $html .= '    <title>' . $project . ': ' . $fileName . '</title>' . "\r\n";
       $html .= '</head>' . "\r\n";
       $html .= '  <body onload=\'initCanvasser("activity","./' . $fileName . '.json", "file");\'>' . "\r\n";
-      $html .= '    <div id=\'outputholder\'></div>' . "\r\n";
+      $html .= '    <div id=\'canvasholder\'></div>' . "\r\n";
       $html .= '  </body>' . "\r\n";
       $html .= '</html>' . "\r\n";
       file_put_contents($projectPath . "/" . $fileName . ".html", $html);

@@ -5,7 +5,7 @@ function initCanvasser(vari, datafile, dataForm, overrides){
   if (window[vari]) window[vari].act.loop = false;
   var oldPos = window[vari] ? {x:window[vari].act.position.x, y:window[vari].act.position.y} : {x:-1,y:-1};
   window[vari] = new canvasser(vari, datafile, dataForm, overrides);
-  window[vari].act.position = {x:oldPos.x, y:oldPos.y};
+  if (window[vari] !== undefined) window[vari].act.position = {x:oldPos.x, y:oldPos.y};
   return window[vari];
 }
 
@@ -1024,9 +1024,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         }
         if (action.type === 'pauseanim'){
           var animPlaying = act.player.filter(function(obj){return obj.id === action.animation})[0];
-          if (animPlaying.pause === undefined) animPlaying.pause = false;
-          if (action.toggle) animPlaying.pause = !animPlaying.pause;
-          else animPlaying.pause = true;
+          if (animPlaying !== undefined){
+            if (animPlaying.pause === undefined) animPlaying.pause = false;
+            if (action.toggle) animPlaying.pause = !animPlaying.pause;
+            else animPlaying.pause = true;
+          }
         }
         if (action.type === 'playanim'){
           var animToPlay = act.data.anims.filter(function(obj){return obj.id === action.animation})[0];

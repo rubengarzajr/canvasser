@@ -187,6 +187,7 @@ function authorcanvasser(dataFile, dataForm){
   authorLibs.authorData = dataFile;
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);
+  console.log("sample", authorLibs.authorData, "string");
   restartCanvasser("sample", authorLibs.authorData, "string");
   authorLibs.menus.update();
   loop();

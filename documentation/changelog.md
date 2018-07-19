@@ -1,5 +1,6 @@
 ## Changelog:
 
+- 2018-07-17 Make sure an anim is not undefined before trying to pause it.
 - 2018-07-11 Markdown like format for help docs.
 - 2018-07-11 Windows Menu order fixed.
 - 2018-07-10 Fixed Authoring UI fonts.

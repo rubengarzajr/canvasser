@@ -158,6 +158,7 @@ authorLibs.windows = {
       if (win.id === 'output'){
         authorLibs.windows.makeDiv({parent:title, id:'outputtitle', classes:'wintitle right', html:'X, Y'});
         winTitle.innerHTML = 'Output';
+        document.getElementById('outputholder').id = 'canvasholder';
       }
       if (win.id === 'file'){
         var fileMenu = document.getElementById('filemenu');
