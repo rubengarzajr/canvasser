@@ -51,6 +51,14 @@
         {"field":"id",         "type":"filterlink", "link":"filter"}
       ]
     },
+    {"type":"textentry",     "widgets":[
+        {"field":"vari",       "type":"varlist", "display":"variable"},
+        {"field":"class",      "type":"text", "display":"CSS Class"},
+        {"field":"style",      "type":"text", "display":"CSS Styles"},
+        {"field":"overcursor", "type":"bool", "display":"over cursor"},
+        {"field":"position",   "type":"posxy", "display":"position"}
+      ]
+    },
     {"type":"url",          "widgets":[
         {"field":"url",        "type":"filename"},
         {"field":"target",     "type":"text"}

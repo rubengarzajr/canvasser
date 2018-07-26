@@ -10,7 +10,7 @@ function initCanvasser(vari, datafile, dataForm, overrides){
 }
 
 function canvasser(vari, interactiveData, dataForm, overrides){
-  this.version  = '1.4.0';
+  this.version  = '1.4.1';
   var act       = {
     actionList   : [],
     dragging     : null,
@@ -1154,6 +1154,51 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             var actObj = act.data.objects.filter(function(obj){return obj.id === action.id})[0];
             actObj.testp = action.testp;
           }
+        }
+        if (action.type === "textentry"){
+          if (action.style === undefined) action.style = '';
+          var holder    = document.getElementById(act.data.settings.canvasparent);
+          var text      = document.getElementById(act.data.settings.canvasparent+'_text_input');
+          var actVari   = act.data.vars.filter(function(obj){return obj.id ===action.vari})[0];
+          var canvasPos = act.canvas.getBoundingClientRect();
+          if (action.position === undefined) action.position = {x:0,y:0};
+          if (action.position.x  === undefined) action.position.x = 0;
+          if (action.position.y  === undefined) action.position.y = 0;
+          var abs = {x:canvasPos.left+action.position.x, y:canvasPos.top+action.position.y};
+          if (action.overcursor){
+            abs = {x:canvasPos.left+act.position.x, y:canvasPos.top+act.position.y};
+          }
+          text          = document.createElement("input");
+
+          var varType   = 'text';
+          if (actVari.type === 'number') varType = 'number';
+          text.setAttribute("type", varType);
+          text.value      = actVari.value;
+          text.id         = act.data.settings.canvasparent + '_text_input';
+          text.style      = 'position:absolute;' + action.style;
+          text.style.left = '0px';
+          text.style.top  = '0px';
+          holder.appendChild(text);
+
+          var textPos = text.getBoundingClientRect();
+          var diff    = {x:abs.x-textPos.left-textPos.width/2, y:abs.y-textPos.top-textPos.height/2};
+          text.style.left = diff.x + 'px';
+          text.style.top = diff.y + 'px';
+          text.focus();
+
+          text.addEventListener ("blur", function(e){
+            document.getElementById(act.data.settings.canvasparent+'_text_input').remove();
+            e.target.removeEventListener(e.type, arguments.callee);
+          }, false);
+          text.addEventListener ("input", function(e){
+            actVari.value = text.value;
+          }, false);
+          text.addEventListener ("keydown", function(e){
+            if(event.key === 'Enter') {
+              document.getElementById(act.data.settings.canvasparent+'_text_input').blur();
+            }
+          }, false);
+
         }
         if (action.type === 'url'){
           var target = document.getElementById(action.target);

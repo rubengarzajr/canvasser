@@ -1,5 +1,14 @@
-## Changelog:
+## TODO:
+- Fix sound still playing after canvasser closed/reloaded/loadinto.
+- Load/Save File manage to Box/Dropbox/Google Drive.
+- Shape copy
+- Load Autoback
+- Fade shapes
+- Tooltip/Instructions to use variable in text shape with {{ var_name }}
 
+
+## Changelog:
+- 2018-07-26 Added text entry through DOM to allow variables values to be changed.
 - 2018-07-17 Make sure an anim is not undefined before trying to pause it.
 - 2018-07-11 Markdown like format for help docs.
 - 2018-07-11 Windows Menu order fixed.
