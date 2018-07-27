@@ -974,6 +974,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             var thisVar = act.data.vars.filter(function(obj){return obj.id === action.itemtocheck})[0];
             if (thisVar !== undefined){
               var go = false;
+              if (thisVar.type === 'number') {
+                thisVar.value = Number(thisVar.value);
+                action.value = Number(action.value);
+              }
               if (action.comparetype === 'equal') {
                 if (thisVar.value === action.value) go = true;
               }
