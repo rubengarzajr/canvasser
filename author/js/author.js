@@ -136,6 +136,7 @@ function initAuthorCanvasser(vari, datafile, dataForm){
   function initEdit(datafile){
     authorLibs.author = new authorcanvasser(datafile, 'file');
   }
+
 }
 
 function localSave(){
@@ -147,7 +148,7 @@ function localSave(){
   var autoString = "Backup " + authorLibs.utils.dateString();
   console.log(autoString)
   var dropAutobk = document.getElementById('menu_autobk_dropdown');
-  var newBk = authorLibs.windows.makeDiv({parent:dropAutobk, html:autoString, first:true});
+  var newBk = authorLibs.windows.makeDiv({parent:dropAutobk, html:autoString, first:true, click:function(){authorLibs.utils.loadAutobk(authorLibs.autoback)}});
   if (dropAutobk.childElementCount > 5) dropAutobk.removeChild(dropAutobk.lastChild);
 
   authorLibs.autoback ++;
@@ -187,12 +188,27 @@ function authorcanvasser(dataFile, dataForm){
   authorLibs.authorData = dataFile;
   window.addEventListener("mouseup",   moveObjU,  false);
   window.addEventListener("mousemove", mouseMove, false);
-  console.log("sample", authorLibs.authorData, "string");
   restartCanvasser("sample", authorLibs.authorData, "string");
   authorLibs.menus.update();
+  authorLibs.responsive = false;
   loop();
 
   function loop(){
+    if (authorLibs.responsive !== authorLibs.authorData.settings.responsive){
+      var canvasholder = document.getElementById('canvasholder');
+      if (authorLibs.authorData.settings.responsive){
+        canvasholder.style.overflow = 'auto';
+        canvasholder.style.resize   = 'both';
+        canvasholder.style.width    = (authorLibs.authorData.settings.width  + 20) + 'px';
+        canvasholder.style.height   = (authorLibs.authorData.settings.height + 20) + 'px';
+      }else{
+        canvasholder.style.overflow = 'auto';
+        canvasholder.style.resize   = 'none';
+        canvasholder.style.width    = 'auto';
+        canvasholder.style.height   = 'auto';
+      }
+      authorLibs.responsive = authorLibs.authorData.settings.responsive;
+    }
     if (authorLibs.gui.moveElement !== null && authorLibs.gui.move){
       authorLibs.gui.moveElement.style.left = authorLibs.gui.mousePos.x  - authorLibs.gui.offset.x + "px";
       authorLibs.gui.moveElement.style.top  = authorLibs.gui.mousePos.y  - authorLibs.gui.offset.y + "px";

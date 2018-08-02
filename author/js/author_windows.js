@@ -76,7 +76,7 @@ authorLibs.windows = {
       {id:"sample",     position:{x:349, y: 52}, menu:{sample:true}, min:true},
       {id:"setting",    position:{x:186, y: 52}, menu:{}, min:true},
       {id:"sound",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
-      {id:"shape",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
+      {id:"shape",      position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
       {id:"test",       position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
       {id:"var",        position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true}
     ]

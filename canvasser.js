@@ -187,9 +187,15 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     }
 
     act.canvas        = document.createElement('canvas');
+    act.canvasdom     = document.getElementById(data.settings.canvasparent);
     act.context       = act.canvas.getContext('2d');
     act.canvas.width  = data.settings.canvaswidth;
     act.canvas.height = data.settings.canvasheight;
+    if (data.settings.responsive){
+      act.canvas.style.width  = "100%";
+      act.canvas.style.height = "auto";
+    }
+
     act.data          = data;
     document.getElementById(data.settings.canvasparent).innerHTML = "";
     document.getElementById(data.settings.canvasparent).appendChild(act.canvas);
@@ -322,11 +328,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
     if (goAll){
       if (test.trueoff) test.active = false;
-      act.actionList.push({mode:'true', obj:{truelist:test.truelist}});
+      act.actionList.push({mode:'true', obj:{truelist:test.truelist}, next:true});
     }
   }
 
   function loop(){
+
     act.data.tests.forEach(function(test){
       if (!test.active) return;
       tests(test);
@@ -948,6 +955,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   function actions(){
     act.actionList.forEach(function(over){
       if (over.obj[over.mode+"list"] === undefined) return;
+
       over.obj[over.mode+"list"].forEach(function(action){
         if (action.type === 'cleardown'){
           act.mode = "none";
@@ -979,7 +987,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
                 action.value = Number(action.value);
               }
               if (action.comparetype === 'equal') {
-                if (thisVar.value === action.value) go = true;
+
+                if (thisVar.value === action.value) {
+                  console.log('TRUE')
+                  go = true;
+                }
               }
               if (action.comparetype === 'greater') {
                 if (thisVar.value > action.value) go = true;
@@ -988,9 +1000,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
                 if (thisVar.value < action.value) go = true;
               }
               if (go){
-                act.actionList.push({mode:'true', obj:over, next:true});
+                act.actionList.push({mode:'true', obj:over.obj, next:true});
               } else  {
-                act.actionList.push({mode:'false', obj:over, next:true});
+                act.actionList.push({mode:'false', obj:over.obj, next:true});
               }
             }
           }
@@ -1221,6 +1233,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
     act.actionList = act.actionList.filter(function(action){return action.next});
     act.actionList.forEach(function(action){delete action.next});
+
   }
 
   function appendToArray(inArray){

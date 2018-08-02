@@ -373,6 +373,7 @@
     "canvaswidth":   {"type":"number"},
     "canvasheight":  {"type":"number"},
     "canvasparent":  {"type":"text"},
+    "responsive":    {"type":"bool"},
     "usecache":      {"type":"bool"}
   },
   "shape":{

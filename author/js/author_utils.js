@@ -275,6 +275,11 @@ authorLibs.utils = {
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
+  loadAutobk:function(string){
+    console.log(string);
+      localStorage.getItem('canvasser_autoback_' +string, JSON.stringify(authorLibs.authorData));
+  },
+
   loadDataUpdate: function(){
     var filter  = document.getElementById('loaddatafilter').value;
     var filebox = document.getElementById('loaddata');
@@ -394,6 +399,8 @@ authorLibs.utils = {
         });
       });
     }
+
+    if (json.settings.responsive === undefined) json.settings.responsive = false;
     return json;
   },
 
