@@ -8,6 +8,7 @@
 - Can't delete shape drawcode
 - rect needs a fill, stroke option
 - responsive broke text entry (no longer aligned)
+- use anchor links to restore page user was last on before leaving
 
 ## Changelog:
 - 2018-08-02 Added setting for responsive Canvasser.
