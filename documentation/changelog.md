@@ -6,6 +6,8 @@
 - Tooltip/Instructions to use variable in text shape with {{ var_name }}
 - Can't remove colors from shape object
 - Can't delete shape drawcode
+- rect needs a fill, stroke option
+- responsive broke text entry (no longer aligned)
 
 ## Changelog:
 - 2018-08-02 Added setting for responsive Canvasser.

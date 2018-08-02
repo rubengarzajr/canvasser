@@ -16,7 +16,7 @@
     {"type":"groupcolor",   "widgets":[{"field":"id",         "type":"text"},                           {"field":"source",     "type":"text"}]},
     {"type":"increment",    "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"},      {"field":"id",         "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}, {"field":"rangemin",   "type":"number"}, {"field":"rangemax",   "type":"number"}]},
     {"type":"loadinto",     "widgets":[{"field":"url",        "type":"text"},                           {"field":"vari",       "type":"text"}]},
-    {"type":"loadpage",     "widgets":[{"field":"url",        "type":"text"},                           {"field":"newpage",    "type":"bool"},     {"field":"intodiv",     "type":"bool"}]},
+    {"type":"loadpage",     "widgets":[{"field":"url",        "type":"text"},                           {"field":"newpage",    "type":"bool"},     {"field":"intodiv",     "type":"bool"}, {"field":"message",    "type":"text"}]},
     {"type":"modvar",       "widgets":[{"field":"id",         "type":"varlist"},                        {"field":"operation",  "type":"select", "id":"operationtype"}, {"field":"amount", "type":"number"}]},
     {"type":"objectcolor",  "widgets":[{"field":"id",         "type":"text"},                           {"field":"source",     "type":"text"}]},
     {"type":"pauseanim",    "widgets":[{"field":"animation",  "type":"anmlist"},  {"field":"toggle",      "type":"bool"}]},

@@ -1035,7 +1035,26 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           initCanvasser(action.vari, action.url, 'file');
         }
         if (action.type === 'loadpage'){
-          if (action.newpage) {window.open(action.url, '_blank');}
+          if (action.newpage) {
+            console.log(act);
+            var goDiv = document.getElementById("canvasserLoadPageInNewTab");
+            if (goDiv !== null) goDiv.parentNode.removeChild(goDiv);
+            goDiv = document.createElement('div');
+            goDiv.style = 'width: 100%;height: 100%;background-color: black;left: 0px;top: 0px;position: absolute;';
+            goDiv.id = "canvasserLoadPageInNewTab"
+            act.canvasdom.appendChild(goDiv);
+            goDiv2 = document.createElement('div');
+            goDiv2.style = 'width: 100%;height: 100%;display: table;';
+            goDiv.appendChild(goDiv2);
+            var button = document.createElement('a');
+            button.innerHTML = action.message + '<br>' + action.url;
+            button.style = "color:white;display: table-cell;vertical-align: middle;text-align: center;"
+            button.href = action.url;
+            button.target="_blank";
+            goDiv2.appendChild(button);
+            button.onclick = function(){goDiv.parentNode.removeChild(goDiv);};
+
+          }
           else {window.location.href = action.url;}
         }
         if (action.type === 'pauseanim'){

@@ -75,7 +75,7 @@
         "canvaswidth": "600",
         "canvasheight": "500",
         "canvasdomname": "activity",
-        "canvasparent": "outputholder",
+        "canvasparent": "canvasholder",
         "usecache": false
     },
     "particles": [],

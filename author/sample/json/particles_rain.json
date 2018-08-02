@@ -101,7 +101,7 @@
         "canvaswidth": "600",
         "canvasheight": "600",
         "canvasdomname": "activity",
-        "canvasparent": "outputholder"
+        "canvasparent": "canvasholder"
     },
     "vars": [
         {
