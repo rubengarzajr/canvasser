@@ -175,6 +175,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       subPropSet(data, Object.keys(override)[0], Object.values(override)[0]);
     });
 
+    if (data.settings === undefined) {
+      console.log('Unable to load Canvasser.')
+      return;
+    }
+
     if (data.layers === undefined){
       data.layers = [{list:[], show:true}];
       var needOrder = ['objects','particles'];
