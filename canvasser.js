@@ -819,52 +819,58 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (usecolor) ctx.fillStyle = color.current[colorIndex];
         ctx.fill();
       }
-      if (shape.type === "textfill") {
+      if (shape.type === "textfill") { processText(shape); }
+      if (shape.type === "textline") { processText(shape); }
+      function processText(shape){
         if (origin === undefined) origin = {x:0,y:0};
         var offset = {x:0, y:0};
         if (shape.offset != undefined){
           if (shape.offset.x !== undefined) offset.x = shape.offset.x;
           if (shape.offset.y !== undefined) offset.y = shape.offset.y;
         }
-        if (usecolor) ctx.fillStyle = color.current[colorIndex];
-        else {
-          if (shape.color !== undefined) ctx.fillStyle = shape.color;
-        }
         var size = 1;
-        if (shape.size !== undefined) size = shape.size;
+        var height = 0;
+        if (shape.size   !== undefined) size   = shape.size;
+        if (shape.height !== undefined) height = shape.height;
         if (shape.font) ctx.font = size*sizer + "px " + shape.font;
+        if (shape.text === undefined) shape.text = '';
         var varText=shape.text.replace(/\{{(.+?)\}}/g, replacer)
+        var lines = varText.split("\n");
+
+        var maxWidth = 0;
+
+        lines.forEach(function(line, idx){
+          var adjust = 0;
+          if (shape.type === 'textline'){
+            ctx.lineWidth = shape.width;
+            if (usecolor) ctx.strokeStyle = color.current[colorIndex];
+            else {
+              if (shape.color !== undefined) ctx.strokeStyle = shape.color;
+            }
+            width = ctx.measureText(line).width;
+            if (shape.justify === 'right') { adjust = Math.floor(-width);   }
+            if (shape.justify === 'center'){ adjust = Math.floor(-width/2); }
+            ctx.strokeText(line, origin.x+adjust+offset.x*sizer, origin.y+(height*idx)+offset.y*sizer);
+          }
+          if (shape.type === 'textfill'){
+            if (usecolor) ctx.fillStyle = color.current[colorIndex];
+            else {
+              if (shape.color !== undefined) ctx.fillStyle = shape.color;
+            }
+            width = ctx.measureText(line).width;
+            if (shape.justify === 'right') { adjust = Math.floor(-width);   }
+            if (shape.justify === 'center'){ adjust = Math.floor(-width/2); }
+            ctx.fillText(line, origin.x+adjust+offset.x*sizer, origin.y+(height*idx)+offset.y*sizer);
+          }
+        });
+
+
         function replacer(match, p1, p2, p3, offset, string) {
-          return act.data.vars.filter(function(obj){return obj.name === p1})[0].value;
+          var val = act.data.vars.filter(function(obj){return obj.name === p1})[0];
+          if (val !== undefined) return val.value;
         }
-        ctx.fillText(varText, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
+
       }
-      if (shape.type === "textline") {
-        if (origin === undefined) origin = {x:0,y:0};
-        var offset = {x:0, y:0};
-        if (shape.offset != undefined){
-          if (shape.offset.x !== undefined) offset.x = shape.offset.x;
-          if (shape.offset.y !== undefined) offset.y = shape.offset.y;
-        }
-        ctx.lineWidth = shape.width;
-        if (usecolor) ctx.strokeStyle = color.current[colorIndex];
-        else {
-          if (shape.color !== undefined) ctx.strokeStyle = shape.color;
-        }
-        var size = 1;
-        if (shape.size !== undefined) size = shape.size;
-        if (shape.font) ctx.font = size*sizer + "px " + shape.font;
-        ctx.strokeText(shape.text, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
-      }
-      if (shape.type === "outlinetext") {
-        ctx.lineWidth   = shape.stroke;
-        ctx.strokeStyle = color.current[colorIndex];
-        ctx.strokeText(shape.text, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
-        colorIndex ++
-        ctx.fillStyle = color.current[colorIndex];
-        ctx.fillText(shape.text, origin.x+offset.x*sizer, origin.y+offset.y*sizer);
-      }
-      if (shape.type === "textfont") ctx.font = shape.size*sizer + "px " + shape.font;
       if (shape.type === "strokecolor") ctx.strokeStyle = shape.color;
       if (shape.type === "stroke") ctx.stroke();
       if (shape.type === "ptest" && doTest) {

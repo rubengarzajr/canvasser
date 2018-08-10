@@ -271,6 +271,7 @@ authorLibs.buildProp = {
       if (subWidget.type === 'sndlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'sounds'}));
       if (subWidget.type === "tests")      authorLibs.buildProp.setTest(defaults);
       if (subWidget.type === "text")       authorLibs.buildProp.setText(Object.assign(defaults, {widthClass:'w100'}));
+      if (subWidget.type === "textarea")   authorLibs.buildProp.setTextArea(Object.assign(defaults, {widthClass:'w100'}));
       if (subWidget.type === 'varlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'vars'}));
     });
   },
@@ -503,6 +504,15 @@ authorLibs.buildProp = {
     authorLibs.windows.makeDiv({parent:div, html:obj.widget.field,
       classes:'entrylabel c_entrytitle_text '+(obj.widthClass != undefined ? obj.widthClass : '')});
     authorLibs.windows.makeElement({parent:div, type:'input', subtype:'text',
+      classes:'auth_text '+(obj.inputClass != undefined ? obj.inputClass : ''), value:obj.value,
+      html:obj.widget.field, change:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}});
+  },
+
+  setTextArea: function(obj){
+    var div = authorLibs.windows.makeDiv({parent:obj.parent});
+    authorLibs.windows.makeDiv({parent:div, html:obj.widget.field,
+      classes:'entrylabel c_entrytitle_text '+(obj.widthClass != undefined ? obj.widthClass : '')});
+    authorLibs.windows.makeElement({parent:div, type:'textarea',
       classes:'auth_text '+(obj.inputClass != undefined ? obj.inputClass : ''), value:obj.value,
       html:obj.widget.field, change:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}});
   },

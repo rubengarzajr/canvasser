@@ -11,6 +11,8 @@
 - use anchor links to restore page user was last on before leaving
 
 ## Changelog:
+- 2018-08-10 Multi-line text shape.
+- 2018-08-09 LoadPage new tab styling.
 - 2018-08-02 Added setting for responsive Canvasser.
 - 2018-07-31 Added copy to Shape menu.
 - 2018-07-31 Fixed conditionals not working.

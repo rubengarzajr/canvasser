@@ -62,17 +62,18 @@ a{
 
 .auth_text{
   background-color: rgb(199, 199, 199);
-  font-size: .8em;
-  font-family: button;
+  border-bottom: 1px rgb(212, 218, 226) solid;
+  border-top: 1px rgb(212, 218, 226) solid;
+  border: 0px;
   display: table-cell;
-  width:150px;
+  font-family: button;
+  font-size: .8em;
+  margin-bottom: 3px;
   margin-left: 0px;
   margin-top: 3px;
-  margin-bottom: 3px;
   padding: 4px;
-  border: 0px;
-  border-top: 1px rgb(212, 218, 226) solid;
-  border-bottom: 1px rgb(212, 218, 226) solid;
+  vertical-align: top;
+  width:150px;
 }
 
 .auth_xy{

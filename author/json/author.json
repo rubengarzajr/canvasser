@@ -245,7 +245,14 @@
   },
   "createtypes":["object","image","shape","settings"],
   "drawcode":[
-    {"type":"arc",          "widgets":[{"field":"offset",  "type":"posxy"}, {"field":"radius",  "type":"number"}, {"field":"startangle", "type":"number"}, {"field":"endangle", "type":"number"}, {"field":"counterclockwise", "type":"bool"}]},
+    {"type":"arc",          "widgets":[
+      {"field":"offset",  "type":"posxy"},
+      {"field":"radius",  "type":"number"},
+      {"field":"startangle", "type":"number"},
+      {"field":"endangle", "type":"number"},
+      {"field":"counterclockwise", "type":"bool"}
+      ]
+    },
     {"type":"bcurve",       "widgets":[{"field":"offseta", "type":"posxy"}, {"field":"offsetb", "type":"posxy"},  {"field":"offsetc",    "type":"posxy"}]},
     {"type":"begin",        "widgets":[]},
     {"type":"close",        "widgets":[]},
@@ -258,10 +265,27 @@
     {"type":"rect",         "widgets":[{"field":"offset",  "type":"posxy"}, {"field":"width", "type":"number"},{"field":"height", "type":"number"}]},
     {"type":"stroke",       "widgets":[]},
     {"type":"strokecolor",  "widgets":[{"field":"color",   "type":"text"}]},
-    {"type":"textfill",     "widgets":[{"field":"offset",  "type":"posxy"},{"field":"text", "type":"text"},{"field":"color", "type":"text"},{"field":"font",    "type":"selecttext", "id":"fontlist"}, {"field":"size",   "type":"number"}]},
-    {"type":"textfont",     "widgets":[{"field":"font",    "type":"text"},{"field":"size", "type":"number"}]},
-    {"type":"textline",     "widgets":[{"field":"offset",  "type":"posxy"},{"field":"text", "type":"text"},{"field":"color", "type":"text"},{"field":"width",   "type":"number"},
-                                       {"field":"font",    "type":"selecttext", "id":"fontlist"}, {"field":"size",   "type":"number"}]}
+    {"type":"textfill",     "widgets":[
+      {"field":"offset",  "type":"posxy"},
+      {"field":"text",    "type":"textarea"},
+      {"field":"color",   "type":"text"},
+      {"field":"font",    "type":"selecttext", "id":"fontlist"},
+      {"field":"size",    "type":"number"},
+      {"field":"height",  "type":"number"},
+      {"field":"justify", "type":"selecttext", "id":"justify"}
+      ]
+    },
+    {"type":"textline",     "widgets":[
+      {"field":"offset",  "type":"posxy"},
+      {"field":"text",    "type":"textarea"},
+      {"field":"color",   "type":"text"},
+      {"field":"width",   "type":"number"},
+      {"field":"font",    "type":"selecttext", "id":"fontlist"},
+      {"field":"size",    "type":"number"},
+      {"field":"height",  "type":"number"},
+      {"field":"justify", "type":"selecttext", "id":"justify"}
+      ]
+    }
   ],
   "image":{
     "imagedata":{
@@ -367,6 +391,7 @@
     "easetype":{"list":["linear","inExp","outExp","inOutExp","inQuad", "outQuad", "inOutQuad"]},
     "filtertype":{"list":["object", "group","particle"]},
     "fontlist":{"list":["Arial","Arial Black", "Courier New", "Impact","Lucida Console","Lucida Sans Unicode","Tahoma","Trebuchet MS","Verdana"]},
+    "justify":{"list":["left", "center", "right"]},
     "layerpos":{"list":["top", "bottom"]},
     "objectorigin":{"list":["upper_left", "center"]},
     "objecttype":{"list":["image", "shape"]},
