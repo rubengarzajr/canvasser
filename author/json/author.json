@@ -287,6 +287,30 @@
       ]
     }
   ],
+  
+  "font":{
+    "link":{
+      "widgets":[
+        {"field":"href",      "type":"text"}
+      ]
+    },
+    "shape":{
+      "widgets":[
+        {"field":"name",      "type":"text"},
+        {"field":"type",      "type":"select",  "id":"objecttype"},
+        {"field":"shape",     "type":"shapelist"},
+        {"field":"order",     "type":"number"},
+        {"field":"blend",     "type":"select",  "id":"composite"},
+        {"field":"group",     "type":"grplist"},
+        {"field":"show",      "type":"bool"},
+        {"field":"usecolor",  "type":"bool"},
+        {"field":"color",     "type":"color"},
+        {"field":"origin",    "type":"select", "id":"objectorigin"},
+        {"field":"position",  "type":"posxy" },
+        {"field":"scale",     "type":"scale"}
+      ]
+    }
+  },
   "image":{
     "imagedata":{
       "widgets":[

@@ -23,7 +23,11 @@ authorLibs.utils = {
 
   addFont: function(id){
     console.log('add foint!')
-    authorLibs.authorData.settings.fontlist.list.push("font!")
+    authorLibs.authorData.settings.fontlist.list.push(
+      {
+        
+      }
+    )
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
