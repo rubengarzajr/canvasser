@@ -250,7 +250,6 @@ authorLibs.windows = {
     if (settings.checked     !== undefined) element.checked      = true;
     if (settings.classes     !== undefined) element.className    = settings.classes;
     if (settings.click       !== undefined) element.onclick      = settings.click;
-    // if (settings.click    !== undefined) element.addEventListener("click",settings.click);
     if (settings.data        !== undefined){
       settings.data.forEach(function(subD){element.dataset[subD.id] = subD.val;})
     }

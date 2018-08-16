@@ -150,12 +150,20 @@ authorLibs.buildProp = {
 
     if (type==='settings'){
       var pDiv = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
-      if (authorLibs.rules.settings[thisProp].type === "bool") authorLibs.buildProp.setBoolSetting({parent:pDiv,
-        widget:{field:thisProp}, path:thisProp, value:authorLibs.authorData.settings[thisProp]});
-      else {
+      if (authorLibs.rules.settings[thisProp].type === "bool"){
+        authorLibs.buildProp.setBoolSetting({parent:pDiv, widget:{field:thisProp}, path:thisProp, value:authorLibs.authorData.settings[thisProp]});
+      }
+      if (authorLibs.rules.settings[thisProp].type === "text" || authorLibs.rules.settings[thisProp].type === "number") {
         authorLibs.windows.makeDiv({parent:pDiv, html:thisProp, classes:'entrylabel c_entrytitle_text w200'});
-        authorLibs.windows.makeElement({parent:pDiv, type:'input', subtype:'text', classes:'auth_text w200',
+        authorLibs.windows.makeElement({parent:pDiv, type:'input', subtype:authorLibs.rules.settings[thisProp].type, classes:'auth_text w200',
           value:authorLibs.authorData.settings[thisProp], change:function(){authorLibs.buildProp.settingUpdate(this, thisProp)}});
+      }
+      if (authorLibs.rules.settings[thisProp].type === "fontlist"){
+        authorLibs.rules.settings[thisProp].list.forEach(function(font){
+          console.log(font)
+        });
+        authorLibs.windows.makeDiv({parent:pDiv, classes:'divbutton', html:'Add Font',
+          click:function(){authorLibs.utils.addFont(thisProp.id);}});
       }
     }
 
@@ -191,7 +199,8 @@ authorLibs.buildProp = {
         authorLibs.buildProp.setListSelect({parent:pBox, obj:thisProp, type:'shapes', widget:tmpObj,
           path:'drawcode.' + idx + '.type', list:drawList, value:val})
         var currentDraw = authorLibs.rules.drawcode.filter(function(draw){return draw.type === widget.type})[0];
-        authorLibs.buildProp.makeWidgets({list: currentDraw.widgets, idx:idx, widget:{field:'drawcode'}, set:{parent:pBox, obj:thisProp, type:'shapes'}});
+        authorLibs.buildProp.makeWidgets({list: currentDraw.widgets, idx:idx,
+          widget:{field:'drawcode'}, set:{parent:pBox, obj:thisProp, type:'shapes'}});
       });
       authorLibs.windows.makeDiv({parent:pDiv, classes:'divbutton', html:'Add drawcode',
         click:function(){authorLibs.utils.addDrawcode(thisProp.id);}});
@@ -246,6 +255,7 @@ authorLibs.buildProp = {
       if (subWidget.type === 'bool')       authorLibs.buildProp.setBoolean(defaults);
       if (subWidget.type === "color")      authorLibs.buildProp.setColor(defaults);
       if (subWidget.type === "filterlink") authorLibs.buildProp.setLinkSel(defaults);
+      if (subWidget.type === "fontlist")   authorLibs.buildProp.setFont(defaults);
       if (subWidget.type === 'grplist')    authorLibs.buildProp.setGroup(Object.assign(defaults));
       if (subWidget.type === "imagedata")  authorLibs.buildProp.setImage(defaults);
       if (subWidget.type === "linkedcontent") {
@@ -254,25 +264,26 @@ authorLibs.buildProp = {
         }
       }
       if (subWidget.type === 'laylist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'layers'}));
-      if (subWidget.type === 'number')     authorLibs.buildProp.setNumber(defaults);
+      if (subWidget.type === 'number' )    authorLibs.buildProp.setNumber(defaults);
       if (subWidget.type === 'objlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'objects'}));
       if (subWidget.type === 'parlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'particles'}));
-      if (subWidget.type === 'posxy'){
+      if (subWidget.type === 'posxy'  ){
         defaults.value = {
           x:authorLibs.utils.getSubProp(obj.set.obj, wPath+'.x'),
           y:authorLibs.utils.getSubProp(obj.set.obj, wPath+'.y')
         };
         authorLibs.buildProp.setPosition(defaults);
       }
-      if (subWidget.type === "scale")      authorLibs.buildProp.setNumber(defaults);
-      if (subWidget.type === 'select')     authorLibs.buildProp.setListSelect(defaults);
-      if (subWidget.type === "selecttext") authorLibs.buildProp.setTxtSelect(defaults);  //TODO: FONTS DRAWCODE - CAN BE CONSOLODATED?
-      if (subWidget.type === "shapelist")  authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'shapes'}));
-      if (subWidget.type === 'sndlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'sounds'}));
-      if (subWidget.type === "tests")      authorLibs.buildProp.setTest(defaults);
-      if (subWidget.type === "text")       authorLibs.buildProp.setText(Object.assign(defaults, {widthClass:'w100'}));
-      if (subWidget.type === "textarea")   authorLibs.buildProp.setTextArea(Object.assign(defaults, {widthClass:'w100'}));
-      if (subWidget.type === 'varlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'vars'}));
+      if (subWidget.type === 'scale')       authorLibs.buildProp.setNumber(defaults);
+      if (subWidget.type === 'select')      authorLibs.buildProp.setListSelect(defaults);
+      if (subWidget.type === 'selecttext')  authorLibs.buildProp.setTxtSelect(defaults);
+      if (subWidget.type === 'suggesttext') authorLibs.buildProp.setTxtSuggest(defaults);
+      if (subWidget.type === 'shapelist')   authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'shapes'}));
+      if (subWidget.type === 'sndlist')     authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'sounds'}));
+      if (subWidget.type === 'tests')       authorLibs.buildProp.setTest(defaults);
+      if (subWidget.type === 'text')        authorLibs.buildProp.setText(Object.assign(defaults, {widthClass:'w100'}));
+      if (subWidget.type === 'textarea')    authorLibs.buildProp.setTextArea(Object.assign(defaults, {widthClass:'w100'}));
+      if (subWidget.type === 'varlist')     authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'vars'}));
     });
   },
 
@@ -517,6 +528,10 @@ authorLibs.buildProp = {
       html:obj.widget.field, change:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}});
   },
 
+  setFont: function(obj){
+    console.log("wee")
+  },
+
   setLinkSel: function(obj){
     var filter   = obj.path.substr(0, obj.path.lastIndexOf(".")) + '.' + obj.widget['link'] ;
     var filterId = authorLibs.utils.getSubProp(obj.obj, filter)+'s';
@@ -545,20 +560,21 @@ authorLibs.buildProp = {
     var id      = authorLibs.utils.getSubProp(obj.obj, obj.path);
     var display = obj.widget.display ? obj.widget.display : obj.widget.field;
     authorLibs.windows.makeDiv({parent:obj.parent, classes:'entrylabel c_entrytitle_text w100', html:display});
-    authorLibs.buildProp.setSelect({parent:obj.parent, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)},
+    authorLibs.buildProp.setSelect({parent:obj.parent, text:true, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)},
     object:obj.obj.id, type:obj.type, list:list, defaultId:id, path:obj.path});
   },
 
   setSelect: function(obj){
     if (obj.text){
-      authorLibs.windows.makeElement({parent:obj.parent, id:'prop_'+obj.path, classes:'sellist '+widget.css, type:'input', subtype:'text',
+      authorLibs.windows.makeElement({parent:obj.parent, id:'prop_'+obj.path,
+        classes:'sellist', type:'input', subtype:'text',
         value:obj.defaultId, list:'datalist_'+obj.path, change:obj.fn});
       var dl = authorLibs.windows.makeElement({parent:obj.parent, id:'datalist_'+obj.path, type:'datalist'});
 
       var newList = obj.list.slice();
       newList.unshift("---NONE---");
       newList.forEach(function(listObject){
-        authorLibs.windows.makeElement({parent:dl, type:'option', html:listObject});
+        authorLibs.windows.makeElement({parent:dl, type:'option', html:listObject.id});
       });
     } else {
       var sel = authorLibs.windows.makeElement({parent:obj.parent, id:'prop_'+obj.path, classes:'sellist', type:'select',

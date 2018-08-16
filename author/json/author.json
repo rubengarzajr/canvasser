@@ -408,11 +408,12 @@
     "canvasheight":  {"type":"number"},
     "canvasparent":  {"type":"text"},
     "responsive":    {"type":"bool"},
-    "usecache":      {"type":"bool"}
+    "usecache":      {"type":"bool"},
+    "fonts":         {"type":"fontlist"}
   },
   "shape":{
     "widgets":[
-      {"field":"name",           "type":"text"}
+      {"field":"name", "type":"text"}
     ]
   },
   "sound":{

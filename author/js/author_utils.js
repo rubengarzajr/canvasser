@@ -21,6 +21,12 @@ authorLibs.utils = {
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
+  addFont: function(id){
+    console.log('add foint!')
+    authorLibs.authorData.settings.fontlist.list.push("font!")
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
   appendToArray: function(inArray){
     var newArr = []
     inArray.forEach(function(element){
@@ -401,6 +407,7 @@ authorLibs.utils = {
     }
 
     if (json.settings.responsive === undefined) json.settings.responsive = false;
+    if (json.settings.fontlist === undefined) json.settings.fontlist = {type:'fontlist', list:[]};
     return json;
   },
 

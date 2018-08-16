@@ -839,7 +839,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (shape.height !== undefined) height = shape.height;
         if (shape.font) ctx.font = size*sizer + "px " + shape.font;
         if (shape.text === undefined) shape.text = '';
-        var varText=shape.text.replace(/\{{(.+?)\}}/g, replacer)
+        var varText=String(shape.text).replace(/\{{(.+?)\}}/g, replacer);
         var lines = varText.split("\n");
 
         var maxWidth = 0;

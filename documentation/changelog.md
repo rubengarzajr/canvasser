@@ -11,6 +11,8 @@
 - use anchor links to restore page user was last on before leaving
 
 ## Changelog:
+- 2018-08-14 Added text entry on select text input types, i.e. font selection.
+- 2018-08-14 Fixed numbers breaking text.
 - 2018-08-10 Multi-line text shape.
 - 2018-08-09 LoadPage new tab styling.
 - 2018-08-02 Added setting for responsive Canvasser.

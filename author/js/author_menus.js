@@ -300,7 +300,7 @@ authorLibs.menus = {
       if (type === 'anims'  || type === 'constraints' || type === 'groups' || type === 'particles'
        || type === 'shapes' || type === 'sounds'      || type === 'tests'  || type === 'vars'){
         var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.buildProp.get(type, menuItem.id)}});
-        var td  = authorLibs.windows.makeTd({parent:tr, width:'100%', html:menuItem.name });
+        var td  = authorLibs.windows.makeTd({parent:tr, width:'100%', style:'font-size:1.3em;', html:menuItem.name });
       }
 
       if (type === 'images'){
@@ -349,9 +349,11 @@ authorLibs.menus = {
   updateSettings: function(){
     var holder        = document.getElementById("settingholder");
     holder.innerHTML  = '';
-    var settingsTable = authorLibs.windows.makeTable({parent:holder, classes:'objtable', id:'settingstable', width:'100%'});
+    var settingsTable = authorLibs.windows.makeTable({parent:holder,
+      classes:'objtable', id:'settingstable', width:'100%'});
     Object.keys(authorLibs.authorData.settings).forEach(function(setting){
-      var tr = authorLibs.windows.makeTr({parent:settingsTable, classes:'clicktr', id:'settings_'+setting, click:function(){authorLibs.buildProp.get('settings', setting)}});
+      var tr = authorLibs.windows.makeTr({parent:settingsTable, classes:'clicktr',
+        id:'settings_'+setting, click:function(){authorLibs.buildProp.get('settings', setting)}});
       authorLibs.windows.makeTd({parent:tr, width:'50%', html:setting});
       authorLibs.windows.makeTd({parent:tr, width:'50%', html: authorLibs.authorData.settings[setting]});
     });
