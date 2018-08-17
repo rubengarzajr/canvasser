@@ -22,12 +22,8 @@ authorLibs.utils = {
   },
 
   addFont: function(id){
-    console.log('add foint!')
-    authorLibs.authorData.settings.fontlist.list.push(
-      {
-        
-      }
-    )
+    authorLibs.authorData.settings.fontlist.list.push({id:authorLibs.utils.uuid(), type:'href'});
+    authorLibs.buildProp.get("settings", 'fontlist');
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 

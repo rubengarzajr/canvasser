@@ -111,8 +111,20 @@ authorLibs.buildProp = {
       var pathList  = [];
       pList.forEach(function(item){pathList.push(item);});
       var id = authorLibs.utils.getSubProp(thisProp, 'id');
+      var path = authorLibs.authorData.paths.filter(function(check){return check.id === thisProp.path;})[0];
       authorLibs.buildProp.makeWidgets({list:authorLibs.rules.image.imagedata.widgets,
         set:{list:pathList, parent:pDiv, obj:thisProp, path:'path', type:'images'}});
+      authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Objects Using this Image'});
+      var objs = authorLibs.authorData.objects.filter(function(check){return check.type==='image' && check.image === thisProp.id;});
+      if (objs.length === 0){
+        authorLibs.windows.makeDiv({parent:pDiv, classes:'load_file', html:'None'});
+      } else {
+        objs.forEach(function(imgObj){
+          authorLibs.windows.makeDiv({parent:pDiv, classes:'load_file', html:imgObj.name,  click:function(){authorLibs.buildProp.get('objects', imgObj.id)}});
+        });
+      }
+      authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Image Preview'});
+      authorLibs.windows.makeImg({parent:pDiv, classes:'imagescale', src:path.url + '/' + thisProp.name});
     }
 
     if (type==='layers'){
@@ -159,8 +171,12 @@ authorLibs.buildProp = {
           value:authorLibs.authorData.settings[thisProp], change:function(){authorLibs.buildProp.settingUpdate(this, thisProp)}});
       }
       if (authorLibs.rules.settings[thisProp].type === "fontlist"){
-        authorLibs.rules.settings[thisProp].list.forEach(function(font){
-          console.log(font)
+        authorLibs.authorData.settings[thisProp].list.forEach(function(font, idx){
+          var divB = authorLibs.windows.makeDiv({parent:pDiv, classes:'actionblock'});
+          var fontTypes = Object.keys(authorLibs.rules.font);
+          authorLibs.buildProp.setListSelect({parent:divB, obj:thisProp, type:'shapes', widget:{field:'type', id:'vartype'},
+            path:'drawcode.' + idx + '.type', list:fontTypes, value:font.type});
+
         });
         authorLibs.windows.makeDiv({parent:pDiv, classes:'divbutton', html:'Add Font',
           click:function(){authorLibs.utils.addFont(thisProp.id);}});
@@ -197,7 +213,7 @@ authorLibs.buildProp = {
         var tmpObj = {id:widget.type, field:'type'};
         var val = authorLibs.utils.getSubProp(thisProp, 'drawcode.' + idx + '.type');
         authorLibs.buildProp.setListSelect({parent:pBox, obj:thisProp, type:'shapes', widget:tmpObj,
-          path:'drawcode.' + idx + '.type', list:drawList, value:val})
+          path:'drawcode.' + idx + '.type', list:drawList, value:val});
         var currentDraw = authorLibs.rules.drawcode.filter(function(draw){return draw.type === widget.type})[0];
         authorLibs.buildProp.makeWidgets({list: currentDraw.widgets, idx:idx,
           widget:{field:'drawcode'}, set:{parent:pBox, obj:thisProp, type:'shapes'}});

@@ -351,11 +351,15 @@ authorLibs.menus = {
     holder.innerHTML  = '';
     var settingsTable = authorLibs.windows.makeTable({parent:holder,
       classes:'objtable', id:'settingstable', width:'100%'});
-    Object.keys(authorLibs.authorData.settings).forEach(function(setting){
+    Object.keys(authorLibs.rules.settings).forEach(function(settingId){
+      var setting    = authorLibs.rules.settings[settingId];
+      var settingVal = authorLibs.authorData.settings[settingId];
+      if (settingId === 'fontlist') settingVal = settingVal.list.length + ' font' +
+        (settingVal.list.length === 1 ? '' : 's');
       var tr = authorLibs.windows.makeTr({parent:settingsTable, classes:'clicktr',
-        id:'settings_'+setting, click:function(){authorLibs.buildProp.get('settings', setting)}});
-      authorLibs.windows.makeTd({parent:tr, width:'50%', html:setting});
-      authorLibs.windows.makeTd({parent:tr, width:'50%', html: authorLibs.authorData.settings[setting]});
+        id:'settings_'+settingId, click:function(){authorLibs.buildProp.get('settings', settingId)}});
+      authorLibs.windows.makeTd({parent:tr, width:'50%', html:setting.display});
+      authorLibs.windows.makeTd({parent:tr, width:'50%', html: settingVal});
     });
   }
 

@@ -287,30 +287,38 @@
       ]
     }
   ],
-  
+
   "font":{
     "link":{
       "widgets":[
-        {"field":"href",      "type":"text"}
-      ]
-    },
-    "shape":{
+        {"field":"url",      "type":"text"}
+        ]
+      },
+    "url":{
       "widgets":[
-        {"field":"name",      "type":"text"},
-        {"field":"type",      "type":"select",  "id":"objecttype"},
-        {"field":"shape",     "type":"shapelist"},
-        {"field":"order",     "type":"number"},
-        {"field":"blend",     "type":"select",  "id":"composite"},
-        {"field":"group",     "type":"grplist"},
-        {"field":"show",      "type":"bool"},
-        {"field":"usecolor",  "type":"bool"},
-        {"field":"color",     "type":"color"},
-        {"field":"origin",    "type":"select", "id":"objectorigin"},
-        {"field":"position",  "type":"posxy" },
-        {"field":"scale",     "type":"scale"}
-      ]
-    }
+        {"field":"url",      "type":"text"},
+        {"field":"family",   "type":"text"}
+        ]
+      }
+    },
+
+  "shape":{
+    "widgets":[
+      {"field":"name",      "type":"text"},
+      {"field":"type",      "type":"select",  "id":"objecttype"},
+      {"field":"shape",     "type":"shapelist"},
+      {"field":"order",     "type":"number"},
+      {"field":"blend",     "type":"select",  "id":"composite"},
+      {"field":"group",     "type":"grplist"},
+      {"field":"show",      "type":"bool"},
+      {"field":"usecolor",  "type":"bool"},
+      {"field":"color",     "type":"color"},
+      {"field":"origin",    "type":"select", "id":"objectorigin"},
+      {"field":"position",  "type":"posxy" },
+      {"field":"scale",     "type":"scale"}
+    ]
   },
+
   "image":{
     "imagedata":{
       "widgets":[
@@ -427,13 +435,13 @@
        "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity" ]}
   },
   "settings":{
-    "canvasdomname": {"type":"text"},
-    "canvaswidth":   {"type":"number"},
-    "canvasheight":  {"type":"number"},
-    "canvasparent":  {"type":"text"},
-    "responsive":    {"type":"bool"},
-    "usecache":      {"type":"bool"},
-    "fonts":         {"type":"fontlist"}
+    "canvasdomname": {"type":"text",     "display":"Name"},
+    "canvaswidth":   {"type":"number",   "display":"Width"},
+    "canvasheight":  {"type":"number",   "display":"Height"},
+    "canvasparent":  {"type":"text",     "display":"Parent"},
+    "responsive":    {"type":"bool",     "display":"Responsive"},
+    "usecache":      {"type":"bool",     "display":"Use Cache"},
+    "fontlist":      {"type":"fontlist", "display":"Fonts"}
   },
   "shape":{
     "widgets":[
