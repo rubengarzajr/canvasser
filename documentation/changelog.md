@@ -5,12 +5,14 @@
 - Fade shapes
 - Tooltip/Instructions to use variable in text shape with {{ var_name }}
 - Can't remove colors from shape object
-- Can't delete shape drawcode
 - rect needs a fill, stroke option
 - responsive broke text entry (no longer aligned)
 - use anchor links to restore page user was last on before leaving
 
 ## Changelog:
+- 2018-08-20 Fixed unable to delete shape drawcode.
+- 2018-08-20 Added preview image to Object properties.
+- 2018-08-17 Added preview image and objects using image to Image properties.
 - 2018-08-14 Added text entry on select text input types, i.e. font selection.
 - 2018-08-14 Fixed numbers breaking text.
 - 2018-08-10 Multi-line text shape.

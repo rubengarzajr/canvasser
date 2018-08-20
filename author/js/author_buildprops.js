@@ -143,6 +143,13 @@ authorLibs.buildProp = {
 
     if (type==='objects'){
       var pDiv = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
+      if (thisProp.type === 'image' && thisProp.image !== undefined){
+        var img = authorLibs.authorData.images.filter(function(check){return check.id === thisProp.image;})[0];
+        var path = authorLibs.authorData.paths.filter(function(check){return check.id === img.path;})[0];
+        authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Image Preview'});
+        authorLibs.windows.makeImg({parent:pDiv, classes:'imagescale', src: path.url + '/' + img.url});
+        authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Properties'});
+      }
       authorLibs.buildProp.makeWidgets({list:authorLibs.rules.object[thisProp.type].widgets, current:true,
         set:{parent:pDiv, obj:thisProp, type:'objects'}});
     }
@@ -197,7 +204,7 @@ authorLibs.buildProp = {
         var pBox = authorLibs.windows.makeDiv({parent:pDiv, classes:'propbox'});
         var rFlo = authorLibs.windows.makeDiv({parent:pBox, classes:'rightfloater'});
         var pDel = authorLibs.windows.makeDiv({parent:rFlo, classes:'deleter',
-          click:function(){authorLibs.windows.deleteprop('shapes', thisProp.id,'drawcode.'+idx)}});
+          click:function(){authorLibs.buildProp.deleteprop('shapes', thisProp.id,'drawcode.'+idx)}});
         authorLibs.windows.makeImg({parent:pDel, id:'removeshape', src:'image/icon_x.png'});
         if (idx > 0){
           var mUp = authorLibs.windows.makeDiv({parent:rFlo, classes:'deleter',
