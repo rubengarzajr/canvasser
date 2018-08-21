@@ -400,16 +400,22 @@ authorLibs.buildProp = {
   },
 
   setColor: function(obj){
-    if (obj.obj[obj.widget.field] === undefined || obj.obj[obj.widget.field] === {}) obj.obj[obj.widget.field] = {current:["rgba(0,0,0,1)"]};
+    if (obj.obj[obj.widget.field] === undefined || obj.obj[obj.widget.field] === {}){
+      obj.obj[obj.widget.field] = {current:["rgba(0,0,0,1)"]};
+    }
     var divZ = authorLibs.windows.makeDiv({parent:obj.parent});
     var div  = authorLibs.windows.makeDiv({parent:divZ, classes:'pos_holder',style:'display:block;'});
     authorLibs.windows.makeDiv({parent:div, classes:'pos_title', html:obj.widget.field });
 
     Object.keys(obj.obj[obj.widget.field]).forEach(function(colorList){
         obj.obj.color[colorList].forEach(function(color,idx){
-          var val = authorLibs.utils.getSubProp(obj.obj, obj.widget.field+'.'+colorList+'.'+idx);
-          authorLibs.buildProp.setText({parent:div, widthClass:'w20', obj:obj.obj, widget:{field:idx},
-            value:val, type:'object', path:obj.widget.field+'.'+colorList+'.'+idx});
+          var val   = authorLibs.utils.getSubProp(obj.obj, obj.widget.field+'.'+colorList+'.'+idx);
+          var pActB = authorLibs.windows.makeDiv({parent:div, classes:'actionblock'});
+          authorLibs.windows.makeImg({parent:pActB, classes:'rightx', click:function(){
+            authorLibs.utils.deleteitem('objects', obj.obj.id, obj.widget.field+'.'+colorList, idx)},
+            src:authorLibs.externalsPath + "image/icon_remove_g.png"});
+          authorLibs.buildProp.setText({parent:pActB, widthClass:'w20', obj:obj.obj, widget:{field:idx},
+            value:val, type:'objects', path:obj.widget.field+'.'+colorList+'.'+idx});
       });
     });
     authorLibs.windows.makeDiv({parent:div, classes:'divbutton', html:'Add Color', click:function(){authorLibs.utils.addColor(obj.obj.id, obj.widget.field)}});

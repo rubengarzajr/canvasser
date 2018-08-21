@@ -62,16 +62,13 @@ authorLibs.utils = {
     }
     return hours + ":" + d.getMinutes() + ":" + d.getSeconds() +  ampm + ' '
           + d.getFullYear() + '/' + (d.getMonth()+1)  + '/' + d.getDate();
-
-
   },
 
   deleteitem: function(type, objName, listType, index){
-    console.log('hello!', type)
-    console.log(authorLibs.authorData[type])
     var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === objName);});
     if (objGet.length === 0) return;
-    objGet[0][listType].splice(index,1);
+    var subProp = authorLibs.utils.getSubProp(objGet[0], listType);
+    subProp.splice(index,1);
     authorLibs.buildProp.get(type,objGet[0].id);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
