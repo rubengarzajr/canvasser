@@ -22,8 +22,8 @@ authorLibs.utils = {
   },
 
   addFont: function(id){
-    authorLibs.authorData.settings.fontlist.list.push({id:authorLibs.utils.uuid(), type:'href'});
-    authorLibs.buildProp.get("settings", 'fontlist');
+    authorLibs.authorData.settings.fonts.push({id:authorLibs.utils.uuid(), type:'link'});
+    authorLibs.buildProp.get("settings", 'fonts');
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
@@ -279,8 +279,10 @@ authorLibs.utils = {
   },
 
   loadAutobk:function(string){
-    console.log(string);
-      localStorage.getItem('canvasser_autoback_' +string, JSON.stringify(authorLibs.authorData));
+    console.log(localStorage)
+    var back = localStorage.getItem('canvasser_autoback_' +string, JSON.stringify(authorLibs.authorData));
+    authorLibs.buildProp.clear();
+    restartCanvasser("sample", JSON.parse(back), "string");
   },
 
   loadDataUpdate: function(){
@@ -404,7 +406,7 @@ authorLibs.utils = {
     }
 
     if (json.settings.responsive === undefined) json.settings.responsive = false;
-    if (json.settings.fontlist === undefined) json.settings.fontlist = {type:'fontlist', list:[]};
+    if (json.settings.fonts === undefined) json.settings.fonts = [];
     return json;
   },
 
@@ -543,7 +545,8 @@ authorLibs.utils = {
     document.getElementById('uploadbox').style.display = 'block';
   },
 
-  setSubProp: function(obj, desc, val){
+  setSubProp: function(obj, descIn, val){
+    var desc = String(descIn);
     var arr = desc.split(".");
     while(arr.length > 1){
       if (obj[arr[0]] === undefined) obj[arr[0]] = {};

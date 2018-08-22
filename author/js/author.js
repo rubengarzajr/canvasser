@@ -151,19 +151,30 @@ function initAuthorCanvasser(vari, datafile, dataForm){
 }
 
 function localSave(){
-  localStorage.setItem('canvasser_autoback_' + authorLibs.autoback, JSON.stringify(authorLibs.authorData));
+  if (localStorage.getItem('canvasser_lastsave') === null){
+    localStorage.setItem('canvasser_lastsave', 0);
+  }
+
+  var autoback =  localStorage.getItem('canvasser_lastsave') + 1;
+  if (autoback >= authorLibs.automax) autoback = 0;
+
+  localStorage.setItem('canvasser_lastsave', autoback);
+  localStorage.setItem('canvasser_autoback_' + autoback, JSON.stringify(authorLibs.authorData));
   var autobk = document.getElementById('autobk');
   autobk.style.display = 'block';
-  autobk.innerHTML = "autoback " + (authorLibs.autoback + 1);
+  autobk.innerHTML     = "autoback " + (autoback);
   authorLibs.utils.fadeElement(autobk, 100);
   var autoString = "Backup " + authorLibs.utils.dateString();
-  console.log(autoString)
   var dropAutobk = document.getElementById('menu_autobk_dropdown');
-  var newBk = authorLibs.windows.makeDiv({parent:dropAutobk, html:autoString, first:true, click:function(){authorLibs.utils.loadAutobk(authorLibs.autoback)}});
-  if (dropAutobk.childElementCount > 5) dropAutobk.removeChild(dropAutobk.lastChild);
+  dropAutobk.innerHTML = '';
+  for(var cnt=0; cnt<authorLibs.automax; cnt++) {
+    var bkData = localStorage.getItem('canvasser_autoback_' + cnt);
+    if (bkData !== null){
+      authorLibs.windows.makeDiv({parent:dropAutobk, html:'backup'+cnt, first:true, click:function(){authorLibs.utils.loadAutobk(cnt)}});
+    }
+  }
+  //if (dropAutobk.childElementCount > authorLibs.automax) dropAutobk.removeChild(dropAutobk.lastChild);
 
-  authorLibs.autoback ++;
-  if (authorLibs.autoback >= authorLibs.automax) authorLibs.autoback = 0
 }
 
 function restartCanvasser(name, data, type){

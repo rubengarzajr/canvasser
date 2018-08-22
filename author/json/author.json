@@ -269,7 +269,7 @@
       {"field":"offset",  "type":"posxy"},
       {"field":"text",    "type":"textarea"},
       {"field":"color",   "type":"text"},
-      {"field":"font",    "type":"selecttext", "id":"fontlist"},
+      {"field":"font",    "type":"selecttext", "id":"fonts"},
       {"field":"size",    "type":"number"},
       {"field":"height",  "type":"number"},
       {"field":"justify", "type":"selecttext", "id":"justify"}
@@ -280,7 +280,7 @@
       {"field":"text",    "type":"textarea"},
       {"field":"color",   "type":"text"},
       {"field":"width",   "type":"number"},
-      {"field":"font",    "type":"selecttext", "id":"fontlist"},
+      {"field":"font",    "type":"selecttext", "id":"fonts"},
       {"field":"size",    "type":"number"},
       {"field":"height",  "type":"number"},
       {"field":"justify", "type":"selecttext", "id":"justify"}
@@ -422,7 +422,7 @@
     "comparetype":{"list":["equal","greater", "less"]},
     "easetype":{"list":["linear","inExp","outExp","inOutExp","inQuad", "outQuad", "inOutQuad"]},
     "filtertype":{"list":["object", "group","particle"]},
-    "fontlist":{"list":["Arial","Arial Black", "Courier New", "Impact","Lucida Console","Lucida Sans Unicode","Tahoma","Trebuchet MS","Verdana"]},
+    "fonts":{"list":["Arial","Arial Black", "Courier New", "Impact","Lucida Console","Lucida Sans Unicode","Tahoma","Trebuchet MS","Verdana"]},
     "justify":{"list":["left", "center", "right"]},
     "layerpos":{"list":["top", "bottom"]},
     "objectorigin":{"list":["upper_left", "center"]},
@@ -441,7 +441,7 @@
     "canvasparent":  {"type":"text",     "display":"Parent"},
     "responsive":    {"type":"bool",     "display":"Responsive"},
     "usecache":      {"type":"bool",     "display":"Use Cache"},
-    "fontlist":      {"type":"fontlist", "display":"Fonts"}
+    "fonts":         {"type":"fonts",    "display":"Fonts"}
   },
   "shape":{
     "widgets":[

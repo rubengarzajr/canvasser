@@ -1,16 +1,28 @@
 authorLibs.buildProp = {
+  clear: function(){
+    document.getElementById('propertiestitle').innerHTML = '';
+    document.getElementById('properties').innerHTML = '';
+  },
 
   get: function(type, id){
     var thisProp = undefined;
     var propName = '';
+
     if (type === 'layers'){
       thisProp = id;
       propName = authorLibs.authorData.layers[id].name;
     }
     else{
-      if (Array.isArray(authorLibs.authorData[type])) {
-        thisProp = authorLibs.authorData[type].filter(function(selected){return selected.id === id;})[0];
+      if (type.indexOf('.') > -1){
+        var newType = type.split('.');
+        type = newType[0];
+        id = newType[1];
+      }
+      var getP = authorLibs.utils.getSubProp(authorLibs.authorData, type);
+      if (Array.isArray(getP)) {
+        thisProp = getP.filter(function(selected){return selected.id === id;})[0];
         if (thisProp !== undefined) propName = thisProp.id;
+
       }
       else thisProp = id;
     }
@@ -110,7 +122,7 @@ authorLibs.buildProp = {
       var pList     = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
       var pathList  = [];
       pList.forEach(function(item){pathList.push(item);});
-      var id = authorLibs.utils.getSubProp(thisProp, 'id');
+      var id   = authorLibs.utils.getSubProp(thisProp, 'id');
       var path = authorLibs.authorData.paths.filter(function(check){return check.id === thisProp.path;})[0];
       authorLibs.buildProp.makeWidgets({list:authorLibs.rules.image.imagedata.widgets,
         set:{list:pathList, parent:pDiv, obj:thisProp, path:'path', type:'images'}});
@@ -124,7 +136,7 @@ authorLibs.buildProp = {
         });
       }
       authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Image Preview'});
-      authorLibs.windows.makeImg({parent:pDiv, classes:'imagescale', src:path.url + '/' + thisProp.name});
+      authorLibs.windows.makeImg({parent:pDiv, classes:'imagescale', src:path.url + '/' + thisProp.url});
     }
 
     if (type==='layers'){
@@ -144,10 +156,14 @@ authorLibs.buildProp = {
     if (type==='objects'){
       var pDiv = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
       if (thisProp.type === 'image' && thisProp.image !== undefined){
-        var img = authorLibs.authorData.images.filter(function(check){return check.id === thisProp.image;})[0];
-        var path = authorLibs.authorData.paths.filter(function(check){return check.id === img.path;})[0];
-        authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Image Preview'});
-        authorLibs.windows.makeImg({parent:pDiv, classes:'imagescale', src: path.url + '/' + img.url});
+        var imgList = authorLibs.authorData.images.filter(function(check){return check.id === thisProp.image;});
+        if (imgList.length > 0){
+          var img = imgList[0];
+          var path = authorLibs.authorData.paths.filter(function(check){return check.id === img.path;})[0];
+          authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Image Preview'});
+          authorLibs.windows.makeImg({parent:pDiv, classes:'imagescale', src: path.url + '/' + img.url});
+        }
+
         authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Properties'});
       }
       authorLibs.buildProp.makeWidgets({list:authorLibs.rules.object[thisProp.type].widgets, current:true,
@@ -174,16 +190,24 @@ authorLibs.buildProp = {
       }
       if (authorLibs.rules.settings[thisProp].type === "text" || authorLibs.rules.settings[thisProp].type === "number") {
         authorLibs.windows.makeDiv({parent:pDiv, html:thisProp, classes:'entrylabel c_entrytitle_text w200'});
-        authorLibs.windows.makeElement({parent:pDiv, type:'input', subtype:authorLibs.rules.settings[thisProp].type, classes:'auth_text w200',
-          value:authorLibs.authorData.settings[thisProp], change:function(){authorLibs.buildProp.settingUpdate(this, thisProp)}});
+        authorLibs.windows.makeElement({parent:pDiv, type:'input', subtype:authorLibs.rules.settings[thisProp].type,
+          classes:'auth_text w200', value:authorLibs.authorData.settings[thisProp],
+          change:function(){authorLibs.buildProp.settingUpdate(this, thisProp)}});
       }
-      if (authorLibs.rules.settings[thisProp].type === "fontlist"){
-        authorLibs.authorData.settings[thisProp].list.forEach(function(font, idx){
-          var divB = authorLibs.windows.makeDiv({parent:pDiv, classes:'actionblock'});
-          var fontTypes = Object.keys(authorLibs.rules.font);
-          authorLibs.buildProp.setListSelect({parent:divB, obj:thisProp, type:'shapes', widget:{field:'type', id:'vartype'},
-            path:'drawcode.' + idx + '.type', list:fontTypes, value:font.type});
+      if (authorLibs.rules.settings[thisProp].type === "fonts"){
+        var fontTypes = Object.keys(authorLibs.rules.font);
 
+        authorLibs.authorData.settings[thisProp].forEach(function(font, idx){
+          var divB = authorLibs.windows.makeDiv({parent:pDiv, classes:'actionblock'});
+          var pDel = authorLibs.windows.makeDiv({parent:divB, classes:'deleter',
+            click:function(){authorLibs.buildProp.settingDelete('fonts', font.id)}});
+          authorLibs.windows.makeImg({parent:pDel, id:'removeshape', src:'image/icon_x.png'});
+
+          authorLibs.buildProp.setListSelect({parent:divB, obj:font, type:'settings.fonts',
+            widget:{field:'type', id:font.id}, path:'type', list:fontTypes, value:font.type});
+          var fontWidgets = authorLibs.rules.font[font.type].widgets;
+          authorLibs.buildProp.makeWidgets({list:fontWidgets, idx:idx, widget:{field:'', id:font.id},
+            set:{parent:divB, obj:font, type:'settings.fonts'}});
         });
         authorLibs.windows.makeDiv({parent:pDiv, classes:'divbutton', html:'Add Font',
           click:function(){authorLibs.utils.addFont(thisProp.id);}});
@@ -278,7 +302,7 @@ authorLibs.buildProp = {
       if (subWidget.type === 'bool')       authorLibs.buildProp.setBoolean(defaults);
       if (subWidget.type === "color")      authorLibs.buildProp.setColor(defaults);
       if (subWidget.type === "filterlink") authorLibs.buildProp.setLinkSel(defaults);
-      if (subWidget.type === "fontlist")   authorLibs.buildProp.setFont(defaults);
+      if (subWidget.type === "fonts")      authorLibs.buildProp.setFont(defaults);
       if (subWidget.type === 'grplist')    authorLibs.buildProp.setGroup(Object.assign(defaults));
       if (subWidget.type === "imagedata")  authorLibs.buildProp.setImage(defaults);
       if (subWidget.type === "linkedcontent") {
@@ -311,8 +335,9 @@ authorLibs.buildProp = {
   },
 
   deleteprop: function(type,id,path){
-    var obj = authorLibs.authorData[type].filter(function(test){return test.id === id})[0];
-    var arr = path.split(".");
+    var find = authorLibs.utils.getSubProp(authorLibs.authorData,type);
+    var obj  = find.filter(function(test){return test.id === id})[0];
+    var arr  = path.split(".");
     while(arr.length > 1){
       if (obj[arr[0]] === undefined) obj[arr[0]] = {};
       obj = obj[arr.shift()];
@@ -390,6 +415,14 @@ authorLibs.buildProp = {
     var ck = authorLibs.windows.makeElement({parent:div, classes:'checkbox', type:'input', subtype:'checkbox',
       click:function(){authorLibs.buildProp.settingUpdate(this, obj.path)}});
     if (obj.value) ck.checked = true;
+  },
+
+  settingDelete: function(type, id){
+    var find  = authorLibs.utils.getSubProp(authorLibs.authorData.settings, type);
+    var index = find.map(function(e) { return e.id; }).indexOf(id);
+    find.splice(index,1);
+    authorLibs.buildProp.get('settings', type);
+    restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
   settingUpdate: function(domElement, setting){
@@ -577,8 +610,9 @@ authorLibs.buildProp = {
     });
     authorLibs.windows.makeDiv({parent:obj.parent, classes:'entrylabel c_entrytitle_text w100',
       html:(obj.widget.display ? obj.widget.display : obj.widget.field)});
-    authorLibs.buildProp.setSelect({parent:obj.parent, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)},
-      object:obj.obj.id, type:obj.type, list:localList, defaultId:obj.value, path:obj.path}
+    authorLibs.buildProp.setSelect({parent:obj.parent, object:obj.obj.id, type:obj.type,
+      fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)},
+      list:localList, defaultId:obj.value, path:obj.path}
     );
   },
 
@@ -630,7 +664,8 @@ authorLibs.buildProp = {
       var newVal = domElement.value.toString();
       if (domElement.type === 'checkbox') newVal = domElement.checked;
       if (newVal === '---NONE---')        newVal = undefined;
-      var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
+      var path = authorLibs.utils.getSubProp( authorLibs.authorData, type);
+      var objGet = path.filter(function(finder){return (finder.id === objectId);})[0];
       authorLibs.utils.setSubProp(objGet, paramPath, newVal);
       authorLibs.buildProp.get(type, objGet.id);
       authorLibs.menus.update(type);
