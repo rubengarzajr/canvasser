@@ -206,7 +206,7 @@ authorLibs.buildProp = {
           authorLibs.buildProp.setListSelect({parent:divB, obj:font, type:'settings.fonts',
             widget:{field:'type', id:font.id}, path:'type', list:fontTypes, value:font.type});
           var fontWidgets = authorLibs.rules.font[font.type].widgets;
-          authorLibs.buildProp.makeWidgets({list:fontWidgets, idx:idx, widget:{field:'', id:font.id},
+          authorLibs.buildProp.makeWidgets({list:fontWidgets, field:'',
             set:{parent:divB, obj:font, type:'settings.fonts'}});
         });
         authorLibs.windows.makeDiv({parent:pDiv, classes:'divbutton', html:'Add Font',

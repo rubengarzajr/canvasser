@@ -191,6 +191,23 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       });
     }
 
+    if (data.settings.fonts !== undefined){
+      data.settings.fonts.forEach(function(font){
+        console.log(font)
+        if (font.type === 'link'){
+          var link  = document.createElement('link');
+          link.href = font.url;
+          link.rel  = 'stylesheet';
+          document.getElementsByTagName('head')[0].appendChild(link);
+        }
+        if (font.type === 'url'){
+          var newcss = '@font-face {font-family: '+ font.family+'; src: url('+font.url+');}';
+          var style  = document.createElement('style');
+          style.appendChild(document.createTextNode(newcss));
+          document.getElementsByTagName('head')[0].appendChild(style);
+        }
+      });
+    }
     act.canvas        = document.createElement('canvas');
     act.canvasdom     = document.getElementById(data.settings.canvasparent);
     act.context       = act.canvas.getContext('2d');

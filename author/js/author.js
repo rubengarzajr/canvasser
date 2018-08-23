@@ -127,22 +127,12 @@ function initAuthorCanvasser(vari, datafile, dataForm){
   learning('load', 'welcome');
   authorLibs.utils.requestJson(authorLibs.externalsPath + "json/author.json", setRules);
   authorLibs.windows.theme('default');
+
   function setRules(data){
     authorLibs.rules  = data;
     if (authorLibs.defaultJSONobj) initEdit(authorLibs.defaultJSON);
     else authorLibs.utils.requestJson(authorLibs.defaultJSON, initEdit);
   }
-
-  // link=document.createElement('link');
-  // link.href='https://fonts.googleapis.com/css?family=Indie+Flower';
-  // link.rel = 'stylesheet';
-  //
-  // document.getElementsByTagName('head')[0].appendChild(link);
-
- var newcss = '@font-face {  font-family: testfont; src: url(./font/snoot-pixel10.woff);}';
- var style = document.createElement('style');
- style.appendChild(document.createTextNode(newcss));
- document.getElementsByTagName('head')[0].appendChild(style);
 
   function initEdit(datafile){
     authorLibs.author = new authorcanvasser(datafile, 'file');

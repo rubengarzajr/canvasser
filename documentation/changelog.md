@@ -9,6 +9,7 @@
 - use anchor links to restore page user was last on before leaving
 
 ## Changelog:
+- 2018-08-21 Added font support through a Google fonts link or standard url.
 - 2018-08-21 Fixed unable to set or delete shape color in objects.
 - 2018-08-20 Fixed unable to delete shape drawcode.
 - 2018-08-20 Added preview image to Object properties.
