@@ -6,8 +6,10 @@
 - Tooltip/Instructions to use variable in text shape with {{ var_name }}
 - responsive broke text entry (no longer aligned)
 - use anchor links to restore page user was last on before leaving
-
+- Files / rename not hooked up
+-
 ## Changelog:
+- 2018-08-23 Fixed fonts being added to head every time canvasser restarted.
 - 2018-08-23 Added fill and stroke options in rect shape.
 - 2018-08-23 Added font support through a Google fonts link or standard url.
 - 2018-08-21 Fixed unable to set or delete shape color in objects.

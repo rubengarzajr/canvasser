@@ -651,6 +651,23 @@ authorLibs.buildProp = {
       }
     },
 
+    statsfile: function(type){
+      var element = document.getElementById('propertiestitle');
+      authorLibs.windows.makeDiv({clearparent:true, parent:element, classes:'proptitle', html:'File Stats:'});
+      var propUI = document.getElementById("properties");
+      propUI.innerHTML = '';
+
+      authorLibs.lists.fileManager.forEach(function(file){
+        var list = [];
+        if (file.type === 'json'){
+          propUI.innerHTML += '<div>'+file.url+'</div>'
+        }
+
+      });
+
+
+    },
+
     updateActionList: function(domElement, objectId, type, paramPath){
       var item = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
       var prop = authorLibs.utils.getSubProp(item, paramPath);

@@ -193,6 +193,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
     if (data.settings.fonts !== undefined){
       data.settings.fonts.forEach(function(font){
+        if (font.url === undefined) return;
+        if (document.head.innerHTML.indexOf(font.url)>-1) return;
         if (font.type === 'link'){
           var link  = document.createElement('link');
           link.href = font.url;

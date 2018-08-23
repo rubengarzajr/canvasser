@@ -62,7 +62,7 @@ authorLibs.windows = {
     var winList = [
       {id:"anim",       position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
       {id:"constraint", position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
-      {id:"file",       position:{x: 23, y: 52}, menu:{refresh:true, uploadfile:true, renamefile:true, addtoproject:true, copyfile:true, deletefile:true, filter:true}, min:true, hide:false},
+      {id:"file",       position:{x: 23, y: 52}, menu:{refresh:true, statsfile:true, uploadfile:true, renamefile:true, addtoproject:true, copyfile:true, deletefile:true, filter:true}, min:true, hide:false},
       {id:"group",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
       {id:"image",      position:{x:675, y: 52}, menu:{add:true, delete:true}, min:true},
       {id:"json",       position:{x:  5, y: 52}, menu:{load:true, view:true, execute:true, format:true},min:false, hide:true},
@@ -148,6 +148,7 @@ authorLibs.windows = {
 
       if (win.menu.refresh)      authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Refresh', click:function(){authorLibs.utils.loadFromPhp('refreshfiles', true)}});
       if (win.menu.uploadfile)   authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Upload',  click:function(){authorLibs.windows.projectsList('saveproject'); authorLibs.utils.selectProject();}});
+      if (win.menu.statsfile)    authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Stats',   click:function(){authorLibs.buildProp.statsfile(win.id +'s')}});
       if (win.menu.addtoproject) authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Link',    click:function(){authorLibs.menus.addToProject( win.id +'s')}});
       if (win.menu.renamefile)   authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Rename',  click:function(){authorLibs.utils.fileRename(win.id +'s')}});
       if (win.menu.copyfile)     authorLibs.windows.makeDiv({parent:menu, classes:'menu-div', html:'Copy',    click:function(){authorLibs.utils.fileCopy(win.id +'s')}});
