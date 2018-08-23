@@ -262,17 +262,27 @@
     {"type":"linewidth",    "widgets":[{"field":"width",   "type":"number"}]},
     {"type":"move",         "widgets":[{"field":"origin",  "type":"posxy"}]},
     {"type":"ptest",        "widgets":[]},
-    {"type":"rect",         "widgets":[{"field":"offset",  "type":"posxy"}, {"field":"width", "type":"number"},{"field":"height", "type":"number"}]},
+    {"type":"rect",         "widgets":[
+        {"field":"offset",    "type":"posxy"},
+        {"field":"width",     "type":"number"},
+        {"field":"height",    "type":"number"},
+        {"field":"fill",      "type":"bool"},
+        {"field":"fillcolor", "type":"text"},
+        {"field":"stroke",    "type":"bool"},
+        {"field":"linecolor", "type":"text"},
+        {"field":"linewidth", "type":"number"}
+      ]
+    },
     {"type":"stroke",       "widgets":[]},
     {"type":"strokecolor",  "widgets":[{"field":"color",   "type":"text"}]},
     {"type":"textfill",     "widgets":[
-      {"field":"offset",  "type":"posxy"},
-      {"field":"text",    "type":"textarea"},
-      {"field":"color",   "type":"text"},
-      {"field":"font",    "type":"selecttext", "id":"fonts"},
-      {"field":"size",    "type":"number"},
-      {"field":"height",  "type":"number"},
-      {"field":"justify", "type":"selecttext", "id":"justify"}
+        {"field":"offset",  "type":"posxy"},
+        {"field":"text",    "type":"textarea"},
+        {"field":"color",   "type":"text"},
+        {"field":"font",    "type":"selecttext", "id":"fonts"},
+        {"field":"size",    "type":"number"},
+        {"field":"height",  "type":"number"},
+        {"field":"justify", "type":"selecttext", "id":"justify"}
       ]
     },
     {"type":"textline",     "widgets":[

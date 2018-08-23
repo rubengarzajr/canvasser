@@ -193,7 +193,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
     if (data.settings.fonts !== undefined){
       data.settings.fonts.forEach(function(font){
-        console.log(font)
         if (font.type === 'link'){
           var link  = document.createElement('link');
           link.href = font.url;
@@ -830,16 +829,34 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     shapeData.drawcode.forEach(function(shape){
       var offset = {x:0, y:0};
       if (shape.offset!== undefined) offset = {x:shape.offset.x, y:shape.offset.y};
-      if (shape.type === "move")      ctx.moveTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
-      if (shape.type === "rect")      ctx.rect(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.width*sizer,shape.height*sizer);
-      if (shape.type === "arc")       ctx.arc(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.radius*sizer, radians(shape.startangle), radians(shape.endangle), shape.counterclockwise);
-      if (shape.type === "bcurve")    ctx.bezierCurveTo(origin.x+offseta.x*sizer, origin.y+offseta.y*sizer, origin.x+offsetb.x*sizer, origin.y+offsetb.y*sizer, origin.x+offsetc.x*sizer, origin.y+offsetc.y*sizer);
-      if (shape.type === "line")      ctx.lineTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
-      if (shape.type === "linewidth") ctx.lineWidth = shape.width*sizer;
-      if (shape.type === "fillcolor") ctx.fillStyle = shape.color;
+      if (shape.type === "arc"){
+        ctx.arc(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.radius*sizer,
+          radians(shape.startangle), radians(shape.endangle), shape.counterclockwise);
+      }
+      if (shape.type === "bcurve"){
+        ctx.bezierCurveTo(origin.x+offseta.x*sizer, origin.y+offseta.y*sizer,
+          origin.x+offsetb.x*sizer, origin.y+offsetb.y*sizer, origin.x+offsetc.x*sizer,
+          origin.y+offsetc.y*sizer);
+      }
       if (shape.type === "fill") {
         if (usecolor) ctx.fillStyle = color.current[colorIndex];
         ctx.fill();
+      }
+      if (shape.type === "fillcolor") ctx.fillStyle = shape.color;
+      if (shape.type === "line")      ctx.lineTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
+      if (shape.type === "linewidth") ctx.lineWidth = shape.width*sizer;
+      if (shape.type === "move")      ctx.moveTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
+      if (shape.type === "rect"){
+        ctx.rect(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.width*sizer,shape.height*sizer);
+        if (shape.stroke){
+          if (shape.linecolor !== undefined) ctx.strokeStyle = shape.linecolor;
+          if (shape.linewidth !== undefined) ctx.lineWidth   = shape.linewidth ;
+          ctx.stroke();
+        }
+        if (shape.fill){
+          if (shape.fillcolor !== undefined) ctx.fillStyle = shape.fillcolor;
+          ctx.fill();
+        }
       }
       if (shape.type === "textfill") { processText(shape); }
       if (shape.type === "textline") { processText(shape); }
