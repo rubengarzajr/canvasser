@@ -682,7 +682,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       if (obj.type === "shape" && obj.show){
         var objParent = obj.parent != undefined ? obj.parent.object : undefined;
         var currentShape = act.data.shapes.filter(function(shape){return shape.id === obj.shape})[0];
+        if (obj.opacity === undefined) obj.opacity = {current:1};
+        if (obj.opacity.current === undefined) obj.opacity.current=1;
         act.context.save();
+        act.context.globalAlpha = obj.opacity.current;
         if (obj.blend) act.context.globalCompositeOperation = obj.blend;
         var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current, obj.usecolor);
         act.context.restore();
@@ -849,6 +852,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       if (shape.type === "linewidth") ctx.lineWidth = shape.width*sizer;
       if (shape.type === "move")      ctx.moveTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       if (shape.type === "rect"){
+        ctx.beginPath();
         ctx.rect(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.width*sizer,shape.height*sizer);
         if (shape.stroke){
           if (shape.linecolor !== undefined) ctx.strokeStyle = shape.linecolor;
@@ -859,6 +863,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (shape.fillcolor !== undefined) ctx.fillStyle = shape.fillcolor;
           ctx.fill();
         }
+        ctx.closePath();
       }
       if (shape.type === "textfill") { processText(shape); }
       if (shape.type === "textline") { processText(shape); }

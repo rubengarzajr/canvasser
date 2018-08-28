@@ -374,6 +374,7 @@
         {"field":"order",     "type":"number"},
         {"field":"blend",     "type":"select",  "id":"composite"},
         {"field":"group",     "type":"grplist"},
+        {"field":"parent.id", "type":"objlist"},
         {"field":"show",      "type":"bool"},
         {"field":"usecolor",  "type":"bool"},
         {"field":"color",     "type":"color"},

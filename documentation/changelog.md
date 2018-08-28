@@ -7,8 +7,16 @@
 - responsive broke text entry (no longer aligned)
 - use anchor links to restore page user was last on before leaving
 - Files / rename not hooked up
--
+- Add copy to anim list and test list
+- Remove Order from Objects
+- Shapes list not alpha sorted
+- Fix: Shape offset undefined set to zero (right now undefined)
+- Report should use getSubProp
+
 ## Changelog:
+- 2018-08-27 Fixed multiple Rect shapes not using colors.
+- 2018-08-27 Added fading for shape objects.
+- 2018-08-27 Exposed parent to shape objects.
 - 2018-08-23 Fixed fonts being added to head every time canvasser restarted.
 - 2018-08-23 Added fill and stroke options in rect shape.
 - 2018-08-23 Added font support through a Google fonts link or standard url.
