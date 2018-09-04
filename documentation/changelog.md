@@ -17,6 +17,7 @@
 - 2018-08-27 Fixed multiple Rect shapes not using colors.
 - 2018-08-27 Added fading for shape objects.
 - 2018-08-27 Exposed parent to shape objects.
+- 2018-08-24 Added Stats Menu Item to Files that displays json info in Property.
 - 2018-08-23 Fixed fonts being added to head every time canvasser restarted.
 - 2018-08-23 Added fill and stroke options in rect shape.
 - 2018-08-23 Added font support through a Google fonts link or standard url.

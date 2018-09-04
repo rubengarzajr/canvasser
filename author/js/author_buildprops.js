@@ -657,10 +657,42 @@ authorLibs.buildProp = {
       var propUI = document.getElementById("properties");
       propUI.innerHTML = '';
 
+      function addToProp(file, data){
+        authorLibs.windows.makeDiv({parent:propUI, classes:'load_filefolder', html:file.id});
+        authorLibs.windows.makeDiv({parent:propUI, classes:'load_file', html:'objects:' + data.objects.length});
+        data.objects.forEach(function(obj){
+          if (obj.clicklist === undefined) return;
+          obj.clicklist.forEach(function(click){
+            Object.keys(click).some(function(k){
+                if (click[k] !== "loadinto") return;
+                authorLibs.windows.makeDiv({parent:propUI, classes:'load_file',
+                  html:'Load: ' + obj.name + ' ' + click.url});
+            });
+          });
+        });
+        authorLibs.windows.makeDiv({parent:propUI, classes:'load_file', html:'Images:' + data.images.length});
+      }
+
+      function requestJson(file, fileNamePath, returnFunction){
+        var fileToDl = fileNamePath;
+        fileToDl += '?' + new Date().getTime();
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+          if (xhr.readyState == 4) returnFunction(file, JSON.parse(xhr.responseText));
+          if (xhr.status == 404) console.error("JSON Load Error: " + xhr.statusText + " " + xhr.readyState);
+        }
+        xhr.overrideMimeType('application/json');
+        xhr.open('GET', fileToDl, true);
+        xhr.send(null);
+      }
       authorLibs.lists.fileManager.forEach(function(file){
         var list = [];
         if (file.type === 'json'){
-          propUI.innerHTML += '<div>'+file.url+'</div>'
+
+          requestJson(file, file.url, addToProp)
+
+
+
         }
 
       });
