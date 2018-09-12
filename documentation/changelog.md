@@ -12,6 +12,7 @@
 - Shapes list not alpha sorted
 - Fix: Shape offset undefined set to zero (right now undefined)
 - Report should use getSubProp
+- Adding a property and showing 0 in the editor should set a zero.
 
 ## Changelog:
 - 2018-08-27 Fixed handling undefined var value for comparison.
