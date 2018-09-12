@@ -215,8 +215,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     act.canvas.width  = data.settings.canvaswidth;
     act.canvas.height = data.settings.canvasheight;
     if (data.settings.responsive){
-      act.canvas.style.width  = "100%";
-      act.canvas.style.height = "auto";
+      act.canvas.style.maxWidth   = "100%";
+      act.canvas.style.height     = "auto";
     }
 
     act.data          = data;

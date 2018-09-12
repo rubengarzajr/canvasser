@@ -15,8 +15,9 @@
 - Adding a property and showing 0 in the editor should set a zero.
 
 ## Changelog:
-- 2018-08-27 Fixed handling undefined var value for comparison.
-- 2018-08-27 Fixed Flipbook handle undefined index and reversing anims with flipbooks.
+- 2018-09-12 Fixed responsive canvassers blowing up to fill width of container.
+- 2018-09-12 Fixed handling undefined var value for comparison.
+- 2018-09-12 Fixed Flipbook handle undefined index and reversing anims with flipbooks.
 - 2018-08-27 Fixed multiple Rect shapes not using colors.
 - 2018-08-27 Added fading for shape objects.
 - 2018-08-27 Exposed parent to shape objects.
