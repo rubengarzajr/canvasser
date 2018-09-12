@@ -448,6 +448,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         play.timelist.forEach(function(animList){
           if (animList.starttime < 1 || animList.starttime === undefined) animList.starttime = 1;
           var addAnim = false;
+          if (animList.endtime === undefined) animList.endtime = animList.starttime;
           if (!play.reverse && animList.starttime >= play.prevTime && animList.starttime <= play.time) addAnim = true;
           if (play.reverse && animList.endtime >= play.time && animList.endtime <= play.prevTime) addAnim = true;
           if (addAnim){

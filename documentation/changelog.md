@@ -14,6 +14,7 @@
 - Report should use getSubProp
 
 ## Changelog:
+- 2018-08-27 Fixed Flipbook handle undefined index and reversing anims with flipbooks.
 - 2018-08-27 Fixed multiple Rect shapes not using colors.
 - 2018-08-27 Added fading for shape objects.
 - 2018-08-27 Exposed parent to shape objects.
