@@ -480,8 +480,8 @@ authorLibs.buildProp = {
     if (flipTest){
       if(flipTest.atlas){
         var pos = {x:authorLibs.utils.getSubProp(obj.obj, 'atlascell.x'), y:authorLibs.utils.getSubProp(obj.obj, 'atlascell..y')};
-        authorLibs.buildProp.setNumber({parent:Div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.x'}, path:'atlascell.x', value:pos.x});
-        authorLibs.buildProp.setNumber({parent:Div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.x'}, path:'atlascell.y', value:pos.y});
+        authorLibs.buildProp.setNumber({parent:div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.x'}, path:'atlascell.x', value:pos.x});
+        authorLibs.buildProp.setNumber({parent:div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.x'}, path:'atlascell.y', value:pos.y});
       }
     }
   },
