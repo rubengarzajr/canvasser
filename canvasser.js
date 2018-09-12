@@ -757,7 +757,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           act.context.translate(oxy.x, oxy.y);
           act.context.scale(obj.scale.current * obj.parentTransform.scale, obj.scale.current * obj.parentTransform.scale);
           if (atlas){
-            if (obj.atlascell === undefined) obj.atlascell = {x:0,y:0};
+            if (obj.atlascell   === undefined) obj.atlascell = {x:0,y:0};
+            if (obj.atlascell.x === undefined) obj.atlascell.x = 0;
+            if (obj.atlascell.y === undefined) obj.atlascell.y = 0;
             act.context.drawImage(act.imageList[obj.image].imageData,
               atlas.cellwidth*obj.atlascell.x, atlas.cellheight*obj.atlascell.y,
               atlas.cellwidth, atlas.cellheight, 0,0,
