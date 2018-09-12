@@ -1038,13 +1038,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             if (thisVar !== undefined){
               var go = false;
               if (thisVar.type === 'number') {
+                if (action.value===undefined) action.value = 0;
                 thisVar.value = Number(thisVar.value);
-                action.value = Number(action.value);
+                action.value  = Number(action.value);
               }
               if (action.comparetype === 'equal') {
-
                 if (thisVar.value === action.value) {
-                  console.log('TRUE')
                   go = true;
                 }
               }
