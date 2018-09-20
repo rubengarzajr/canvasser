@@ -172,7 +172,7 @@ authorLibs.buildProp = {
 
     if (type==='particles'){
       var pDiv = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
-      authorLibs.buildProp.makeWidgets({list:authorLibs.rules.particle.widgets, set:{parent:pDiv, obj:thisProp, type:'particles'}});
+      authorLibs.buildProp.makeWidgets({list:authorLibs.rules.particle.widgets, current:true, set:{parent:pDiv, obj:thisProp, type:'particles'}});
     }
 
     if (type==='paths'){
@@ -293,7 +293,9 @@ authorLibs.buildProp = {
       if (obj.widget === undefined && obj.idx === undefined) wPath = subWidget.field;
       else wPath = obj.widget.field + '.' + obj.idx + (subWidget.field !== undefined ? '.' + subWidget.field : '');
       if (obj.current === true &&
-        (subWidget.type === 'number' || subWidget.type === 'posxy'  || subWidget.type === 'scale')) wPath += '.current';
+        (subWidget.type === 'number' || subWidget.type === 'posxy'  || subWidget.type === 'scale')){
+        wPath += '.current';
+      }
       var val = authorLibs.utils.getSubProp(obj.set.obj, wPath);
       var defaults = Object.assign({}, obj.set, {widget:subWidget, path:wPath, value:val});
       if (subWidget.type === "actions")    authorLibs.buildProp.setAction(defaults);

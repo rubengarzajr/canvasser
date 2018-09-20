@@ -14,7 +14,10 @@
 - Report should use getSubProp
 - Adding a property and showing 0 in the editor should set a zero.
 
+
+
 ## Changelog:
+- 2018-09-20 Fixed setting position of particle in UI (not using current)
 - 2018-09-12 Fixed responsive canvassers blowing up to fill width of container.
 - 2018-09-12 Fixed handling undefined var value for comparison.
 - 2018-09-12 Fixed Flipbook handle undefined index and reversing anims with flipbooks.
