@@ -172,7 +172,7 @@ authorLibs.buildProp = {
 
     if (type==='particles'){
       var pDiv = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
-      authorLibs.buildProp.makeWidgets({list:authorLibs.rules.particle.widgets, current:true, set:{parent:pDiv, obj:thisProp, type:'particles'}});
+      authorLibs.buildProp.makeWidgets({list:authorLibs.rules.particle.widgets, currentpos:true, set:{parent:pDiv, obj:thisProp, type:'particles'}});
     }
 
     if (type==='paths'){
@@ -294,6 +294,9 @@ authorLibs.buildProp = {
       else wPath = obj.widget.field + '.' + obj.idx + (subWidget.field !== undefined ? '.' + subWidget.field : '');
       if (obj.current === true &&
         (subWidget.type === 'number' || subWidget.type === 'posxy'  || subWidget.type === 'scale')){
+        wPath += '.current';
+      }
+      if (obj.currentpos === true && subWidget.type === 'posxy'){
         wPath += '.current';
       }
       var val = authorLibs.utils.getSubProp(obj.set.obj, wPath);

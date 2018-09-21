@@ -13,10 +13,12 @@
 - Fix: Shape offset undefined set to zero (right now undefined)
 - Report should use getSubProp
 - Adding a property and showing 0 in the editor should set a zero.
-
+- Object type to none breaks ui
+- scaled down object with centered pivot only drag from where the noncentered image would be
 
 
 ## Changelog:
+- 2018-09-21 Fixed setting values of particle in UI (everything was using current)
 - 2018-09-20 Fixed setting position of particle in UI (not using current)
 - 2018-09-12 Fixed responsive canvassers blowing up to fill width of container.
 - 2018-09-12 Fixed handling undefined var value for comparison.
