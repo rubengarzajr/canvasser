@@ -154,6 +154,7 @@ authorLibs.buildProp = {
     }
 
     if (type==='objects'){
+      if (thisProp.type === undefined) thisProp.type = 'image';
       var pDiv = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
       if (thisProp.type === 'image' && thisProp.image !== undefined){
         var imgList = authorLibs.authorData.images.filter(function(check){return check.id === thisProp.image;});

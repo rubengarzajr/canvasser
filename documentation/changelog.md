@@ -1,25 +1,30 @@
 ## TODO:
+
+Bugs:
 - Fix sound still playing after canvasser closed/reloaded/loadinto.
-- Load/Save File manage to Box/Dropbox/Google Drive.
-- Load Autoback
-- Fade shapes
-- Tooltip/Instructions to use variable in text shape with {{ var_name }}
 - responsive broke text entry (no longer aligned)
-- use anchor links to restore page user was last on before leaving
 - Files / rename not hooked up
-- Add copy to anim list and test list
-- Remove Order from Objects
-- Shapes list not alpha sorted
-- Fix: Shape offset undefined set to zero (right now undefined)
 - Report should use getSubProp
 - Adding a property and showing 0 in the editor should set a zero.
-- Object type to none breaks ui
-- scaled down object with centered pivot only drag from where the noncentered image would be
 
+Features:
+- Load/Save File manage to Box/Dropbox/Google Drive.
+- Load Autoback
+- Add Tooltip/Instructions to use variable in text shape with {{ var_name }}
+- use anchor links to restore page user was last on before leaving
 
 ## Changelog:
-- 2018-09-21 Fixed setting values of particle in UI (everything was using current)
-- 2018-09-20 Fixed setting position of particle in UI (not using current)
+- 2018-09-24 Added fill and stroke to arc shape.
+- 2018-09-24 Fixed shape start angle to default to 0.
+- 2018-09-24 Fixed shape list not sorted alphabetically.
+- 2018-09-24 Fixed shape disappears if x or y in shape offset undefined.
+- 2018-09-24 Fixed Setting object type to none would break properties window.
+- 2018-09-24 Fixed scaled down object with non-zero pivot not draging correctly.
+- 2018-09-24 Add copy to test list.
+- 2018-09-24 Remove unused "order" property from objects and particles.
+- 2018-09-24 Fixed setting vis on particles that are off break canvasser.
+- 2018-09-21 Fixed setting values of particle in UI (everything was using current).
+- 2018-09-20 Fixed setting position of particle in UI (not using current).
 - 2018-09-12 Fixed responsive canvassers blowing up to fill width of container.
 - 2018-09-12 Fixed handling undefined var value for comparison.
 - 2018-09-12 Fixed Flipbook handle undefined index and reversing anims with flipbooks.

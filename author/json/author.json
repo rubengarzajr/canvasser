@@ -250,7 +250,12 @@
       {"field":"radius",  "type":"number"},
       {"field":"startangle", "type":"number"},
       {"field":"endangle", "type":"number"},
-      {"field":"counterclockwise", "type":"bool"}
+      {"field":"counterclockwise", "type":"bool"},
+      {"field":"fill",      "type":"bool"},
+      {"field":"fillcolor", "type":"text"},
+      {"field":"stroke",    "type":"bool"},
+      {"field":"linecolor", "type":"text"},
+      {"field":"linewidth", "type":"number"}
       ]
     },
     {"type":"bcurve",       "widgets":[{"field":"offseta", "type":"posxy"}, {"field":"offsetb", "type":"posxy"},  {"field":"offsetc",    "type":"posxy"}]},
@@ -317,7 +322,6 @@
       {"field":"name",      "type":"text"},
       {"field":"type",      "type":"select",  "id":"objecttype"},
       {"field":"shape",     "type":"shapelist"},
-      {"field":"order",     "type":"number"},
       {"field":"blend",     "type":"select",  "id":"composite"},
       {"field":"group",     "type":"grplist"},
       {"field":"show",      "type":"bool"},
@@ -348,7 +352,6 @@
         {"field":"name",      "type":"text"},
         {"field":"type",      "type":"select",  "id":"objecttype"},
         {"field":"image",     "type":"imagedata"},
-        {"field":"order",     "type":"number"},
         {"field":"blend",     "type":"select",  "id":"composite"},
         {"field":"group",     "type":"grplist"},
         {"field":"parent.id", "type":"objlist"},
@@ -371,7 +374,6 @@
         {"field":"name",      "type":"text"},
         {"field":"type",      "type":"select",  "id":"objecttype"},
         {"field":"shape",     "type":"shapelist"},
-        {"field":"order",     "type":"number"},
         {"field":"blend",     "type":"select",  "id":"composite"},
         {"field":"group",     "type":"grplist"},
         {"field":"parent.id", "type":"objlist"},
@@ -387,7 +389,6 @@
   "particle":{
     "widgets":[
       {"field":"name",                       "type":"text"},
-      {"field":"order",                      "type":"number"},
       {"field":"parent.id",                  "type":"objlist"},
       {"field":"keepalive",                  "type":"bool", "display":"Keep Alive"},
       {"field":"image",                      "type":"imagedata"},

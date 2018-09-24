@@ -283,7 +283,7 @@ authorLibs.menus = {
       return;
     }
 
-    var sorter = ['objects','images', 'anims'];
+    var sorter = ['objects','images', 'anims', 'shapes'];
     sorter.forEach(function(testType){
       if (type === testType){
         authorLibs.authorData[testType].sort(function(a, b){

@@ -522,7 +522,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             groupObjs.forEach(function(animSubOb){animSubOb.testp = anim.testp});
           } else {
             var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
-            animOb.testp = anim.testp
+            if (animOb !== undefined) animOb.testp = anim.testp
           }
           anim.delete = true;
         }
@@ -532,7 +532,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             groupObjs.forEach(function(animSubOb){animSubOb.show = anim.show;});
           } else {
             var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
-            animOb.show = anim.show;
+            if (animOb !== undefined) animOb.show = anim.show;
           }
           anim.delete = true;
         }
@@ -775,13 +775,13 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           var pix = [0,0,0,0];
           if (obj.scale.current>.001){
             if (obj.origin === 'center'){
-              obj.originxy.current.x = -Math.floor(act.imageList[obj.image].imageData.naturalWidth/2);
-              obj.originxy.current.y = -Math.floor(act.imageList[obj.image].imageData.naturalHeight/2)
+              obj.originxy.current.x = Math.floor(act.imageList[obj.image].imageData.naturalWidth /2);
+              obj.originxy.current.y = Math.floor(act.imageList[obj.image].imageData.naturalHeight/2);
             }
 
             pix = getPixel({id:obj.image, pos:{
-                            x:Math.floor((act.position.x-pos.x-obj.originxy.current.x)/obj.scale.current),
-                            y:Math.floor((act.position.y-pos.y-obj.originxy.current.y)/obj.scale.current)}
+                            x:Math.floor((act.position.x-pos.x+(obj.originxy.current.x * obj.scale.current))/obj.scale.current),
+                            y:Math.floor((act.position.y-pos.y+(obj.originxy.current.y * obj.scale.current))/obj.scale.current)}
                           });
           }
           if (pix[3] != 0 && act.mode !== 'none') {
@@ -836,10 +836,25 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     if (shapeData.drawcode === undefined) shapeData.drawcode = [];
     shapeData.drawcode.forEach(function(shape){
       var offset = {x:0, y:0};
-      if (shape.offset!== undefined) offset = {x:shape.offset.x, y:shape.offset.y};
+      if (shape.offset !== undefined){
+        if (shape.offset.x !== undefined) offset.x = shape.offset.x;
+        if (shape.offset.y !== undefined) offset.y = shape.offset.y;
+      }
+
       if (shape.type === "arc"){
+        if (shape.startangle === undefined) shape.startangle = 0;
+        if (shape.endangle === undefined)   shape.endangle   = 0;
         ctx.arc(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.radius*sizer,
           radians(shape.startangle), radians(shape.endangle), shape.counterclockwise);
+        if (shape.stroke){
+          if (shape.linecolor !== undefined) ctx.strokeStyle = shape.linecolor;
+          if (shape.linewidth !== undefined) ctx.lineWidth   = shape.linewidth ;
+          ctx.stroke();
+        }
+        if (shape.fill){
+          if (shape.fillcolor !== undefined) ctx.fillStyle = shape.fillcolor;
+          ctx.fill();
+        }
       }
       if (shape.type === "bcurve"){
         ctx.bezierCurveTo(origin.x+offseta.x*sizer, origin.y+offseta.y*sizer,
