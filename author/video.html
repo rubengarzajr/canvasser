@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Author</title>
+
+    <link rel="shortcut icon" href="../favicon.ico" />
+
+    <link href="./css/normalize.css" rel="stylesheet" type="text/css"/>
+    <link href="./css/canvasser.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+
+    body {
+        background: black;
+    }
+
+    #c {
+        width: 800px;
+        height: 600px;
+    }
+
+    #v {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -180px 0 0 -240px;
+    }
+    </style>
+
+  </head>
+  <body>
+
+<canvas id=c></canvas>
+  </body>
+
+  <script>
+  rot1=0;
+  document.addEventListener('DOMContentLoaded', function(){
+
+  var video = document.createElement('video');
+  video.src = "../../testvideo.mp4";
+  video.autoplay = true;
+  video.loop = true;
+
+  //var v = document.getElementById('v');
+  var canvas = document.getElementById('c');
+  var context = canvas.getContext('2d');
+
+  var cw = Math.floor(canvas.clientWidth / 1);
+  var ch = Math.floor(canvas.clientHeight / 1);
+  canvas.width = 800;
+  canvas.height = 600;
+
+  video.addEventListener('play', function(){
+      draw(this,canvas,context,video.videoWidth,video.videoHeight);
+  },false);
+video.playbackRate = 0.5
+},false);
+
+function random(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function draw(video,canvas,c,w,h) {
+  c.clearRect(0,0,canvas.width,canvas.height);
+  rot1++;
+  if (video.currentTime < 22.9) video.currentTime = 22.9;
+  if (video.currentTime > 24.1) video.currentTime = 22.9;
+
+  //if (rot1 > 100 && rot1 < 130) video.currentTime = random(0,500);
+  //if(video.paused || video.ended) return false;
+  c.save();
+  c.translate(250, 220);
+  c.rotate(rot1/12 * Math.PI / 180);
+  c.translate(-250, -220);
+  c.drawImage(video,0,0,w,h);
+  c.restore();
+  c.save();
+  c.globalAlpha = 1;
+  c.globalCompositeOperation = 'multiply';
+  c.transform(.5, .1, -.2, .75, 200, 200);
+  //c.translate(150, 350);
+  //c.rotate(-25 * Math.PI / 180);
+
+  c.drawImage(video,0,0,w,h);
+
+  c.restore();
+  setTimeout(draw,20,video,canvas,c,w,h);
+}
+</script>
+</html>
