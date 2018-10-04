@@ -59,30 +59,10 @@ authorLibs.windows = {
 
     authorLibs.windows.makeDiv({parent:upload, html:"SELECT", classes:'button_load',  click:function(){authorLibs.utils.fileUploadPre()}});
     authorLibs.windows.makeDiv({parent:upload, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('uploadbox')}});
-    var winList = [
-      {id:"anim",       position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
-      {id:"constraint", position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
-      {id:"file",       position:{x: 23, y: 52}, menu:{refresh:true, statsfile:true, uploadfile:true, renamefile:true, addtoproject:true, copyfile:true, deletefile:true, filter:true}, min:true, hide:false},
-      {id:"group",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
-      {id:"image",      position:{x:675, y: 52}, menu:{add:true, delete:true}, min:true},
-      {id:"json",       position:{x:  5, y: 52}, menu:{load:true, view:true, execute:true, format:true},min:false, hide:true},
-      {id:"layer",      position:{x: 23, y: 78}, menu:{add:true, delete:true}, min:true, hide:false},
-      {id:"learn",      position:{x:502, y:140}, menu:{}},
-      {id:"object",     position:{x:512, y: 52}, menu:{add:true, delete:true, copy:true, filter:true}, min:true},
-      {id:"output",     position:{x: 10, y:174}, menu:{reload:true}},
-      {id:"particle",   position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false,  hide:true},
-      {id:"path",       position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
-      {id:"properties", position:{x:838, y: 52}, menu:{add:true, delete:true}},
-      {id:"sample",     position:{x:349, y: 52}, menu:{sample:true}, min:true},
-      {id:"setting",    position:{x:186, y: 52}, menu:{}, min:true},
-      {id:"sound",      position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true},
-      {id:"shape",      position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
-      {id:"test",       position:{x:  5, y: 52}, menu:{add:true, delete:true, copy:true}, min:false, hide:true},
-      {id:"var",        position:{x:  5, y: 52}, menu:{add:true, delete:true}, min:false, hide:true}
-    ]
 
     var menuFile = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_file',    classes:'menu_items', html:'File', click:function(){authorLibs.menus.menuToggle('menu_file_dropdown')}});
     var dropFile = authorLibs.windows.makeDiv({parent:menuFile, id:'menu_file_dropdown',  classes:"menu_dropdown", style:'display:none;'});
+
     authorLibs.windows.makeDiv({parent:dropFile, html:'New',                    classes:'drop_items', click:function(){authorLibs.utils.loadDefault()}});
     authorLibs.windows.makeDiv({parent:dropFile, html:'Load File', id:'loader', classes:'drop_items', click:function(){authorLibs.utils.loadFromPhp('loadFilePHP', false)}});
     authorLibs.windows.makeDiv({parent:dropFile, html:'Save File', id:'saver',  classes:'drop_items', click:function(){
@@ -94,26 +74,17 @@ authorLibs.windows = {
 
     var menuWindows = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_windows', classes:'menu_items', html:'Windows', click:function(){authorLibs.menus.menuToggle('menu_windows_dropdown')}});
     var dropWin = authorLibs.windows.makeDiv({parent:menuWindows, id:'menu_windows_dropdown', classes:"menu_dropdown", style:'display:none;'});
-    winList.forEach(function(win){
+    authorLibs.rules.windows.forEach(function(win){
       authorLibs.windows.makeDiv({parent:dropWin,  classes:'drop_items', html:win.id.charAt(0).toUpperCase() +  win.id.slice(1), click:function(){authorLibs.menus.menuToggle(win.id+'bank')}});
     });
 
-    var themeList = [
-      {id:"Default", css:"default"},
-      {id:"Blue",    css:"blue"},
-      {id:"Green",   css:"green"}
-    ];
-
     var menuAutoBk = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_autobk',  classes:'menu_items', html:'AutoBack', click:function(){authorLibs.menus.menuToggle('menu_autobk_dropdown')}});
     var dropAutobk = authorLibs.windows.makeDiv({parent:menuAutoBk, id:'menu_autobk_dropdown',  classes:"menu_dropdown", style:'display:none;'});
-
-
     var menuTheme = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_theme',    classes:'menu_items', html:'Theme', click:function(){authorLibs.menus.menuToggle('menu_theme_dropdown')}});
     var dropTheme = authorLibs.windows.makeDiv({parent:menuTheme, id:'menu_theme_dropdown',  classes:"menu_dropdown", style:'display:none;'});
-    themeList.forEach(function(theme){
+    authorLibs.rules.themes.forEach(function(theme){
       authorLibs.windows.makeDiv({parent:dropTheme,  classes:'drop_items', html:theme.id, click:function(){authorLibs.windows.theme(theme.css)}});
     });
-
     authorLibs.windows.makeDiv({parent:projectHolder,  classes:"projectspacer"});
 
     var upload_json = authorLibs.windows.makeElement({type:'input', subtype:'file', parent:authorLibs.dom.parent, id:'upload_json', style:'display:none'});
@@ -122,7 +93,7 @@ authorLibs.windows = {
     upload_image.addEventListener('change', authorLibs.menus.loadImage, false);
     authorLibs.windows.makeDiv({parent:head, id:'titlelabel', classes:'titlecenter'});
 
-    winList.forEach(function(win){
+    authorLibs.rules.windows.forEach(function(win){
       var show      = win.hide ? "display:none" : "display:block";
       var bank      = authorLibs.windows.makeDiv({parent:authorLibs.dom.parent,  id:win.id + 'bank', classes:'window_movable',style:'left:'+win.position.x+'px; top:'+win.position.y+'px;'+show});
       var title     = authorLibs.windows.makeDiv({parent:bank,  id:win.id + 'mover', classes:'titlebar'});
@@ -245,12 +216,21 @@ authorLibs.windows = {
     return authorLibs.windows.makeElement(settings);
   },
 
+  makeVid: function(settings){
+    settings.type = 'video';
+    settings.autoplay = true;
+    settings.controls = true;
+    return authorLibs.windows.makeElement(settings);
+  },
+
   makeElement: function(settings){
     var element = document.createElement(settings.type);
+    if (settings.autoplay    !== undefined) element.autoplay     = settings.autoplay;
     if (settings.change      !== undefined) element.onchange     = settings.change;
     if (settings.checked     !== undefined) element.checked      = true;
     if (settings.classes     !== undefined) element.className    = settings.classes;
     if (settings.click       !== undefined) element.onclick      = settings.click;
+    if (settings.controls    !== undefined) element.controls     = settings.controls;
     if (settings.data        !== undefined){
       settings.data.forEach(function(subD){element.dataset[subD.id] = subD.val;})
     }

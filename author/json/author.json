@@ -56,7 +56,7 @@
     {"type":"soundstop",    "widgets":[{"field":"id",         "type":"sndlist"}]},
     {"type":"testpset",     "widgets":[
         {"field":"testp",      "type":"bool"},
-        {"field":"filter",     "type":"select",     "id":"filtertype", "display":"Select Type"},
+        {"field":"filter",     "type":"select",     "id":"filtertype", "display":"Select Type", "default":"object"},
         {"field":"id",         "type":"filterlink", "link":"filter"}
       ]
     },
@@ -74,8 +74,8 @@
       ]
     },
     {"type":"vis",          "widgets":[
+        {"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type", "default":"object"},
         {"field":"id",         "type":"filterlink", "link":"filter"},
-        {"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type"},
         {"field":"show",       "type":"bool"}
       ]
     }
@@ -96,111 +96,119 @@
   },
   "anims":[
     {"type":"console",      "widgets":[
-        {"field":"starttime", "type":"number"},
-        {"field":"text",      "type":"text"}
+        {"field":"starttime", "type":"number", "default":0},
+        {"field":"text",      "type":"text", "default":"Check the console."}
       ]
     },
     {"type":"fade",         "widgets":[
         {"field":"fromcurrent", "type":"bool"},
-        {"field":"starttime",   "type":"number"},
-        {"field":"endtime",     "type":"number"},
-        {"field":"filter",      "type":"select",     "id":"filtertype"},
+        {"field":"starttime",   "type":"number", "default":0},
+        {"field":"endtime",     "type":"number", "default":1000},
+        {"field":"filter",      "type":"select",     "id":"filtertype", "default": "object"},
         {"field":"id",          "type":"filterlink", "link":"filter"},
-        {"field":"startalpha",  "type":"number"},
-        {"field":"endalpha",    "type":"number"}
+        {"field":"startalpha",  "type":"number", "default":0},
+        {"field":"endalpha",    "type":"number", "default":1}
       ]
     },
     {"type":"flipbook",     "widgets":[
-        {"field":"starttime",   "type":"number"},
-        {"field":"filter",      "type":"select",     "id":"filtertype"},
+        {"field":"starttime",   "type":"number", "default":0},
+        {"field":"filter",      "type":"select",     "id":"filtertype", "default": "object"},
         {"field":"id",          "type":"filterlink", "link":"filter"},
-        {"field":"atlascell.x", "type":"number"},
-        {"field":"atlascell.y", "type":"number"}
+        {"field":"atlascell.x", "type":"number", "default":0},
+        {"field":"atlascell.y", "type":"number", "default":0}
       ]
     },
     {"type":"layerassign",  "widgets":[
-        {"field":"starttime",   "type":"number"},
-        {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type"},
+        {"field":"starttime",   "type":"number", "default":0},
+        {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type", "default": "object"},
         {"field":"id",          "type":"filterlink", "link":"filter"},
         {"field":"tolayer",     "type":"laylist",    "display":"To Layer"},
         {"field":"layerpos",    "type":"select",     "id":"layerpos", "display":"Layer Order"}
       ]
     },
     {"type":"loadinto",     "widgets":[
-        {"field":"starttime",   "type":"number"},
+        {"field":"starttime",   "type":"number", "default":0},
         {"field":"url",         "type":"text"},
         {"field":"vari",        "type":"text"}
       ]
     },
     {"type":"move",         "widgets":[
         {"field":"fromcurrent", "type":"bool"},
-        {"field":"starttime",   "type":"number"},
-        {"field":"endtime",     "type":"number"},
-        {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type"},
+        {"field":"starttime",   "type":"number", "default":0},
+        {"field":"endtime",     "type":"number", "default":1000},
+        {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type", "default": "object"},
         {"field":"id",          "type":"filterlink", "link":"filter"},
-        {"field":"startpos",    "type":"posxy",      "display":"Start Position"},
-        {"field":"endpos",      "type":"posxy",      "display":"End Position"},
-        {"field":"ease",        "type":"select",     "id":"easetype", "display":"Ease"}
+        {"field":"startpos",    "type":"posxy",      "display":"Start Position", "default":{"x":0,"y":0}},
+        {"field":"endpos",      "type":"posxy",      "display":"End Position", "default":{"x":100,"y":100}},
+        {"field":"ease",        "type":"select",     "id":"easetype", "display":"Ease", "default":"linear"}
       ]
     },
     {"type":"pause",        "widgets":[
-        {"field":"starttime", "type":"number"},
+        {"field":"starttime", "type":"number", "default":0},
         {"field":"id",        "type":"animlist"},
         {"field":"toggle",    "type":"bool"}
       ]
     },
     {"type":"play",         "widgets":[
-        {"field":"starttime", "type":"number"},
+        {"field":"starttime", "type":"number", "default":0},
         {"field":"id",        "type":"animlist"}
       ]
     },
     {"type":"pstart",       "widgets":[
-        {"field":"starttime", "type":"number"},
+        {"field":"starttime", "type":"number", "default":0},
         {"field":"id",        "type":"parlist"}
       ]
     },
     {"type":"scale",        "widgets":[
         {"field":"fromcurrent", "type":"bool"},
-        {"field":"starttime",   "type":"number"},
-        {"field":"endtime",     "type":"number"},
-        {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type"},
+        {"field":"starttime",   "type":"number", "default":0},
+        {"field":"endtime",     "type":"number", "default":1000},
+        {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type", "default": "object"},
         {"field":"id",          "type":"filterlink", "link":"filter"},
-        {"field":"startscale",  "type":"number"},
-        {"field":"endscale",    "type":"number"}
+        {"field":"startscale",  "type":"number", "default":1},
+        {"field":"endscale",    "type":"number", "default":2}
       ]
     },
     {"type":"sound",        "widgets":[
-        {"field":"starttime", "type":"number"},
+        {"field":"starttime", "type":"number", "default":0},
         {"field":"id",        "type":"sndlist"}
       ]
     },
     {"type":"soundstop",    "widgets":[
-        {"field":"starttime", "type":"number"},
+        {"field":"starttime", "type":"number", "default":0},
         {"field":"id",        "type":"sndlist"}
       ]
     },
     {"type":"testpset",     "widgets":[
         {"field":"testp",     "type":"bool"},
-        {"field":"starttime", "type":"number"},
-        {"field":"filter",    "type":"select",     "id":"filtertype"},
+        {"field":"starttime", "type":"number", "default":0},
+        {"field":"filter",    "type":"select",     "id":"filtertype", "default": "object"},
         {"field":"id",        "type":"filterlink", "link":"filter"}
       ]
     },
     {"type":"turn",         "widgets":[
         {"field":"fromcurrent", "type":"bool"},
-        {"field":"starttime",   "type":"number"},
-        {"field":"endtime",     "type":"number"},
-        {"field":"filter",      "type":"select",     "id":"filtertype"},
+        {"field":"starttime",   "type":"number", "default":0},
+        {"field":"endtime",     "type":"number", "default":1000},
+        {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type", "default": "object"},
         {"field":"id",          "type":"filterlink", "link":"filter"},
-        {"field":"startrot",    "type":"number"},
-        {"field":"endrot",      "type":"number"}
+        {"field":"startrot",    "type":"number", "default":0},
+        {"field":"endrot",      "type":"number", "default":180}
       ]
     },
     {"type":"vis",          "widgets":[
-        {"field":"starttime", "type":"number"},
-        {"field":"filter",    "type":"select", "id":"filtertype", "display":"Select Type"},
+        {"field":"starttime", "type":"number", "default":0},
+        {"field":"filter",    "type":"select", "id":"filtertype", "display":"Select Type", "default": "object"},
         {"field":"id",        "type":"filterlink", "link":"filter"},
         {"field":"show",      "type":"bool"}
+      ]
+    },
+    {"type":"videoplay",    "widgets":[
+        {"field":"video",     "type":"videodata"},
+        {"field":"play",    "type":"bool", "default":true},
+        {"field":"speed",     "type":"number", "default":1},
+        {"field":"timestart", "type":"number", "default":0},
+        {"field":"timeend",   "type":"number", "default":-1}
       ]
     }
   ],
@@ -384,6 +392,28 @@
         {"field":"position",  "type":"posxy" },
         {"field":"scale",     "type":"scale"}
       ]
+    },
+    "video":{
+      "widgets":[
+        {"field":"name",      "type":"text"},
+        {"field":"type",      "type":"select",  "id":"objecttype"},
+        {"field":"video",     "type":"videodata"},
+        {"field":"blend",     "type":"select",  "id":"composite"},
+        {"field":"group",     "type":"grplist"},
+        {"field":"parent.id", "type":"objlist"},
+        {"field":"show",      "type":"bool"},
+        {"field":"origin",    "type":"select",  "id":"objectorigin"},
+        {"field":"originxy",  "type":"posxy"},
+        {"field":"position",  "type":"posxy"},
+        {"field":"atlascell", "type":"cellxy"},
+        {"field":"scale",     "type":"scale"},
+        {"field":"testp",     "type":"bool",    "display":"Interactive"},
+        {"field":"clicklist", "type":"actions", "display":"Click/Touch Event", "dependson":"testp"},
+        {"field":"draglist",  "type":"actions", "display":"Drag Event",        "dependson":"testp"},
+        {"field":"droplist",  "type":"actions", "display":"Drop Event",        "dependson":"testp"},
+        {"field":"truelist",  "type":"actions", "display":"Conditional True",  "dependson":"testp"},
+        {"field":"falselist", "type":"actions", "display":"Conditional False", "dependson":"testp"}
+      ]
     }
   },
   "particle":{
@@ -438,7 +468,7 @@
     "justify":{"list":["left", "center", "right"]},
     "layerpos":{"list":["top", "bottom"]},
     "objectorigin":{"list":["upper_left", "center"]},
-    "objecttype":{"list":["image", "shape"]},
+    "objecttype":{"list":["image", "shape","video"]},
     "operationtype":{"list":["add", "sub","set"]},
     "vartype":{"list":["number", "string", "boolean"]},
     "particletype":{"list":["flow","burst"]},
@@ -467,6 +497,11 @@
       {"field":"url",     "type":"text"}
     ]
   },
+  "themes":[
+    {"id":"Default", "css":"default"},
+    {"id":"Blue",    "css":"blue"},
+    {"id":"Green",   "css":"green"}
+  ],
   "tests":[
     {"field":"name",      "type":"text"},
     {"field":"active",    "type":"bool"},
@@ -476,6 +511,13 @@
     {"field":"truelist",  "type":"actions", "display":"When True"},
     {"field":"falselist", "type":"actions", "display":"When False"}
   ],
+  "video":{
+    "widgets":[
+      {"field":"name",     "type":"text"},
+      {"field":"url",      "type":"text"},
+      {"field":"deferred", "type":"bool"}
+    ]
+  },
   "widgets":{
     "bool":"boolean",
     "color":"rgba",
@@ -486,6 +528,25 @@
     "xy":{"x":"number","y":"number"}
   },
   "windows":[
-    {"type":"object"}
+    {"id":"anim",       "position":{"x":  5, "y": 52}, "menu":{"add":true,"delete":true,"copy":true}, "min":false, "hide":true},
+    {"id":"constraint", "position":{"x":  5, "y": 52}, "menu":{"add":true,"delete":true,"copy":true}, "min":false, "hide":true},
+    {"id":"file",       "position":{"x": 23, "y": 52}, "menu":{"refresh":true,"statsfile":true,"uploadfile":true,"renamefile":true,"addtoproject":true,"copyfile":true,"deletefile":true,"filter":true}, "min":true, "hide":false},
+    {"id":"group",      "position":{"x":  5, "y": 52}, "menu":{"add":true,"delete":true}, "min":false, "hide":true},
+    {"id":"image",      "position":{"x":675, "y": 52}, "menu":{"add":true,"delete":true}, "min":true,  "hide":false},
+    {"id":"json",       "position":{"x":  5, "y": 52}, "menu":{"load":true,"view":true,"execute":true,"format":true}, "min":false,  "hide":true},
+    {"id":"layer",      "position":{"x": 23, "y": 78}, "menu":{"add":true,"delete":true}, "min":true,  "hide":false},
+    {"id":"learn",      "position":{"x":502, "y":140}, "menu":{}},
+    {"id":"object",     "position":{"x":512, "y": 52}, "menu":{"add":true, "delete":true, "copy":true, "filter":true}, "min":true},
+    {"id":"output",     "position":{"x": 10, "y":174}, "menu":{"reload":true}},
+    {"id":"particle",   "position":{"x":  5, "y": 52}, "menu":{"add":true, "delete":true}, "min":false,  "hide":true},
+    {"id":"path",       "position":{"x":  5, "y": 52}, "menu":{"add":true, "delete":true}, "min":false, "hide":true},
+    {"id":"properties", "position":{"x":838, "y": 52}, "menu":{"add":true, "delete":true}},
+    {"id":"sample",     "position":{"x":349, "y": 52}, "menu":{"sample":true}, "min":true},
+    {"id":"setting",    "position":{"x":186, "y": 52}, "menu":{}, "min":true},
+    {"id":"sound",      "position":{"x":  5, "y": 52}, "menu":{"add":true, "delete":true}, "min":false, "hide":true},
+    {"id":"shape",      "position":{"x":  5, "y": 52}, "menu":{"add":true, "delete":true, "copy":true}, "min":false, "hide":true},
+    {"id":"test",       "position":{"x":  5, "y": 52}, "menu":{"add":true, "delete":true, "copy":true}, "min":false, "hide":true},
+    {"id":"video",      "position":{"x":  5, "y": 52}, "menu":{"add":true, "delete":true}, "min":false,  "hide":true},
+    {"id":"var",        "position":{"x":  5, "y": 52}, "menu":{"add":true, "delete":true}, "min":false, "hide":true}
   ]
 }

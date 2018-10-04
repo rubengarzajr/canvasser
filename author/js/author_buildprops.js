@@ -43,7 +43,7 @@ authorLibs.buildProp = {
           authorLibs.buildProp.setText({parent:pDiv, widthClass:'w50', obj:thisProp, widget:widget, inputClass:widget.css,
             value:thisProp[widget.field], type:'anims', path:widget.field});
         }
-        if (widget.type === "number") authorLibs.buildProp.setNumber({parent:pDiv, obj:thisProp, type:'anims', widget:widget, path:widget.field, value:val});
+        if (widget.type === "number") authorLibs.buildProp.setNumber({parent:pDiv, obj:thisProp, type:'anims', widget:widget, path:widget.field, value:val, default:widget.default});
         if (widget.type === "bool")   authorLibs.buildProp.setBoolean({parent:pDiv, obj:thisProp, type:'anims', widget:widget, path:widget.field, value:val});
         if (widget.type === "timelist"){
           var wlist = [];
@@ -82,7 +82,7 @@ authorLibs.buildProp = {
             value:thisProp[widget.field], type:'constraints', path:widget.field});
         }
 
-        if (widget.type === "number") authorLibs.buildProp.setNumber({parent:pDiv, obj:thisProp, type:'constraints', widget:widget, path:widget.field, value:val});
+        if (widget.type === "number") authorLibs.buildProp.setNumber({parent:pDiv, obj:thisProp, type:'constraints', widget:widget, path:widget.field, value:val, default:widget.default});
         if (widget.type === "bool")  authorLibs.buildProp.setBoolean({parent:pDiv, obj:thisProp, type:'constraints', widget:widget, path:widget.field, value:val});
         if (widget.type === "driverlist"){
           var wlist = [];
@@ -278,13 +278,25 @@ authorLibs.buildProp = {
       if (thisProp.type === 'number'){
         if (isNaN(thisProp.value)) thisProp.value = 0;
         authorLibs.buildProp.setNumber({parent:pDiv, obj:thisProp, type:'vars', widget:{field:'value'},
-          path:'value', value:thisProp.value});
+          path:'value', value:thisProp.value, default:widget.default});
       }
       if (thisProp.type === 'string'){
         authorLibs.buildProp.setText({parent:pDiv, widthClass:'w50', obj:thisProp, widget:{field:'value'},
           inputClass:'w200', value:thisProp.value, type:'vars', path:'value'});
       }
     }
+
+    if (type==='videos'){
+      var pDiv = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
+      var id   = authorLibs.utils.getSubProp(thisProp, 'id');
+
+      authorLibs.buildProp.makeWidgets({list:authorLibs.rules.video.widgets,
+        set:{list:pathList, parent:pDiv, obj:thisProp, path:'path', type:'videos'}});
+
+      authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Video Preview'});
+      authorLibs.windows.makeVid({parent:pDiv, classes:'imagescale', src:thisProp.url});
+    }
+
     authorLibs.menus.updateSelectionWindow(type,id);
   },
 
@@ -301,7 +313,7 @@ authorLibs.buildProp = {
         wPath += '.current';
       }
       var val = authorLibs.utils.getSubProp(obj.set.obj, wPath);
-      var defaults = Object.assign({}, obj.set, {widget:subWidget, path:wPath, value:val});
+      var defaults = Object.assign({}, obj.set, {widget:subWidget, path:wPath, value:val, default:subWidget.default});
       if (subWidget.type === "actions")    authorLibs.buildProp.setAction(defaults);
       if (subWidget.type === 'animlist')   authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'anims'}));
       if (subWidget.type === 'anmlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'anims'}));
@@ -337,6 +349,7 @@ authorLibs.buildProp = {
       if (subWidget.type === 'text')        authorLibs.buildProp.setText(Object.assign(defaults, {widthClass:'w100'}));
       if (subWidget.type === 'textarea')    authorLibs.buildProp.setTextArea(Object.assign(defaults, {widthClass:'w100'}));
       if (subWidget.type === 'varlist')     authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'vars'}));
+      if (subWidget.type === "videodata")   authorLibs.buildProp.setVideo(defaults);
     });
   },
 
@@ -389,8 +402,8 @@ authorLibs.buildProp = {
     if (objGet.length === 0) return;
     if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
     objGet[0][listType].push(command);
-    authorLibs.buildProp.get(type,objGet[0].id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
+    authorLibs.buildProp.updateSubItem(objGet[0], type, command.type, listType+'.'+(objGet[0][listType].length-1)+'.type');
+    authorLibs.buildProp.updateUI(objGet[0], type);
   },
 
   moveprop: function(type,id,path,moveto){
@@ -485,11 +498,19 @@ authorLibs.buildProp = {
     var flipTest = authorLibs.authorData.images.filter(function(img){ return img.id === obj.obj.image})[0];
     if (flipTest){
       if(flipTest.atlas){
-        var pos = {x:authorLibs.utils.getSubProp(obj.obj, 'atlascell.x'), y:authorLibs.utils.getSubProp(obj.obj, 'atlascell..y')};
-        authorLibs.buildProp.setNumber({parent:div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.x'}, path:'atlascell.x', value:pos.x});
-        authorLibs.buildProp.setNumber({parent:div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.y'}, path:'atlascell.y', value:pos.y});
+        var pos = {x:authorLibs.utils.getSubProp(obj.obj, 'atlascell.x'), y:authorLibs.utils.getSubProp(obj.obj, 'atlascell.y')};
+        authorLibs.buildProp.setNumber({parent:div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.x'}, path:'atlascell.x', value:pos.x, default:widget.default});
+        authorLibs.buildProp.setNumber({parent:div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.y'}, path:'atlascell.y', value:pos.y, default:widget.default});
       }
     }
+  },
+
+  setVideo: function(obj){
+    var vidList = authorLibs.buildProp.listIdsNames('videos');
+    var div     = authorLibs.windows.makeDiv({parent:obj.parent});
+    authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100', html:obj.widget.field});
+    authorLibs.buildProp.setSelect({parent:div, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}, object:obj.obj.id, type:obj.type,
+      list:vidList, defaultId:obj.obj[obj.widget.field], path:obj.widget.field});
   },
 
   listIdsNames: function(filter){
@@ -557,7 +578,12 @@ authorLibs.buildProp = {
   },
 
   setNumber: function(obj){
-    if (obj.value === undefined) obj.value = 0;
+    // THIS IS ONLY FOR DISPLAY
+    if (obj.value === undefined) {
+      obj.value = 0;
+      //if (obj.default === undefined) obj.value = 0;
+      //else obj.value = obj.default;
+    }
     var div = authorLibs.windows.makeDiv({parent:obj.parent});
     authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100',
       html:(obj.widget.display ? obj.widget.display : obj.widget.field)});
@@ -694,25 +720,15 @@ authorLibs.buildProp = {
       authorLibs.lists.fileManager.forEach(function(file){
         var list = [];
         if (file.type === 'json'){
-
           requestJson(file, file.url, addToProp)
-
-
-
         }
-
       });
-
-
     },
 
     updateActionList: function(domElement, objectId, type, paramPath){
       var item = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
       var prop = authorLibs.utils.getSubProp(item, paramPath);
       authorLibs.buildProp.updateItem(domElement, objectId, type, paramPath);
-      var newRule = authorLibs.rules.actions.filter(function(ruleName){
-        return ruleName.elementType === domElement.value}
-      )[0];
     },
 
     updateItem: function(domElement, objectId, type, paramPath){
@@ -721,11 +737,35 @@ authorLibs.buildProp = {
       if (newVal === '---NONE---')        newVal = undefined;
       var path = authorLibs.utils.getSubProp( authorLibs.authorData, type);
       var objGet = path.filter(function(finder){return (finder.id === objectId);})[0];
+
       authorLibs.utils.setSubProp(objGet, paramPath, newVal);
-      authorLibs.buildProp.get(type, objGet.id);
+      authorLibs.buildProp.updateSubItem(objGet, type, newVal, paramPath);
+      authorLibs.buildProp.updateUI(objGet, type);
+    },
+
+    updateSubItem: function(objGet, type, newVal, paramPath){
+      if (authorLibs.rules[type] === undefined) return;
+      var subRule = authorLibs.rules[type].filter(function(rule){
+        return rule.type === newVal}
+      )[0];
+      if (subRule !== undefined){
+        subRule.widgets.forEach(function(widget){
+          if (widget.default !== undefined) {
+            var newPath = paramPath.substr(0, paramPath.lastIndexOf("."));
+            authorLibs.utils.setSubProp(objGet, newPath+'.'+widget.field, widget.default);
+          }
+        })
+      }
+    },
+
+    updateUI(obj, type){
+      authorLibs.buildProp.get(type, obj.id);
       authorLibs.menus.update(type);
       authorLibs.menus.update('layers');
       restartCanvasser("sample", authorLibs.authorData, "string");
     }
+
+
+
 
 }

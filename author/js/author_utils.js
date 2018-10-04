@@ -552,7 +552,7 @@ authorLibs.utils = {
       if (obj[arr[0]] === undefined) obj[arr[0]] = {};
       obj = obj[arr.shift()];
     }
-    obj[arr[0]] = (typeof(val) === "boolean" ? val : (isNaN(val) ? val : (val.indexOf(".")==-1)? parseInt(val) : parseFloat(val)));
+    obj[arr[0]] = typeof(val) === "boolean" ? val : isNaN(val) ? val : typeof(val) === "number" ? val : val.indexOf(".")==-1 ? parseInt(val) : parseFloat(val);
   },
 
   togglegroup: function(domElement, objectId, type, paramPath, groupName){

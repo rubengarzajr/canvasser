@@ -10,7 +10,7 @@ function initCanvasser(vari, datafile, dataForm, overrides){
 }
 
 function canvasser(vari, interactiveData, dataForm, overrides){
-  this.version  = '1.4.1';
+  this.version  = '1.4.2';
   var act       = {
     actionList   : [],
     dragging     : null,
@@ -26,7 +26,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     player       : [],
     prevPosition : {x:0, y:0},
     soundList    : {},
-    touch        : []
+    touch        : [],
+    videoList    : {}
   };
 
   var ease = new Ease();
@@ -272,6 +273,14 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       }
     });
 
+    if (act.data.videos === undefined) act.data.videos = [];
+    act.data.videos.forEach(function(video){
+      if (video.deferred) {
+        act.videoList[video.id] = {deferred:true};
+        return;
+      }
+      loadVideo(video, null, false);
+    });
 
     if (act.data.anims !== undefined){
       act.data.anims.forEach(function(anim){
@@ -356,7 +365,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   }
 
   function loop(){
-
     act.data.tests.forEach(function(test){
       if (!test.active) return;
       tests(test);
@@ -524,6 +532,15 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
             if (animOb !== undefined) animOb.testp = anim.testp
           }
+          anim.delete = true;
+        }
+        if (anim.type === "videoplay"){
+          //TODO: Control playing
+          console.log(act.videoList[anim.video])
+          console.log(act.videoList[anim.video].play)
+          act.videoList[anim.video].play = true;
+          act.videoList[anim.video].loop = true;
+          console.log(act.videoList[anim.video].play)
           anim.delete = true;
         }
         if (anim.type === "vis"){
@@ -796,6 +813,63 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           }
         }
       }
+
+      if (obj.type === "video" && obj.show){
+        if (act.videoList[obj.video] === undefined) return;
+        obj.parentTransform = {position:{x:0,y:0}, scale:1, rotation:0};
+        if (obj.parent !== undefined){
+          if (obj.parent.object !== undefined){
+            obj.parentTransform = {
+              position:{x: obj.parent.object.position.current.x, y: obj.parent.object.position.current.y},
+              scale:obj.parent.object.scale.current,
+              rotation:obj.parent.object.rotation
+            };
+          }
+        }
+
+        var pos = {
+          x:obj.position.current.x * obj.parentTransform.scale + obj.parentTransform.position.x,
+          y:obj.position.current.y * obj.parentTransform.scale + obj.parentTransform.position.y
+        };
+        if (obj.scale.current === 0 || obj.scale.current === NaN || obj.scale.current < 0) {
+          obj.scale.current = 0.01;
+        }
+        if (obj.originxy           === undefined) obj.originxy = {current:{x:0, y:0}};
+        if (obj.originxy.current   === undefined) obj.originxy.current = {x:0, y:0};
+        if (obj.originxy.current.x === undefined) obj.originxy.current.x = 0;
+        if (obj.originxy.current.y === undefined) obj.originxy.current.y = 0;
+        var oxy = {x:obj.originxy.current.x, y:obj.originxy.current.y};
+        if (obj.origin === "center") {
+          if (atlas){
+              oxy ={"x":-Math.floor((atlas.cellwidth/2*obj.scale.current)), "y":-Math.floor((atlas.cellheight/2*obj.scale.current))};
+          } else {
+            oxy = {
+              "x":-(Math.floor(act.videoList[obj.image].imageData.naturalWidth  / 2 * obj.scale.current * obj.parentTransform.scale)),
+              "y":-(Math.floor(act.videoList[obj.image].imageData.naturalHeight / 2 * obj.scale.current * obj.parentTransform.scale))
+            };
+          }
+        } else {
+          oxy = {
+            "x":-(Math.floor(obj.originxy.current.x * obj.scale.current)),
+            "y":-(Math.floor(obj.originxy.current.y * obj.scale.current))
+          };
+
+        }
+        if (isNaN(pos.x)){console.log("x NaN"); pos.x = 0;}
+        if (isNaN(pos.y)){console.log("y NaN"); pos.y = 0;}
+
+        if (obj.opacity === undefined) obj.opacity = {current:1};
+        act.context.save();
+        act.context.globalAlpha = obj.opacity.current;
+        if (obj.blend) act.context.globalCompositeOperation = obj.blend;
+        act.context.translate(pos.x, pos.y);
+        act.context.rotate(obj.rotation);
+        act.context.translate(oxy.x, oxy.y);
+        act.context.scale(obj.scale.current * obj.parentTransform.scale, obj.scale.current * obj.parentTransform.scale);
+
+        act.context.drawImage(act.videoList[obj.video], 0, 0, act.videoList[obj.video].videoWidth, act.videoList[obj.video].videoHeight);
+        act.context.restore();
+      }
     }
 
     pManager.update();
@@ -1013,6 +1087,17 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         delete act.imageList[deferred].deferredStart;
       }
     };
+  }
+
+  function loadVideo(video, deferred, loadNew){
+    if (act.videoList[video.id] === undefined){
+      act.videoList[video.id] = document.createElement('video');
+      act.videoList[video.id].src = video.url;
+      act.videoList[video.id].autoplay = true;
+      act.videoList[video.id].controls = true;
+      //document.body.appendChild(act.videoList[video.id]);
+
+    }
   }
 
   function modVal(operation, startVal, val){

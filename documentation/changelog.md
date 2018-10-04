@@ -5,15 +5,18 @@ Bugs:
 - responsive broke text entry (no longer aligned)
 - Files / rename not hooked up
 - Report should use getSubProp
-- Adding a property and showing 0 in the editor should set a zero.
+- Add defaults to objects - currently works for anims but not objects. Broken in buildprops addaction
 
 Features:
 - Load/Save File manage to Box/Dropbox/Google Drive.
 - Load Autoback
 - Add Tooltip/Instructions to use variable in text shape with {{ var_name }}
 - use anchor links to restore page user was last on before leaving
+- Add an update on change button (default to true)
+
 
 ## Changelog:
+- 2018-10-04 Added defaults for animation timelist commands.
 - 2018-09-24 Added fill and stroke to arc shape.
 - 2018-09-24 Fixed shape start angle to default to 0.
 - 2018-09-24 Fixed shape list not sorted alphabetically.

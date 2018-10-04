@@ -57,6 +57,7 @@ authorLibs.menus = {
     if (type === 'sounds')      authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, url:authorLibs.externalsPath});
     if (type === 'tests')       authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, active:true});
     if (type === 'vars')        authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, value:0});
+    if (type === 'videos')      authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, url:authorLibs.externalsPath});
 
     authorLibs.menus.updateMenu(type);
     if (type === 'objects' || type === 'particles') authorLibs.menus.updateMenu('layers');
@@ -298,7 +299,7 @@ authorLibs.menus = {
 
     authorLibs.authorData[type].forEach(function(menuItem, idx){
       if (type === 'anims'  || type === 'constraints' || type === 'groups' || type === 'particles'
-       || type === 'shapes' || type === 'sounds'      || type === 'tests'  || type === 'vars'){
+       || type === 'shapes' || type === 'sounds'      || type === 'tests'  || type === 'vars' || type === 'videos'){
         var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.buildProp.get(type, menuItem.id)}});
         var td  = authorLibs.windows.makeTd({parent:tr, width:'100%', style:'font-size:1.3em;', html:menuItem.name });
       }

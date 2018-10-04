@@ -123,13 +123,13 @@ function initAuthorCanvasser(vari, datafile, dataForm){
   window.setInterval(function(){
     localSave();
   }, 60000*authorLibs.autominutes);
-  authorLibs.windows.build();
-  learning('load', 'welcome');
   authorLibs.utils.requestJson(authorLibs.externalsPath + "json/author.json", setRules);
   authorLibs.windows.theme('default');
 
   function setRules(data){
     authorLibs.rules  = data;
+    authorLibs.windows.build();
+    learning('load', 'welcome');
     if (authorLibs.defaultJSONobj) initEdit(authorLibs.defaultJSON);
     else authorLibs.utils.requestJson(authorLibs.defaultJSON, initEdit);
   }
