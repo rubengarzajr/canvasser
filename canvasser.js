@@ -2,6 +2,21 @@
 
 function initCanvasser(vari, datafile, dataForm, overrides){
   if (overrides == undefined) overrides = [];
+
+  if (typeof window[vari] === 'object' ){
+    if (typeof window[vari].act === 'object' ){
+      if (window[vari].act.videoList !== undefined){
+        for (var property1 in window[vari].act.videoList) {
+          window[vari].act.videoList[property1].pause();
+        }
+      }
+      if (window[vari].act.soundList !== undefined){
+        for (var property1 in window[vari].act.soundList) {
+          window[vari].act.soundList[property1].pause();
+        }
+      }
+    }
+  }
   if (window[vari]) window[vari].act.loop = false;
   var oldPos = window[vari] ? {x:window[vari].act.position.x, y:window[vari].act.position.y} : {x:-1,y:-1};
   window[vari] = new canvasser(vari, datafile, dataForm, overrides);
@@ -535,12 +550,14 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           anim.delete = true;
         }
         if (anim.type === "videoplay"){
-          //TODO: Control playing
-          console.log(act.videoList[anim.video])
-          console.log(act.videoList[anim.video].play)
-          act.videoList[anim.video].play = true;
-          act.videoList[anim.video].loop = true;
-          console.log(act.videoList[anim.video].play)
+          if (anim.video != undefined){
+            if (anim.play) act.videoList[anim.video].play();
+            else act.videoList[anim.video].pause();
+            if (anim.loop) act.videoList[anim.video].loop = true;
+            checkSet(act.videoList[anim.video], 'currentTime', anim.timestart,0);
+            checkSet(act.videoList[anim.video], 'playbackRate', anim.speed,0,10);
+            checkSet(act.videoList[anim.video], 'volume', anim.volume,0,1);
+          }
           anim.delete = true;
         }
         if (anim.type === "vis"){
@@ -840,14 +857,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (obj.originxy.current.y === undefined) obj.originxy.current.y = 0;
         var oxy = {x:obj.originxy.current.x, y:obj.originxy.current.y};
         if (obj.origin === "center") {
-          if (atlas){
-              oxy ={"x":-Math.floor((atlas.cellwidth/2*obj.scale.current)), "y":-Math.floor((atlas.cellheight/2*obj.scale.current))};
-          } else {
-            oxy = {
-              "x":-(Math.floor(act.videoList[obj.image].imageData.naturalWidth  / 2 * obj.scale.current * obj.parentTransform.scale)),
-              "y":-(Math.floor(act.videoList[obj.image].imageData.naturalHeight / 2 * obj.scale.current * obj.parentTransform.scale))
-            };
-          }
+          oxy = {
+            "x":-(Math.floor(act.videoList[obj.video].videoWidth  / 2 * obj.scale.current * obj.parentTransform.scale)),
+            "y":-(Math.floor(act.videoList[obj.video].videoHeight / 2 * obj.scale.current * obj.parentTransform.scale))
+          };
         } else {
           oxy = {
             "x":-(Math.floor(obj.originxy.current.x * obj.scale.current)),
@@ -1091,12 +1104,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
   function loadVideo(video, deferred, loadNew){
     if (act.videoList[video.id] === undefined){
-      act.videoList[video.id] = document.createElement('video');
+      act.videoList[video.id]     = document.createElement('video');
       act.videoList[video.id].src = video.url;
-      act.videoList[video.id].autoplay = true;
-      act.videoList[video.id].controls = true;
-      //document.body.appendChild(act.videoList[video.id]);
-
     }
   }
 
@@ -1432,6 +1441,17 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       if (obj.id !== action.id) return false;
     }
     return true;
+  }
+
+  function checkSet(check, prop, set, min, max){
+    if (check === undefined || prop === undefined || set === undefined) return;
+    if (min !== undefined){
+      if (set < min) set = min;
+    }
+    if (max !== undefined){
+      if (set > max) set = max;
+    }
+    check[prop] = set;
   }
 
   function copyObj(object, newObj){

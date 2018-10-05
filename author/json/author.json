@@ -204,11 +204,14 @@
       ]
     },
     {"type":"videoplay",    "widgets":[
+        {"field":"starttime", "type":"number", "default":0},
         {"field":"video",     "type":"videodata"},
-        {"field":"play",    "type":"bool", "default":true},
+        {"field":"play",      "type":"bool", "default":true},
+        {"field":"loop",      "type":"bool", "default":false},
         {"field":"speed",     "type":"number", "default":1},
         {"field":"timestart", "type":"number", "default":0},
-        {"field":"timeend",   "type":"number", "default":-1}
+        {"field":"timeend",   "type":"number", "default":-1},
+        {"field":"volume",    "type":"number", "default":1}
       ]
     }
   ],
