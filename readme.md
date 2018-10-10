@@ -6,6 +6,7 @@
 ## Quick Start
 Copy the files to a web server / LAMP / MAMP / WAMP.
 
+### HTACCESS Files
 Create a .htaccess file in your canvasser directory.
 ```
 Options +FollowSymLinks
@@ -14,13 +15,6 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ author/php/api.php [L]
-```
-
-If you are running Ubuntu or some other Linux distro - you might need to enable mod_rewrite.
-
-```
-sudo a2enmod rewrite
-sudo service restart apache2
 ```
 
 Also, you may need to allow your .htaccess file to rewrite rules.
@@ -43,6 +37,37 @@ Edit the VirtualHost by adding the <Directory> contents.
 
 ```
 
+### Apache Settings
+If you are running Ubuntu or some other Linux distro - you might need to enable mod_rewrite.
+
+```
+sudo a2enmod rewrite
+sudo service restart apache2
+```
+
+### PHP Settings
+
+You may also need to increase the max post and upload file size inside your PHP.INI file.
+For example - LAMP would need to sudo gedit /etc/php/7.0/apache2/php.ini
+
+Then search for:
+```
+upload_max_filesize
+```
+and then change it to a larger value like:
+```
+upload_max_filesize = 10M
+```
+
+Also, you need to change
+```
+post_max_size
+```
+
+to match the value you put in max upload_max_filesize
+```
+post_max_size = 10M
+```
 Restart your apache service.
 ```
 sudo service restart apache2

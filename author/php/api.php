@@ -26,9 +26,10 @@ if (empty($contentUrl)){
 
 $contentUrl .= $contentModifier;
 
-$supportedFiles = array('gif','html','jpg','json','mp3','png','svg','wav');
+$supportedFiles = array('gif','html','jpg','json','mp3','png','svg','wav','mp4');
 $imageFiles     = array('gif','jpg','svg','png');
 $soundFiles     = array('mp3','wav');
+$videoFiles     = array('mp4');
 
 $url   = preg_replace('/\?.*/', '', $_SERVER['REQUEST_URI']);
 $path  = explode("/",$url);
@@ -60,12 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $pathParts     = pathinfo($fileNameFull);
     $fileName      = $pathParts['filename'];
     $extension     = $pathParts['extension'];
-    $data          = $_POST['data'];
     $outType       = $extension;
 
-    if (!in_array($extension,$supportedFiles)){die('{"error":"File type not supported: ' . $fileNameFull . ' ' . $extension . '."}');}
+    if (empty($fileNameFull)) {die('[{"error":"Upload Failed: File might too large or permissions incorrectly set?"}]');}
+
+    if (!in_array($extension,$supportedFiles)){die('[{"error":"File type not supported: \"' . $extension . '\" in ' . $fileNameFull . ' ."}]');}
     if (in_array($extension,$imageFiles)){$outType = 'image';}
     if (in_array($extension,$soundFiles)){$outType = 'sound';}
+    if (in_array($extension,$videoFiles)){$outType = 'video';}
 
     $returnOut = array();
 
@@ -86,15 +89,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
       array_push($returnOut, '{"project": "' . $project . '", "url":"' . $contentUrl . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileName .  '.html", "type":"html"}');
     }
 
-    error_log($contentPath . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileNameFull);
-    if (file_exists( $contentPath . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileNameFull)) {
+    if (file_exists($contentPath . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileNameFull)) {
       deleteFileBk($contentPath, $contentDeleted, $project, $fileNameFull);
     }
+
+    error_log($_FILES["fileToUpload"]["tmp_name"],0);
+    error_log($projectPath . DIRECTORY_SEPARATOR . $fileNameFull ,0);
 
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $projectPath . DIRECTORY_SEPARATOR . $fileNameFull)) {
       array_push($returnOut, '{"project": "' . $project . '", "url":"' . $contentUrl . DIRECTORY_SEPARATOR . $project . DIRECTORY_SEPARATOR . $fileNameFull .  '", "type":"' . $outType . '"}');
     } else {
-      array_push($returnOut, '{"error":"' . $_FILES["fileToUpload"]["tmp_name"] . ' not saved!"}');
+      array_push($returnOut, '{"error":"' . $fileNameFull . ' not saved!"}');
+      error_log('Error: ' . $fileNameFull . ' not saved!' , 0);
     }
     echo '[';
     for ($cnt = 0; $cnt < count($returnOut); $cnt++) {
@@ -115,6 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $filterArray = $imageFiles;
     } else if ($getType == 'sound') {
       $filterArray = $soundFiles;
+    } else if ($getType == 'video') {
+      $filterArray = $videoFiles;
     } else {
       $filterArray = array(clean($_REQUEST['type']));
     }
@@ -135,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 }
 
 function arrayToJSON($array, $path, $url,  $filterArray){
-  global $supportedFiles, $imageFiles, $soundFiles;
+  global $supportedFiles, $imageFiles, $soundFiles, $videoFiles;
   echo '[';
   $cnt   = count($array);
   $first = True;
@@ -150,6 +158,7 @@ function arrayToJSON($array, $path, $url,  $filterArray){
     if (!in_array($type,$filterArray)){continue;}
     if (in_array($type,$imageFiles)){$outType = 'image';}
     if (in_array($type,$soundFiles)){$outType = 'sound';}
+    if (in_array($type,$videoFiles)){$outType = 'video';}
 
     if ($first){
       $first = False;

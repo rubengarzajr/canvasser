@@ -80,7 +80,7 @@ authorLibs.menus = {
       authorLibs.menus.update('paths');
 
       var justName = itemToAdd.id.replace(/\.[^/.]+$/, "");
-      if (itemToAdd.type === 'image' || itemToAdd.type === 'sound'){
+      if (itemToAdd.type === 'image' || itemToAdd.type === 'sound' || itemToAdd.type === 'video'){
         var existing = authorLibs.authorData[itemToAdd.type+'s'].filter(function(item){
           return item.name === justName;
         });
@@ -224,6 +224,7 @@ authorLibs.menus = {
     if (!toUp || toUp === 'shapes')      authorLibs.menus.updateMenu('shapes');
     if (!toUp || toUp === 'tests')       authorLibs.menus.updateMenu('tests');
     if (!toUp || toUp === 'vars')        authorLibs.menus.updateMenu('vars');
+    if (!toUp || toUp === 'videos')      authorLibs.menus.updateMenu('videos');
   },
 
   updateMenu: function(type){

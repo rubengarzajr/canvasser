@@ -368,7 +368,11 @@ authorLibs.utils = {
       if (xhr.status === 200) {
         var res = JSON.parse(xhr.responseText);
         res.forEach(function(item){
-          document.getElementById('notice_content').innerHTML += item.project + ': ' + item.url + '<br>';
+          if (item.error !== undefined){
+            document.getElementById('notice_content').innerHTML += 'ERROR: ' + item.error + '<br>';
+          } else {
+            document.getElementById('notice_content').innerHTML += item.project + ': ' + item.url + '<br>';
+          }
         });
         authorLibs.utils.loadFromPhp('refreshfiles', true);
       }
@@ -385,7 +389,7 @@ authorLibs.utils = {
   },
 
   prepJson: function(json){
-    var needNames = ['anims','constraints','groups','images','objects','particles','paths','shapes','sounds','tests','vars'];
+    var needNames = ['anims','constraints','groups','images','objects','particles','paths','shapes','sounds','tests','vars','videos'];
     needNames.forEach(function(type){
       if (json[type] === undefined) return;
         json[type].forEach(function(item){
@@ -442,7 +446,7 @@ authorLibs.utils = {
         if (item.project.indexOf(fileFilter) === -1) return;
       }
       authorLibs.windows.makeDiv({parent:filebox, html:item.project, classes:'load_project'});
-      var subs = ['json','image','sound','html'];
+      var subs = ['json','image','sound','html','video'];
       subs.forEach(function(sub){
         if (item[sub] === undefined) return;
         if (item[sub].length === 0) return;
@@ -534,7 +538,11 @@ authorLibs.utils = {
     report.forEach(function(subport){
       for (var key in subport) {
         var obj = subport[key];
+        if (key === 'url'){
+          reportOut += key +' : <a style="color:white" target="_blank" href="' + obj + '">' + obj + '</a><br>';
+        }else{
           reportOut += key + ": " + obj + '<br>';
+        }
       }
       reportOut += '<br>';
     });

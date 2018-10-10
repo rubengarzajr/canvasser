@@ -60,7 +60,8 @@ authorLibs.windows = {
     authorLibs.windows.makeDiv({parent:upload, html:"SELECT", classes:'button_load',  click:function(){authorLibs.utils.fileUploadPre()}});
     authorLibs.windows.makeDiv({parent:upload, html:"CANCEL", classes:'button_load',  click:function(){authorLibs.menus.menuToggle('uploadbox')}});
 
-    var menuFile = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_file',    classes:'menu_items', html:'File', click:function(){authorLibs.menus.menuToggle('menu_file_dropdown')}});
+    var menuFile = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_file',    classes:'menu_items', html:'File',
+      click:function(){authorLibs.menus.menuToggle('menu_file_dropdown')}});
     var dropFile = authorLibs.windows.makeDiv({parent:menuFile, id:'menu_file_dropdown',  classes:"menu_dropdown", style:'display:none;'});
 
     authorLibs.windows.makeDiv({parent:dropFile, html:'New',                    classes:'drop_items', click:function(){authorLibs.utils.loadDefault()}});
@@ -69,8 +70,9 @@ authorLibs.windows = {
       authorLibs.windows.projectsList('saveproject'),
       authorLibs.menus.menuToggle('savebox')}
     });
-    authorLibs.windows.makeDiv({parent:dropFile, id:'uploader',  classes:'drop_items', html:'Upload Files',  click:function(){authorLibs.utils.selectProject();}});
-    authorLibs.windows.makeDiv({parent:dropFile,   classes:'drop_items', html:'Restart', click:function(){authorLibs.windows.reload()}});
+    authorLibs.windows.makeDiv({parent:dropFile, id:'uploader',  classes:'drop_items', html:'Upload Files',
+      click:function(){authorLibs.windows.projectsList('saveproject'); authorLibs.utils.selectProject();}});
+    authorLibs.windows.makeDiv({parent:dropFile, classes:'drop_items', html:'Restart', click:function(){authorLibs.windows.reload()}});
 
     var menuWindows = authorLibs.windows.makeDiv({parent:projectHolder, id:'menu_windows', classes:'menu_items', html:'Windows', click:function(){authorLibs.menus.menuToggle('menu_windows_dropdown')}});
     var dropWin = authorLibs.windows.makeDiv({parent:menuWindows, id:'menu_windows_dropdown', classes:"menu_dropdown", style:'display:none;'});
@@ -134,14 +136,21 @@ authorLibs.windows = {
       }
       if (win.id === 'file'){
         var fileMenu = document.getElementById('filemenu');
-        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_json', style:'display: table-cell;', checked:true,  click:function(){authorLibs.utils.refreshfiles()}});
+        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_json',
+          style:'display: table-cell;', checked:true,  click:function(){authorLibs.utils.refreshfiles()}});
         authorLibs.windows.makeDiv({parent:fileMenu, classes:'menu-check', html:'JSON'});
-        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_image', style:'display: table-cell;', checked:true, click:function(){authorLibs.utils.refreshfiles()}});
+        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_image',
+          style:'display: table-cell;', checked:true, click:function(){authorLibs.utils.refreshfiles()}});
         authorLibs.windows.makeDiv({parent:fileMenu, classes:'menu-check', html:'IMAGE'});
-        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_html', style:'display: table-cell;', checked:true, click:function(){authorLibs.utils.refreshfiles()}});
+        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_html',
+          style:'display: table-cell;', checked:true, click:function(){authorLibs.utils.refreshfiles()}});
         authorLibs.windows.makeDiv({parent:fileMenu, classes:'menu-check', html:'HTML'});
-        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_sound', style:'display: table-cell;', checked:true, click:function(){authorLibs.utils.refreshfiles()}});
+        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_sound',
+          style:'display: table-cell;', checked:true, click:function(){authorLibs.utils.refreshfiles()}});
         authorLibs.windows.makeDiv({parent:fileMenu, classes:'menu-check', html:'SOUND'});
+        authorLibs.windows.makeElement({type:'input', subtype:'checkbox', parent:fileMenu, id:'filemanager_check_video',
+          style:'display: table-cell;', checked:true, click:function(){authorLibs.utils.refreshfiles()}});
+        authorLibs.windows.makeDiv({parent:fileMenu, classes:'menu-check', html:'VIDEO'});
         var filelistDiv = authorLibs.windows.makeDiv({parent:contents, classes:'content_load_all', id:'filelist'});
       }
       if (win.id === 'json'){

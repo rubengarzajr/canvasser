@@ -5,10 +5,11 @@ Bugs:
 - Files / rename not hooked up
 - Report should use getSubProp
 - Add defaults to objects - currently works for anims but not objects. Broken in buildprops addaction
-- Video: not showing in author UI video menu
-- Video: duplicate video sometimes showing in video list
 - Need to use end time for video
 - Video gets out of sync with anim if switch to different tab
+- Need to better inform user if file upload size exceeds max upload size.
+- Link uploaded video not grabbing paths
+
 
 Features:
 - Load/Save File manage to Box/Dropbox/Google Drive.
@@ -18,8 +19,12 @@ Features:
 - Add an update on change button (default to true)
 - Add upload mp4
 
-
 ## Changelog:
+- 2018-10-10 Fixed file type not supported error message.
+- 2018-10-10 Fixed File - Upload doesn't display autocomplete like when launched from file manager.
+- 2018-10-10 Added URL in Save Status are now links.
+- 2018-10-10 Fixed File save errors now showing up in Upload Status.
+- 2018-10-10 Fixed video list not updating.
 - 2018-10-05 Fixed centering video object.
 - 2018-10-05 Fixed video and sound now stop when canvasser stops.
 - 2018-10-04 Added defaults for animation timelist commands.
