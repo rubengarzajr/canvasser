@@ -408,7 +408,6 @@
         {"field":"origin",    "type":"select",  "id":"objectorigin"},
         {"field":"originxy",  "type":"posxy"},
         {"field":"position",  "type":"posxy"},
-        {"field":"atlascell", "type":"cellxy"},
         {"field":"scale",     "type":"scale"},
         {"field":"testp",     "type":"bool",    "display":"Interactive"},
         {"field":"clicklist", "type":"actions", "display":"Click/Touch Event", "dependson":"testp"},
@@ -495,7 +494,7 @@
   },
   "sound":{
     "widgets":[
-      {"field":"id",      "type":"text",   "css":"w100"},
+      {"field":"name",    "type":"text",   "css":"w100"},
       {"field":"path",    "type":"select", "id":"pathdata"},
       {"field":"url",     "type":"text"}
     ]
@@ -517,6 +516,7 @@
   "video":{
     "widgets":[
       {"field":"name",     "type":"text"},
+      {"field":"path",     "type":"select", "id":"pathdata"},
       {"field":"url",      "type":"text"},
       {"field":"deferred", "type":"bool"}
     ]

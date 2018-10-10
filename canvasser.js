@@ -1103,9 +1103,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   }
 
   function loadVideo(video, deferred, loadNew){
+    videosrc = video.path != undefined ? act.pathList[video.path] + '/' + video.url : video.url;
+
     if (act.videoList[video.id] === undefined){
       act.videoList[video.id]     = document.createElement('video');
-      act.videoList[video.id].src = video.url;
+      act.videoList[video.id].src = videosrc;
     }
   }
 

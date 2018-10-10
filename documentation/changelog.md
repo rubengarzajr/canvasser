@@ -9,6 +9,7 @@ Bugs:
 - Video gets out of sync with anim if switch to different tab
 - Need to better inform user if file upload size exceeds max upload size.
 - Link uploaded video not grabbing paths
+- Video deferred not used.
 
 
 Features:
@@ -17,9 +18,13 @@ Features:
 - Add Tooltip/Instructions to use variable in text shape with {{ var_name }}
 - use anchor links to restore page user was last on before leaving
 - Add an update on change button (default to true)
-- Add upload mp4
+
 
 ## Changelog:
+- 2018-10-10 Video linking now working and video path hooked up.
+- 2018-10-10 Added sound preview.
+- 2018-10-10 Fixed sound properties displayed ID.
+- 2018-10-10 Added mp4 uploading.
 - 2018-10-10 Fixed file type not supported error message.
 - 2018-10-10 Fixed File - Upload doesn't display autocomplete like when launched from file manager.
 - 2018-10-10 Added URL in Save Status are now links.

@@ -257,10 +257,13 @@ authorLibs.buildProp = {
     if (type==='sounds'){
       var pDiv  = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
       var pList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
+      var path = authorLibs.authorData.paths.filter(function(check){return check.id === thisProp.path;})[0];
       var pathList  = [];
       pList.forEach(function(item){pathList.push(item);});
       var id = authorLibs.utils.getSubProp(thisProp, 'path');
       authorLibs.buildProp.makeWidgets({list:authorLibs.rules.sound.widgets, set:{list:pathList, parent:pDiv, obj:thisProp, path:'path', type:'sounds'}});
+      authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Sound Preview'});
+      authorLibs.windows.makeVid({parent:pDiv, classes:'imagescale', src:path.url + '/' + thisProp.url});
     }
 
     if (type==='tests'){
@@ -289,12 +292,15 @@ authorLibs.buildProp = {
     if (type==='videos'){
       var pDiv = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
       var id   = authorLibs.utils.getSubProp(thisProp, 'id');
-
+      var path = authorLibs.authorData.paths.filter(function(check){return check.id === thisProp.path;})[0];
+      var pList = authorLibs.utils.objPartToArr(authorLibs.authorData.paths, "id");
+      var pathList  = [];
+      pList.forEach(function(item){pathList.push(item);});
       authorLibs.buildProp.makeWidgets({list:authorLibs.rules.video.widgets,
         set:{list:pathList, parent:pDiv, obj:thisProp, path:'path', type:'videos'}});
 
       authorLibs.windows.makeDiv({parent:pDiv, classes:'load_filefolder', html:'Video Preview'});
-      authorLibs.windows.makeVid({parent:pDiv, classes:'imagescale', src:thisProp.url});
+      authorLibs.windows.makeVid({parent:pDiv, classes:'imagescale', src:path.url + '/' + thisProp.url});
     }
 
     authorLibs.menus.updateSelectionWindow(type,id);
