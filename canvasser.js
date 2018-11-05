@@ -554,7 +554,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             if (anim.play) act.videoList[anim.video].play();
             else act.videoList[anim.video].pause();
             if (anim.loop) act.videoList[anim.video].loop = true;
-            checkSet(act.videoList[anim.video], 'currentTime', anim.timestart,0);
+            if (!anim.current) checkSet(act.videoList[anim.video], 'currentTime', anim.timestart,0);
             checkSet(act.videoList[anim.video], 'playbackRate', anim.speed,0,10);
             checkSet(act.videoList[anim.video], 'volume', anim.volume,0,1);
           }

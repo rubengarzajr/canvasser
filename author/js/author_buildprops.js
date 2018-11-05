@@ -1,7 +1,38 @@
 authorLibs.buildProp = {
+  addaction: function(id, type, listType, command){
+    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
+    if (objGet.length === 0) return;
+    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
+    objGet[0][listType].push(command);
+    authorLibs.buildProp.updateSubItem(objGet[0], type, command.type, listType+'.'+(objGet[0][listType].length-1)+'.type');
+    authorLibs.buildProp.updateUI(objGet[0], type);
+  },
+
+  addtest: function(id, type, listType){
+    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
+    if (objGet.length === 0) return;
+    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
+    objGet[0][listType].push({"type":"var"});
+    authorLibs.buildProp.get(type,objGet[0].id);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
   clear: function(){
     document.getElementById('propertiestitle').innerHTML = '';
     document.getElementById('properties').innerHTML = '';
+  },
+
+  deleteprop: function(type,id,path){
+    var find = authorLibs.utils.getSubProp(authorLibs.authorData,type);
+    var obj  = find.filter(function(test){return test.id === id})[0];
+    var arr  = path.split(".");
+    while(arr.length > 1){
+      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
+      obj = obj[arr.shift()];
+    }
+    obj.splice(arr[0],1);
+    authorLibs.buildProp.get(type, id);
+    restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
   get: function(type, id){
@@ -306,6 +337,17 @@ authorLibs.buildProp = {
     authorLibs.menus.updateSelectionWindow(type,id);
   },
 
+  listIdsNames: function(filter){
+    var idList    = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "id");
+    var nameList  = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "name");
+    var comboList = [];
+    for (var i = 0; i < idList.length; i++ ) {
+      if (nameList[i] === undefined) nameList[i] = idList[i];
+      comboList.push( {id: idList[i], name:nameList[i]});
+    }
+    return comboList;
+  },
+
   makeWidgets: function(obj){
     obj.list.forEach(function(subWidget){
       var wPath = '';
@@ -359,15 +401,14 @@ authorLibs.buildProp = {
     });
   },
 
-  deleteprop: function(type,id,path){
-    var find = authorLibs.utils.getSubProp(authorLibs.authorData,type);
-    var obj  = find.filter(function(test){return test.id === id})[0];
-    var arr  = path.split(".");
+  moveprop: function(type,id,path,moveto){
+    var obj = authorLibs.authorData[type].filter(function(test){return test.id === id})[0];
+    var arr = path.split(".");
     while(arr.length > 1){
       if (obj[arr[0]] === undefined) obj[arr[0]] = {};
       obj = obj[arr.shift()];
     }
-    obj.splice(arr[0],1);
+    obj.splice(moveto, 0, obj.splice(arr[0], 1)[0]);
     authorLibs.buildProp.get(type, id);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },
@@ -403,27 +444,6 @@ authorLibs.buildProp = {
     authorLibs.windows.makeDiv({parent:divA, classes:'divbutton', html:'Add Action', click:function(){authorLibs.buildProp.addaction(obj.obj.id, obj.type, obj.widget.field, {"type":"cleardown"});}});
   },
 
-  addaction: function(id, type, listType, command){
-    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
-    if (objGet.length === 0) return;
-    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
-    objGet[0][listType].push(command);
-    authorLibs.buildProp.updateSubItem(objGet[0], type, command.type, listType+'.'+(objGet[0][listType].length-1)+'.type');
-    authorLibs.buildProp.updateUI(objGet[0], type);
-  },
-
-  moveprop: function(type,id,path,moveto){
-    var obj = authorLibs.authorData[type].filter(function(test){return test.id === id})[0];
-    var arr = path.split(".");
-    while(arr.length > 1){
-      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
-      obj = obj[arr.shift()];
-    }
-    obj.splice(moveto, 0, obj.splice(arr[0], 1)[0]);
-    authorLibs.buildProp.get(type, id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
   setBoolean: function(obj){
     var display = obj.widget.display === undefined ? obj.widget.field : obj.widget.display;
     var div = authorLibs.windows.makeDiv({parent:obj.parent});
@@ -440,21 +460,6 @@ authorLibs.buildProp = {
     var ck = authorLibs.windows.makeElement({parent:div, classes:'checkbox', type:'input', subtype:'checkbox',
       click:function(){authorLibs.buildProp.settingUpdate(this, obj.path)}});
     if (obj.value) ck.checked = true;
-  },
-
-  settingDelete: function(type, id){
-    var find  = authorLibs.utils.getSubProp(authorLibs.authorData.settings, type);
-    var index = find.map(function(e) { return e.id; }).indexOf(id);
-    find.splice(index,1);
-    authorLibs.buildProp.get('settings', type);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
-  settingUpdate: function(domElement, setting){
-    if (domElement.type === 'checkbox') authorLibs.authorData.settings[setting] = domElement.checked;
-    else authorLibs.authorData.settings[setting] = domElement.value;
-    authorLibs.menus.update('settings');
-    restartCanvasser("sample", authorLibs.authorData, "string");
   },
 
   setColor: function(obj){
@@ -477,6 +482,11 @@ authorLibs.buildProp = {
       });
     });
     authorLibs.windows.makeDiv({parent:div, classes:'divbutton', html:'Add Color', click:function(){authorLibs.utils.addColor(obj.obj.id, obj.widget.field)}});
+  },
+
+  //TODO: What's this?
+  setFont: function(obj){
+    console.log("wee")
   },
 
   setGroup: function(obj){
@@ -511,23 +521,37 @@ authorLibs.buildProp = {
     }
   },
 
-  setVideo: function(obj){
-    var vidList = authorLibs.buildProp.listIdsNames('videos');
-    var div     = authorLibs.windows.makeDiv({parent:obj.parent});
-    authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100', html:obj.widget.field});
-    authorLibs.buildProp.setSelect({parent:div, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}, object:obj.obj.id, type:obj.type,
-      list:vidList, defaultId:obj.obj[obj.widget.field], path:obj.widget.field});
+  setLinkSel: function(obj){
+    var filter   = obj.path.substr(0, obj.path.lastIndexOf(".")) + '.' + obj.widget['link'] ;
+    var filterId = authorLibs.utils.getSubProp(obj.obj, filter)+'s';
+    var val      = authorLibs.utils.getSubProp(obj.obj, obj.path);
+    authorLibs.buildProp.setTypeList({parent:obj.parent, obj:obj.obj, type:obj.type, widget:obj.widget,
+      path:obj.path, value:val, filter:filterId});
   },
 
-  listIdsNames: function(filter){
-    var idList    = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "id");
-    var nameList  = authorLibs.utils.objPartToArr(authorLibs.authorData[filter], "name");
-    var comboList = [];
-    for (var i = 0; i < idList.length; i++ ) {
-      if (nameList[i] === undefined) nameList[i] = idList[i];
-      comboList.push( {id: idList[i], name:nameList[i]});
+  setListSelect: function(obj){
+    var selOp = (obj.list === undefined ? authorLibs.rules.select[obj.widget.id].list : obj.list);
+    var localList  = [];
+    selOp.forEach(function(item){
+      localList.push({id:item, name:item});
+    });
+    authorLibs.windows.makeDiv({parent:obj.parent, classes:'entrylabel c_entrytitle_text w100',
+      html:(obj.widget.display ? obj.widget.display : obj.widget.field)});
+    authorLibs.buildProp.setSelect({parent:obj.parent, object:obj.obj.id, type:obj.type,
+      fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)},
+      list:localList, defaultId:obj.value, path:obj.path}
+    );
+  },
+
+  setNumber: function(obj){
+    if (obj.value === undefined) {
+      obj.value = 0;
     }
-    return comboList;
+    var div = authorLibs.windows.makeDiv({parent:obj.parent});
+    authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100',
+      html:(obj.widget.display ? obj.widget.display : obj.widget.field)});
+    authorLibs.windows.makeElement({parent:div, classes:'auth_xy', type:'input', subtype:'number',
+      value:obj.value, change:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}});
   },
 
   setPosition: function(obj){
@@ -538,12 +562,37 @@ authorLibs.buildProp = {
     authorLibs.windows.makeSpan({parent:div, classes:'entrylabel c_entrylabel_pos w100', html:display});
     var spX = authorLibs.windows.makeSpan({parent:div, classes:'entrytitle c_entrylabel_pos', html:'X',
       style:'display:inline-block; height:16px;'});
+    console.log(obj)
     authorLibs.windows.makeElement({parent:div, classes:'auth_xy', type:'input', subtype:'number',
       value:obj.value.x, change:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path+'.x')}});
     var spY = authorLibs.windows.makeSpan({parent:div, classes:'entrytitle c_entrylabel_pos', html:'Y',
       style:'display:inline-block; height:16px;'});
     authorLibs.windows.makeElement({parent:div, classes:'auth_xy', type:'input', subtype:'number',
       value:obj.value.y, change:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path+'.y')}});
+  },
+
+  setSelect: function(obj){
+    if (obj.text){
+      authorLibs.windows.makeElement({parent:obj.parent, id:'prop_'+obj.path,
+        classes:'sellist', type:'input', subtype:'text',
+        value:obj.defaultId, list:'datalist_'+obj.path, change:obj.fn});
+      var dl = authorLibs.windows.makeElement({parent:obj.parent, id:'datalist_'+obj.path, type:'datalist'});
+
+      var newList = obj.list.slice();
+      newList.unshift("---NONE---");
+      newList.forEach(function(listObject){
+        authorLibs.windows.makeElement({parent:dl, type:'option', html:listObject.id});
+      });
+    } else {
+      var sel = authorLibs.windows.makeElement({parent:obj.parent, id:'prop_'+obj.path, classes:'sellist', type:'select',
+        change:obj.fn});
+      var objList  = obj.list.slice();
+      objList.unshift({id:"---NONE---", name:"---NONE---"} );
+      objList.forEach(function(listObject){
+        var op = authorLibs.windows.makeElement({parent:sel, id:'datalist_'+obj.path, value:listObject.id, type:'option', html:listObject.name});
+        if (listObject.id === obj.defaultId) op.selected = true;
+      });
+    }
   },
 
   setTest: function(obj){
@@ -574,42 +623,6 @@ authorLibs.buildProp = {
       authorLibs.buildProp.addtest(obj.obj.id, 'tests', obj.widget.field);}, html:'Add Test'});
   },
 
-  addtest: function(id, type, listType){
-    var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
-    if (objGet.length === 0) return;
-    if( objGet[0][listType] === undefined)  objGet[0][listType] = [];
-    objGet[0][listType].push({"type":"var"});
-    authorLibs.buildProp.get(type,objGet[0].id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
-  setNumber: function(obj){
-    // THIS IS ONLY FOR DISPLAY
-    if (obj.value === undefined) {
-      obj.value = 0;
-      //if (obj.default === undefined) obj.value = 0;
-      //else obj.value = obj.default;
-    }
-    var div = authorLibs.windows.makeDiv({parent:obj.parent});
-    authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100',
-      html:(obj.widget.display ? obj.widget.display : obj.widget.field)});
-    authorLibs.windows.makeElement({parent:div, classes:'auth_xy', type:'input', subtype:'number',
-      value:obj.value, change:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}});
-  },
-
-  setTypeList: function(obj){
-    var list = [];
-    if (obj.filter === 'layers'){
-      authorLibs.authorData.layers.forEach(function(layer, idx){ list.push({name:layer.name, id:layer.id})});
-    } else list = authorLibs.buildProp.listIdsNames(obj.filter);
-
-    var div = authorLibs.windows.makeDiv({parent:obj.parent});
-    authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100',
-      html: (obj.widget.display ? obj.widget.display : obj.widget.field)});
-    authorLibs.buildProp.setSelect({parent:div, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}, object:obj.obj.id, type:obj.type,
-      list:list, defaultId:obj.value, path:obj.path});
-  },
-
   setText: function(obj){
     var div = authorLibs.windows.makeDiv({parent:obj.parent});
     authorLibs.windows.makeDiv({parent:div, html:obj.widget.field,
@@ -628,32 +641,6 @@ authorLibs.buildProp = {
       html:obj.widget.field, change:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}});
   },
 
-  setFont: function(obj){
-    console.log("wee")
-  },
-
-  setLinkSel: function(obj){
-    var filter   = obj.path.substr(0, obj.path.lastIndexOf(".")) + '.' + obj.widget['link'] ;
-    var filterId = authorLibs.utils.getSubProp(obj.obj, filter)+'s';
-    var val      = authorLibs.utils.getSubProp(obj.obj, obj.path);
-    authorLibs.buildProp.setTypeList({parent:obj.parent, obj:obj.obj, type:obj.type, widget:obj.widget,
-      path:obj.path, value:val, filter:filterId});
-  },
-
-  setListSelect: function(obj){
-    var selOp = (obj.list === undefined ? authorLibs.rules.select[obj.widget.id].list : obj.list);
-    var localList  = [];
-    selOp.forEach(function(item){
-      localList.push({id:item, name:item});
-    });
-    authorLibs.windows.makeDiv({parent:obj.parent, classes:'entrylabel c_entrytitle_text w100',
-      html:(obj.widget.display ? obj.widget.display : obj.widget.field)});
-    authorLibs.buildProp.setSelect({parent:obj.parent, object:obj.obj.id, type:obj.type,
-      fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)},
-      list:localList, defaultId:obj.value, path:obj.path}
-    );
-  },
-
   setTxtSelect: function(obj){
     var selOp   = (obj.list === undefined ? authorLibs.rules.select[obj.widget.id].list : obj.list);
     var list    = [];
@@ -665,113 +652,123 @@ authorLibs.buildProp = {
     object:obj.obj.id, type:obj.type, list:list, defaultId:id, path:obj.path});
   },
 
-  setSelect: function(obj){
-    if (obj.text){
-      authorLibs.windows.makeElement({parent:obj.parent, id:'prop_'+obj.path,
-        classes:'sellist', type:'input', subtype:'text',
-        value:obj.defaultId, list:'datalist_'+obj.path, change:obj.fn});
-      var dl = authorLibs.windows.makeElement({parent:obj.parent, id:'datalist_'+obj.path, type:'datalist'});
+  settingDelete: function(type, id){
+    var find  = authorLibs.utils.getSubProp(authorLibs.authorData.settings, type);
+    var index = find.map(function(e) { return e.id; }).indexOf(id);
+    find.splice(index,1);
+    authorLibs.buildProp.get('settings', type);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
 
-      var newList = obj.list.slice();
-      newList.unshift("---NONE---");
-      newList.forEach(function(listObject){
-        authorLibs.windows.makeElement({parent:dl, type:'option', html:listObject.id});
-      });
-    } else {
-      var sel = authorLibs.windows.makeElement({parent:obj.parent, id:'prop_'+obj.path, classes:'sellist', type:'select',
-        change:obj.fn});
-      var objList  = obj.list.slice();
-      objList.unshift({id:"---NONE---", name:"---NONE---"} );
-      objList.forEach(function(listObject){
-        var op = authorLibs.windows.makeElement({parent:sel, id:'datalist_'+obj.path, value:listObject.id, type:'option', html:listObject.name});
-        if (listObject.id === obj.defaultId) op.selected = true;
-        });
-      }
-    },
+  settingUpdate: function(domElement, setting){
+    if (domElement.type === 'checkbox') authorLibs.authorData.settings[setting] = domElement.checked;
+    else authorLibs.authorData.settings[setting] = domElement.value;
+    authorLibs.menus.update('settings');
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
 
-    statsfile: function(type){
-      var element = document.getElementById('propertiestitle');
-      authorLibs.windows.makeDiv({clearparent:true, parent:element, classes:'proptitle', html:'File Stats:'});
-      var propUI = document.getElementById("properties");
-      propUI.innerHTML = '';
+  setTypeList: function(obj){
+    var list = [];
+    if (obj.filter === 'layers'){
+      authorLibs.authorData.layers.forEach(function(layer, idx){ list.push({name:layer.name, id:layer.id})});
+    } else list = authorLibs.buildProp.listIdsNames(obj.filter);
 
-      function addToProp(file, data){
-        authorLibs.windows.makeDiv({parent:propUI, classes:'load_filefolder', html:file.id});
-        authorLibs.windows.makeDiv({parent:propUI, classes:'load_file', html:'objects:' + data.objects.length});
-        data.objects.forEach(function(obj){
-          if (obj.clicklist === undefined) return;
-          obj.clicklist.forEach(function(click){
-            Object.keys(click).some(function(k){
-                if (click[k] !== "loadinto") return;
-                authorLibs.windows.makeDiv({parent:propUI, classes:'load_file',
-                  html:'Load: ' + obj.name + ' ' + click.url});
-            });
+    var div = authorLibs.windows.makeDiv({parent:obj.parent});
+    authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100',
+      html: (obj.widget.display ? obj.widget.display : obj.widget.field)});
+    authorLibs.buildProp.setSelect({parent:div, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}, object:obj.obj.id, type:obj.type,
+      list:list, defaultId:obj.value, path:obj.path});
+  },
+
+  setVideo: function(obj){
+    var vidList = authorLibs.buildProp.listIdsNames('videos');
+    var div     = authorLibs.windows.makeDiv({parent:obj.parent});
+    authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100', html:obj.widget.field});
+    authorLibs.buildProp.setSelect({parent:div, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}, object:obj.obj.id, type:obj.type,
+      list:vidList, defaultId:obj.obj[obj.widget.field], path:obj.widget.field});
+  },
+
+  //TODO: Why request JSON in this function?
+  statsfile: function(type){
+    var element = document.getElementById('propertiestitle');
+    authorLibs.windows.makeDiv({clearparent:true, parent:element, classes:'proptitle', html:'File Stats:'});
+    var propUI = document.getElementById("properties");
+    propUI.innerHTML = '';
+
+    function addToProp(file, data){
+      authorLibs.windows.makeDiv({parent:propUI, classes:'load_filefolder', html:file.id});
+      authorLibs.windows.makeDiv({parent:propUI, classes:'load_file', html:'objects:' + data.objects.length});
+      data.objects.forEach(function(obj){
+        if (obj.clicklist === undefined) return;
+        obj.clicklist.forEach(function(click){
+          Object.keys(click).some(function(k){
+              if (click[k] !== "loadinto") return;
+              authorLibs.windows.makeDiv({parent:propUI, classes:'load_file',
+                html:'Load: ' + obj.name + ' ' + click.url});
           });
         });
-        authorLibs.windows.makeDiv({parent:propUI, classes:'load_file', html:'Images:' + data.images.length});
-      }
-
-      function requestJson(file, fileNamePath, returnFunction){
-        var fileToDl = fileNamePath;
-        fileToDl += '?' + new Date().getTime();
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function(){
-          if (xhr.readyState == 4) returnFunction(file, JSON.parse(xhr.responseText));
-          if (xhr.status == 404) console.error("JSON Load Error: " + xhr.statusText + " " + xhr.readyState);
-        }
-        xhr.overrideMimeType('application/json');
-        xhr.open('GET', fileToDl, true);
-        xhr.send(null);
-      }
-      authorLibs.lists.fileManager.forEach(function(file){
-        var list = [];
-        if (file.type === 'json'){
-          requestJson(file, file.url, addToProp)
-        }
       });
-    },
-
-    updateActionList: function(domElement, objectId, type, paramPath){
-      var item = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
-      var prop = authorLibs.utils.getSubProp(item, paramPath);
-      authorLibs.buildProp.updateItem(domElement, objectId, type, paramPath);
-    },
-
-    updateItem: function(domElement, objectId, type, paramPath){
-      var newVal = domElement.value.toString();
-      if (domElement.type === 'checkbox') newVal = domElement.checked;
-      if (newVal === '---NONE---')        newVal = undefined;
-      var path = authorLibs.utils.getSubProp( authorLibs.authorData, type);
-      var objGet = path.filter(function(finder){return (finder.id === objectId);})[0];
-
-      authorLibs.utils.setSubProp(objGet, paramPath, newVal);
-      authorLibs.buildProp.updateSubItem(objGet, type, newVal, paramPath);
-      authorLibs.buildProp.updateUI(objGet, type);
-    },
-
-    updateSubItem: function(objGet, type, newVal, paramPath){
-      if (authorLibs.rules[type] === undefined) return;
-      var subRule = authorLibs.rules[type].filter(function(rule){
-        return rule.type === newVal}
-      )[0];
-      if (subRule !== undefined){
-        subRule.widgets.forEach(function(widget){
-          if (widget.default !== undefined) {
-            var newPath = paramPath.substr(0, paramPath.lastIndexOf("."));
-            authorLibs.utils.setSubProp(objGet, newPath+'.'+widget.field, widget.default);
-          }
-        })
-      }
-    },
-
-    updateUI(obj, type){
-      authorLibs.buildProp.get(type, obj.id);
-      authorLibs.menus.update(type);
-      authorLibs.menus.update('layers');
-      restartCanvasser("sample", authorLibs.authorData, "string");
+      authorLibs.windows.makeDiv({parent:propUI, classes:'load_file', html:'Images:' + data.images.length});
     }
 
+    function requestJson(file, fileNamePath, returnFunction){
+      var fileToDl = fileNamePath;
+      fileToDl += '?' + new Date().getTime();
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function(){
+        if (xhr.readyState == 4) returnFunction(file, JSON.parse(xhr.responseText));
+        if (xhr.status == 404) console.error("JSON Load Error: " + xhr.statusText + " " + xhr.readyState);
+      }
+      xhr.overrideMimeType('application/json');
+      xhr.open('GET', fileToDl, true);
+      xhr.send(null);
+    }
+    authorLibs.lists.fileManager.forEach(function(file){
+      var list = [];
+      if (file.type === 'json'){
+        requestJson(file, file.url, addToProp)
+      }
+    });
+  },
 
+  updateActionList: function(domElement, objectId, type, paramPath){
+    var item = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];
+    var prop = authorLibs.utils.getSubProp(item, paramPath);
+    authorLibs.buildProp.updateItem(domElement, objectId, type, paramPath);
+  },
 
+  updateItem: function(domElement, objectId, type, paramPath){
+    var newVal = domElement.value.toString();
+    if (domElement.type === 'checkbox') newVal = domElement.checked;
+    if (newVal === '---NONE---')        newVal = undefined;
+    var path = authorLibs.utils.getSubProp(authorLibs.authorData, type);
+    var objGet = path.filter(function(finder){return (finder.id === objectId);})[0];
+
+    authorLibs.utils.setSubProp(objGet, paramPath, newVal);
+    authorLibs.buildProp.updateSubItem(objGet, type, newVal, paramPath);
+    authorLibs.buildProp.updateUI(objGet, type);
+  },
+
+  updateSubItem: function(objGet, type, newVal, paramPath){
+    if (authorLibs.rules[type] === undefined) return;
+    var subRule = authorLibs.rules[type].filter(function(rule){
+      return rule.type === newVal}
+    )[0];
+    if (subRule !== undefined){
+      subRule.widgets.forEach(function(widget){
+        if (widget.default !== undefined) {
+          var newPath = paramPath.substr(0, paramPath.lastIndexOf("."));
+          authorLibs.utils.setSubProp(objGet, newPath+'.'+widget.field, widget.default);
+        }
+      })
+    }
+  },
+
+  updateUI(obj, type){
+    authorLibs.buildProp.get(type, obj.id);
+    authorLibs.menus.update(type);
+    authorLibs.menus.update('layers');
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  }
 
 }

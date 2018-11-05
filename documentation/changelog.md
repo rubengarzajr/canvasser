@@ -10,7 +10,9 @@ Bugs:
 - Need to better inform user if file upload size exceeds max upload size.
 - Link uploaded video not grabbing paths
 - Video deferred not used.
-
+- Video in Animation displays none instead of video name.
+- Anim move copying values if move used twice.
+- buildprops.statsfile looks like it has a redundant requestJson
 
 Features:
 - Load/Save File manage to Box/Dropbox/Google Drive.
@@ -18,9 +20,11 @@ Features:
 - Add Tooltip/Instructions to use variable in text shape with {{ var_name }}
 - use anchor links to restore page user was last on before leaving
 - Add an update on change button (default to true)
+- Animation able to set variable value
 
 
 ## Changelog:
+- 2018-11-05 Added "Current" bool to Video to allow playback from current time.
 - 2018-10-10 Video linking now working and video path hooked up.
 - 2018-10-10 Added sound preview.
 - 2018-10-10 Fixed sound properties displayed ID.
