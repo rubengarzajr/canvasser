@@ -562,7 +562,6 @@ authorLibs.buildProp = {
     authorLibs.windows.makeSpan({parent:div, classes:'entrylabel c_entrylabel_pos w100', html:display});
     var spX = authorLibs.windows.makeSpan({parent:div, classes:'entrytitle c_entrylabel_pos', html:'X',
       style:'display:inline-block; height:16px;'});
-    console.log(obj)
     authorLibs.windows.makeElement({parent:div, classes:'auth_xy', type:'input', subtype:'number',
       value:obj.value.x, change:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path+'.x')}});
     var spY = authorLibs.windows.makeSpan({parent:div, classes:'entrytitle c_entrylabel_pos', html:'Y',
@@ -593,6 +592,16 @@ authorLibs.buildProp = {
         if (listObject.id === obj.defaultId) op.selected = true;
       });
     }
+  },
+
+  setSubProp: function(obj, descIn, val){
+    var desc = String(descIn);
+    var arr = desc.split(".");
+    while(arr.length > 1){
+      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
+      obj = obj[arr.shift()];
+    }
+    obj[arr[0]] = typeof(val) === "boolean" ? val : isNaN(val) ? val : typeof(val) === "number" ? val : val.indexOf(".")==-1 ? parseInt(val) : parseFloat(val);
   },
 
   setTest: function(obj){
@@ -744,8 +753,10 @@ authorLibs.buildProp = {
     var path = authorLibs.utils.getSubProp(authorLibs.authorData, type);
     var objGet = path.filter(function(finder){return (finder.id === objectId);})[0];
 
-    authorLibs.utils.setSubProp(objGet, paramPath, newVal);
-    authorLibs.buildProp.updateSubItem(objGet, type, newVal, paramPath);
+    authorLibs.buildProp.setSubProp(objGet, paramPath, newVal);
+    //TODO: This broke numeric input with 2 moves in an anim.
+    // Did this ever do anthing useful?
+    //authorLibs.buildProp.updateSubItem(objGet, type, newVal, paramPath);
     authorLibs.buildProp.updateUI(objGet, type);
   },
 
@@ -758,7 +769,7 @@ authorLibs.buildProp = {
       subRule.widgets.forEach(function(widget){
         if (widget.default !== undefined) {
           var newPath = paramPath.substr(0, paramPath.lastIndexOf("."));
-          authorLibs.utils.setSubProp(objGet, newPath+'.'+widget.field, widget.default);
+          authorLibs.buildProp.setSubProp(objGet, newPath+'.'+widget.field, widget.default);
         }
       })
     }

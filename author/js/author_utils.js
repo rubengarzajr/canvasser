@@ -553,16 +553,6 @@ authorLibs.utils = {
     document.getElementById('uploadbox').style.display = 'block';
   },
 
-  setSubProp: function(obj, descIn, val){
-    var desc = String(descIn);
-    var arr = desc.split(".");
-    while(arr.length > 1){
-      if (obj[arr[0]] === undefined) obj[arr[0]] = {};
-      obj = obj[arr.shift()];
-    }
-    obj[arr[0]] = typeof(val) === "boolean" ? val : isNaN(val) ? val : typeof(val) === "number" ? val : val.indexOf(".")==-1 ? parseInt(val) : parseFloat(val);
-  },
-
   togglegroup: function(domElement, objectId, type, paramPath, groupName){
     var element = domElement.checked;
     var objGet  = authorLibs.authorData[type].filter(function(finder){return (finder.id === objectId);})[0];

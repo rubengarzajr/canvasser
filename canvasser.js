@@ -482,6 +482,16 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       }
 
       play.playing.forEach(function(anim){
+        if (anim.type === "blend"){
+          if (anim.filter === 'group') {
+            var groupObjs = findInGroup(anim.id);
+            groupObjs.forEach(function(animSubOb){animSubOb.blend = anim.mode});
+          } else {
+            var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
+            if (animOb !== undefined) animOb.blend = anim.mode
+          }
+          anim.delete = true;
+        }
         if (anim.type === "flipbook"){
           var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
           if (anim.atlascell   === undefined) anim.atlascell = {x:0, y:0};

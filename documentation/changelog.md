@@ -11,8 +11,8 @@ Bugs:
 - Link uploaded video not grabbing paths
 - Video deferred not used.
 - Video in Animation displays none instead of video name.
-- Anim move copying values if move used twice.
 - buildprops.statsfile looks like it has a redundant requestJson
+- Should rebuild current Properties panel on image or video linked/added.
 
 Features:
 - Load/Save File manage to Box/Dropbox/Google Drive.
@@ -24,6 +24,7 @@ Features:
 
 
 ## Changelog:
+- 2018-11-06 Fixed nim move copying values if move used twice.
 - 2018-11-05 Added "Current" bool to Video to allow playback from current time.
 - 2018-10-10 Video linking now working and video path hooked up.
 - 2018-10-10 Added sound preview.
