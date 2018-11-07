@@ -20,6 +20,10 @@ a{
   border: 2px rgb(100,100,100) solid;
 }
 
+.abs{
+  position: absolute;
+}
+
 #alert_box{
   background-color: var(--alert-bg-color);
   border-radius: 10px;

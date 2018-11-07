@@ -712,17 +712,22 @@ setDefault: function(obj){
       list:list, defaultId:obj.value, path:obj.path});
     if (obj.path === 'shape' && obj.type === 'objects') {
       if(obj.obj.shape === '' || obj.obj.shape === undefined){
-        authorLibs.windows.makeDiv({parent:div, classes:'divbutton', html:"Create", click:function(){
+        authorLibs.windows.makeDiv({parent:div, classes:'abs divbutton', html:"Create", click:function(){
           var id = authorLibs.menus.addItem('shapes');
           obj.obj.shape = id;
           authorLibs.buildProp.get(obj.type, obj.obj.id)
           }
         });
       } else {
-        authorLibs.windows.makeDiv({parent:div, classes:'divbutton', html:"Edit", click:function(){
+        authorLibs.windows.makeDiv({parent:div, classes:'abs divbutton', html:"Edit", click:function(){
           authorLibs.buildProp.get('shapes', obj.obj.shape);
           }
         });
+        //TODO: Maybe include shape in object for easier editing?
+        // authorLibs.windows.makeDiv({parent:obj.parent, classes:'pos_holder', html:obj.obj.shape, click:function(){
+        //   authorLibs.buildProp.get('shapes', obj.obj.shape);
+        //   }
+        //});
       }
     }
   },

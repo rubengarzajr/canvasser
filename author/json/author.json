@@ -266,15 +266,15 @@
   "drawcode":[
     {"type":"arc",          "widgets":[
       {"field":"offset",  "type":"posxy"},
-      {"field":"radius",  "type":"number"},
-      {"field":"startangle", "type":"number"},
-      {"field":"endangle", "type":"number"},
+      {"field":"radius",  "type":"number", "default":100},
+      {"field":"startangle", "type":"number", "default":0},
+      {"field":"endangle", "type":"number", "default":90},
       {"field":"counterclockwise", "type":"bool"},
       {"field":"fill",      "type":"bool"},
       {"field":"fillcolor", "type":"text"},
-      {"field":"stroke",    "type":"bool"},
-      {"field":"linecolor", "type":"text"},
-      {"field":"linewidth", "type":"number"}
+      {"field":"stroke",    "type":"bool", "default":true},
+      {"field":"linecolor", "type":"text", "default":"black"},
+      {"field":"linewidth", "type":"number", "default": 4}
       ]
     },
     {"type":"bcurve",       "widgets":[{"field":"offseta", "type":"posxy"}, {"field":"offsetb", "type":"posxy"},  {"field":"offsetc",    "type":"posxy"}]},
@@ -288,36 +288,36 @@
     {"type":"ptest",        "widgets":[]},
     {"type":"rect",         "widgets":[
         {"field":"offset",    "type":"posxy"},
-        {"field":"width",     "type":"number"},
-        {"field":"height",    "type":"number"},
-        {"field":"fill",      "type":"bool"},
-        {"field":"fillcolor", "type":"text"},
-        {"field":"stroke",    "type":"bool"},
-        {"field":"linecolor", "type":"text"},
-        {"field":"linewidth", "type":"number"}
+        {"field":"width",     "type":"number","default":100},
+        {"field":"height",    "type":"number","default":100},
+        {"field":"fill",      "type":"bool", "default":true},
+        {"field":"fillcolor", "type":"text", "default":"gray"},
+        {"field":"stroke",    "type":"bool", "default":true},
+        {"field":"linecolor", "type":"text", "default":"black"},
+        {"field":"linewidth", "type":"number", "default":4}
       ]
     },
     {"type":"stroke",       "widgets":[]},
     {"type":"strokecolor",  "widgets":[{"field":"color",   "type":"text"}]},
     {"type":"textfill",     "widgets":[
         {"field":"offset",  "type":"posxy"},
-        {"field":"text",    "type":"textarea", "default":"Text"},
+        {"field":"text",    "type":"textarea", "default":"Text Fill"},
         {"field":"color",   "type":"text", "default":"black"},
         {"field":"font",    "type":"selecttext", "id":"fonts", "default":"Arial"},
         {"field":"size",    "type":"number", "default":40},
         {"field":"height",  "type":"number", "default":40},
-        {"field":"justify", "type":"selecttext", "id":"justify"}
+        {"field":"justify", "type":"selecttext", "id":"justify", "default":"left"}
       ]
     },
     {"type":"textline",     "widgets":[
       {"field":"offset",  "type":"posxy"},
-      {"field":"text",    "type":"textarea"},
-      {"field":"color",   "type":"text"},
-      {"field":"width",   "type":"number"},
-      {"field":"font",    "type":"selecttext", "id":"fonts"},
-      {"field":"size",    "type":"number"},
-      {"field":"height",  "type":"number"},
-      {"field":"justify", "type":"selecttext", "id":"justify"}
+      {"field":"text",    "type":"textarea", "default":"Text Line"},
+      {"field":"color",   "type":"text", "default":"black"},
+      {"field":"width",   "type":"number", "default":2},
+      {"field":"font",    "type":"selecttext", "id":"fonts", "default":"Arial"},
+      {"field":"size",    "type":"number", "default":40},
+      {"field":"height",  "type":"number", "default":40},
+      {"field":"justify", "type":"selecttext", "id":"justify", "default":"left"}
       ]
     }
   ],

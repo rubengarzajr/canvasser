@@ -13,6 +13,9 @@ Bugs:
 - Video in Animation displays none instead of video name.
 - buildprops.statsfile looks like it has a redundant requestJson
 - Should rebuild current Properties panel on image or video linked/added.
+- Shape "bcurve" offseta is not defined.
+- Shape "line" not working as expected.
+
 
 Features:
 - Load/Save File manage to Box/Dropbox/Google Drive.
@@ -24,8 +27,9 @@ Features:
 
 
 ## Changelog:
+- 2018-11-07 Added defaults to rect and arc drawcode.
 - 2018-11-07 Added defaults to text entry.
-- 2018-11-07 Allow shape creation in object mode.
+- 2018-11-07 Allow shape creation and edit link in object properties.
 - 2018-11-06 Fixed anim move copying values if move used twice.
 - 2018-11-05 Added "Current" bool to Video to allow playback from current time.
 - 2018-10-10 Video linking now working and video path hooked up.
