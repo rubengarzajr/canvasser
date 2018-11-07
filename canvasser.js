@@ -915,6 +915,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   }
 
   function drawShapes(act, parent, pos, shapeData, color, doTest, testP, scale, usecolor){
+    if (color === undefined) return;
     if (color.current === undefined) color.current = ['rgb(0,0,0,1)'];
     if (shapeData === undefined) return;
     var ctx        = act.context;

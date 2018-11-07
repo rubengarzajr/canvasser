@@ -8,6 +8,13 @@ authorLibs.buildProp = {
     authorLibs.buildProp.updateUI(objGet[0], type);
   },
 
+  addDrawcode: function(id){
+    var shape = authorLibs.authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
+    shape.drawcode.push({type:'fill'});
+    authorLibs.buildProp.get('shapes', id);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
   addtest: function(id, type, listType){
     var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === id);});
     if (objGet.length === 0) return;
@@ -282,7 +289,7 @@ authorLibs.buildProp = {
           widget:{field:'drawcode'}, set:{parent:pBox, obj:thisProp, type:'shapes'}});
       });
       authorLibs.windows.makeDiv({parent:pDiv, classes:'divbutton', html:'Add drawcode',
-        click:function(){authorLibs.utils.addDrawcode(thisProp.id);}});
+        click:function(){authorLibs.buildProp.addDrawcode(thisProp.id);}});
     }
 
     if (type==='sounds'){
@@ -362,6 +369,10 @@ authorLibs.buildProp = {
       }
       var val = authorLibs.utils.getSubProp(obj.set.obj, wPath);
       var defaults = Object.assign({}, obj.set, {widget:subWidget, path:wPath, value:val, default:subWidget.default});
+      defaults.value = authorLibs.buildProp.setDefault(defaults);
+
+
+
       if (subWidget.type === "actions")    authorLibs.buildProp.setAction(defaults);
       if (subWidget.type === 'animlist')   authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'anims'}));
       if (subWidget.type === 'anmlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'anims'}));
@@ -484,6 +495,15 @@ authorLibs.buildProp = {
     authorLibs.windows.makeDiv({parent:div, classes:'divbutton', html:'Add Color', click:function(){authorLibs.utils.addColor(obj.obj.id, obj.widget.field)}});
   },
 
+setDefault: function(obj){
+  if (obj.value === undefined) {
+    var def = authorLibs.utils.getSubProp(authorLibs.authorData, obj.type)[0];
+    authorLibs.buildProp.setSubProp(def, obj.path, obj.default);
+    return obj.default;
+  }
+  return obj.value;
+},
+
   //TODO: What's this?
   setFont: function(obj){
     console.log("wee")
@@ -535,8 +555,12 @@ authorLibs.buildProp = {
     selOp.forEach(function(item){
       localList.push({id:item, name:item});
     });
-    authorLibs.windows.makeDiv({parent:obj.parent, classes:'entrylabel c_entrytitle_text w100',
-      html:(obj.widget.display ? obj.widget.display : obj.widget.field)});
+    var html = obj.widget.display ? obj.widget.display : obj.widget.field;
+    if (obj.path === 'type' && obj.type === 'objects'){
+        html += '<img style="display: inline-block;margin-left: 52px;margin-bottom: -8px; margin-top: -16px;" src="'+'./image/icon_layer_' + obj.obj.type + '.png'+'">';
+    }
+    authorLibs.windows.makeDiv({parent:obj.parent, classes:'entrylabel c_entrytitle_text w100', html:html});
+
     authorLibs.buildProp.setSelect({parent:obj.parent, object:obj.obj.id, type:obj.type,
       fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)},
       list:localList, defaultId:obj.value, path:obj.path}
@@ -544,9 +568,6 @@ authorLibs.buildProp = {
   },
 
   setNumber: function(obj){
-    if (obj.value === undefined) {
-      obj.value = 0;
-    }
     var div = authorLibs.windows.makeDiv({parent:obj.parent});
     authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100',
       html:(obj.widget.display ? obj.widget.display : obj.widget.field)});
@@ -655,6 +676,7 @@ authorLibs.buildProp = {
     var list    = [];
     selOp.forEach(function(item){list.push({id:item, name:item});});
     var id      = authorLibs.utils.getSubProp(obj.obj, obj.path);
+    if (id === undefined) id = obj.default;
     var display = obj.widget.display ? obj.widget.display : obj.widget.field;
     authorLibs.windows.makeDiv({parent:obj.parent, classes:'entrylabel c_entrytitle_text w100', html:display});
     authorLibs.buildProp.setSelect({parent:obj.parent, text:true, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)},
@@ -685,8 +707,24 @@ authorLibs.buildProp = {
     var div = authorLibs.windows.makeDiv({parent:obj.parent});
     authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100',
       html: (obj.widget.display ? obj.widget.display : obj.widget.field)});
+
     authorLibs.buildProp.setSelect({parent:div, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}, object:obj.obj.id, type:obj.type,
       list:list, defaultId:obj.value, path:obj.path});
+    if (obj.path === 'shape' && obj.type === 'objects') {
+      if(obj.obj.shape === '' || obj.obj.shape === undefined){
+        authorLibs.windows.makeDiv({parent:div, classes:'divbutton', html:"Create", click:function(){
+          var id = authorLibs.menus.addItem('shapes');
+          obj.obj.shape = id;
+          authorLibs.buildProp.get(obj.type, obj.obj.id)
+          }
+        });
+      } else {
+        authorLibs.windows.makeDiv({parent:div, classes:'divbutton', html:"Edit", click:function(){
+          authorLibs.buildProp.get('shapes', obj.obj.shape);
+          }
+        });
+      }
+    }
   },
 
   setVideo: function(obj){
@@ -754,7 +792,7 @@ authorLibs.buildProp = {
     var objGet = path.filter(function(finder){return (finder.id === objectId);})[0];
 
     authorLibs.buildProp.setSubProp(objGet, paramPath, newVal);
-    //TODO: This broke numeric input with 2 moves in an anim.
+    //TODO: This caused position x y with 2 moves in an anim to duplicate entry.
     // Did this ever do anthing useful?
     //authorLibs.buildProp.updateSubItem(objGet, type, newVal, paramPath);
     authorLibs.buildProp.updateUI(objGet, type);

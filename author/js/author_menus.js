@@ -52,18 +52,20 @@ authorLibs.menus = {
       emitDirStart:0});
       authorLibs.authorData.layers[authorLibs.authorData.layers.length-1].list.push({id:particleId, type:'particles', name:itemName});
     }
-    if (type === 'paths')       authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, url:authorLibs.externalsPath});
-    if (type === 'shapes')      authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName});
-    if (type === 'sounds')      authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, url:authorLibs.externalsPath});
-    if (type === 'tests')       authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, active:true});
-    if (type === 'vars')        authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, value:0});
-    if (type === 'videos')      authorLibs.authorData[type].push({id:authorLibs.utils.uuid(), name:itemName, url:authorLibs.externalsPath});
+    var id = authorLibs.utils.uuid();
+    if (type === 'paths')       authorLibs.authorData[type].push({id:id, name:itemName, url:authorLibs.externalsPath});
+    if (type === 'shapes')      authorLibs.authorData[type].push({id:id, name:itemName});
+    if (type === 'sounds')      authorLibs.authorData[type].push({id:id, name:itemName, url:authorLibs.externalsPath});
+    if (type === 'tests')       authorLibs.authorData[type].push({id:id, name:itemName, active:true});
+    if (type === 'vars')        authorLibs.authorData[type].push({id:id, name:itemName, value:0});
+    if (type === 'videos')      authorLibs.authorData[type].push({id:id, name:itemName, url:authorLibs.externalsPath});
 
     authorLibs.menus.updateMenu(type);
     if (type === 'objects' || type === 'particles') authorLibs.menus.updateMenu('layers');
     initCanvasser("sample", JSON.stringify(authorLibs.authorData), "string");
     authorLibs.menus.updateSelectionWindow(type, itemName);
     authorLibs.utils.view();
+    return id;
   },
 
   addToProject: function(winId){

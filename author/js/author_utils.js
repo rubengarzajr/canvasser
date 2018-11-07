@@ -14,13 +14,6 @@ authorLibs.utils = {
     authorLibs.buildProp.get("constraints", constraintName);
   },
 
-  addDrawcode: function(id){
-    var shape = authorLibs.authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
-    shape.drawcode.push({type:'fill'});
-    authorLibs.buildProp.get('shapes', id);
-    restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
   addFont: function(id){
     authorLibs.authorData.settings.fonts.push({id:authorLibs.utils.uuid(), type:'link'});
     authorLibs.buildProp.get("settings", 'fonts');

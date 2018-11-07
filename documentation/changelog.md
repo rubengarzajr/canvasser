@@ -24,7 +24,9 @@ Features:
 
 
 ## Changelog:
-- 2018-11-06 Fixed nim move copying values if move used twice.
+- 2018-11-07 Added defaults to text entry.
+- 2018-11-07 Allow shape creation in object mode.
+- 2018-11-06 Fixed anim move copying values if move used twice.
 - 2018-11-05 Added "Current" bool to Video to allow playback from current time.
 - 2018-10-10 Video linking now working and video path hooked up.
 - 2018-10-10 Added sound preview.

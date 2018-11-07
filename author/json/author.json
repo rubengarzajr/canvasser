@@ -1,7 +1,7 @@
 {
   "actions":[
     {"type":"cleardown",    "widgets":[]},
-    {"type":"console",      "widgets":[{"field":"text",       "type":"text"}]},
+    {"type":"console",      "widgets":[{"field":"text",       "type":"text", "default":"Console Output"}]},
     {"type":"conditional",  "widgets":[
         {"field":"check",      "type":"select", "id":"conditionaltype", "display":"Condition"},
         {"type":"linkedcontent", "link":"check", "sourcelist":"conditionals"}
@@ -301,11 +301,11 @@
     {"type":"strokecolor",  "widgets":[{"field":"color",   "type":"text"}]},
     {"type":"textfill",     "widgets":[
         {"field":"offset",  "type":"posxy"},
-        {"field":"text",    "type":"textarea"},
-        {"field":"color",   "type":"text"},
-        {"field":"font",    "type":"selecttext", "id":"fonts"},
-        {"field":"size",    "type":"number"},
-        {"field":"height",  "type":"number"},
+        {"field":"text",    "type":"textarea", "default":"Text"},
+        {"field":"color",   "type":"text", "default":"black"},
+        {"field":"font",    "type":"selecttext", "id":"fonts", "default":"Arial"},
+        {"field":"size",    "type":"number", "default":40},
+        {"field":"height",  "type":"number", "default":40},
         {"field":"justify", "type":"selecttext", "id":"justify"}
       ]
     },
@@ -551,7 +551,7 @@
     {"id":"output",     "position":{"x": 10, "y":174}, "menu":{"reload":true}},
     {"id":"particle",   "position":{"x":  5, "y": 52}, "menu":{"add":true, "delete":true}, "min":false,  "hide":true},
     {"id":"path",       "position":{"x":  5, "y": 52}, "menu":{"add":true, "delete":true}, "min":false, "hide":true},
-    {"id":"properties", "position":{"x":838, "y": 52}, "menu":{"add":true, "delete":true}},
+    {"id":"properties", "position":{"x":838, "y": 52}, "menu":{"add":false, "delete":false}},
     {"id":"sample",     "position":{"x":349, "y": 52}, "menu":{"sample":true}, "min":true},
     {"id":"setting",    "position":{"x":186, "y": 52}, "menu":{}, "min":true},
     {"id":"sound",      "position":{"x":  5, "y": 52}, "menu":{"add":true, "delete":true}, "min":false, "hide":true},
