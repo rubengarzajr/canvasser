@@ -1,7 +1,7 @@
 var authorLibs = {
   autoback: 0,
   automax: 10,
-  autominutes:.1,
+  autominutes:.5,
   externalsPath:  './',
   learningPath: './learning/',
   defaultJSONobj: false,
