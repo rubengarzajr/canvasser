@@ -32,6 +32,65 @@ authorLibs.utils = {
     return newArr;
   },
 
+  autoBackSort:function(){
+    var list = [];
+    for(var cnt=0; cnt<authorLibs.automax; cnt++) {
+      var timeStamp = localStorage.getItem('canvasser_autoback_time_' + cnt);
+      if (timeStamp !== null){
+        list.push({id:cnt, time:timeStamp});
+      }
+    }
+
+    return list.sort(function(a,b){ return a.time - b.time; });
+  },
+
+  autoBackLoad:function(string){
+    var back = localStorage.getItem('canvasser_autoback_' +string, JSON.stringify(authorLibs.authorData));
+    authorLibs.buildProp.clear();
+    restartCanvasser("sample", JSON.parse(back), "string");
+  },
+
+  autoBackSave:function(){
+    if (localStorage.getItem('canvasser_lastsave') === null){
+      localStorage.setItem('canvasser_lastsave', -1);
+    }
+
+    var autoback = parseInt(localStorage.getItem('canvasser_lastsave'));
+    autoback ++;
+    if (autoback > authorLibs.automax-1) autoback = 0;
+
+    var checkBack = autoback === 0 ? authorLibs.automax-1 : autoback - 1;
+    var prevSave = localStorage.getItem('canvasser_autoback_' + checkBack);
+    var newSave  = JSON.stringify(authorLibs.authorData);
+
+    if (prevSave === newSave) return;
+
+    var date = new Date()
+    localStorage.setItem('canvasser_lastsave', autoback);
+    localStorage.setItem('canvasser_autoback_' + autoback, newSave);
+    localStorage.setItem('canvasser_autoback_time_' + autoback, date.getTime());
+
+    authorLibs.utils.autoBackUpdate();
+  },
+
+  autoBackUpdate:function(){
+    var autobk = document.getElementById('autobk');
+    autobk.style.display = 'block';
+    autobk.innerHTML     = 'autoback';
+    authorLibs.utils.fadeElement(autobk, 100);
+
+    var list = authorLibs.utils.autoBackSort();
+    var dropAutobk = document.getElementById('menu_autobk_dropdown');
+    dropAutobk.innerHTML = '';
+
+    list.forEach(function(item){
+      var time = new Date(parseInt(item.time));
+      var timeParsed = time.toLocaleTimeString() + ' ' + time.toLocaleDateString();
+      authorLibs.windows.makeDiv({parent:dropAutobk, html:'AutoBack '+ timeParsed,
+        first:true, click:function(){authorLibs.utils.autoBackLoad(item.id)}});
+    });
+  },
+
   copyObj: function(object, newObj){
     for (var key in object) {
       if (object.hasOwnProperty(key)) {
@@ -269,13 +328,6 @@ authorLibs.utils = {
     authorLibs.menus.update('layers');
     authorLibs.buildProp.get('layers', idx);
     restartCanvasser("sample", authorLibs.authorData, "string");
-  },
-
-  loadAutobk:function(string){
-    console.log(localStorage)
-    var back = localStorage.getItem('canvasser_autoback_' +string, JSON.stringify(authorLibs.authorData));
-    authorLibs.buildProp.clear();
-    restartCanvasser("sample", JSON.parse(back), "string");
   },
 
   loadDataUpdate: function(){

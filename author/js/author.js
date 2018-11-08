@@ -1,7 +1,7 @@
 var authorLibs = {
   autoback: 0,
-  automax: 5,
-  autominutes:.5,
+  automax: 10,
+  autominutes:.1,
   externalsPath:  './',
   learningPath: './learning/',
   defaultJSONobj: false,
@@ -121,7 +121,7 @@ function pickWin(win, toggle, size, bank){
 function initAuthorCanvasser(vari, datafile, dataForm){
   for (var i = 1; i < 99999; i++)  window.clearInterval(i);
   window.setInterval(function(){
-    localSave();
+    authorLibs.utils.autoBackSave();
   }, 60000*authorLibs.autominutes);
   authorLibs.utils.requestJson(authorLibs.externalsPath + "json/author.json", setRules);
   authorLibs.windows.theme('default');
@@ -136,36 +136,10 @@ function initAuthorCanvasser(vari, datafile, dataForm){
 
   function initEdit(datafile){
     authorLibs.author = new authorcanvasser(datafile, 'file');
+    authorLibs.utils.autoBackUpdate();
   }
-
 }
 
-function localSave(){
-  if (localStorage.getItem('canvasser_lastsave') === null){
-    localStorage.setItem('canvasser_lastsave', 0);
-  }
-
-  var autoback =  localStorage.getItem('canvasser_lastsave') + 1;
-  if (autoback >= authorLibs.automax) autoback = 0;
-
-  localStorage.setItem('canvasser_lastsave', autoback);
-  localStorage.setItem('canvasser_autoback_' + autoback, JSON.stringify(authorLibs.authorData));
-  var autobk = document.getElementById('autobk');
-  autobk.style.display = 'block';
-  autobk.innerHTML     = "autoback " + (autoback);
-  authorLibs.utils.fadeElement(autobk, 100);
-  var autoString = "Backup " + authorLibs.utils.dateString();
-  var dropAutobk = document.getElementById('menu_autobk_dropdown');
-  dropAutobk.innerHTML = '';
-  for(var cnt=0; cnt<authorLibs.automax; cnt++) {
-    var bkData = localStorage.getItem('canvasser_autoback_' + cnt);
-    if (bkData !== null){
-      authorLibs.windows.makeDiv({parent:dropAutobk, html:'backup'+cnt, first:true, click:function(){authorLibs.utils.loadAutobk(cnt)}});
-    }
-  }
-  //if (dropAutobk.childElementCount > authorLibs.automax) dropAutobk.removeChild(dropAutobk.lastChild);
-
-}
 
 function restartCanvasser(name, data, type){
   data.paths.forEach(function(path){

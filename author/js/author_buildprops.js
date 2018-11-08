@@ -734,10 +734,10 @@ setDefault: function(obj){
 
   setVideo: function(obj){
     var vidList = authorLibs.buildProp.listIdsNames('videos');
-    var div     = authorLibs.windows.makeDiv({parent:obj.parent});
+    var div = authorLibs.windows.makeDiv({parent:obj.parent});
     authorLibs.windows.makeDiv({parent:div, classes:'entrylabel c_entrytitle_text w100', html:obj.widget.field});
     authorLibs.buildProp.setSelect({parent:div, fn:function(){authorLibs.buildProp.updateItem(this, obj.obj.id, obj.type, obj.path)}, object:obj.obj.id, type:obj.type,
-      list:vidList, defaultId:obj.obj[obj.widget.field], path:obj.widget.field});
+      list:vidList, defaultId:obj.value, path:obj.widget.field});
   },
 
   //TODO: Why request JSON in this function?

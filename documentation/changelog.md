@@ -1,25 +1,28 @@
 ## TODO:
 
-Bugs:
+### Bugs:
+
+#### A
 - responsive broke text entry (no longer aligned)
 - Files / rename not hooked up
 - Report should use getSubProp
-- Add defaults to objects - currently works for anims but not objects. Broken in buildprops addaction
-- Need to use end time for video
 - Video gets out of sync with anim if switch to different tab
-- Need to better inform user if file upload size exceeds max upload size.
-- Link uploaded video not grabbing paths
-- Video deferred not used.
-- Video in Animation displays none instead of video name.
-- buildprops.statsfile looks like it has a redundant requestJson
-- Should rebuild current Properties panel on image or video linked/added.
-- Shape "bcurve" offseta is not defined.
 - Shape "line" not working as expected.
 
+#### B
+- Link uploaded video not grabbing paths
+- Shape "bcurve" offseta is not defined.
+- Objects using SVG image are not interactive.
 
-Features:
+#### C
+- Need to use end time for video
+- Video deferred not used.
+- Need to better inform user if file upload size exceeds max upload size.
+- Should rebuild current Properties panel when anything loaded / changed.
+- buildprops.statsfile looks like it has a redundant requestJson
+
+### New Features:
 - Load/Save File manage to Box/Dropbox/Google Drive.
-- Load Autoback
 - Add Tooltip/Instructions to use variable in text shape with {{ var_name }}
 - use anchor links to restore page user was last on before leaving
 - Add an update on change button (default to true)
@@ -27,6 +30,8 @@ Features:
 
 
 ## Changelog:
+- 2018-11-08 Added Autoback loading and it only saves if changes made.
+- 2018-11-08 Fixed Video in Animation displays none instead of video name.
 - 2018-11-07 Added defaults to rect and arc drawcode.
 - 2018-11-07 Added defaults to text entry.
 - 2018-11-07 Allow shape creation and edit link in object properties.

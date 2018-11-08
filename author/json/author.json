@@ -14,7 +14,15 @@
     },
     {"type":"function",     "widgets":[{"field":"id",         "type":"objlist"},                        {"field":"function",   "type":"text"}]},
     {"type":"groupcolor",   "widgets":[{"field":"id",         "type":"text"},                           {"field":"source",     "type":"text"}]},
-    {"type":"increment",    "widgets":[{"field":"filter",     "type":"select", "id":"filtertype"},      {"field":"id",         "type":"objlist"}, {"field":"prop",    "type":"text"}, {"field":"newvalue",    "type":"text"}, {"field":"rangemin",   "type":"number"}, {"field":"rangemax",   "type":"number"}]},
+    {"type":"increment",    "widgets":[
+      {"field":"filter",     "type":"select", "id":"filtertype", "default":"object"},
+      {"field":"id",         "type":"objlist"},
+      {"field":"prop",    "type":"text"},
+      {"field":"newvalue",    "type":"text"},
+      {"field":"rangemin",   "type":"number"},
+      {"field":"rangemax",   "type":"number"}
+      ]
+    },
     {"type":"loadinto",     "widgets":[{"field":"url",        "type":"text"},                           {"field":"vari",       "type":"text"}]},
     {"type":"loadpage",     "widgets":[
       {"field":"url",        "type":"text"},
@@ -39,7 +47,7 @@
       ]
     },
     {"type":"slideobject",  "widgets":[
-        {"field":"filter",     "type":"select",     "id":"filtertype", "display":"Select Type"},
+        {"field":"filter",     "type":"select",     "id":"filtertype", "display":"Select Type", "default":"object"},
         {"field":"id",         "type":"filterlink", "link":"filter"},
         {"field":"constrainx", "type":"bool"},
         {"field":"constrainy", "type":"bool"},
