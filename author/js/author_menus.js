@@ -64,6 +64,7 @@ authorLibs.menus = {
     if (type === 'objects' || type === 'particles') authorLibs.menus.updateMenu('layers');
     initCanvasser("sample", JSON.stringify(authorLibs.authorData), "string");
     authorLibs.menus.updateSelectionWindow(type, itemName);
+    authorLibs.buildProp.getCurrent();
     authorLibs.utils.view();
     return id;
   },

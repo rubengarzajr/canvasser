@@ -68,6 +68,8 @@ authorLibs.buildProp = {
     if (thisProp.name === undefined) thisProp.name = thisProp.id;
     else propName = thisProp.name;
 
+    authorLibs.current = {type:type, id:id};
+
     var element = document.getElementById('propertiestitle');
     authorLibs.windows.makeDiv({clearparent:true, parent:element, classes:'proptitle', html:type.charAt(0).toUpperCase()+type.slice(1, -1)+' : '+propName});
     var propUI = document.getElementById("properties");
@@ -342,6 +344,11 @@ authorLibs.buildProp = {
     }
 
     authorLibs.menus.updateSelectionWindow(type,id);
+  },
+
+  getCurrent: function(){
+    if (authorLibs.current.type === undefined || authorLibs.current.id === undefined) return;
+    authorLibs.buildProp.get(authorLibs.current.type, authorLibs.current.id);
   },
 
   listIdsNames: function(filter){

@@ -18,7 +18,6 @@
 - Need to use end time for video
 - Video deferred not used.
 - Need to better inform user if file upload size exceeds max upload size.
-- Should rebuild current Properties panel when anything loaded / changed.
 - buildprops.statsfile looks like it has a redundant requestJson
 
 ### New Features:
@@ -30,6 +29,7 @@
 
 
 ## Changelog:
+- 2018-11-09 Fixed "Properties" panel now updates when asset loaded / changed.
 - 2018-11-08 Added Autoback loading and it only saves if changes made.
 - 2018-11-08 Fixed Video in Animation displays none instead of video name.
 - 2018-11-07 Added defaults to rect and arc drawcode.
