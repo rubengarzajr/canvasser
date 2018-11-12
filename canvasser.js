@@ -674,38 +674,42 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           } else animOb.position.current = {x:Math.round(posDiff.x), y:Math.round(posDiff.y)};
         }
         if (anim.type === "scale") {
-          if (anim.filter === 'group') {
-            var groupObjs = findInGroup(animOb.id)
-            groupObjs.forEach(function(animSubOb){
-              if (anim.startscale === undefined || anim.fromcurrent) anim.startscale = animSubOb.scale.current;
-              var percent   = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
-              var scaleDiff = (anim.endscale - anim.startscale) * percent + anim.startscale;
-              animSubOb.scale.current = scaleDiff;
-            });
-          } else {
-            if (anim.startscale === undefined || anim.fromcurrent) anim.startscale = animOb.scale.current;
+          var objs = [animOb];
+          if (anim.filter === 'group') objs = findInGroup(animOb.id);
+
+          objs.forEach(function(animSubOb){
+            if (anim.startscale === undefined || anim.fromcurrent) anim.startscale = animSubOb.scale.current;
             var percent   = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
-            var scaleDiff = (anim.endscale - anim.startscale) * percent + anim.startscale;
-            animOb.scale.current = scaleDiff;
-          }
+            var t       = play.time    - anim.starttime;
+            var d       = anim.endtime - anim.starttime;
+            if (anim.ease === undefined) anim.ease = 'linear';
+            var scaleDiff = ease[anim.ease](t, anim.startscale, anim.endscale-anim.startscale, d);
+            animSubOb.scale.current = scaleDiff;
+          });
         }
         if (anim.type === "turn") {
-          if (animOb.rotation === undefined) animOb.rotation = 0;
-          var startrot = 0;
-          var endrot   = radians(anim.endrot);
-          if (anim.fromcurrent) {
-            if (anim.fromCurrentStart == undefined){
-              startrot = animOb.rotation;
-              anim.fromCurrentStart = startrot;
-            } else {
-              startrot = anim.fromCurrentStart;
-            }
-          } else if (anim.startrot !== undefined) startrot = radians(anim.startrot);
-          var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
-          var rotDiff = (endrot - startrot) * percent + startrot;
-          animOb.rotation = rotDiff;
+          var objs = [animOb];
+          if (anim.filter === 'group') objs = findInGroup(animOb.id);
+          objs.forEach(function(animSubOb){
+            if (animSubOb.rotation === undefined) animSubOb.rotation = 0;
+            var startrot = 0;
+            var endrot   = radians(anim.endrot);
+            if (anim.fromcurrent) {
+              if (anim.fromCurrentStart == undefined){
+                startrot = animSubOb.rotation;
+                anim.fromCurrentStart = startrot;
+              } else {
+                startrot = anim.fromCurrentStart;
+              }
+            } else if (anim.startrot !== undefined) startrot = radians(anim.startrot);
+            var percent = (play.time - anim.starttime) / (anim.endtime - anim.starttime);
+            var t       = play.time    - anim.starttime;
+            var d       = anim.endtime - anim.starttime;
+            if (anim.ease === undefined) anim.ease = 'linear';
+            var rotDiff = ease[anim.ease](t, startrot, endrot-startrot, d);
+            animSubOb.rotation = rotDiff;
+          });
         }
-
       });
     });
     act.player = act.player.filter(function(play){return !play.delete});

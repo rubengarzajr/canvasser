@@ -181,7 +181,8 @@
         {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type", "default": "object"},
         {"field":"id",          "type":"filterlink", "link":"filter"},
         {"field":"startscale",  "type":"number", "default":1},
-        {"field":"endscale",    "type":"number", "default":2}
+        {"field":"endscale",    "type":"number", "default":2},
+        {"field":"ease",        "type":"select",     "id":"easetype", "display":"Ease", "default":"linear"}
       ]
     },
     {"type":"sound",        "widgets":[
@@ -208,7 +209,8 @@
         {"field":"filter",      "type":"select",     "id":"filtertype", "display":"Select Type", "default": "object"},
         {"field":"id",          "type":"filterlink", "link":"filter"},
         {"field":"startrot",    "type":"number", "default":0},
-        {"field":"endrot",      "type":"number", "default":180}
+        {"field":"endrot",      "type":"number", "default":180},
+        {"field":"ease",        "type":"select",     "id":"easetype", "display":"Ease", "default":"linear"}
       ]
     },
     {"type":"vis",          "widgets":[

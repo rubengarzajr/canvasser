@@ -13,12 +13,14 @@
 - Link uploaded video not grabbing paths
 - Shape "bcurve" offseta is not defined.
 - Objects using SVG image are not interactive.
+- When a parent's animation has a turn the child doesn't turn
 
 #### C
 - Need to use end time for video
 - Video deferred not used.
 - Need to better inform user if file upload size exceeds max upload size.
 - buildprops.statsfile looks like it has a redundant requestJson
+- Clear file manager when link clicked.
 
 ### New Features:
 - Load/Save File manage to Box/Dropbox/Google Drive.
@@ -29,6 +31,10 @@
 
 
 ## Changelog:
+- 2018-11-12 Added ease & group to turn animation.
+- 2018-11-12 Added ease to scale animation.
+- 2018-11-12 Added update property window on asset linked through file window.
+- 2018-11-12 Fixed default value function breaking changing any value.
 - 2018-11-09 Fixed "Properties" panel now updates when asset loaded / changed.
 - 2018-11-08 Added Autoback loading and it only saves if changes made.
 - 2018-11-08 Fixed Video in Animation displays none instead of video name.
