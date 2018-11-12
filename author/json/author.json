@@ -383,7 +383,7 @@
         {"field":"group",     "type":"grplist"},
         {"field":"parent.id", "type":"objlist"},
         {"field":"show",      "type":"bool"},
-        {"field":"origin",    "type":"select",  "id":"objectorigin"},
+        {"field":"origin",    "type":"select",  "id":"objectorigin", "default":"upper_left"},
         {"field":"originxy",  "type":"posxy"},
         {"field":"position",  "type":"posxy"},
         {"field":"atlascell", "type":"cellxy"},

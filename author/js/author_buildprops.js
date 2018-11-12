@@ -378,8 +378,6 @@ authorLibs.buildProp = {
       var defaults = Object.assign({}, obj.set, {widget:subWidget, path:wPath, value:val, default:subWidget.default});
       defaults.value = authorLibs.buildProp.setDefault(defaults);
 
-
-
       if (subWidget.type === "actions")    authorLibs.buildProp.setAction(defaults);
       if (subWidget.type === 'animlist')   authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'anims'}));
       if (subWidget.type === 'anmlist')    authorLibs.buildProp.setTypeList(Object.assign(defaults, {filter:'anims'}));
@@ -503,7 +501,7 @@ authorLibs.buildProp = {
   },
 
 setDefault: function(obj){
-  if (obj.value === undefined) {
+  if (obj.value === undefined && obj.default !== undefined) {
     var def = authorLibs.utils.getSubProp(authorLibs.authorData, obj.type)[0];
     authorLibs.buildProp.setSubProp(def, obj.path, obj.default);
     return obj.default;

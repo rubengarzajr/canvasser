@@ -94,6 +94,7 @@ authorLibs.menus = {
         authorLibs.menus.update(itemToAdd.type+'s');
       }
     });
+    authorLibs.buildProp.getCurrent();
   },
 
   copy: function(type){
