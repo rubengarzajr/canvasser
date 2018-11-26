@@ -501,8 +501,8 @@ authorLibs.buildProp = {
   },
 
 setDefault: function(obj){
-  if (obj.value === undefined && obj.default !== undefined) {
-    var def = authorLibs.utils.getSubProp(authorLibs.authorData, obj.type)[0];
+  if (obj.value === undefined && obj.default !== undefined){
+    var def = authorLibs.utils.getById(obj.obj.id, obj.type);
     authorLibs.buildProp.setSubProp(def, obj.path, obj.default);
     return obj.default;
   }

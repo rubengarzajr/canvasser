@@ -84,7 +84,7 @@
     {"type":"vis",          "widgets":[
         {"field":"filter",     "type":"select", "id":"filtertype", "display":"Select Type", "default":"object"},
         {"field":"id",         "type":"filterlink", "link":"filter"},
-        {"field":"show",       "type":"bool"}
+        {"field":"show",       "type":"bool", "default": true}
       ]
     }
   ],
@@ -381,7 +381,7 @@
         {"field":"name",      "type":"text"},
         {"field":"type",      "type":"select",  "id":"objecttype"},
         {"field":"image",     "type":"imagedata"},
-        {"field":"blend",     "type":"select",  "id":"composite"},
+        {"field":"blend",     "type":"select",  "id":"composite", "default":"source-over"},
         {"field":"group",     "type":"grplist"},
         {"field":"parent.id", "type":"objlist"},
         {"field":"show",      "type":"bool"},

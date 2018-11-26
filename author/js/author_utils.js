@@ -243,6 +243,10 @@ authorLibs.utils = {
     return index;
   },
 
+  getById: function(id, type){
+    return authorLibs.authorData[type].filter(function(obj){return obj.id === id})[0];
+  },
+
   getProjects: function(returnFunction){
     var url = authorLibs.endpoints.projects;
     var xhr = new XMLHttpRequest();

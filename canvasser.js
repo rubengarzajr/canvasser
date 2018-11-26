@@ -828,9 +828,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             }
 
             pix = getPixel({id:obj.image, pos:{
-                            x:Math.floor((act.position.x-pos.x+(obj.originxy.current.x * obj.scale.current))/obj.scale.current),
-                            y:Math.floor((act.position.y-pos.y+(obj.originxy.current.y * obj.scale.current))/obj.scale.current)}
-                          });
+              x:Math.floor((act.position.x-pos.x+(obj.originxy.current.x * obj.scale.current))/obj.scale.current),
+              y:Math.floor((act.position.y-pos.y+(obj.originxy.current.y * obj.scale.current))/obj.scale.current)}
+            });
           }
           if (pix[3] != 0 && act.mode !== 'none') {
             act.actionList.push({mode:act.mode, obj:obj});
