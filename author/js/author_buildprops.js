@@ -315,13 +315,14 @@ authorLibs.buildProp = {
       var pDiv  = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
       authorLibs.buildProp.setText({parent:pDiv, widthClass:'w50', obj:thisProp, widget:{field:'name'}, inputClass:'w200',
         value:thisProp.name, type:'vars', path:'name'});
+        console.log(thisProp)
       if (thisProp.type === undefined) thisProp.type = 'number';
       authorLibs.buildProp.setListSelect({parent:pDiv, widthClass:'w50', obj:thisProp, widget:{field:'type', id:'vartype'},
         value:thisProp.type, type:'vars', path:'type'});
       if (thisProp.type === 'number'){
         if (isNaN(thisProp.value)) thisProp.value = 0;
         authorLibs.buildProp.setNumber({parent:pDiv, obj:thisProp, type:'vars', widget:{field:'value'},
-          path:'value', value:thisProp.value, default:widget.default});
+          path:'value', value:thisProp.value, default:{field:'value'}});
       }
       if (thisProp.type === 'string'){
         authorLibs.buildProp.setText({parent:pDiv, widthClass:'w50', obj:thisProp, widget:{field:'value'},

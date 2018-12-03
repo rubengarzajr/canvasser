@@ -33,7 +33,8 @@
 
 
 ## Changelog:
-- 2018-12-03 Fixed text modvar to work with strings.
+- 2018-12-03 Fixed var properties in authoring tool.
+- 2018-12-03 Fixed modvar to work with strings.
 - 2018-12-03 Added check to only activate object on top when clicking.
 - 2018-11-26 Fixed setting default values would change first object only.
 - 2018-11-12 Added ease & group to turn animation.
