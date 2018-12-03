@@ -1274,7 +1274,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           var varChange = act.data.vars.filter(function(obj){return obj.id === action.id})[0];
           if (action.operation === "add") varChange.value = Number(varChange.value) + Number(action.amount);
           if (action.operation === "sub") varChange.value = Number(varChange.value) - Number(action.amount);
-          if (action.operation === "set") varChange.value = Number(action.amount);
+          if (action.operation === "set") {
+            varChange.value = varChange.type ==='number' ? Number(action.amount) : action.amount ;
+            if (varChange.type ==='boolean') varChange.type = action.amount === 'true' ? true : false;
+          }
         }
         if (action.type === 'swapimage'){
           act.data.objects.forEach(function(obj){

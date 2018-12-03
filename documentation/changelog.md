@@ -8,11 +8,14 @@
 - Report should use getSubProp
 - Video gets out of sync with anim if switch to different tab
 - Shape "line" not working as expected.
+- Authoring tool var broken
 
 #### B
 - Shape "bcurve" offseta is not defined.
 - When a parent's animation has a turn the child doesn't turn
 - Figure out why some objects using SVG images are not interactive.
+- Var set in authoring tool doesn't change based on entry type.
+- boolean var type not supported
 
 #### C
 - Need to use end time for video
@@ -30,6 +33,7 @@
 
 
 ## Changelog:
+- 2018-12-03 Fixed text modvar to work with strings.
 - 2018-12-03 Added check to only activate object on top when clicking.
 - 2018-11-26 Fixed setting default values would change first object only.
 - 2018-11-12 Added ease & group to turn animation.
