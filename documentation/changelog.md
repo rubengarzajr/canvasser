@@ -3,18 +3,16 @@
 ### Bugs:
 
 #### A
-- Objects using SVG image are not interactive.
 - responsive broke text entry (no longer aligned)
 - Files / rename not hooked up
 - Report should use getSubProp
 - Video gets out of sync with anim if switch to different tab
 - Shape "line" not working as expected.
-- testp z check - only activate the one on addToProp
 
 #### B
-- Link uploaded video not grabbing paths
 - Shape "bcurve" offseta is not defined.
 - When a parent's animation has a turn the child doesn't turn
+- Figure out why some objects using SVG images are not interactive.
 
 #### C
 - Need to use end time for video
@@ -32,6 +30,7 @@
 
 
 ## Changelog:
+- 2018-12-03 Added check to only activate object on top when clicking.
 - 2018-11-26 Fixed setting default values would change first object only.
 - 2018-11-12 Added ease & group to turn animation.
 - 2018-11-12 Added ease to scale animation.

@@ -1134,6 +1134,26 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   }
 
   function actions(){
+    var clickList = {};
+    var objList = [];
+    var topClick = undefined;
+    if (act.actionList.length>0){
+
+      var actIdx = act.actionList.length;
+      while (actIdx--) {
+        if (act.actionList[actIdx]) {
+          objList.push(act.actionList[actIdx].obj.id)
+          clickList[act.actionList[actIdx].obj.id] = act.actionList[actIdx];
+          act.actionList.splice(actIdx, 1);
+        }
+      }
+      act.data.layers.forEach(function(layer){
+        layer.list.forEach(function(obj){
+          if (objList.includes(obj.id)) topClick = obj.id
+        });
+      });
+      act.actionList.push(clickList[topClick]);
+    }
     act.actionList.forEach(function(over){
       if (over.obj[over.mode+"list"] === undefined) return;
 
