@@ -315,7 +315,6 @@ authorLibs.buildProp = {
       var pDiv  = authorLibs.windows.makeDiv({clearparent:true, parent:propUI, classes:'propbody'});
       authorLibs.buildProp.setText({parent:pDiv, widthClass:'w50', obj:thisProp, widget:{field:'name'}, inputClass:'w200',
         value:thisProp.name, type:'vars', path:'name'});
-        console.log(thisProp)
       if (thisProp.type === undefined) thisProp.type = 'number';
       authorLibs.buildProp.setListSelect({parent:pDiv, widthClass:'w50', obj:thisProp, widget:{field:'type', id:'vartype'},
         value:thisProp.type, type:'vars', path:'type'});
