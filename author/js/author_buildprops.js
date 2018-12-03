@@ -122,8 +122,10 @@ authorLibs.buildProp = {
             value:thisProp[widget.field], type:'constraints', path:widget.field});
         }
 
-        if (widget.type === "number") authorLibs.buildProp.setNumber({parent:pDiv, obj:thisProp, type:'constraints', widget:widget, path:widget.field, value:val, default:widget.default});
-        if (widget.type === "bool")  authorLibs.buildProp.setBoolean({parent:pDiv, obj:thisProp, type:'constraints', widget:widget, path:widget.field, value:val});
+        if (widget.type === "number") authorLibs.buildProp.setNumber({parent:pDiv, obj:thisProp, type:'constraints',
+          widget:widget, path:widget.field, value:val, default:widget.default});
+        if (widget.type === "bool")  authorLibs.buildProp.setBoolean({parent:pDiv, obj:thisProp, type:'constraints',
+          widget:widget, path:widget.field, value:val});
         if (widget.type === "driverlist"){
           var wlist = [];
           authorLibs.rules.constraint.drivers.forEach(function(template){wlist.push({id:template.type, name:template.type})});
@@ -140,13 +142,17 @@ authorLibs.buildProp = {
               authorLibs.windows.makeImg({parent:pbDiv, classes:'rightx', click:function(){authorLibs.utils.deletedriver(thisProp.id, idx)},
                 src:authorLibs.externalsPath + "image/icon_remove_g.png"});
               authorLibs.windows.makeDiv({parent:pbDiv, classes:'entrylabel c_entrytitle_text w100', html:idx});
-              authorLibs.buildProp.setSelect({parent:pbDiv, fn:function(){authorLibs.buildProp.updateItem(this, thisProp.id, 'constraints', widget.field);}, object:thisProp.id, type:'constraints',
-                list:wlist, defaultId:actobject.type, path:widget.field+'.'+idx+'.type'});
+              authorLibs.buildProp.setSelect({parent:pbDiv, fn:function(){authorLibs.buildProp.updateItem(this,
+                thisProp.id, 'constraints', widget.field+'.'+idx+'.type');}, object:thisProp.id, type:'constraints', list:wlist,
+                defaultId:actobject.type, path:widget.field+'.'+idx+'.type'
+              });
 
               authorLibs.buildProp.makeWidgets({list:actionWidgets, idx:idx, widget:widget,  set:{parent:pbDiv, obj:thisProp, type:'constraints'}});
             });
           }
-          authorLibs.windows.makeDiv({parent:pDiv, classes:'divbutton', click:function(){authorLibs.utils.addConstraint(thisProp.id, widget.field)}, html:'Add Command'});
+          authorLibs.windows.makeDiv({parent:pDiv, classes:'divbutton', click:function(){
+            authorLibs.utils.addConstraint(thisProp.id, widget.field)}, html:'Add Command'
+          });
         }
       });
     }

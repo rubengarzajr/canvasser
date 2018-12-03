@@ -116,6 +116,15 @@ authorLibs.utils = {
           + d.getFullYear() + '/' + (d.getMonth()+1)  + '/' + d.getDate();
   },
 
+  deletedriver: function(driverName, index){
+    var driverGet = authorLibs.authorData.constraints.filter(function(finder){return (finder.id === driverName);});
+    if (driverGet.length === 0) return;
+    console.log(driverGet[0])
+    driverGet[0].driverlist.splice(index,1);
+    authorLibs.buildProp.get("constraints", driverName);
+    restartCanvasser("sample", authorLibs.authorData, "string");
+  },
+
   deleteitem: function(type, objName, listType, index){
     var objGet = authorLibs.authorData[type].filter(function(finder){return (finder.id === objName);});
     if (objGet.length === 0) return;
