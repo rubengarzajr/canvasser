@@ -33,6 +33,7 @@
 
 
 ## Changelog:
+- 2018-12-10 Allowed text entry in test value.
 - 2018-12-03 Fixed constraint type properties in authoring tool.
 - 2018-12-03 Fixed var properties in authoring tool.
 - 2018-12-03 Fixed modvar to work with strings.

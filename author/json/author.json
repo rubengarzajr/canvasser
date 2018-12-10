@@ -248,7 +248,11 @@
   },
   "conditionals":{
     "position":{"widgets":[{"field":"itemtocheck",   "type":"objlist"}, {"field":"position",   "type":"objlist"}]},
-    "var":     {"widgets":[{"field":"itemtocheck",   "type":"varlist"}, {"field":"value",      "type":"number"}, {"field":"comparetype",  "type":"select", "id":"comparetype"} ]}
+    "var":     {"widgets":[
+      {"field":"itemtocheck",   "type":"varlist"},
+      {"field":"value",      "type":"text"},
+      {"field":"comparetype",  "type":"select", "id":"comparetype"}
+    ]}
   },
   "constraint":{
       "widgets":[
