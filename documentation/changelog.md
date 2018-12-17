@@ -3,7 +3,6 @@
 ### Bugs:
 
 #### A
-- responsive broke text entry (no longer aligned)
 - Files / rename not hooked up
 - Report should use getSubProp
 - Video gets out of sync with anim if switch to different tab
@@ -33,6 +32,7 @@
 
 
 ## Changelog:
+- 2018-12-17 Fixed alignment on responsive text entry.
 - 2018-12-10 Allowed text entry in test value.
 - 2018-12-03 Fixed constraint type properties in authoring tool.
 - 2018-12-03 Fixed var properties in authoring tool.

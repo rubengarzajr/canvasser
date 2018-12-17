@@ -1395,6 +1395,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           }
         }
         if (action.type === "textentry"){
+          var scaleAmt = 1;
+          if (parseInt(sample.act.canvasdom.style.width) < act.data.settings.canvaswidth){
+            scaleAmt = parseInt(sample.act.canvasdom.style.width) / act.data.settings.canvaswidth;
+          }
           if (action.style === undefined) action.style = '';
           var holder    = document.getElementById(act.data.settings.canvasparent);
           var text      = document.getElementById(act.data.settings.canvasparent+'_text_input');
@@ -1403,13 +1407,20 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (action.position === undefined) action.position = {x:0,y:0};
           if (action.position.x  === undefined) action.position.x = 0;
           if (action.position.y  === undefined) action.position.y = 0;
-          var abs = {x:canvasPos.left+action.position.x, y:canvasPos.top+action.position.y};
+          var abs = {
+            x:canvasPos.left + (action.position.x * scaleAmt),
+            y:canvasPos.top  + (action.position.y * scaleAmt)
+            };
           if (action.overcursor){
-            abs = {x:canvasPos.left+act.position.x, y:canvasPos.top+act.position.y};
+            abs = {
+              x:canvasPos.left + (act.position.x * scaleAmt), 
+              y:canvasPos.top  + (act.position.y * scaleAmt)
+            };
           }
           text          = document.createElement("input");
 
           var varType   = 'text';
+          if (actVari.type === undefined) actVari.type = 'text';
           if (actVari.type === 'number') varType = 'number';
           text.setAttribute("type", varType);
           text.value      = actVari.value;
@@ -1422,7 +1433,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           var textPos = text.getBoundingClientRect();
           var diff    = {x:abs.x-textPos.left-textPos.width/2, y:abs.y-textPos.top-textPos.height/2};
           text.style.left = diff.x + 'px';
-          text.style.top = diff.y + 'px';
+          text.style.top  = diff.y + 'px';
           text.focus();
 
           text.addEventListener ("blur", function(e){
