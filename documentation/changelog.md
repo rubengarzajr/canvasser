@@ -32,6 +32,7 @@
 
 
 ## Changelog:
+- 2019-02-13 Fixed tests not working due to not to converting string to number.
 - 2018-12-17 Fixed alignment on responsive text entry.
 - 2018-12-10 Allowed text entry in test value.
 - 2018-12-03 Fixed constraint type properties in authoring tool.

@@ -354,6 +354,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         var thisVar = act.data.vars.filter(function(obj){return obj.id === subtest.itemtocheck})[0];
         if (thisVar !== undefined){
           var go = false;
+          if (thisVar.type === 'number'){
+             thisVar.value = Number(thisVar.value);
+             subtest.value = Number(subtest.value);
+          }
           if (subtest.comparetype === 'equal') {
             if (thisVar.value === subtest.value) go = true;
           }
@@ -376,6 +380,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     if (goAll){
       if (test.trueoff) test.active = false;
       act.actionList.push({mode:'true', obj:{truelist:test.truelist}, next:true});
+    } else {
+      if (test.falseoff) test.active = false;
+      act.actionList.push({mode:'false', obj:{falselist:test.falselist}, next:true});
     }
   }
 
@@ -1413,7 +1420,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             };
           if (action.overcursor){
             abs = {
-              x:canvasPos.left + (act.position.x * scaleAmt), 
+              x:canvasPos.left + (act.position.x * scaleAmt),
               y:canvasPos.top  + (act.position.y * scaleAmt)
             };
           }
