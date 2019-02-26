@@ -1403,8 +1403,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         }
         if (action.type === "textentry"){
           var scaleAmt = 1;
-          if (parseInt(sample.act.canvasdom.style.width) < act.data.settings.canvaswidth){
-            scaleAmt = parseInt(sample.act.canvasdom.style.width) / act.data.settings.canvaswidth;
+          if (parseInt(act.canvasdom.style.width) < act.data.settings.canvaswidth){
+            scaleAmt = parseInt(act.canvasdom.style.width) / act.data.settings.canvaswidth;
           }
           if (action.style === undefined) action.style = '';
           var holder    = document.getElementById(act.data.settings.canvasparent);
