@@ -25,7 +25,7 @@ function initCanvasser(vari, datafile, dataForm, overrides){
 }
 
 function canvasser(vari, interactiveData, dataForm, overrides){
-  this.version  = '1.4.2';
+  this.version  = '1.5.0';
   var act       = {
     actionList   : [],
     dragging     : null,
@@ -438,6 +438,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           }
           subPropSet(child, dr.constrainop, driver)
         }
+        if (dr.type === 'var'){
+          var parent = act.data.vars.filter(function(obj){return obj.id === dr.var})[0];
+          if (parent === undefined) return
+          subPropSet(act.data, dr.path, parent.value);
+        }
       });
     });
 
@@ -564,6 +569,11 @@ function canvasser(vari, interactiveData, dataForm, overrides){
             var animOb = act.data.objects.filter(function(obj){return obj.id === anim.id})[0];
             if (animOb !== undefined) animOb.testp = anim.testp
           }
+          anim.delete = true;
+        }
+        if (anim.type === "varset"){
+          var thisVar = act.data.vars.filter(function(obj){return obj.id === anim.var})[0];
+          thisVar.value = anim.value;
           anim.delete = true;
         }
         if (anim.type === "videoplay"){
@@ -951,6 +961,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
       }
 
       if (shape.type === "arc"){
+        ctx.beginPath();
         if (shape.startangle === undefined) shape.startangle = 0;
         if (shape.endangle === undefined)   shape.endangle   = 0;
         ctx.arc(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.radius*sizer,
@@ -964,19 +975,25 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (shape.fillcolor !== undefined) ctx.fillStyle = shape.fillcolor;
           ctx.fill();
         }
+        ctx.closePath();
       }
       if (shape.type === "bcurve"){
         ctx.bezierCurveTo(origin.x+offseta.x*sizer, origin.y+offseta.y*sizer,
           origin.x+offsetb.x*sizer, origin.y+offsetb.y*sizer, origin.x+offsetc.x*sizer,
           origin.y+offsetc.y*sizer);
       }
-      if (shape.type === "fill") {
-        if (usecolor) ctx.fillStyle = color.current[colorIndex];
-        ctx.fill();
+
+      if (shape.type === "line"){
+        ctx.beginPath();
+        shape.startpos = checkPos(shape.startpos);
+        shape.endpos   = checkPos(shape.endpos);
+        ctx.moveTo(origin.x+shape.startpos.x+offset.x*sizer, origin.y+shape.startpos.y+offset.y*sizer);
+        ctx.lineTo(origin.x+shape.endpos.x  +offset.x*sizer, origin.y+shape.endpos.y  +offset.y*sizer);
+        ctx.strokeStyle = shape.linecolor;
+        ctx.lineWidth   = shape.linewidth;
+        ctx.stroke();
+        ctx.closePath();
       }
-      if (shape.type === "fillcolor") ctx.fillStyle = shape.color;
-      if (shape.type === "line")      ctx.lineTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
-      if (shape.type === "linewidth") ctx.lineWidth = shape.width*sizer;
       if (shape.type === "move")      ctx.moveTo(origin.x+offset.x*sizer, origin.y+offset.y*sizer);
       if (shape.type === "rect"){
         ctx.beginPath();
@@ -1040,12 +1057,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
 
         function replacer(match, p1, p2, p3, offset, string) {
           var val = act.data.vars.filter(function(obj){return obj.name === p1})[0];
-          if (val !== undefined) return val.value;
+          if (val       === undefined || val       === null) return '';
+          if (val.value === undefined || val.value === null) return '';
+          return val.value;
         }
 
       }
-      if (shape.type === "strokecolor") ctx.strokeStyle = shape.color;
-      if (shape.type === "stroke") ctx.stroke();
       if (shape.type === "ptest" && doTest) {
         if (ctx.isPointInPath(testP.x, testP.y)) test = true;
       }
@@ -1512,6 +1529,22 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     check[prop] = set;
   }
 
+  function checkPos(pos){
+    var returnValue = {x:0, y:0};
+    if (pos === undefined) return returnValue;
+    if (pos.x !== undefined) returnValue.x = checkNumVar(pos.x);
+    if (pos.y !== undefined) returnValue.y = checkNumVar(pos.y);
+    return returnValue;
+  }
+
+  function checkNumVar(val){
+    if (val.toString().includes('{{')) {
+      var varName = val.match(/{{([^']+)}}/)[1];
+      var thisVar = act.data.vars.filter(function(obj){return obj.name === varName})[0];
+      return Number(thisVar.value);
+    } else return Number(val);
+  }
+
   function copyObj(object, newObj){
     for (var key in object) {
       if (object.hasOwnProperty(key)) {
@@ -1633,6 +1666,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   function randIntervalInt(min,max){ return Math.floor(Math.random()*(max-min+1)+min); }
 
   function subPropGet(obj, desc){
+    if (obj === undefined || desc === undefined) return;
     var arr = desc.split(".");
     while(arr.length > 1){
       var isnum = /^\d+$/.test(arr[0]);
@@ -1645,6 +1679,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
   }
 
   function subPropSet(obj, desc, val){
+    if (desc === undefined) return;
     var arr = desc.split(".");
     while(arr.length > 1){
       if (obj[arr[0]] === undefined) obj[arr[0]] = {};

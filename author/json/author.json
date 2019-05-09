@@ -224,6 +224,12 @@
         {"field":"ease",        "type":"select",     "id":"easetype", "display":"Ease", "default":"linear"}
       ]
     },
+    {"type":"varset",       "widgets":[
+        {"field":"starttime", "type":"number", "default":0},
+        {"field":"var",       "type":"varlist"},
+        {"field":"value",     "type":"text"}
+      ]
+    },
     {"type":"vis",          "widgets":[
         {"field":"starttime", "type":"number", "default":0},
         {"field":"filter",    "type":"select", "id":"filtertype", "display":"Select Type", "default": "object"},
@@ -247,7 +253,11 @@
   "authorsettings":{
   },
   "conditionals":{
-    "position":{"widgets":[{"field":"itemtocheck",   "type":"objlist"}, {"field":"position",   "type":"objlist"}]},
+    "position":{"widgets":[
+      {"field":"itemtocheck",   "type":"objlist"},
+      {"field":"position",   "type":"objlist"}
+      ]
+    },
     "var":     {"widgets":[
       {"field":"itemtocheck",   "type":"varlist"},
       {"field":"value",      "type":"text"},
@@ -266,12 +276,12 @@
                                             {"field":"constrained", "type":"objlist"}
                                            ]
         },
-        {"type":"position",      "widgets":[{"field":"axis",        "type":"select", "id":"axistype", "display":"Select Axis"},
+        {"type":"position",      "widgets":[{"field":"axis",        "type":"select", "id":"axistype", "display":"Select Axis", "default":"xy"},
                                             {"field":"driver",      "type":"objlist"},
                                             {"field":"constrained", "type":"objlist"},
                                             {"field":"offset",      "type":"posxy"},
-                                            {"field":"operation",   "type":"select", "id":"constraintype"},
-                                            {"field":"value",       "type":"number"}
+                                            {"field":"operation",   "type":"select", "id":"constraintype", "default":"add"},
+                                            {"field":"value",       "type":"number", "default":0}
                                            ]
         },
         {"type":"relation",      "widgets":[{"field":"driver",         "type":"objlist"},
@@ -283,6 +293,10 @@
                                             {"field":"constrainop",    "type":"select", "id":"relationtype"},
                                             {"field":"constrainmin",   "type":"number"},
                                             {"field":"constrainmax",   "type":"number"}
+                                           ]
+        },
+        {"type":"var",           "widgets":[{"field":"var",    "type":"varlist"},
+                                            {"field":"path",   "type":"text"}
                                            ]
         }
       ]
@@ -303,12 +317,14 @@
       ]
     },
     {"type":"bcurve",       "widgets":[{"field":"offseta", "type":"posxy"}, {"field":"offsetb", "type":"posxy"},  {"field":"offsetc",    "type":"posxy"}]},
-    {"type":"begin",        "widgets":[]},
-    {"type":"close",        "widgets":[]},
-    {"type":"fill",         "widgets":[]},
-    {"type":"fillcolor",    "widgets":[{"field":"color",   "type":"text"}]},
-    {"type":"line",         "widgets":[{"field":"origin",  "type":"posxy"}]},
-    {"type":"linewidth",    "widgets":[{"field":"width",   "type":"number"}]},
+    {"type":"line",         "widgets":[
+      {"field":"offset",    "type":"posxy"},
+      {"field":"startpos",  "type":"posxy", "default":{"x":0,"y":0}},
+      {"field":"endpos",    "type":"posxy", "default":{"x":50,"y":50}},
+      {"field":"linecolor", "type":"text", "default":"black"},
+      {"field":"linewidth", "type":"number", "default": 4}
+      ]
+    },
     {"type":"move",         "widgets":[{"field":"origin",  "type":"posxy"}]},
     {"type":"ptest",        "widgets":[]},
     {"type":"rect",         "widgets":[
@@ -322,8 +338,6 @@
         {"field":"linewidth", "type":"number", "default":4}
       ]
     },
-    {"type":"stroke",       "widgets":[]},
-    {"type":"strokecolor",  "widgets":[{"field":"color",   "type":"text"}]},
     {"type":"textfill",     "widgets":[
         {"field":"offset",  "type":"posxy"},
         {"field":"text",    "type":"textarea", "default":"Text Fill"},

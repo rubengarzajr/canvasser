@@ -10,7 +10,7 @@ authorLibs.buildProp = {
 
   addDrawcode: function(id){
     var shape = authorLibs.authorData.shapes.filter(function(shape){ return shape.id === id;})[0];
-    shape.drawcode.push({type:'fill'});
+    shape.drawcode.push({type:'rect'});
     authorLibs.buildProp.get('shapes', id);
     restartCanvasser("sample", authorLibs.authorData, "string");
   },

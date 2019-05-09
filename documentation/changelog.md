@@ -6,9 +6,9 @@
 - Files / rename not hooked up
 - Report should use getSubProp
 - Video gets out of sync with anim if switch to different tab
-- Shape "line" not working as expected.
 
 #### B
+- Shapes don't turn with animation (tried with rect).
 - Shape "bcurve" offseta is not defined.
 - When a parent's animation has a turn the child doesn't turn
 - Figure out why some objects using SVG images are not interactive.
@@ -24,6 +24,7 @@
 - Clear file manager when link clicked.
 
 ### New Features:
+- Not orientation in objects!
 - Load/Save File manage to Box/Dropbox/Google Drive.
 - Add Tooltip/Instructions to use variable in text shape with {{ var_name }}
 - use anchor links to restore page user was last on before leaving
@@ -32,6 +33,13 @@
 
 
 ## Changelog:
+- 2019-05-09 Removed shapes begin, linewidth, stroke, fill, strokecolor, close, fillcolor.
+- 2019-05-09 Fixed line not following constraints and added some defaults.
+- 2019-05-09 Added VarSet animation command.
+- 2019-05-09 Added Var constraint.
+- 2019-05-07 Fixed line not showing up.
+- 2018-04-10 **Version 1.5.0**
+- 2019-05-02 Fixed null and undefined showing in var text shape if var undefined.
 - 2019-02-26 Fixed test using hard coded sample.
 - 2019-02-13 Fixed tests not working due to not to converting string to number.
 - 2018-12-17 Fixed alignment on responsive text entry.
