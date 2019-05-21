@@ -28,7 +28,7 @@
   "canvasheight":"500",
   "canvasdomname":"activity",
   "canvasparent":"canvasholder",
-  "responsive":false,
+  "responsive":true,
   "usecache":false
   }
 }
