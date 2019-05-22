@@ -33,6 +33,7 @@
 
 
 ## Changelog:
+- 2019-05-22 Fixed bug in Objects when using a number as a object name.
 - 2019-05-09 Removed shapes begin, linewidth, stroke, fill, strokecolor, close, fillcolor.
 - 2019-05-09 Fixed line not following constraints and added some defaults.
 - 2019-05-09 Added VarSet animation command.

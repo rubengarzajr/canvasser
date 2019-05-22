@@ -300,7 +300,7 @@ authorLibs.menus = {
       }
     });
 
-    var objectFilter = document.getElementById('objectfilter').value;
+    var objectFilter = String(document.getElementById('objectfilter').value);
 
     authorLibs.authorData[type].forEach(function(menuItem, idx){
       if (type === 'anims'  || type === 'constraints' || type === 'groups' || type === 'particles'
@@ -328,6 +328,7 @@ authorLibs.menus = {
       }
 
       if (type === 'objects'){
+        menuItem.name = String(menuItem.name);
         if (menuItem.name.indexOf(objectFilter) === -1) return;
         var tr  = authorLibs.windows.makeTr({parent:menuTable, classes:'clicktr', id:type+'_'+menuItem.id, click:function(){authorLibs.buildProp.get(type, menuItem.id)}});
         authorLibs.windows.makeTd({parent:tr, style:'font-size:1.3em;', width:'75%', html:menuItem.name});
