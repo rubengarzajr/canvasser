@@ -1420,8 +1420,14 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         }
         if (action.type === "textentry"){
           var scaleAmt = 1;
-          if (parseInt(act.canvasdom.style.width) < act.data.settings.canvaswidth){
-            scaleAmt = parseInt(act.canvasdom.style.width) / act.data.settings.canvaswidth;
+          var testWidth = act.canvasdom.clientWidth;
+          console.log(testWidth)
+          if (parseInt(act.canvasdom.style.width) < act.canvasdom.clientwidth){
+            testWidth = parseInt(act.canvasdom.style.width);
+          }
+          console.log(testWidth)
+          if (testWidth < act.data.settings.canvaswidth){
+            scaleAmt = testWidth / act.data.settings.canvaswidth;
           }
           if (action.style === undefined) action.style = '';
           var holder    = document.getElementById(act.data.settings.canvasparent);
