@@ -1421,11 +1421,9 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (action.type === "textentry"){
           var scaleAmt = 1;
           var testWidth = act.canvasdom.clientWidth;
-          console.log(testWidth)
           if (parseInt(act.canvasdom.style.width) < act.canvasdom.clientwidth){
             testWidth = parseInt(act.canvasdom.style.width);
           }
-          console.log(testWidth)
           if (testWidth < act.data.settings.canvaswidth){
             scaleAmt = testWidth / act.data.settings.canvaswidth;
           }
