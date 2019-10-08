@@ -338,6 +338,21 @@
         {"field":"linewidth", "type":"number", "default":4}
       ]
     },
+    {"type":"rectround",     "widgets":[
+        {"field":"offset",    "type":"posxy"},
+        {"field":"width",     "type":"number","default":100},
+        {"field":"height",    "type":"number","default":100},
+        {"field":"fill",      "type":"bool", "default":true},
+        {"field":"fillcolor", "type":"text", "default":"gray"},
+        {"field":"stroke",    "type":"bool", "default":true},
+        {"field":"linecolor", "type":"text", "default":"black"},
+        {"field":"linewidth", "type":"number", "default":4},
+        {"field":"tl",   "type":"number", "default":4},
+        {"field":"tr",   "type":"number", "default":4},
+        {"field":"bl",   "type":"number", "default":4},
+        {"field":"br",   "type":"number", "default":4}
+      ]
+    },
     {"type":"textfill",     "widgets":[
         {"field":"offset",  "type":"posxy"},
         {"field":"text",    "type":"textarea", "default":"Text Fill"},
@@ -440,7 +455,13 @@
         {"field":"color",     "type":"color"},
         {"field":"origin",    "type":"select", "id":"objectorigin"},
         {"field":"position",  "type":"posxy" },
-        {"field":"scale",     "type":"scale"}
+        {"field":"scale",     "type":"scale"},
+        {"field":"testp",     "type":"bool",    "display":"Interactive"},
+        {"field":"clicklist", "type":"actions", "display":"Click/Touch Event", "dependson":"testp"},
+        {"field":"draglist",  "type":"actions", "display":"Drag Event",        "dependson":"testp"},
+        {"field":"droplist",  "type":"actions", "display":"Drop Event",        "dependson":"testp"},
+        {"field":"truelist",  "type":"actions", "display":"Conditional True",  "dependson":"testp"},
+        {"field":"falselist", "type":"actions", "display":"Conditional False", "dependson":"testp"}
       ]
     },
     "video":{

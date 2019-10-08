@@ -755,8 +755,8 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (obj.blend) act.context.globalCompositeOperation = obj.blend;
         var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current, obj.usecolor);
         act.context.restore();
-        if (!obj.testp) return;
-        if (posCheck && act.mode !== 'none') act.actionList.push({mode:act.mode, obj:obj});
+        if (!obj.testp || act.mode === 'none') return;
+        if (posCheck ) {act.actionList.push({mode:act.mode, obj:obj});}
       }
 
       if (obj.type === "image" && obj.show){
@@ -1007,8 +1007,40 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           if (shape.fillcolor !== undefined) ctx.fillStyle = shape.fillcolor;
           ctx.fill();
         }
+        if (ctx.isPointInPath(testP.x, testP.y)) {test = true;}
         ctx.closePath();
       }
+
+      if (shape.type === "rectround"){
+        ctx.beginPath();
+        //ctx.rect(origin.x+offset.x*sizer, origin.y+offset.y*sizer, shape.width*sizer,shape.height*sizer);
+
+        var x = origin.x+offset.x*sizer;
+        var y = origin.y+offset.y*sizer;
+
+        ctx.moveTo(x + shape.tl, y);
+        ctx.lineTo(x + shape.width - shape.tr, y);
+        ctx.quadraticCurveTo(x + shape.width, y, x + shape.width, y + shape.tr);
+        ctx.lineTo(x + shape.width, y + shape.height - shape.br);
+        ctx.quadraticCurveTo(x + shape.width, y + shape.height, x + shape.width - shape.br, y + shape.height);
+        ctx.lineTo(x + shape.bl, y + shape.height);
+        ctx.quadraticCurveTo(x, y + shape.height, x, y + shape.height - shape.bl);
+        ctx.lineTo(x, y + shape.tl);
+        ctx.quadraticCurveTo(x, y, x + shape.tl, y);
+
+        if (shape.stroke){
+          if (shape.linecolor !== undefined) ctx.strokeStyle = shape.linecolor;
+          if (shape.linewidth !== undefined) ctx.lineWidth   = shape.linewidth ;
+          ctx.stroke();
+        }
+        if (shape.fill){
+          if (shape.fillcolor !== undefined) ctx.fillStyle = shape.fillcolor;
+          ctx.fill();
+        }
+        if (ctx.isPointInPath(testP.x, testP.y)) {test = true;}
+        ctx.closePath();
+      }
+
       if (shape.type === "textfill") { processText(shape); }
       if (shape.type === "textline") { processText(shape); }
       function processText(shape){
@@ -1242,7 +1274,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           window[action.function](action.params);
         }
         if (action.type === 'function'){
-          window[action.function]({id:action.id});
+          var funct = action.function.split(".");
+          var win = window[funct.shift()];
+          while (funct.length > 0){
+            win = win[funct.shift()];
+          }
+          win({id:action.id});
         }
         if (action.type === 'increment'){
           act.data.objects.forEach(function(obj){
