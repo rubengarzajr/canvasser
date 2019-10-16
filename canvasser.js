@@ -756,7 +756,15 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         var posCheck = drawShapes(act, objParent, obj.position.current, currentShape, obj.color, obj.testp, act.position, obj.scale.current, obj.usecolor);
         act.context.restore();
         if (!obj.testp || act.mode === 'none') return;
-        if (posCheck ) {act.actionList.push({mode:act.mode, obj:obj});}
+        if (posCheck) {
+          act.actionList.push({mode:act.mode, obj:obj});
+        } else {
+          if (act.dragging !== null) {
+            if (obj.id === act.dragging.id) {
+              act.actionList.push({mode:act.mode, obj:obj});
+            }
+          }
+        }
       }
 
       if (obj.type === "image" && obj.show){
@@ -1194,7 +1202,6 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     var objList = [];
     var topClick = undefined;
     if (act.actionList.length>0){
-
       var actIdx = act.actionList.length;
       while (actIdx--) {
         if (act.actionList[actIdx]) {
@@ -1276,10 +1283,12 @@ function canvasser(vari, interactiveData, dataForm, overrides){
         if (action.type === 'function'){
           var funct = action.function.split(".");
           var win = window[funct.shift()];
-          while (funct.length > 0){
-            win = win[funct.shift()];
+          if (win !== undefined){
+            while (funct.length > 0){
+              win = win[funct.shift()];
+            }
+            win({id:action.id});
           }
-          win({id:action.id});
         }
         if (action.type === 'increment'){
           act.data.objects.forEach(function(obj){

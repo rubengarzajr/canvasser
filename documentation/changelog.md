@@ -33,6 +33,8 @@
 
 
 ## Changelog:
+- 2019-10-16 Fixed dragging shapes no longer loses grip.
+- 2019-10-16 Fixed handling external functions that don't exist.
 - 2019-10-08 Fixed handle functions with dots in name.
 - 2019-10-08 Added curved rectangles.
 - 2019-10-07 Added interactive shape - rectangle.
