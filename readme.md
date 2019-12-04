@@ -3,6 +3,9 @@
 #### Authoring tool for interactive, embeddable, multimedia animations based on HTML5 Canvas.
 #### Questions / Comments: <rubengarzajr@gmail.com>
 
+## Recovery of deleted files
+https://yourIP/canvasser/author/php/recover.php
+
 ## Quick Start
 Copy the files to a web server / LAMP / MAMP / WAMP.
 

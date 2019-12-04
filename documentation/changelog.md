@@ -8,6 +8,8 @@
 - Video gets out of sync with anim if switch to different tab
 
 #### B
+- Atlas images interactive takes all cells into account
+- Atlas images don't take aniamtion turn into account
 - Shapes don't turn with animation (tried with rect).
 - Shape "bcurve" offseta is not defined.
 - When a parent's animation has a turn the child doesn't turn
@@ -33,6 +35,7 @@
 
 
 ## Changelog:
+- 2019-10-16 Fixed default value of 0 breaking atlas author UI.
 - 2019-10-16 Fixed dragging shapes no longer loses grip.
 - 2019-10-16 Fixed handling external functions that don't exist.
 - 2019-10-08 Fixed handle functions with dots in name.
