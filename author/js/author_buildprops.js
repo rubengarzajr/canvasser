@@ -545,9 +545,10 @@ setDefault: function(obj){
     var flipTest = authorLibs.authorData.images.filter(function(img){ return img.id === obj.obj.image})[0];
     if (flipTest){
       if(flipTest.atlas){
+        if (authorLibs.utils.getSubProp(obj.obj, 'atlascell') === undefined){ obj.obj.atlascell={x:0,y:0};}
         var pos = {x:authorLibs.utils.getSubProp(obj.obj, 'atlascell.x'), y:authorLibs.utils.getSubProp(obj.obj, 'atlascell.y')};
-        authorLibs.buildProp.setNumber({parent:div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.x'}, path:'atlascell.x', value:pos.x, default:widget.default});
-        authorLibs.buildProp.setNumber({parent:div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.y'}, path:'atlascell.y', value:pos.y, default:widget.default});
+        authorLibs.buildProp.setNumber({parent:div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.x'}, path:'atlascell.x', value:pos.x, default:0});
+        authorLibs.buildProp.setNumber({parent:div, obj:obj.obj, type:obj.type, widget:{field:'atlascell.y'}, path:'atlascell.y', value:pos.y, default:0});
       }
     }
   },

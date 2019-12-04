@@ -848,8 +848,10 @@ function canvasser(vari, interactiveData, dataForm, overrides){
           var pix = [0,0,0,0];
           if (obj.scale.current>.001){
             if (obj.origin === 'center'){
-              obj.originxy.current.x = Math.floor(act.imageList[obj.image].imageData.naturalWidth /2);
-              obj.originxy.current.y = Math.floor(act.imageList[obj.image].imageData.naturalHeight/2);
+              var offWidth  = atlas ? atlas.cellwidth  : act.imageList[obj.image].imageData.naturalWidth;
+              var offHeight = atlas ? atlas.cellheight : act.imageList[obj.image].imageData.naturalHeight;
+              obj.originxy.current.x = Math.floor(offWidth  / 2);
+              obj.originxy.current.y = Math.floor(offHeight / 2);
             }
 
             pix = getPixel({id:obj.image, pos:{
