@@ -734,7 +734,7 @@ function canvasser(vari, interactiveData, dataForm, overrides){
     if (act.mode === "true") act.mode = "none";
     if (act.mouseDown){
       act.mouseDownCnt ++;
-      if (act.position.x !== act.prevPosition.x && act.position.y !== act.prevPosition.y && act.mouseDownCnt > 2) {
+      if ((act.position.x !== act.prevPosition.x || act.position.y !== act.prevPosition.y) && act.mouseDownCnt > 2) {
         act.mode = 'drag';
         act.canvas.style.cursor = "move";
       }
